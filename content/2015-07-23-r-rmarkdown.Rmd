@@ -18,7 +18,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 \
 \
 
-[**dplyr**](https://dplyr.tidyverse.org/) es un paquete compuesto por un conjunto de funciones diseñados por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como [**The tidyverse**](https://www.tidyverse.org/). En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames. 
+[**dplyr**](https://dplyr.tidyverse.org/) es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como [**The tidyverse**](https://www.tidyverse.org/). En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames. 
 
 \
 
@@ -27,8 +27,8 @@ Las funciones del paquete **dplyr** son las siguientes:
 - `select( )`
 - `filter( )`
 - `mutate( )`
-- `arrange( )`
 - `summarise( )`
+- `arrange( )`
 
 \
 
@@ -44,12 +44,14 @@ library(dplyr)
 
 \ 
 
+Por lo general, el primer argumento de estas funciones es el dataframe utilizado, al que sigue los parametros requeridos para realizar las operaciones. No obstante, una forma sencilla de utilizar las funciones del paquete `dplyr`es utilizando pipes (%>%), encadenando de esta forma distintas funciones en un mismo código. Para ello, se establece en primer lugar el data frame a utilizar, seguido del operador %>% y después la función y los parámetros necesarios. Los ejemplos utilizados en este post utilizarán pipes. 
+
 
 # babynames
 
 \
 
-En  este post utilizaremos el dataframe (tibble) **babynames**, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1980 hasta 2017, aunque descarta los nombres de menos de seis observaciones, proporcionado por la [Agencia de Seguridad Social norteamericana](https://www.ssa.gov/oact/babynames/limits.html). El data frame se compone de 1.924.655 mill de filas y 5 columnas: `year`, `sex`,`name`, `n` y `prop`, donde `prop` es la proporción de personas de dicho género con el nombre indicado en el año correspondiente.
+En  este post utilizaremos el dataframe (tibble) **babynames**, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1880 hasta 2017, aunque descarta los nombres de menos de seis observaciones, proporcionado por la [Agencia de Seguridad Social norteamericana](https://www.ssa.gov/oact/babynames/limits.html). El data frame se compone de 1.924.655 mill de filas y 5 columnas: `year`, `sex`,`name`, `n` y `prop`, donde `prop` es la proporción de personas de dicho género con el nombre indicado en el año correspondiente.
 
 \
 
@@ -88,4 +90,213 @@ tail(babynames)
 
 \
 
+
+# select()
+
+\
+
+Supongamos que no queremos conservar todas las columnas del data frame original. En nuestro caso particular supongamos que únicamente queremos trabajar con las columnas `year`, `sex` y `name`. En ese caso podemos seleccionar dichas columnas de la siguiente forma:
+
+\
+
+
+```{r}
+
+# Seleccionando las columnas year, sex y name:
+
+babynames %>%
+  select(year, sex, name)
+
+```
+
+\
+
+Otras formas alternativas para obtener el mismo resultado sería utilizando `:`, que se utiliza para seleccionar las variables que se encuentran entre las dos columnas seleccionadas o, por otro lado, eliminando las dos últimas columnas con el signo negativo. 
+
+\
+
+```{r}
+
+# seleccionando las columnas que se encuentran entre las columnas year y name:
+
+babynames %>%
+  select(year:name)
+
+
+# eliminando las columnas que se encuentran entre n y prop:
+
+babynames %>%
+  select(-(n:prop))
+```
+
+\
+
+# filter()
+
+\ 
+
+La funcion `filter()` permite seleccionar un conjunto de observaciones según un parámetro determinado. Por ejemplo, supongamos que nos interesa seleccionar únicamente las observaciones correspondientes al **año 2017**. En dicho caso podemos indicar el siguiente código:
+
+\
+
+```{r}
+
+babynames %>%
+  filter(year== 2017)
+
+```
+
+\
+
+Pongamos que nos interesa seleccionar solo los **nombres de sexo masculino (M)**, para ello indicaríamos el siguiente comando:
+
+\
+
+```{r}
+
+babynames %>%
+  filter(sex== "M")
+
+```
+
+\
+
+En el caso de que quisieramos seleccionar los **nombres de sexo masculino para un año determinado** anotaríamos el siguiente código:
+
+\
+
+```{r}
+
+babynames %>%
+  filter(year == 2017 & sex== "M")
+
+```
+
+\
+
+Otro ejemplo sería, por ejemplo, filtrar el conjunto de observaciones para identificar el número de niños de sexo masculino que recibieron un nombre determinado para cada uno de los años del periodo. Pongamos, por ejemplo, que queremos determinar cuántos recién nacidos recibieron el nombre de Ruben(sin tilde) para cada año entre 1880 y 2017.
+
+\
+
+```{r, warning=FALSE}
+
+# Guardamos el nuevo data frame con el nombre Ruben
+
+Ruben <- babynames %>%
+  filter(sex == "M" & name == "Ruben")
+
+# el paquete knitr permite hacer tablas utilizando la función kable()
+
+library(knitr)
+
+kable(Ruben)
+```
+
+
+\
+
+Como se ha indicado previamente, las pipes `%>%` sirven especialmente para encadenar funciones, pudiendo reducir el tamaño del código y facilitando su interpretación. Por ejemplo, en el caso de que nos interesara seleccionar únicamente el **año y el nombre de los recien nacidos de sexo masculino en el año 2017** indicaríamos:
+
+\
+
+```{r}
+babynames %>%
+  select(year, sex, name) %>%
+  filter(year == 2017 & sex== "M")
+```
+
+
+# mutate()
+
+\
+
+La función `mutate()` nos permite añadir columnas nuevas partiendo de las columnas del data frame original. A modo de ejemplo podemos crear una nueva columna, que denominaremos `prop_2`, como resultado de multiplicar la columna `prop` por 100. La función `mutate()` requiere, una vez indicado el data frame sobre el que va a operar, que indiquemos el nombre de la nueva columna y la operación que determina el valor de la misma:
+
+\
+
+```{r}
+
+babynames %>%
+  mutate( prop_2 = prop * 100)
+
+
+```
+
+\
+
+Supongamos que nos interesa que en una nueva columna se indique el total de las observaciones del conjunto del data frame. En nuestro caso cabe la posibilidad que nos interese crear una nueva columna donde se indique la suma del total de los *babynames*, es decir, de `n`, bien sea la suma de todos los años del periodo (1880-2017), bien sea el total según el año. En dicho caso podemos utilizar la función `mutate()` de la siguiente forma:
+
+\
+
+```{r}
+
+# En el primero de los casos la columna sería igual para el total de observaciones, en tanto en cuanto indica el total de n (348120517).
+
+babynames %>%
+  mutate( suma_total = sum(n))
+
+# En el segundo de los casos, agrupando por año, el valor de la columna sería distinta según el año. Así, por ejemplo, para 1880 la suma de n sería 201484. 
+
+babynames %>%
+  group_by(year) %>%
+  mutate( suma_by_year = sum(n))
+
+
+```
+
+
+# summarise()
+
+\
+
+La función `summarise()` provee un valor determinado en función de un conjunto de valores. Así, por ejemplo, para determinar el **número de observaciones (filas)** del data frame, o para determinar el **número total de nacimientos (`n`)** podemos utilizar esta función de la siguiente forma:
+
+\
+
+```{r}
+
+babynames %>%
+  summarise(num_observaciones = n(),
+            total_babynames = sum(n))
+```
+
+\
+
+No obstante, la función `summarise()` tiene una especial utilidad cuando se utiliza conjuntamente con la función `group_by()`. Así, por ejemplo, podemos estimar el número de nacimientos por cada año: 
+
+\
+
+```{r}
+
+babynames %>%
+  group_by (year) %>%
+  summarise(suma = sum(n))
+
+```
+
+\
+
+O podemos identificar el número de nacimientos por año y por sexo del recién nacido:
+
+\
+
+```{r}
+babynames %>%
+  group_by (year, sex) %>%
+  summarise(suma = sum(n))
+```
+
+\
+
+De forma similar podemos estimar en una sola orden el valor de diversos indicadores. A modo de ejemplo, estimamos para cada año y según el sexo del recién nacido, el **total de nacimientos, el valor máximo y el valor mínimo** (que previsiblemente será 5 debido a que la base de datos proporciona información de los nombres que superen dicho valor) 
+
+\
+
+```{r}
+
+babynames %>%
+  group_by (year, sex) %>%
+  summarise(suma = sum(n), max = max(n), min = min(n))
+
+```
 
