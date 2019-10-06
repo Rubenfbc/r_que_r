@@ -60,7 +60,21 @@ library(babynames)
 ```
 
 \
-Por consiguiente, las primeras y últimas seis observaciones de `babynames` son:
+
+Por consiguiente, la estructura del data frame es:
+
+\
+
+```{r}
+
+str(babynames)
+
+```
+
+\
+
+Donde las primeras y últimas seis observaciones de `babynames` son:
+
 \
  
  
@@ -73,13 +87,5 @@ tail(babynames)
 ```
 
 \
-Y la estructura del dataframe es:
-\
 
-```{r}
 
-str(babynames)
-
-```
-
-probando probando

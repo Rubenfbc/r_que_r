@@ -126,7 +126,22 @@ library(dplyr)</code></pre>
 <pre class="r"><code>
 library(babynames)</code></pre>
 <p><br />
-Por consiguiente, las primeras y últimas seis observaciones de <code>babynames</code> son:<br />
+</p>
+<p>Por consiguiente, la estructura del data frame es:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+str(babynames)
+## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1924665 obs. of  5 variables:
+##  $ year: num  1880 1880 1880 1880 1880 1880 1880 1880 1880 1880 ...
+##  $ sex : chr  &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
+##  $ name: chr  &quot;Mary&quot; &quot;Anna&quot; &quot;Emma&quot; &quot;Elizabeth&quot; ...
+##  $ n   : int  7065 2604 2003 1939 1746 1578 1472 1414 1320 1288 ...
+##  $ prop: num  0.0724 0.0267 0.0205 0.0199 0.0179 ...</code></pre>
+<p><br />
+</p>
+<p>Donde las primeras y últimas seis observaciones de <code>babynames</code> son:</p>
+<p><br />
 </p>
 <pre class="r"><code>
 head(babynames)
@@ -152,17 +167,7 @@ tail(babynames)
 ## 5  2017 M     Zylis      5 0.00000255
 ## 6  2017 M     Zyrie      5 0.00000255</code></pre>
 <p><br />
-Y la estructura del dataframe es:<br />
 </p>
-<pre class="r"><code>
-str(babynames)
-## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1924665 obs. of  5 variables:
-##  $ year: num  1880 1880 1880 1880 1880 1880 1880 1880 1880 1880 ...
-##  $ sex : chr  &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
-##  $ name: chr  &quot;Mary&quot; &quot;Anna&quot; &quot;Emma&quot; &quot;Elizabeth&quot; ...
-##  $ n   : int  7065 2604 2003 1939 1746 1578 1472 1414 1320 1288 ...
-##  $ prop: num  0.0724 0.0267 0.0205 0.0199 0.0179 ...</code></pre>
-<p>probando probando</p>
 </div>
 
                 </section>
