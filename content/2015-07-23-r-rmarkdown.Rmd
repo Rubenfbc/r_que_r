@@ -1,0 +1,60 @@
+---
+title: "Aprendiendo dplyr con 'babynames`"
+author: "Rubén F. Bustillo"
+date: 2019-10-06
+categories: ["R"]
+tags: ["dplyr", "tidyverse"]
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+\
+
+# ¿Qué es dplyr?
+
+\
+\
+
+[**dplyr**](https://dplyr.tidyverse.org/) es un paquete compuesto por un conjunto de funciones diseñados por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como [**The tidyverse**](https://www.tidyverse.org/). En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames. 
+
+\
+
+Las funciones del paquete **dplyr** son las siguientes:
+
+- `select( )`
+- `filter( )`
+- `mutate( )`
+- `arrange( )`
+- `summarise( )`
+
+\
+
+En primer lugar debemos instalar y cargar el paquete **dplyr**
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(dplyr)
+
+```
+
+\ 
+
+
+# babynames
+
+\
+
+En este post utilizaremos el dataframe (tibble) *babynames*, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1980 hasta 2017, proporcionado por la [Agencia de Seguridad Social norteamericana](https://www.ssa.gov/oact/babynames/limits.html). El data frame se compone de 1,9 mill de filas y 5 columnas (`year`, `sex`,`name`, `n`, `prop`). 
+
+```{r, warning= F}
+
+library(babynames)
+
+```
+
+
