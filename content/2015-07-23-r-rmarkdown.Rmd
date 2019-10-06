@@ -49,7 +49,9 @@ library(dplyr)
 
 \
 
-En este post utilizaremos el dataframe (tibble) *babynames*, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1980 hasta 2017, proporcionado por la [Agencia de Seguridad Social norteamericana](https://www.ssa.gov/oact/babynames/limits.html). El data frame se compone de 1,9 mill de filas y 5 columnas (`year`, `sex`,`name`, `n`, `prop`). 
+En  este post utilizaremos el dataframe (tibble) **babynames**, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1980 hasta 2017, aunque descarta los nombres de menos de seis observaciones, proporcionado por la [Agencia de Seguridad Social norteamericana](https://www.ssa.gov/oact/babynames/limits.html). El data frame se compone de 1.924.655 mill de filas y 5 columnas: `year`, `sex`,`name`, `n` y `prop`, donde `prop` es la proporción de personas de dicho género con el nombre indicado en el año correspondiente.
+
+\
 
 ```{r, warning= F}
 
@@ -57,4 +59,26 @@ library(babynames)
 
 ```
 
+\
+Por consiguiente, las primeras y últimas seis observaciones de `babynames` son:
+\
+ 
+ 
+```{r}
+
+head(babynames)
+
+
+tail(babynames)
+```
+
+\
+Y la estructura del dataframe es:
+\
+
+```{r}
+
+str(babynames)
+
+```
 

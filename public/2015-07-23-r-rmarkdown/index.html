@@ -120,9 +120,48 @@ library(dplyr)</code></pre>
 <h1>babynames</h1>
 <p><br />
 </p>
-<p>En este post utilizaremos el dataframe (tibble) <em>babynames</em>, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1980 hasta 2017, proporcionado por la <a href="https://www.ssa.gov/oact/babynames/limits.html">Agencia de Seguridad Social norteamericana</a>. El data frame se compone de 1,9 mill de filas y 5 columnas (<code>year</code>, <code>sex</code>,<code>name</code>, <code>n</code>, <code>prop</code>).</p>
+<p>En este post utilizaremos el dataframe (tibble) <strong>babynames</strong>, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1980 hasta 2017, aunque descarta los nombres de menos de seis observaciones, proporcionado por la <a href="https://www.ssa.gov/oact/babynames/limits.html">Agencia de Seguridad Social norteamericana</a>. El data frame se compone de 1.924.655 mill de filas y 5 columnas: <code>year</code>, <code>sex</code>,<code>name</code>, <code>n</code> y <code>prop</code>, donde <code>prop</code> es la proporción de personas de dicho género con el nombre indicado en el año correspondiente.</p>
+<p><br />
+</p>
 <pre class="r"><code>
 library(babynames)</code></pre>
+<p><br />
+Por consiguiente, las primeras y últimas seis observaciones de <code>babynames</code> son:<br />
+</p>
+<pre class="r"><code>
+head(babynames)
+## # A tibble: 6 x 5
+##    year sex   name          n   prop
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
+## 1  1880 F     Mary       7065 0.0724
+## 2  1880 F     Anna       2604 0.0267
+## 3  1880 F     Emma       2003 0.0205
+## 4  1880 F     Elizabeth  1939 0.0199
+## 5  1880 F     Minnie     1746 0.0179
+## 6  1880 F     Margaret   1578 0.0162
+
+
+tail(babynames)
+## # A tibble: 6 x 5
+##    year sex   name       n       prop
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;      &lt;dbl&gt;
+## 1  2017 M     Zyhier     5 0.00000255
+## 2  2017 M     Zykai      5 0.00000255
+## 3  2017 M     Zykeem     5 0.00000255
+## 4  2017 M     Zylin      5 0.00000255
+## 5  2017 M     Zylis      5 0.00000255
+## 6  2017 M     Zyrie      5 0.00000255</code></pre>
+<p><br />
+Y la estructura del dataframe es:<br />
+</p>
+<pre class="r"><code>
+str(babynames)
+## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1924665 obs. of  5 variables:
+##  $ year: num  1880 1880 1880 1880 1880 1880 1880 1880 1880 1880 ...
+##  $ sex : chr  &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
+##  $ name: chr  &quot;Mary&quot; &quot;Anna&quot; &quot;Emma&quot; &quot;Elizabeth&quot; ...
+##  $ n   : int  7065 2604 2003 1939 1746 1578 1472 1414 1320 1288 ...
+##  $ prop: num  0.0724 0.0267 0.0205 0.0199 0.0179 ...</code></pre>
 </div>
 
                 </section>
