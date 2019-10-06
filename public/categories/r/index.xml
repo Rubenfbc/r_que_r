@@ -6,20 +6,22 @@
     <description>Recent content in R on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Sun, 06 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/2015/07/23/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Aprendiendo dplyr con &#39;babynames`</title>
+      <link>/2015-07-23-r-rmarkdown/</link>
+      <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2015/07/23/hello-r-markdown/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/2015-07-23-r-rmarkdown/</guid>
+      <description>¿Qué es dplyr?
+dplyr es un paquete compuesto por un conjunto de funciones diseñados por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.
+
+Las funciones del paquete dplyr son las siguientes:
+select( )filter( )mutate( )arrange( )summarise( )</description>
     </item>
     
   </channel>
