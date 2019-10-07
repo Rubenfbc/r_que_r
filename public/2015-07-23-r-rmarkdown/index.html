@@ -141,32 +141,26 @@ str(babynames)
 ##  $ prop: num  0.0724 0.0267 0.0205 0.0199 0.0179 ...</code></pre>
 <p><br />
 </p>
-<p>Donde las primeras y últimas seis observaciones de <code>babynames</code> son:</p>
+<p>Donde las primeras diez observaciones de <code>babynames</code> son los nombres más comunes en el primer año del periodo, es decir, 1880.</p>
 <p><br />
 </p>
 <pre class="r"><code>
-head(babynames)
-## # A tibble: 6 x 5
-##    year sex   name          n   prop
-##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
-## 1  1880 F     Mary       7065 0.0724
-## 2  1880 F     Anna       2604 0.0267
-## 3  1880 F     Emma       2003 0.0205
-## 4  1880 F     Elizabeth  1939 0.0199
-## 5  1880 F     Minnie     1746 0.0179
-## 6  1880 F     Margaret   1578 0.0162
+head(babynames, n=10)
+## # A tibble: 10 x 5
+##     year sex   name          n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary       7065 0.0724
+##  2  1880 F     Anna       2604 0.0267
+##  3  1880 F     Emma       2003 0.0205
+##  4  1880 F     Elizabeth  1939 0.0199
+##  5  1880 F     Minnie     1746 0.0179
+##  6  1880 F     Margaret   1578 0.0162
+##  7  1880 F     Ida        1472 0.0151
+##  8  1880 F     Alice      1414 0.0145
+##  9  1880 F     Bertha     1320 0.0135
+## 10  1880 F     Sarah      1288 0.0132
 
-
-tail(babynames)
-## # A tibble: 6 x 5
-##    year sex   name       n       prop
-##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;      &lt;dbl&gt;
-## 1  2017 M     Zyhier     5 0.00000255
-## 2  2017 M     Zykai      5 0.00000255
-## 3  2017 M     Zykeem     5 0.00000255
-## 4  2017 M     Zylin      5 0.00000255
-## 5  2017 M     Zylis      5 0.00000255
-## 6  2017 M     Zyrie      5 0.00000255</code></pre>
+# Mary lidera el ranking en dicho año, seguido por Anna, Emma y Elizabeth. En los primeros diez puestos no encontramos nombres masculinos. </code></pre>
 <p><br />
 </p>
 </div>
@@ -198,7 +192,7 @@ babynames %&gt;%
 ## # ... with 1,924,655 more rows</code></pre>
 <p><br />
 </p>
-<p>Otras formas alternativas para obtener el mismo resultado sería utilizando <code>:</code>, que se utiliza para seleccionar las variables que se encuentran entre las dos columnas seleccionadas o, por otro lado, eliminando las dos últimas columnas con el signo negativo.</p>
+<p>Otras formas alternativas para obtener el mismo resultado sería utilizando <code>:</code>, que se utiliza para seleccionar las variables que se encuentran entre las dos columnas seleccionadas o, también, eliminando las dos últimas columnas mediante el uso de un signo negativo.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -246,7 +240,7 @@ babynames %&gt;%
 <div id="filter" class="section level1">
 <h1>filter()</h1>
 <p> </p>
-<p>La funcion <code>filter()</code> permite seleccionar un conjunto de observaciones según un parámetro determinado. Por ejemplo, supongamos que nos interesa seleccionar únicamente las observaciones correspondientes al <strong>año 2017</strong>. En dicho caso podemos indicar el siguiente código:</p>
+<p>La funcion <code>filter()</code> permite seleccionar un conjunto de observaciones según un parámetro determinado. Por ejemplo, supongamos que nos interesa seleccionar únicamente las observaciones correspondientes al <strong>año 2017</strong>. En dicho caso podemos escribir el siguiente código:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -265,7 +259,9 @@ babynames %&gt;%
 ##  8  2017 F     Amelia    11800 0.00629
 ##  9  2017 F     Evelyn    10675 0.00569
 ## 10  2017 F     Abigail   10551 0.00563
-## # ... with 32,459 more rows</code></pre>
+## # ... with 32,459 more rows
+
+# En 2017 Emma sigue siendo uno de los nombres más recurrentes, ocupando el primer puesto del ranking. Por el contrario, nuevos nombres como Olivia, Ava, Sophia, etc., aparecen en el nuevo ranking. Al igual que sucedía en 1880 seguimos sin encontrar nombres masculinos en el top 10.</code></pre>
 <p><br />
 </p>
 <p>Pongamos que nos interesa seleccionar solo los <strong>nombres de sexo masculino (M)</strong>, para ello indicaríamos el siguiente comando:</p>
@@ -287,7 +283,9 @@ babynames %&gt;%
 ##  8  1880 M     Thomas   2534 0.0214
 ##  9  1880 M     Henry    2444 0.0206
 ## 10  1880 M     Robert   2415 0.0204
-## # ... with 786,362 more rows</code></pre>
+## # ... with 786,362 more rows
+
+# Nombres clásicos aparecen en el ranking masculino. John, William, James, Charles o George se sitúan como los nombres más populares en 1880.</code></pre>
 <p><br />
 </p>
 <p>En el caso de que quisieramos seleccionar los <strong>nombres de sexo masculino para un año determinado</strong> anotaríamos el siguiente código:</p>
@@ -309,10 +307,12 @@ babynames %&gt;%
 ##  8  2017 M     Elijah   13268 0.00676
 ##  9  2017 M     Oliver   13141 0.00669
 ## 10  2017 M     Jacob    13106 0.00668
-## # ... with 14,150 more rows</code></pre>
+## # ... with 14,150 more rows
+
+# Se observa un cambio significativo en las preferencias de los nombres de los recién nacidos. Liam, Noah, Logan aparecen en el ranking, aunque algunos nombres más tradicionales, como William o James, conservan todavía su atractivo. </code></pre>
 <p><br />
 </p>
-<p>Otro ejemplo sería, por ejemplo, filtrar el conjunto de observaciones para identificar el número de niños de sexo masculino que recibieron un nombre determinado para cada uno de los años del periodo. Pongamos, por ejemplo, que queremos determinar cuántos recién nacidos recibieron el nombre de Ruben(sin tilde) para cada año entre 1880 y 2017.</p>
+<p>Otro posibilidad sería, por ejemplo, filtrar el conjunto de observaciones con el objetivo de identificar el número de niños de sexo masculino que recibieron un nombre determinado para cada uno de los años del periodo. Pongamos, por ejemplo, que queremos determinar <strong>cuántos recién nacidos recibieron el nombre de Ruben (sin tilde)</strong> para cada uno de los años entre 1880 y 2017.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -1305,6 +1305,8 @@ kable(Ruben)</code></pre>
 </tr>
 </tbody>
 </table>
+<pre class="r"><code>
+# Vemos que el nombre de Ruben fue incrementando su popularidad en Estados Unidos a lo largo de los años, especialmente hasta 1992, y después, poco a poco, ha ido progresivamente perdiendo su atractivo. No obstante, no parece que Ruben haya sido un nombre muy recurrido en el país a lo largo de estos años. </code></pre>
 <p><br />
 </p>
 <p>Como se ha indicado previamente, las pipes <code>%&gt;%</code> sirven especialmente para encadenar funciones, pudiendo reducir el tamaño del código y facilitando su interpretación. Por ejemplo, en el caso de que nos interesara seleccionar únicamente el <strong>año y el nombre de los recien nacidos de sexo masculino en el año 2017</strong> indicaríamos:</p>
@@ -1332,7 +1334,7 @@ kable(Ruben)</code></pre>
 <h1>mutate()</h1>
 <p><br />
 </p>
-<p>La función <code>mutate()</code> nos permite añadir columnas nuevas partiendo de las columnas del data frame original. A modo de ejemplo podemos crear una nueva columna, que denominaremos <code>prop_2</code>, como resultado de multiplicar la columna <code>prop</code> por 100. La función <code>mutate()</code> requiere, una vez indicado el data frame sobre el que va a operar, que indiquemos el nombre de la nueva columna y la operación que determina el valor de la misma:</p>
+<p>La función <code>mutate()</code> nos permite añadir columnas nuevas partiendo de las columnas del data frame original. A modo de ejemplo podemos crear una nueva columna, que denominaremos <code>prop_2</code>, como resultado de multiplicar la columna <code>prop</code> por 100. La función <code>mutate()</code> requiere, una vez indicado el data frame sobre el que se va a operar, que indiquemos el nombre de la nueva columna y la operación que determina el valor de la misma:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -1351,10 +1353,12 @@ babynames %&gt;%
 ##  8  1880 F     Alice      1414 0.0145   1.45
 ##  9  1880 F     Bertha     1320 0.0135   1.35
 ## 10  1880 F     Sarah      1288 0.0132   1.32
-## # ... with 1,924,655 more rows</code></pre>
+## # ... with 1,924,655 more rows
+
+# De esta forma comprobamos de una forma más adecuada que Mary, el nombre femenino más utilizado en 1880, representa el 7,24 del total de nombres de recién nacidos en dicho año.  </code></pre>
 <p><br />
 </p>
-<p>Supongamos que nos interesa que en una nueva columna se indique el total de las observaciones del conjunto del data frame. En nuestro caso cabe la posibilidad que nos interese crear una nueva columna donde se indique la suma del total de los <em>babynames</em>, es decir, de <code>n</code>, bien sea la suma de todos los años del periodo (1880-2017), bien sea el total según el año. En dicho caso podemos utilizar la función <code>mutate()</code> de la siguiente forma:</p>
+<p>Supongamos que nos interesa que en una nueva columna se indique el total de las observaciones del conjunto del data frame. En nuestro caso cabe la posibilidad que nos interese crear una nueva columna donde se indique la <strong>suma del total de los <em>babynames</em> </strong>, es decir, de <code>n</code>, bien sea la suma de todos los años del periodo (1880-2017), bien sea el total según el año. En dicho caso podemos utilizar la función <code>mutate()</code> de la siguiente forma:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -1396,7 +1400,9 @@ babynames %&gt;%
 ##  8  1880 F     Alice      1414 0.0145       201484
 ##  9  1880 F     Bertha     1320 0.0135       201484
 ## 10  1880 F     Sarah      1288 0.0132       201484
-## # ... with 1,924,655 more rows</code></pre>
+## # ... with 1,924,655 more rows
+
+# Al realizar este tipo de operaciones debemos siempre ser conscientes de los valores que estamos sumando (o con los que estamos operando) para evitar equívocos. Por ello, resulta de gran utilidad utilizar la función summarise() que vemos a continuación.</code></pre>
 </div>
 <div id="summarise" class="section level1">
 <h1>summarise()</h1>
@@ -1412,10 +1418,12 @@ babynames %&gt;%
 ## # A tibble: 1 x 2
 ##   num_observaciones total_babynames
 ##               &lt;int&gt;           &lt;int&gt;
-## 1           1924665       348120517</code></pre>
+## 1           1924665       348120517
+
+# Esta operación nos permite comprobar el total de observaciones y el total de babynames del conjunto del dataframe. </code></pre>
 <p><br />
 </p>
-<p>No obstante, la función <code>summarise()</code> tiene una especial utilidad cuando se utiliza conjuntamente con la función <code>group_by()</code>. Así, por ejemplo, podemos estimar el número de nacimientos por cada año:</p>
+<p>No obstante, la función <code>summarise()</code> tiene una especial utilidad cuando se utiliza conjuntamente con la función <code>group_by()</code>. Así, por ejemplo, podemos estimar facilmente el <strong>número de nacimientos por cada año</strong> (o mejor dicho el número de solicitudes de la tarjeta de la SS por nacimiento en Estados Unidos cada año):</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -1435,13 +1443,16 @@ babynames %&gt;%
 ##  8  1887 247394
 ##  9  1888 299473
 ## 10  1889 288946
-## # ... with 128 more rows</code></pre>
+## # ... with 128 more rows
+
+# El total del primer deberá coincidir con el valor de la nueva columna creada previamente (suma_by_year) en cada uno de los años del periodo analizado.</code></pre>
 <p><br />
 </p>
-<p>O podemos identificar el número de nacimientos por año y por sexo del recién nacido:</p>
+<p>De forma similar podemos identificar el número de nacimientos por año y por sexo de los recién nacidos:</p>
 <p><br />
 </p>
-<pre class="r"><code>babynames %&gt;%
+<pre class="r"><code>
+babynames %&gt;%
   group_by (year, sex) %&gt;%
   summarise(suma = sum(n))
 ## # A tibble: 276 x 3
@@ -1458,7 +1469,9 @@ babynames %&gt;%
 ##  8  1883 M     104627
 ##  9  1884 F     129020
 ## 10  1884 M     114442
-## # ... with 266 more rows</code></pre>
+## # ... with 266 more rows
+
+# En los primeros años el registro es mayor en los niños que en las niñas. </code></pre>
 <p><br />
 </p>
 <p>De forma similar podemos estimar en una sola orden el valor de diversos indicadores. A modo de ejemplo, estimamos para cada año y según el sexo del recién nacido, el <strong>total de nacimientos, el valor máximo y el valor mínimo</strong> (que previsiblemente será 5 debido a que la base de datos proporciona información de los nombres que superen dicho valor)</p>
@@ -1483,6 +1496,79 @@ babynames %&gt;%
 ##  9  1884 F     129020  9217     5
 ## 10  1884 M     114442  9388     5
 ## # ... with 266 more rows</code></pre>
+<p><br />
+</p>
+<p>En el data frame anterior podemos observar las observaciones con mayor valor <code>n</code> en cada año y por sexo, entre otros aspectos. No obstante, puede que nos interese determinar qué nombres lideran el ranking cada año. Para ello podemos establecer el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Para establecer los nombres (F y M) que lideran el ranking entre 1880 y 1889:
+
+babynames %&gt;%
+  group_by (year, sex, name) %&gt;%
+  summarise(max = max(n)) %&gt;%
+  top_n(1) %&gt;%
+  head(n=20)
+## Selecting by max
+## # A tibble: 20 x 4
+## # Groups:   year, sex [20]
+##     year sex   name    max
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;
+##  1  1880 F     Mary   7065
+##  2  1880 M     John   9655
+##  3  1881 F     Mary   6919
+##  4  1881 M     John   8769
+##  5  1882 F     Mary   8148
+##  6  1882 M     John   9557
+##  7  1883 F     Mary   8012
+##  8  1883 M     John   8894
+##  9  1884 F     Mary   9217
+## 10  1884 M     John   9388
+## 11  1885 F     Mary   9128
+## 12  1885 M     John   8756
+## 13  1886 F     Mary   9889
+## 14  1886 M     John   9026
+## 15  1887 F     Mary   9888
+## 16  1887 M     John   8110
+## 17  1888 F     Mary  11754
+## 18  1888 M     John   9247
+## 19  1889 F     Mary  11648
+## 20  1889 M     John   8548
+
+# Para establecer los nombres (F y M) que lideran el ranking entre 2008 y 2017:
+
+babynames %&gt;%
+  group_by (year, sex, name) %&gt;%
+  summarise(max = max(n)) %&gt;%
+  top_n(1) %&gt;%
+  tail(n=20)
+## Selecting by max
+## # A tibble: 20 x 4
+## # Groups:   year, sex [20]
+##     year sex   name       max
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;int&gt;
+##  1  2008 F     Emma     18809
+##  2  2008 M     Jacob    22591
+##  3  2009 F     Isabella 22298
+##  4  2009 M     Jacob    21169
+##  5  2010 F     Isabella 22905
+##  6  2010 M     Jacob    22117
+##  7  2011 F     Sophia   21837
+##  8  2011 M     Jacob    20365
+##  9  2012 F     Sophia   22304
+## 10  2012 M     Jacob    19069
+## 11  2013 F     Sophia   21213
+## 12  2013 M     Noah     18241
+## 13  2014 F     Emma     20924
+## 14  2014 M     Noah     19286
+## 15  2015 F     Emma     20435
+## 16  2015 M     Noah     19613
+## 17  2016 F     Emma     19471
+## 18  2016 M     Noah     19082
+## 19  2017 F     Emma     19738
+## 20  2017 M     Liam     18728
+
+# Mary y John son, sin lugar a duda, los nombres más recurrentes al inicio del periodo. Por el contrario, en la última década existe una mayor variabilidad en el nombre más escogido tanto para niño como para niña. No obstante, es fácil identificar un grupo de nombres de gran atractivo para la población en estos años, bien sea Emma, Isabella o Sophia para niña o Jacob y Noah para niño. </code></pre>
 </div>
 
                 </section>
