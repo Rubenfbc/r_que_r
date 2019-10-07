@@ -4,6 +4,7 @@ author: "Rubén F. Bustillo"
 date: 2019-10-06
 categories: ["R"]
 tags: ["dplyr", "tidyverse"]
+
 ---
 
 
@@ -26,6 +27,7 @@ Las funciones del paquete **dplyr** son las siguientes:
 
 - `select( )`
 - `filter( )`
+- `group_by()`
 - `mutate( )`
 - `summarise( )`
 - `arrange( )`
@@ -146,6 +148,12 @@ babynames %>%
 
 # En 2017 Emma sigue siendo uno de los nombres más recurrentes, ocupando el primer puesto del ranking. Por el contrario, nuevos nombres como Olivia, Ava, Sophia, etc., aparecen en el nuevo ranking. Al igual que sucedía en 1880 seguimos sin encontrar nombres masculinos en el top 10.
 
+
+# Podemos seleccionar varios años 
+
+babynames %>%
+  filter(year %in% c(1880, 1900, 1920, 1940, 1960, 1980, 2000))
+
 ```
 
 \
@@ -180,6 +188,19 @@ babynames %>%
 
 \
 
+O supongamos que nos interesa seleccionar los **nombres de cualquier sexo que hayan superado los 9000 registros** y determinar el año en el que esto sucedió
+
+\
+
+```{r}
+
+babynames %>%
+  filter(n > 9000)
+
+```
+
+\
+
 Otro posibilidad sería, por ejemplo, filtrar el conjunto de observaciones con el objetivo de identificar el número de niños de sexo masculino que recibieron un nombre determinado para cada uno de los años del periodo. Pongamos, por ejemplo, que queremos determinar **cuántos recién nacidos recibieron el nombre de Ruben (sin tilde)** para cada uno de los años entre 1880 y 2017.
 
 \
@@ -195,7 +216,7 @@ Ruben <- babynames %>%
 
 library(knitr)
 
-kable(Ruben)
+knitr::kable(Ruben)
 
 # Vemos que el nombre de Ruben fue incrementando su popularidad en Estados Unidos a lo largo de los años, especialmente hasta 1992, y después, poco a poco, ha ido progresivamente perdiendo su atractivo. No obstante, no parece que Ruben haya sido un nombre muy recurrido en el país a lo largo de estos años. 
 
@@ -429,6 +450,12 @@ babynames %>%
 # En este caso vemos que Linda resultó ser la opción más popular para las niñas en 1947 y 1948, siendo estos años donde más gente coincidió en su decisión.
 
 ```
+
+\
+
+# dplyr y ggplot2
+
+\
 
 
 

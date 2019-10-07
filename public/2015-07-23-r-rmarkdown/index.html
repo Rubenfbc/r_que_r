@@ -103,6 +103,7 @@
 <ul>
 <li><code>select( )</code></li>
 <li><code>filter( )</code></li>
+<li><code>group_by()</code></li>
 <li><code>mutate( )</code></li>
 <li><code>summarise( )</code></li>
 <li><code>arrange( )</code></li>
@@ -261,7 +262,27 @@ babynames %&gt;%
 ## 10  2017 F     Abigail   10551 0.00563
 ## # ... with 32,459 more rows
 
-# En 2017 Emma sigue siendo uno de los nombres más recurrentes, ocupando el primer puesto del ranking. Por el contrario, nuevos nombres como Olivia, Ava, Sophia, etc., aparecen en el nuevo ranking. Al igual que sucedía en 1880 seguimos sin encontrar nombres masculinos en el top 10.</code></pre>
+# En 2017 Emma sigue siendo uno de los nombres más recurrentes, ocupando el primer puesto del ranking. Por el contrario, nuevos nombres como Olivia, Ava, Sophia, etc., aparecen en el nuevo ranking. Al igual que sucedía en 1880 seguimos sin encontrar nombres masculinos en el top 10.
+
+
+# Podemos seleccionar varios años 
+
+babynames %&gt;%
+  filter(year %in% c(1880, 1900, 1920, 1940, 1960, 1980, 2000))
+## # A tibble: 86,581 x 5
+##     year sex   name          n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary       7065 0.0724
+##  2  1880 F     Anna       2604 0.0267
+##  3  1880 F     Emma       2003 0.0205
+##  4  1880 F     Elizabeth  1939 0.0199
+##  5  1880 F     Minnie     1746 0.0179
+##  6  1880 F     Margaret   1578 0.0162
+##  7  1880 F     Ida        1472 0.0151
+##  8  1880 F     Alice      1414 0.0145
+##  9  1880 F     Bertha     1320 0.0135
+## 10  1880 F     Sarah      1288 0.0132
+## # ... with 86,571 more rows</code></pre>
 <p><br />
 </p>
 <p>Pongamos que nos interesa seleccionar solo los <strong>nombres de sexo masculino (M)</strong>, para ello indicaríamos el siguiente comando:</p>
@@ -312,6 +333,28 @@ babynames %&gt;%
 # Se observa un cambio significativo en las preferencias de los nombres de los recién nacidos. Liam, Noah, Logan aparecen en el ranking, aunque algunos nombres más tradicionales, como William o James, conservan todavía su atractivo. </code></pre>
 <p><br />
 </p>
+<p>O supongamos que nos interesa seleccionar los <strong>nombres de cualquier sexo que hayan superado los 9000 registros</strong> y determinar el año en el que esto sucedió</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  filter(n &gt; 9000)
+## # A tibble: 6,653 x 5
+##     year sex   name        n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 M     John     9655 0.0815
+##  2  1880 M     William  9532 0.0805
+##  3  1882 M     John     9557 0.0783
+##  4  1882 M     William  9298 0.0762
+##  5  1884 F     Mary     9217 0.0670
+##  6  1884 M     John     9388 0.0765
+##  7  1885 F     Mary     9128 0.0643
+##  8  1886 F     Mary     9889 0.0643
+##  9  1886 M     John     9026 0.0758
+## 10  1887 F     Mary     9888 0.0636
+## # ... with 6,643 more rows</code></pre>
+<p><br />
+</p>
 <p>Otro posibilidad sería, por ejemplo, filtrar el conjunto de observaciones con el objetivo de identificar el número de niños de sexo masculino que recibieron un nombre determinado para cada uno de los años del periodo. Pongamos, por ejemplo, que queremos determinar <strong>cuántos recién nacidos recibieron el nombre de Ruben (sin tilde)</strong> para cada uno de los años entre 1880 y 2017.</p>
 <p><br />
 </p>
@@ -325,7 +368,7 @@ Ruben &lt;- babynames %&gt;%
 
 library(knitr)
 
-kable(Ruben)</code></pre>
+knitr::kable(Ruben)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -1685,6 +1728,13 @@ babynames %&gt;%
 ## # ... with 1,924,655 more rows
 
 # En este caso vemos que Linda resultó ser la opción más popular para las niñas en 1947 y 1948, siendo estos años donde más gente coincidió en su decisión.</code></pre>
+<p><br />
+</p>
+</div>
+<div id="dplyr-y-ggplot2" class="section level1">
+<h1>dplyr y ggplot2</h1>
+<p><br />
+</p>
 </div>
 
                 </section>

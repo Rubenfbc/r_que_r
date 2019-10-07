@@ -21,7 +21,7 @@
 dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.
 
 Las funciones del paquete dplyr son las siguientes:
-select( )filter( )mutate( )summarise( )arrange( )</description>
+select( )filter( )group_by()mutate( )summarise( )arrange( )</description>
     </item>
     
   </channel>
