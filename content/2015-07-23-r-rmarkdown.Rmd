@@ -133,6 +133,21 @@ babynames %>%
 
 \
 
+En el caso de que fuese requerido **cambiar el nombre de todas o alguna de las columnas seleccionadas** se puede hacer de forma sencilla como se observa en la siguiente orden:
+
+\
+
+```{r}
+
+babynames %>%
+  select(year, sexo= sex, nombre = name, num = n)
+
+# Para renombrar las columnas sin necesidad de seleccionarlas podemos hacer uso de la función rename()
+
+```
+
+\
+
 # filter()
 
 \ 
@@ -369,7 +384,7 @@ babynames %>%
 
 \
 
-De forma similar podemos estimar en una sola orden el valor de diversos indicadores. A modo de ejemplo, estimamos para cada año y según el sexo del recién nacido, el **total de nacimientos, el valor máximo y el valor mínimo** (que previsiblemente será 5 debido a que la base de datos proporciona información de los nombres que superen dicho valor) 
+También podemos estimar en una sola orden el valor de diversos indicadores. A modo de ejemplo, estimamos para cada año y según el sexo del recién nacido, el **total de nacimientos, el valor máximo y el valor mínimo** (que previsiblemente será 5 debido a que la base de datos proporciona información de los nombres que superen dicho valor) 
 
 \
 
@@ -409,6 +424,53 @@ babynames %>%
 # Mary y John son, definitivamente, los nombres más recurrentes al inicio del periodo. Por el contrario, en la última década existe una mayor variabilidad en el nombre más escogido tanto para niño como para niña. No obstante, es fácil identificar un grupo de nombres de gran atractivo para la población en estos años, bien sea Emma, Isabella o Sophia para niña o Jacob y Noah para niño. 
 
 ```
+
+\
+
+Una forma alternativa es indicando expresamente que queremos detectar la primera observación del rango deseado, la última o podemos establecer la posición de la observación deseada:
+
+\
+
+```{r}
+
+# La primera observación coincidirá con el resultado anterior, siendo Mary y John los nombres más comunes de los primeros años del periodo considerado. 
+
+babynames %>%
+  group_by (year, sex) %>%
+  summarise(nombre = first(name), max = max(n))
+
+# En este caso particular detectar la observación más baja carece de significado, en tanto en cuanto las observaciones más bajas serán de 5 (mínimo valor de la base de datos), pero puede resultar muy útil en otros análisis
+
+babynames %>%
+  group_by (year, sex) %>%
+  summarise(nombre = last(name), min = min(n))
+
+# Podemos indicar qué valor queremos, pongamos que en lugar de la observación de mayor valor queremos el segundo nombre más utilizado por año y sexo:
+
+babynames %>%
+  group_by (year, sex) %>%
+  summarise(nombre = nth(name, 2))
+
+# Vemos que tras Mary y John los nombres que lideran el ranking, al menos en los primeros años del periodo, son Anna y William.
+
+```
+
+\
+
+También es posible seleccionar las columnas indicando el número de filas. Así, por ejemplo, para seleccionar **los dos primeros valores de cada año y sexo** podemos indicar la siguiente orden:
+
+\
+
+```{r}
+
+babynames %>%
+  group_by(year, sex) %>%
+  filter(row_number() <=2)
+
+# Evidentemente, los nombres detectados son los mismos que los obtenidos en los ejercicios previos
+
+```
+
 
 \
 
@@ -456,6 +518,5 @@ babynames %>%
 # dplyr y ggplot2
 
 \
-
 
 

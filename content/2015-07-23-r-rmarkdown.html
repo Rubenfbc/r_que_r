@@ -157,6 +157,30 @@ babynames %&gt;%
 ## # ... with 1,924,655 more rows</code></pre>
 <p><br />
 </p>
+<p>En el caso de que fuese requerido <strong>cambiar el nombre de todas o alguna de las columnas seleccionadas</strong> se puede hacer de forma sencilla como se observa en la siguiente orden:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  select(year, sexo= sex, nombre = name, num = n)
+## # A tibble: 1,924,665 x 4
+##     year sexo  nombre      num
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;
+##  1  1880 F     Mary       7065
+##  2  1880 F     Anna       2604
+##  3  1880 F     Emma       2003
+##  4  1880 F     Elizabeth  1939
+##  5  1880 F     Minnie     1746
+##  6  1880 F     Margaret   1578
+##  7  1880 F     Ida        1472
+##  8  1880 F     Alice      1414
+##  9  1880 F     Bertha     1320
+## 10  1880 F     Sarah      1288
+## # ... with 1,924,655 more rows
+
+# Para renombrar las columnas sin necesidad de seleccionarlas podemos hacer uso de la función rename()</code></pre>
+<p><br />
+</p>
 </div>
 <div id="filter" class="section level1">
 <h1>filter()</h1>
@@ -1479,7 +1503,7 @@ babynames %&gt;%
 # En los primeros años el registro es mayor en los niños que en las niñas. </code></pre>
 <p><br />
 </p>
-<p>De forma similar podemos estimar en una sola orden el valor de diversos indicadores. A modo de ejemplo, estimamos para cada año y según el sexo del recién nacido, el <strong>total de nacimientos, el valor máximo y el valor mínimo</strong> (que previsiblemente será 5 debido a que la base de datos proporciona información de los nombres que superen dicho valor)</p>
+<p>También podemos estimar en una sola orden el valor de diversos indicadores. A modo de ejemplo, estimamos para cada año y según el sexo del recién nacido, el <strong>total de nacimientos, el valor máximo y el valor mínimo</strong> (que previsiblemente será 5 debido a que la base de datos proporciona información de los nombres que superen dicho valor)</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -1574,6 +1598,102 @@ babynames %&gt;%
 ## 20  2017 M     Liam     18728
 
 # Mary y John son, definitivamente, los nombres más recurrentes al inicio del periodo. Por el contrario, en la última década existe una mayor variabilidad en el nombre más escogido tanto para niño como para niña. No obstante, es fácil identificar un grupo de nombres de gran atractivo para la población en estos años, bien sea Emma, Isabella o Sophia para niña o Jacob y Noah para niño. </code></pre>
+<p><br />
+</p>
+<p>Una forma alternativa es indicando expresamente que queremos detectar la primera observación del rango deseado, la última o podemos establecer la posición de la observación deseada:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# La primera observación coincidirá con el resultado anterior, siendo Mary y John los nombres más comunes de los primeros años del periodo considerado. 
+
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(nombre = first(name), max = max(n))
+## # A tibble: 276 x 4
+## # Groups:   year [138]
+##     year sex   nombre   max
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;
+##  1  1880 F     Mary    7065
+##  2  1880 M     John    9655
+##  3  1881 F     Mary    6919
+##  4  1881 M     John    8769
+##  5  1882 F     Mary    8148
+##  6  1882 M     John    9557
+##  7  1883 F     Mary    8012
+##  8  1883 M     John    8894
+##  9  1884 F     Mary    9217
+## 10  1884 M     John    9388
+## # ... with 266 more rows
+
+# En este caso particular detectar la observación más baja carece de significado, en tanto en cuanto las observaciones más bajas serán de 5 (mínimo valor de la base de datos), pero puede resultar muy útil en otros análisis
+
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(nombre = last(name), min = min(n))
+## # A tibble: 276 x 4
+## # Groups:   year [138]
+##     year sex   nombre      min
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;
+##  1  1880 F     Wilma         5
+##  2  1880 M     Zachariah     5
+##  3  1881 F     Viney         5
+##  4  1881 M     Wright        5
+##  5  1882 F     Zilla         5
+##  6  1882 M     Zed           5
+##  7  1883 F     Zoa           5
+##  8  1883 M     Winthrop      5
+##  9  1884 F     Yetta         5
+## 10  1884 M     Zachariah     5
+## # ... with 266 more rows
+
+# Podemos indicar qué valor queremos, pongamos que en lugar de la observación de mayor valor queremos el segundo nombre más utilizado por año y sexo:
+
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(nombre = nth(name, 2))
+## # A tibble: 276 x 3
+## # Groups:   year [138]
+##     year sex   nombre 
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  
+##  1  1880 F     Anna   
+##  2  1880 M     William
+##  3  1881 F     Anna   
+##  4  1881 M     William
+##  5  1882 F     Anna   
+##  6  1882 M     William
+##  7  1883 F     Anna   
+##  8  1883 M     William
+##  9  1884 F     Anna   
+## 10  1884 M     William
+## # ... with 266 more rows
+
+# Vemos que tras Mary y John los nombres que lideran el ranking, al menos en los primeros años del periodo, son Anna y William.</code></pre>
+<p><br />
+</p>
+<p>También es posible seleccionar las columnas indicando el número de filas. Así, por ejemplo, para seleccionar <strong>los dos primeros valores de cada año y sexo</strong> podemos indicar la siguiente orden:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  group_by(year, sex) %&gt;%
+  filter(row_number() &lt;=2)
+## # A tibble: 552 x 5
+## # Groups:   year, sex [276]
+##     year sex   name        n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary     7065 0.0724
+##  2  1880 F     Anna     2604 0.0267
+##  3  1880 M     John     9655 0.0815
+##  4  1880 M     William  9532 0.0805
+##  5  1881 F     Mary     6919 0.0700
+##  6  1881 F     Anna     2698 0.0273
+##  7  1881 M     John     8769 0.0810
+##  8  1881 M     William  8524 0.0787
+##  9  1882 F     Mary     8148 0.0704
+## 10  1882 F     Anna     3143 0.0272
+## # ... with 542 more rows
+
+# Evidentemente, los nombres detectados son los mismos que los obtenidos en los ejercicios previos</code></pre>
 <p><br />
 </p>
 </div>
