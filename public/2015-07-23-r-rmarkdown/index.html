@@ -1309,10 +1309,11 @@ kable(Ruben)</code></pre>
 # Vemos que el nombre de Ruben fue incrementando su popularidad en Estados Unidos a lo largo de los años, especialmente hasta 1992, y después, poco a poco, ha ido progresivamente perdiendo su atractivo. No obstante, no parece que Ruben haya sido un nombre muy recurrido en el país a lo largo de estos años. </code></pre>
 <p><br />
 </p>
-<p>Como se ha indicado previamente, las pipes <code>%&gt;%</code> sirven especialmente para encadenar funciones, pudiendo reducir el tamaño del código y facilitando su interpretación. Por ejemplo, en el caso de que nos interesara seleccionar únicamente el <strong>año y el nombre de los recien nacidos de sexo masculino en el año 2017</strong> indicaríamos:</p>
+<p>Como se ha indicado previamente, las pipes <code>%&gt;%</code> sirven especialmente para encadenar funciones, pudiendo reducir el tamaño del código y facilitando su interpretación. Por ejemplo, en el caso de que nos interesara seleccionar únicamente el <strong>año y el nombre de los recién nacidos de sexo masculino en el año 2017</strong> indicaríamos:</p>
 <p><br />
 </p>
-<pre class="r"><code>babynames %&gt;%
+<pre class="r"><code>
+babynames %&gt;%
   select(year, sex, name) %&gt;%
   filter(year == 2017 &amp; sex== &quot;M&quot;)
 ## # A tibble: 14,160 x 3
@@ -1329,6 +1330,47 @@ kable(Ruben)</code></pre>
 ##  9  2017 M     Oliver  
 ## 10  2017 M     Jacob   
 ## # ... with 14,150 more rows</code></pre>
+<p><br />
+</p>
+</div>
+<div id="group_by" class="section level1">
+<h1>group_by()</h1>
+<p><br />
+</p>
+<p>La función <code>group_by()</code> convierte el data frame original en una tabla agrupada según los parámetros de la función. La función <code>group_by()</code>, como veremos, funciona muy bien cuando se usa conjuntamente con otras funciones como <code>summarise()</code> o <code>mutate()</code>. Por tanto usaremos esta función conjuntamente con otras funciones en los apartados posteriores pero, a modo de ejemplo, veamos como se podría agrupar nuestro data frame según el sexo de los recién nacidos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# La tabla_1 sería el resultado de agrupar las filas por sexo utilizando group_by()
+
+tabla_1 &lt;- babynames %&gt;%
+  group_by(sex)
+
+# Una vez agrupada la tabla por sexo, con la función summarise() que veremos después, podemos identificar el número de observaciones según el sexo masculino o femenino del recién nacido. 
+
+tabla_1 %&gt;%
+  summarise(n = n())
+## # A tibble: 2 x 2
+##   sex         n
+##   &lt;chr&gt;   &lt;int&gt;
+## 1 F     1138293
+## 2 M      786372
+
+# Debemos recordar desagrupar las observaciones una vez realizado el análisis necesario utilizando la función ungroup()
+
+tabla_1 &lt;- tabla_1 %&gt;%
+  ungroup()
+
+# Vemos que una vez hemos desagrupado las observaciones, si aplicamos de nuevo la función summarise() el resultado obtenido es para el conjunto de observaciones y no para las observaciones agrupadas.
+
+tabla_1 %&gt;%
+  summarise(n = n())
+## # A tibble: 1 x 1
+##         n
+##     &lt;int&gt;
+## 1 1924665</code></pre>
+<p><br />
+</p>
 </div>
 <div id="mutate" class="section level1">
 <h1>mutate()</h1>
@@ -1568,7 +1610,81 @@ babynames %&gt;%
 ## 19  2017 F     Emma     19738
 ## 20  2017 M     Liam     18728
 
-# Mary y John son, sin lugar a duda, los nombres más recurrentes al inicio del periodo. Por el contrario, en la última década existe una mayor variabilidad en el nombre más escogido tanto para niño como para niña. No obstante, es fácil identificar un grupo de nombres de gran atractivo para la población en estos años, bien sea Emma, Isabella o Sophia para niña o Jacob y Noah para niño. </code></pre>
+# Mary y John son, definitivamente, los nombres más recurrentes al inicio del periodo. Por el contrario, en la última década existe una mayor variabilidad en el nombre más escogido tanto para niño como para niña. No obstante, es fácil identificar un grupo de nombres de gran atractivo para la población en estos años, bien sea Emma, Isabella o Sophia para niña o Jacob y Noah para niño. </code></pre>
+<p><br />
+</p>
+</div>
+<div id="arrange" class="section level1">
+<h1>arrange()</h1>
+<p><br />
+</p>
+<p>La función <code>arrange()</code> nos permite ordenar los datos por filas según algún criterio establecido. Pongamos en este caso que queremos <strong>ordenar las observaciones por nombre, según un criterio alfabético</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Para ordenar las filas de la A a la Z: 
+
+babynames %&gt;%
+  arrange(name)
+## # A tibble: 1,924,665 x 5
+##     year sex   name      n       prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;      &lt;dbl&gt;
+##  1  2007 M     Aaban     5 0.00000226
+##  2  2009 M     Aaban     6 0.00000283
+##  3  2010 M     Aaban     9 0.00000439
+##  4  2011 M     Aaban    11 0.00000542
+##  5  2012 M     Aaban    11 0.00000543
+##  6  2013 M     Aaban    14 0.00000694
+##  7  2014 M     Aaban    16 0.00000783
+##  8  2015 M     Aaban    15 0.00000736
+##  9  2016 M     Aaban     9 0.00000446
+## 10  2017 M     Aaban    11 0.0000056 
+## # ... with 1,924,655 more rows
+
+# Para ordenarlas de la Z a la A:
+
+babynames %&gt;%
+  arrange(desc(name)) 
+## # A tibble: 1,924,665 x 5
+##     year sex   name          n       prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;      &lt;dbl&gt;
+##  1  2010 M     Zzyzx         5 0.00000244
+##  2  2014 M     Zyyon         6 0.00000293
+##  3  2010 F     Zyyanna       6 0.00000306
+##  4  2015 M     Zyvon         7 0.00000343
+##  5  2009 M     Zyvion        5 0.00000236
+##  6  2016 F     Zyva          8 0.00000415
+##  7  2017 F     Zyva          9 0.0000048 
+##  8  2015 M     Zyus          5 0.00000245
+##  9  2002 M     Zytavious     6 0.0000029 
+## 10  2004 M     Zytavious     6 0.00000284
+## # ... with 1,924,655 more rows
+
+# Resulta que Zzyzx, antes llamado Soda Springs, es una comunidad en el Condado de San Bernardino, en el desierto de Mojave en California. Según Wikipedia un tal Curtis Howe Springer se inventó el término y lo dio a dicho espacio, orgulloso de que dicho vocablo fuese la última palabra en el idioma inglés. Parece ser que la revista Reader´s Digest ha declarado a Zzyzx el lugar de California más difícil de pronunciar y que una encuesta de eBabyNames.com dice que Zzyzx (que se pronunciaría algo así como Zay-Zix) sería, según sus encuestados, el nombre más raro que habría existido jamás. </code></pre>
+<p><br />
+</p>
+<p>Podemos también organizar las observaciones según otros criterios. Si por ejemplo queremos detectar qué nombres, en qué año y a qué sexo corresponde las <strong>observaciones con mayor número de registros</strong>. Para ello podemos anotar la siguiente orden:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  arrange(desc(n))
+## # A tibble: 1,924,665 x 5
+##     year sex   name        n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;
+##  1  1947 F     Linda   99686 0.0548
+##  2  1948 F     Linda   96209 0.0552
+##  3  1947 M     James   94756 0.0510
+##  4  1957 M     Michael 92695 0.0424
+##  5  1947 M     Robert  91642 0.0493
+##  6  1949 F     Linda   91016 0.0518
+##  7  1956 M     Michael 90620 0.0423
+##  8  1958 M     Michael 90520 0.0420
+##  9  1948 M     James   88588 0.0497
+## 10  1954 M     Michael 88514 0.0428
+## # ... with 1,924,655 more rows
+
+# En este caso vemos que Linda resultó ser la opción más popular para las niñas en 1947 y 1948, siendo estos años donde más gente coincidió en su decisión.</code></pre>
 </div>
 
                 </section>
