@@ -1,0 +1,132 @@
+---
+title: "Aproximación a la evolución de los nombres en España"
+author: "Rubén F. Bustillo"
+date: 2019-10-08
+categories: ["R"]
+tags: ["dplyr", "tidyverse", "ggplot2"]
+
+---
+
+\
+
+# Nombres en España
+
+\
+
+En el post anterior, con el objetivo de exponer las principales funciones del paquete `dplyr`, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017, en función de los datos que provee la Administración de Seguridad Social de este país. Realizando dicho post me empecé a preguntar cómo habrán evolucionado los nombres en nuestro país en las últimas décadas. 
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(tidyverse)
+library(scales)
+
+```
+
+\
+
+La base de datos del INEI. 
+Pero a diferencia de la base de datos del post anterior, esta indica la edad promedio de cada uno de los nombres de la lista. 
+
+\
+
+# Nombres masculinos
+
+```{r}
+hombres_por_edad_media <- read_excel("./nombres_por_edad_media.xls", 
+                                     sheet = "Hom")
+
+str(hombres_por_edad_media)
+```
+
+\
+
+```{r}
+hombres <- hombres_por_edad_media %>%
+  select(Nombre, Frec, Media)%>%
+  mutate(
+    grupos_edad =case_when(
+      Media >0 & Media <= 5 ~ "Edad promedio entre 0 y 5 años",
+      Media >5 & Media <= 10 ~"Edad promedio entre 6 y 10 años",
+      Media >10 & Media <= 20 ~"Edad promedio entre 11 y 20 años",
+      Media >20 & Media <= 30 ~"Edad promedio entre 21 y 30 años",
+      Media >30 & Media <= 40 ~"Edad promedio entre 31 y 40 años",
+      Media >40 & Media <= 50 ~"Edad promedio entre 41 y 50 años",
+      Media >50 & Media <= 60 ~"Edad promedio entre 51 y 60 años",
+      Media >60 & Media <= 70 ~"Edad promedio entre 60 y 70 años",
+      Media >70 & Media <= 80 ~"Edad promedio mayor de 71 años",
+      Media >80 & Media <= 90 ~"81-90",
+      TRUE  ~ "91"
+      )
+    ) %>%
+  group_by(grupos_edad,Nombre, Frec) %>%
+  select(grupos_edad, Nombre, Frec) %>%
+  arrange(grupos_edad) %>%
+  group_by(grupos_edad) %>%
+  mutate(suma_grupo_edad = sum(Frec))%>%
+  mutate(percent = Frec/suma_grupo_edad*100) %>%
+  top_n(20,Frec)
+
+hombres
+```
+
+
+```{r}
+hombres$Nombre <- str_to_title(hombres$Nombre)
+hombres$grupos_edad <- factor(hombres$grupos_edad, 
+                              levels=c("Edad promedio entre 0 y 5 años",
+                                       "Edad promedio entre 6 y 10 años",
+                                       "Edad promedio entre 11 y 20 años",
+                                       "Edad promedio entre 21 y 30 años",
+                                       "Edad promedio entre 31 y 40 años",
+                                       "Edad promedio entre 41 y 50 años",
+                                       "Edad promedio entre 51 y 60 años",
+                                       "Edad promedio entre 60 y 70 años",
+                                       "Edad promedio mayor de 71 años"),
+                              labels=c("Edad promedio entre 0 y 5 años",
+                                       "Edad promedio entre 6 y 10 años",
+                                       "Edad promedio entre 11 y 20 años",
+                                       "Edad promedio entre 21 y 30 años",
+                                       "Edad promedio entre 31 y 40 años",
+                                       "Edad promedio entre 41 y 50 años",
+                                       "Edad promedio entre 51 y 60 años",
+                                       "Edad promedio entre 60 y 70 años",
+                                       "Edad promedio mayor de 71 años"))
+
+hombres %>%
+  group_by(grupos_edad) %>%
+  summarise(total_por_grupo=sum(Frec))
+
+```
+
+```{r}
+source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R")
+```
+
+```{r, fig.width= 10, fig.height=20}
+ggplot(hombres, aes(reorder(Nombre, Frec, sum),Frec)) +
+  geom_col(fill = "#fc6721", 
+           alpha = 0.8)+
+  coord_flip()+
+  facet_wrap(~grupos_edad, scales= "free_y", ncol=2)+
+  theme_lab()+
+  labs(title = "Nombres masculinos más comunes", 
+      subtitle = "Organizados en categorías según su edad promedio", 
+      caption = "Source: INE  |  @Ruben46563154", 
+      x = "", y = "", 
+      fill = NULL) + 
+  theme(panel.grid.major.x = element_blank())+
+  scale_y_continuous(labels=comma)+
+  geom_hline(yintercept=c(200000, 400000,600000), 
+             color="lightgrey",
+             linetype="dashed")+
+  geom_text(aes(label=Frec, y=Frec + 0.05), 
+            hjust=0,
+            color="grey40",
+            size= 3.2)
+```
+

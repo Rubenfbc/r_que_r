@@ -1855,6 +1855,31 @@ babynames %&gt;%
 <h1>dplyr y ggplot2</h1>
 <p><br />
 </p>
+<p>Conviene tener en cuenta que las funciones del paquete <code>dplyr</code>, utilizando pipes (<code>%</code>) para encadenar funciones, pueden utilizarse conjuntamente con los gráficos de ggplot como se observa en los siguientes ejemplos.</p>
+<p><br />
+</p>
+<p>En primer lugar queremos observar la evolución del número total de registros por año, para lo que utilizaremos las funciones <code>group_by()</code> y <code>summarise()</code> seguido de las instrucciones de ggplot2.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Cargamos la librería ggplot2
+
+library(ggplot2)
+
+babynames %&gt;%
+  group_by(year) %&gt;% 
+  summarise(suma = sum(n)) %&gt;%
+  ggplot(aes(x= year, y = suma, fill = &quot;orange&quot;)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal() +
+  guides(fill=F) +
+  labs( x= &quot;year&quot;, 
+        y= &quot; &quot;,
+        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1880 a 2017&quot;,
+        subtitle = &quot;Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social&quot;,
+        caption =  &quot;US Social Security Administration&quot;)</code></pre>
+<p><img src="/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 </div>
 
                 </section>

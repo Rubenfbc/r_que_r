@@ -1,0 +1,145 @@
+---
+title: "Aproximación a la evolución de los nombres en España"
+author: "Rubén F. Bustillo"
+date: 2019-10-08
+categories: ["R"]
+tags: ["dplyr", "tidyverse", "ggplot2"]
+
+---
+
+
+
+<p><br />
+</p>
+<div id="nombres-en-espana" class="section level1">
+<h1>Nombres en España</h1>
+<p><br />
+</p>
+<p>En el post anterior, con el objetivo de exponer las principales funciones del paquete <code>dplyr</code>, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017, en función de los datos que provee la Administración de Seguridad Social de este país. Realizando dicho post me empecé a preguntar cómo habrán evolucionado los nombres en nuestro país en las últimas décadas.</p>
+<p><br />
+</p>
+<pre class="r"><code>library(dplyr)
+library(ggplot2)
+library(readxl)
+library(tidyverse)
+library(scales)</code></pre>
+<p><br />
+</p>
+<p>La base de datos del INEI.
+Pero a diferencia de la base de datos del post anterior, esta indica la edad promedio de cada uno de los nombres de la lista.</p>
+<p><br />
+</p>
+</div>
+<div id="nombres-masculinos" class="section level1">
+<h1>Nombres masculinos</h1>
+<pre class="r"><code>hombres_por_edad_media &lt;- read_excel(&quot;./nombres_por_edad_media.xls&quot;, 
+                                     sheet = &quot;Hom&quot;)
+
+str(hombres_por_edad_media)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    25078 obs. of  4 variables:
+##  $ Orden : chr  &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##  $ Nombre: chr  &quot;ANTONIO&quot; &quot;JOSE&quot; &quot;MANUEL&quot; &quot;FRANCISCO&quot; ...
+##  $ Frec  : num  678425 594144 590965 498934 365196 ...
+##  $ Media : num  55.9 61.1 54.9 57.4 30.5 55.7 49.6 33 27 53.3 ...</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>hombres &lt;- hombres_por_edad_media %&gt;%
+  select(Nombre, Frec, Media)%&gt;%
+  mutate(
+    grupos_edad =case_when(
+      Media &gt;0 &amp; Media &lt;= 5 ~ &quot;Edad promedio entre 0 y 5 años&quot;,
+      Media &gt;5 &amp; Media &lt;= 10 ~&quot;Edad promedio entre 6 y 10 años&quot;,
+      Media &gt;10 &amp; Media &lt;= 20 ~&quot;Edad promedio entre 11 y 20 años&quot;,
+      Media &gt;20 &amp; Media &lt;= 30 ~&quot;Edad promedio entre 21 y 30 años&quot;,
+      Media &gt;30 &amp; Media &lt;= 40 ~&quot;Edad promedio entre 31 y 40 años&quot;,
+      Media &gt;40 &amp; Media &lt;= 50 ~&quot;Edad promedio entre 41 y 50 años&quot;,
+      Media &gt;50 &amp; Media &lt;= 60 ~&quot;Edad promedio entre 51 y 60 años&quot;,
+      Media &gt;60 &amp; Media &lt;= 70 ~&quot;Edad promedio entre 60 y 70 años&quot;,
+      Media &gt;70 &amp; Media &lt;= 80 ~&quot;Edad promedio mayor de 71 años&quot;,
+      Media &gt;80 &amp; Media &lt;= 90 ~&quot;81-90&quot;,
+      TRUE  ~ &quot;91&quot;
+      )
+    ) %&gt;%
+  group_by(grupos_edad,Nombre, Frec) %&gt;%
+  select(grupos_edad, Nombre, Frec) %&gt;%
+  arrange(grupos_edad) %&gt;%
+  group_by(grupos_edad) %&gt;%
+  mutate(suma_grupo_edad = sum(Frec))%&gt;%
+  mutate(percent = Frec/suma_grupo_edad*100) %&gt;%
+  top_n(20,Frec)
+
+hombres</code></pre>
+<pre><code>## # A tibble: 180 x 5
+## # Groups:   grupos_edad [9]
+##    grupos_edad                    Nombre  Frec suma_grupo_edad percent
+##    &lt;chr&gt;                          &lt;chr&gt;  &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Edad promedio entre 0 y 5 años LEO    16593           51596   32.2 
+##  2 Edad promedio entre 0 y 5 años ENZO    9692           51596   18.8 
+##  3 Edad promedio entre 0 y 5 años DYLAN   6719           51596   13.0 
+##  4 Edad promedio entre 0 y 5 años THIAGO  5054           51596    9.80
+##  5 Edad promedio entre 0 y 5 años NEIZAN  1789           51596    3.47
+##  6 Edad promedio entre 0 y 5 años IZEI     788           51596    1.53
+##  7 Edad promedio entre 0 y 5 años EIDEN    677           51596    1.31
+##  8 Edad promedio entre 0 y 5 años EIDAN    662           51596    1.28
+##  9 Edad promedio entre 0 y 5 años HARON    661           51596    1.28
+## 10 Edad promedio entre 0 y 5 años IYAD     619           51596    1.20
+## # ... with 170 more rows</code></pre>
+<pre class="r"><code>hombres$Nombre &lt;- str_to_title(hombres$Nombre)
+hombres$grupos_edad &lt;- factor(hombres$grupos_edad, 
+                              levels=c(&quot;Edad promedio entre 0 y 5 años&quot;,
+                                       &quot;Edad promedio entre 6 y 10 años&quot;,
+                                       &quot;Edad promedio entre 11 y 20 años&quot;,
+                                       &quot;Edad promedio entre 21 y 30 años&quot;,
+                                       &quot;Edad promedio entre 31 y 40 años&quot;,
+                                       &quot;Edad promedio entre 41 y 50 años&quot;,
+                                       &quot;Edad promedio entre 51 y 60 años&quot;,
+                                       &quot;Edad promedio entre 60 y 70 años&quot;,
+                                       &quot;Edad promedio mayor de 71 años&quot;),
+                              labels=c(&quot;Edad promedio entre 0 y 5 años&quot;,
+                                       &quot;Edad promedio entre 6 y 10 años&quot;,
+                                       &quot;Edad promedio entre 11 y 20 años&quot;,
+                                       &quot;Edad promedio entre 21 y 30 años&quot;,
+                                       &quot;Edad promedio entre 31 y 40 años&quot;,
+                                       &quot;Edad promedio entre 41 y 50 años&quot;,
+                                       &quot;Edad promedio entre 51 y 60 años&quot;,
+                                       &quot;Edad promedio entre 60 y 70 años&quot;,
+                                       &quot;Edad promedio mayor de 71 años&quot;))
+
+hombres %&gt;%
+  group_by(grupos_edad) %&gt;%
+  summarise(total_por_grupo=sum(Frec))</code></pre>
+<pre><code>## # A tibble: 9 x 2
+##   grupos_edad                      total_por_grupo
+##   &lt;fct&gt;                                      &lt;dbl&gt;
+## 1 Edad promedio entre 0 y 5 años             46773
+## 2 Edad promedio entre 6 y 10 años           119525
+## 3 Edad promedio entre 11 y 20 años          758197
+## 4 Edad promedio entre 21 y 30 años         2091265
+## 5 Edad promedio entre 31 y 40 años         2538215
+## 6 Edad promedio entre 41 y 50 años         3219273
+## 7 Edad promedio entre 51 y 60 años         4353380
+## 8 Edad promedio entre 60 y 70 años          935101
+## 9 Edad promedio mayor de 71 años              8586</code></pre>
+<pre class="r"><code>source(&quot;https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R&quot;)</code></pre>
+<pre class="r"><code>ggplot(hombres, aes(reorder(Nombre, Frec, sum),Frec)) +
+  geom_col(fill = &quot;#fc6721&quot;, 
+           alpha = 0.8)+
+  coord_flip()+
+  facet_wrap(~grupos_edad, scales= &quot;free_y&quot;, ncol=2)+
+  theme_lab()+
+  labs(title = &quot;Nombres masculinos más comunes&quot;, 
+      subtitle = &quot;Organizados en categorías según su edad promedio&quot;, 
+      caption = &quot;Source: INE  |  @Ruben46563154&quot;, 
+      x = &quot;&quot;, y = &quot;&quot;, 
+      fill = NULL) + 
+  theme(panel.grid.major.x = element_blank())+
+  scale_y_continuous(labels=comma)+
+  geom_hline(yintercept=c(200000, 400000,600000), 
+             color=&quot;lightgrey&quot;,
+             linetype=&quot;dashed&quot;)+
+  geom_text(aes(label=Frec, y=Frec + 0.05), 
+            hjust=0,
+            color=&quot;grey40&quot;,
+            size= 3.2)</code></pre>
+<p><img src="/nombres_files/figure-html/unnamed-chunk-6-1.png" width="960" /></p>
+</div>

@@ -1,0 +1,1886 @@
+---
+title: "Aprendiendo dplyr con 'babynames'"
+author: "Rubén F. Bustillo"
+date: 2019-10-06
+categories: ["R"]
+tags: ["dplyr", "tidyverse"]
+
+---
+
+
+
+<p><br />
+</p>
+<div id="que-es-dplyr" class="section level1">
+<h1>¿Qué es dplyr?</h1>
+<p><br />
+<br />
+</p>
+<p><a href="https://dplyr.tidyverse.org/"><strong>dplyr</strong></a> es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como <a href="https://www.tidyverse.org/"><strong>The tidyverse</strong></a>. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.</p>
+<p><br />
+</p>
+<p>Las funciones del paquete <strong>dplyr</strong> son las siguientes:</p>
+<ul>
+<li><code>select()</code></li>
+<li><code>filter()</code></li>
+<li><code>group_by()</code></li>
+<li><code>mutate()</code></li>
+<li><code>summarise()</code></li>
+<li><code>arrange()</code></li>
+</ul>
+<p><br />
+</p>
+<p>En primer lugar debemos instalar y cargar el paquete <strong>dplyr</strong></p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(dplyr)</code></pre>
+<p> </p>
+<p>Por lo general, el primer argumento de estas funciones es el dataframe utilizado, al que sigue los parametros requeridos para realizar las operaciones. No obstante, una forma sencilla de utilizar las funciones del paquete <code>dplyr</code>es utilizando pipes (%&gt;%), encadenando de esta forma distintas funciones en un mismo código. Para ello, se establece en primer lugar el data frame a utilizar, seguido del operador %&gt;% y después la función y los parámetros necesarios. Los ejemplos utilizados en este post utilizarán pipes.</p>
+</div>
+<div id="babynames" class="section level1">
+<h1>babynames</h1>
+<p><br />
+</p>
+<p>En este post utilizaremos el dataframe (tibble) <strong>babynames</strong>, incluido en el paquete llamado también babynames. Dicho dataframe contiene información por nombre de las personas recien nacidas en Estados Unidos para cada año desde 1880 hasta 2017, aunque descarta los nombres de menos de seis observaciones, proporcionado por la <a href="https://www.ssa.gov/oact/babynames/limits.html">Agencia de Seguridad Social norteamericana</a>. El data frame se compone de 1.924.655 mill de filas y 5 columnas: <code>year</code>, <code>sex</code>,<code>name</code>, <code>n</code> y <code>prop</code>, donde <code>prop</code> es la proporción de personas de dicho género con el nombre indicado en el año correspondiente.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(babynames)</code></pre>
+<p><br />
+</p>
+<p>Por consiguiente, la estructura del data frame es:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+str(babynames)
+## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    1924665 obs. of  5 variables:
+##  $ year: num  1880 1880 1880 1880 1880 1880 1880 1880 1880 1880 ...
+##  $ sex : chr  &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
+##  $ name: chr  &quot;Mary&quot; &quot;Anna&quot; &quot;Emma&quot; &quot;Elizabeth&quot; ...
+##  $ n   : int  7065 2604 2003 1939 1746 1578 1472 1414 1320 1288 ...
+##  $ prop: num  0.0724 0.0267 0.0205 0.0199 0.0179 ...</code></pre>
+<p><br />
+</p>
+<p>Donde las primeras diez observaciones de <code>babynames</code> son los nombres más comunes en el primer año del periodo, es decir, 1880.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+head(babynames, n=10)
+## # A tibble: 10 x 5
+##     year sex   name          n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary       7065 0.0724
+##  2  1880 F     Anna       2604 0.0267
+##  3  1880 F     Emma       2003 0.0205
+##  4  1880 F     Elizabeth  1939 0.0199
+##  5  1880 F     Minnie     1746 0.0179
+##  6  1880 F     Margaret   1578 0.0162
+##  7  1880 F     Ida        1472 0.0151
+##  8  1880 F     Alice      1414 0.0145
+##  9  1880 F     Bertha     1320 0.0135
+## 10  1880 F     Sarah      1288 0.0132
+
+# Mary lidera el ranking en dicho año, seguido por Anna, Emma y Elizabeth. En los primeros diez puestos no encontramos nombres masculinos. </code></pre>
+<p><br />
+</p>
+</div>
+<div id="select" class="section level1">
+<h1>select()</h1>
+<p><br />
+</p>
+<p>Supongamos que no queremos conservar todas las columnas del data frame original. En nuestro caso particular supongamos que únicamente queremos trabajar con las columnas <code>year</code>, <code>sex</code> y <code>name</code>. En ese caso podemos seleccionar dichas columnas de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Seleccionando las columnas year, sex y name:
+
+babynames %&gt;%
+  select(year, sex, name)
+## # A tibble: 1,924,665 x 3
+##     year sex   name     
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
+##  1  1880 F     Mary     
+##  2  1880 F     Anna     
+##  3  1880 F     Emma     
+##  4  1880 F     Elizabeth
+##  5  1880 F     Minnie   
+##  6  1880 F     Margaret 
+##  7  1880 F     Ida      
+##  8  1880 F     Alice    
+##  9  1880 F     Bertha   
+## 10  1880 F     Sarah    
+## # ... with 1,924,655 more rows</code></pre>
+<p><br />
+</p>
+<p>Otras formas alternativas para obtener el mismo resultado sería utilizando <code>:</code>, que se utiliza para seleccionar las variables que se encuentran entre las dos columnas seleccionadas o, también, eliminando las dos últimas columnas mediante el uso de un signo negativo.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# seleccionando las columnas que se encuentran entre las columnas year y name:
+
+babynames %&gt;%
+  select(year:name)
+## # A tibble: 1,924,665 x 3
+##     year sex   name     
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
+##  1  1880 F     Mary     
+##  2  1880 F     Anna     
+##  3  1880 F     Emma     
+##  4  1880 F     Elizabeth
+##  5  1880 F     Minnie   
+##  6  1880 F     Margaret 
+##  7  1880 F     Ida      
+##  8  1880 F     Alice    
+##  9  1880 F     Bertha   
+## 10  1880 F     Sarah    
+## # ... with 1,924,655 more rows
+
+
+# eliminando las columnas que se encuentran entre n y prop:
+
+babynames %&gt;%
+  select(-(n:prop))
+## # A tibble: 1,924,665 x 3
+##     year sex   name     
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
+##  1  1880 F     Mary     
+##  2  1880 F     Anna     
+##  3  1880 F     Emma     
+##  4  1880 F     Elizabeth
+##  5  1880 F     Minnie   
+##  6  1880 F     Margaret 
+##  7  1880 F     Ida      
+##  8  1880 F     Alice    
+##  9  1880 F     Bertha   
+## 10  1880 F     Sarah    
+## # ... with 1,924,655 more rows</code></pre>
+<p><br />
+</p>
+<p>En el caso de que fuese requerido <strong>cambiar el nombre de todas o alguna de las columnas seleccionadas</strong> se puede hacer de forma sencilla como se observa en la siguiente orden:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  select(year, sexo= sex, nombre = name, num = n)
+## # A tibble: 1,924,665 x 4
+##     year sexo  nombre      num
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;
+##  1  1880 F     Mary       7065
+##  2  1880 F     Anna       2604
+##  3  1880 F     Emma       2003
+##  4  1880 F     Elizabeth  1939
+##  5  1880 F     Minnie     1746
+##  6  1880 F     Margaret   1578
+##  7  1880 F     Ida        1472
+##  8  1880 F     Alice      1414
+##  9  1880 F     Bertha     1320
+## 10  1880 F     Sarah      1288
+## # ... with 1,924,655 more rows
+
+# Para renombrar las columnas sin necesidad de seleccionarlas podemos hacer uso de la función rename()</code></pre>
+<p><br />
+</p>
+</div>
+<div id="filter" class="section level1">
+<h1>filter()</h1>
+<p> </p>
+<p>La funcion <code>filter()</code> permite seleccionar un conjunto de observaciones según un parámetro determinado. Por ejemplo, supongamos que nos interesa seleccionar únicamente las observaciones correspondientes al <strong>año 2017</strong>. En dicho caso podemos escribir el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  filter(year== 2017)
+## # A tibble: 32,469 x 5
+##     year sex   name          n    prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;
+##  1  2017 F     Emma      19738 0.0105 
+##  2  2017 F     Olivia    18632 0.00994
+##  3  2017 F     Ava       15902 0.00848
+##  4  2017 F     Isabella  15100 0.00805
+##  5  2017 F     Sophia    14831 0.00791
+##  6  2017 F     Mia       13437 0.00717
+##  7  2017 F     Charlotte 12893 0.00688
+##  8  2017 F     Amelia    11800 0.00629
+##  9  2017 F     Evelyn    10675 0.00569
+## 10  2017 F     Abigail   10551 0.00563
+## # ... with 32,459 more rows
+
+# En 2017 Emma sigue siendo uno de los nombres más recurrentes, ocupando el primer puesto del ranking. Por el contrario, nuevos nombres como Olivia, Ava, Sophia, etc., aparecen en el nuevo ranking. Al igual que sucedía en 1880 seguimos sin encontrar nombres masculinos en el top 10.
+
+
+# Podemos seleccionar varios años 
+
+babynames %&gt;%
+  filter(year %in% c(1880, 1900, 1920, 1940, 1960, 1980, 2000))
+## # A tibble: 86,581 x 5
+##     year sex   name          n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary       7065 0.0724
+##  2  1880 F     Anna       2604 0.0267
+##  3  1880 F     Emma       2003 0.0205
+##  4  1880 F     Elizabeth  1939 0.0199
+##  5  1880 F     Minnie     1746 0.0179
+##  6  1880 F     Margaret   1578 0.0162
+##  7  1880 F     Ida        1472 0.0151
+##  8  1880 F     Alice      1414 0.0145
+##  9  1880 F     Bertha     1320 0.0135
+## 10  1880 F     Sarah      1288 0.0132
+## # ... with 86,571 more rows</code></pre>
+<p><br />
+</p>
+<p>Pongamos que nos interesa seleccionar solo los <strong>nombres de sexo masculino (M)</strong>, para ello indicaríamos el siguiente comando:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  filter(sex== &quot;M&quot;)
+## # A tibble: 786,372 x 5
+##     year sex   name        n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 M     John     9655 0.0815
+##  2  1880 M     William  9532 0.0805
+##  3  1880 M     James    5927 0.0501
+##  4  1880 M     Charles  5348 0.0452
+##  5  1880 M     George   5126 0.0433
+##  6  1880 M     Frank    3242 0.0274
+##  7  1880 M     Joseph   2632 0.0222
+##  8  1880 M     Thomas   2534 0.0214
+##  9  1880 M     Henry    2444 0.0206
+## 10  1880 M     Robert   2415 0.0204
+## # ... with 786,362 more rows
+
+# Nombres clásicos aparecen en el ranking masculino. John, William, James, Charles o George se sitúan como los nombres más populares en 1880.</code></pre>
+<p><br />
+</p>
+<p>En el caso de que quisieramos seleccionar los <strong>nombres de sexo masculino para un año determinado</strong> anotaríamos el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  filter(year == 2017 &amp; sex== &quot;M&quot;)
+## # A tibble: 14,160 x 5
+##     year sex   name         n    prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;int&gt;   &lt;dbl&gt;
+##  1  2017 M     Liam     18728 0.00954
+##  2  2017 M     Noah     18326 0.00933
+##  3  2017 M     William  14904 0.00759
+##  4  2017 M     James    14232 0.00725
+##  5  2017 M     Logan    13974 0.00712
+##  6  2017 M     Benjamin 13733 0.00699
+##  7  2017 M     Mason    13502 0.00688
+##  8  2017 M     Elijah   13268 0.00676
+##  9  2017 M     Oliver   13141 0.00669
+## 10  2017 M     Jacob    13106 0.00668
+## # ... with 14,150 more rows
+
+# Se observa un cambio significativo en las preferencias de los nombres de los recién nacidos. Liam, Noah, Logan aparecen en el ranking, aunque algunos nombres más tradicionales, como William o James, conservan todavía su atractivo. </code></pre>
+<p><br />
+</p>
+<p>O supongamos que nos interesa seleccionar los <strong>nombres de cualquier sexo que hayan superado los 9000 registros</strong> y determinar el año en el que esto sucedió</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  filter(n &gt; 9000)
+## # A tibble: 6,653 x 5
+##     year sex   name        n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 M     John     9655 0.0815
+##  2  1880 M     William  9532 0.0805
+##  3  1882 M     John     9557 0.0783
+##  4  1882 M     William  9298 0.0762
+##  5  1884 F     Mary     9217 0.0670
+##  6  1884 M     John     9388 0.0765
+##  7  1885 F     Mary     9128 0.0643
+##  8  1886 F     Mary     9889 0.0643
+##  9  1886 M     John     9026 0.0758
+## 10  1887 F     Mary     9888 0.0636
+## # ... with 6,643 more rows</code></pre>
+<p><br />
+</p>
+<p>Otro posibilidad sería, por ejemplo, filtrar el conjunto de observaciones con el objetivo de identificar el número de niños de sexo masculino que recibieron un nombre determinado para cada uno de los años del periodo. Pongamos, por ejemplo, que queremos determinar <strong>cuántos recién nacidos recibieron el nombre de Ruben (sin tilde)</strong> para cada uno de los años entre 1880 y 2017.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Guardamos el nuevo data frame con el nombre Ruben
+
+Ruben &lt;- babynames %&gt;%
+  filter(sex == &quot;M&quot; &amp; name == &quot;Ruben&quot;)
+
+# el paquete knitr permite hacer tablas utilizando la función kable()
+
+library(knitr)
+
+knitr::kable(Ruben)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="left">sex</th>
+<th align="left">name</th>
+<th align="right">n</th>
+<th align="right">prop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1880</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">30</td>
+<td align="right">0.0002534</td>
+</tr>
+<tr class="even">
+<td align="right">1881</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">21</td>
+<td align="right">0.0001939</td>
+</tr>
+<tr class="odd">
+<td align="right">1882</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">34</td>
+<td align="right">0.0002786</td>
+</tr>
+<tr class="even">
+<td align="right">1883</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">30</td>
+<td align="right">0.0002667</td>
+</tr>
+<tr class="odd">
+<td align="right">1884</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">28</td>
+<td align="right">0.0002281</td>
+</tr>
+<tr class="even">
+<td align="right">1885</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">28</td>
+<td align="right">0.0002415</td>
+</tr>
+<tr class="odd">
+<td align="right">1886</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">40</td>
+<td align="right">0.0003360</td>
+</tr>
+<tr class="even">
+<td align="right">1887</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">34</td>
+<td align="right">0.0003110</td>
+</tr>
+<tr class="odd">
+<td align="right">1888</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">21</td>
+<td align="right">0.0001617</td>
+</tr>
+<tr class="even">
+<td align="right">1889</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">33</td>
+<td align="right">0.0002772</td>
+</tr>
+<tr class="odd">
+<td align="right">1890</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">25</td>
+<td align="right">0.0002088</td>
+</tr>
+<tr class="even">
+<td align="right">1891</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">25</td>
+<td align="right">0.0002288</td>
+</tr>
+<tr class="odd">
+<td align="right">1892</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">44</td>
+<td align="right">0.0003347</td>
+</tr>
+<tr class="even">
+<td align="right">1893</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">41</td>
+<td align="right">0.0003387</td>
+</tr>
+<tr class="odd">
+<td align="right">1894</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">33</td>
+<td align="right">0.0002642</td>
+</tr>
+<tr class="even">
+<td align="right">1895</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">37</td>
+<td align="right">0.0002922</td>
+</tr>
+<tr class="odd">
+<td align="right">1896</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">49</td>
+<td align="right">0.0003796</td>
+</tr>
+<tr class="even">
+<td align="right">1897</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">42</td>
+<td align="right">0.0003444</td>
+</tr>
+<tr class="odd">
+<td align="right">1898</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">45</td>
+<td align="right">0.0003406</td>
+</tr>
+<tr class="even">
+<td align="right">1899</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">32</td>
+<td align="right">0.0002778</td>
+</tr>
+<tr class="odd">
+<td align="right">1900</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">50</td>
+<td align="right">0.0003084</td>
+</tr>
+<tr class="even">
+<td align="right">1901</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">35</td>
+<td align="right">0.0003028</td>
+</tr>
+<tr class="odd">
+<td align="right">1902</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">45</td>
+<td align="right">0.0003390</td>
+</tr>
+<tr class="even">
+<td align="right">1903</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">50</td>
+<td align="right">0.0003866</td>
+</tr>
+<tr class="odd">
+<td align="right">1904</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">38</td>
+<td align="right">0.0002743</td>
+</tr>
+<tr class="even">
+<td align="right">1905</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">41</td>
+<td align="right">0.0002862</td>
+</tr>
+<tr class="odd">
+<td align="right">1906</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">52</td>
+<td align="right">0.0003609</td>
+</tr>
+<tr class="even">
+<td align="right">1907</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">62</td>
+<td align="right">0.0003910</td>
+</tr>
+<tr class="odd">
+<td align="right">1908</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">60</td>
+<td align="right">0.0003606</td>
+</tr>
+<tr class="even">
+<td align="right">1909</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">71</td>
+<td align="right">0.0004014</td>
+</tr>
+<tr class="odd">
+<td align="right">1910</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">83</td>
+<td align="right">0.0003980</td>
+</tr>
+<tr class="even">
+<td align="right">1911</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">59</td>
+<td align="right">0.0002444</td>
+</tr>
+<tr class="odd">
+<td align="right">1912</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">134</td>
+<td align="right">0.0002968</td>
+</tr>
+<tr class="even">
+<td align="right">1913</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">154</td>
+<td align="right">0.0002872</td>
+</tr>
+<tr class="odd">
+<td align="right">1914</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">199</td>
+<td align="right">0.0002912</td>
+</tr>
+<tr class="even">
+<td align="right">1915</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">256</td>
+<td align="right">0.0002906</td>
+</tr>
+<tr class="odd">
+<td align="right">1916</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">237</td>
+<td align="right">0.0002567</td>
+</tr>
+<tr class="even">
+<td align="right">1917</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">289</td>
+<td align="right">0.0003012</td>
+</tr>
+<tr class="odd">
+<td align="right">1918</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">286</td>
+<td align="right">0.0002727</td>
+</tr>
+<tr class="even">
+<td align="right">1919</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">292</td>
+<td align="right">0.0002876</td>
+</tr>
+<tr class="odd">
+<td align="right">1920</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">336</td>
+<td align="right">0.0003052</td>
+</tr>
+<tr class="even">
+<td align="right">1921</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">357</td>
+<td align="right">0.0003137</td>
+</tr>
+<tr class="odd">
+<td align="right">1922</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">361</td>
+<td align="right">0.0003208</td>
+</tr>
+<tr class="even">
+<td align="right">1923</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">368</td>
+<td align="right">0.0003250</td>
+</tr>
+<tr class="odd">
+<td align="right">1924</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">398</td>
+<td align="right">0.0003404</td>
+</tr>
+<tr class="even">
+<td align="right">1925</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">427</td>
+<td align="right">0.0003708</td>
+</tr>
+<tr class="odd">
+<td align="right">1926</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">440</td>
+<td align="right">0.0003841</td>
+</tr>
+<tr class="even">
+<td align="right">1927</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">478</td>
+<td align="right">0.0004114</td>
+</tr>
+<tr class="odd">
+<td align="right">1928</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">493</td>
+<td align="right">0.0004320</td>
+</tr>
+<tr class="even">
+<td align="right">1929</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">484</td>
+<td align="right">0.0004370</td>
+</tr>
+<tr class="odd">
+<td align="right">1930</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">516</td>
+<td align="right">0.0004569</td>
+</tr>
+<tr class="even">
+<td align="right">1931</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">465</td>
+<td align="right">0.0004348</td>
+</tr>
+<tr class="odd">
+<td align="right">1932</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">469</td>
+<td align="right">0.0004366</td>
+</tr>
+<tr class="even">
+<td align="right">1933</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">398</td>
+<td align="right">0.0003902</td>
+</tr>
+<tr class="odd">
+<td align="right">1934</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">443</td>
+<td align="right">0.0004172</td>
+</tr>
+<tr class="even">
+<td align="right">1935</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">488</td>
+<td align="right">0.0004563</td>
+</tr>
+<tr class="odd">
+<td align="right">1936</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">482</td>
+<td align="right">0.0004529</td>
+</tr>
+<tr class="even">
+<td align="right">1937</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">489</td>
+<td align="right">0.0004472</td>
+</tr>
+<tr class="odd">
+<td align="right">1938</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">445</td>
+<td align="right">0.0003916</td>
+</tr>
+<tr class="even">
+<td align="right">1939</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">450</td>
+<td align="right">0.0003971</td>
+</tr>
+<tr class="odd">
+<td align="right">1940</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">443</td>
+<td align="right">0.0003735</td>
+</tr>
+<tr class="even">
+<td align="right">1941</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">462</td>
+<td align="right">0.0003682</td>
+</tr>
+<tr class="odd">
+<td align="right">1942</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">512</td>
+<td align="right">0.0003636</td>
+</tr>
+<tr class="even">
+<td align="right">1943</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">544</td>
+<td align="right">0.0003741</td>
+</tr>
+<tr class="odd">
+<td align="right">1944</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">506</td>
+<td align="right">0.0003643</td>
+</tr>
+<tr class="even">
+<td align="right">1945</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">560</td>
+<td align="right">0.0004084</td>
+</tr>
+<tr class="odd">
+<td align="right">1946</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">648</td>
+<td align="right">0.0003927</td>
+</tr>
+<tr class="even">
+<td align="right">1947</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">737</td>
+<td align="right">0.0003968</td>
+</tr>
+<tr class="odd">
+<td align="right">1948</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">909</td>
+<td align="right">0.0005099</td>
+</tr>
+<tr class="even">
+<td align="right">1949</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">997</td>
+<td align="right">0.0005533</td>
+</tr>
+<tr class="odd">
+<td align="right">1950</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1025</td>
+<td align="right">0.0005635</td>
+</tr>
+<tr class="even">
+<td align="right">1951</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1040</td>
+<td align="right">0.0005440</td>
+</tr>
+<tr class="odd">
+<td align="right">1952</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1098</td>
+<td align="right">0.0005562</td>
+</tr>
+<tr class="even">
+<td align="right">1953</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1202</td>
+<td align="right">0.0006006</td>
+</tr>
+<tr class="odd">
+<td align="right">1954</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1259</td>
+<td align="right">0.0006087</td>
+</tr>
+<tr class="even">
+<td align="right">1955</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1290</td>
+<td align="right">0.0006173</td>
+</tr>
+<tr class="odd">
+<td align="right">1956</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1366</td>
+<td align="right">0.0006370</td>
+</tr>
+<tr class="even">
+<td align="right">1957</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1382</td>
+<td align="right">0.0006318</td>
+</tr>
+<tr class="odd">
+<td align="right">1958</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1375</td>
+<td align="right">0.0006386</td>
+</tr>
+<tr class="even">
+<td align="right">1959</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1358</td>
+<td align="right">0.0006269</td>
+</tr>
+<tr class="odd">
+<td align="right">1960</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1359</td>
+<td align="right">0.0006275</td>
+</tr>
+<tr class="even">
+<td align="right">1961</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1382</td>
+<td align="right">0.0006410</td>
+</tr>
+<tr class="odd">
+<td align="right">1962</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1380</td>
+<td align="right">0.0006565</td>
+</tr>
+<tr class="even">
+<td align="right">1963</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1259</td>
+<td align="right">0.0006096</td>
+</tr>
+<tr class="odd">
+<td align="right">1964</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1345</td>
+<td align="right">0.0006634</td>
+</tr>
+<tr class="even">
+<td align="right">1965</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1150</td>
+<td align="right">0.0006068</td>
+</tr>
+<tr class="odd">
+<td align="right">1966</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1198</td>
+<td align="right">0.0006590</td>
+</tr>
+<tr class="even">
+<td align="right">1967</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1175</td>
+<td align="right">0.0006602</td>
+</tr>
+<tr class="odd">
+<td align="right">1968</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1139</td>
+<td align="right">0.0006413</td>
+</tr>
+<tr class="even">
+<td align="right">1969</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1237</td>
+<td align="right">0.0006760</td>
+</tr>
+<tr class="odd">
+<td align="right">1970</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1326</td>
+<td align="right">0.0006958</td>
+</tr>
+<tr class="even">
+<td align="right">1971</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1322</td>
+<td align="right">0.0007270</td>
+</tr>
+<tr class="odd">
+<td align="right">1972</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1323</td>
+<td align="right">0.0007900</td>
+</tr>
+<tr class="even">
+<td align="right">1973</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1310</td>
+<td align="right">0.0008115</td>
+</tr>
+<tr class="odd">
+<td align="right">1974</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1383</td>
+<td align="right">0.0008481</td>
+</tr>
+<tr class="even">
+<td align="right">1975</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1376</td>
+<td align="right">0.0008478</td>
+</tr>
+<tr class="odd">
+<td align="right">1976</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1365</td>
+<td align="right">0.0008358</td>
+</tr>
+<tr class="even">
+<td align="right">1977</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1365</td>
+<td align="right">0.0007983</td>
+</tr>
+<tr class="odd">
+<td align="right">1978</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1379</td>
+<td align="right">0.0008069</td>
+</tr>
+<tr class="even">
+<td align="right">1979</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1398</td>
+<td align="right">0.0007802</td>
+</tr>
+<tr class="odd">
+<td align="right">1980</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1488</td>
+<td align="right">0.0008022</td>
+</tr>
+<tr class="even">
+<td align="right">1981</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1473</td>
+<td align="right">0.0007909</td>
+</tr>
+<tr class="odd">
+<td align="right">1982</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1470</td>
+<td align="right">0.0007790</td>
+</tr>
+<tr class="even">
+<td align="right">1983</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1494</td>
+<td align="right">0.0008018</td>
+</tr>
+<tr class="odd">
+<td align="right">1984</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1374</td>
+<td align="right">0.0007323</td>
+</tr>
+<tr class="even">
+<td align="right">1985</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1453</td>
+<td align="right">0.0007553</td>
+</tr>
+<tr class="odd">
+<td align="right">1986</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1381</td>
+<td align="right">0.0007189</td>
+</tr>
+<tr class="even">
+<td align="right">1987</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1527</td>
+<td align="right">0.0007833</td>
+</tr>
+<tr class="odd">
+<td align="right">1988</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1592</td>
+<td align="right">0.0007955</td>
+</tr>
+<tr class="even">
+<td align="right">1989</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1595</td>
+<td align="right">0.0007612</td>
+</tr>
+<tr class="odd">
+<td align="right">1990</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1744</td>
+<td align="right">0.0008107</td>
+</tr>
+<tr class="even">
+<td align="right">1991</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1732</td>
+<td align="right">0.0008173</td>
+</tr>
+<tr class="odd">
+<td align="right">1992</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1805</td>
+<td align="right">0.0008601</td>
+</tr>
+<tr class="even">
+<td align="right">1993</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1749</td>
+<td align="right">0.0008470</td>
+</tr>
+<tr class="odd">
+<td align="right">1994</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1724</td>
+<td align="right">0.0008460</td>
+</tr>
+<tr class="even">
+<td align="right">1995</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1697</td>
+<td align="right">0.0008439</td>
+</tr>
+<tr class="odd">
+<td align="right">1996</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1662</td>
+<td align="right">0.0008296</td>
+</tr>
+<tr class="even">
+<td align="right">1997</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1595</td>
+<td align="right">0.0007986</td>
+</tr>
+<tr class="odd">
+<td align="right">1998</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1582</td>
+<td align="right">0.0007804</td>
+</tr>
+<tr class="even">
+<td align="right">1999</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1637</td>
+<td align="right">0.0008031</td>
+</tr>
+<tr class="odd">
+<td align="right">2000</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1716</td>
+<td align="right">0.0008221</td>
+</tr>
+<tr class="even">
+<td align="right">2001</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1735</td>
+<td align="right">0.0008392</td>
+</tr>
+<tr class="odd">
+<td align="right">2002</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1571</td>
+<td align="right">0.0007606</td>
+</tr>
+<tr class="even">
+<td align="right">2003</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1655</td>
+<td align="right">0.0007881</td>
+</tr>
+<tr class="odd">
+<td align="right">2004</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1601</td>
+<td align="right">0.0007580</td>
+</tr>
+<tr class="even">
+<td align="right">2005</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1464</td>
+<td align="right">0.0006886</td>
+</tr>
+<tr class="odd">
+<td align="right">2006</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1593</td>
+<td align="right">0.0007271</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1477</td>
+<td align="right">0.0006673</td>
+</tr>
+<tr class="odd">
+<td align="right">2008</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1354</td>
+<td align="right">0.0006215</td>
+</tr>
+<tr class="even">
+<td align="right">2009</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1197</td>
+<td align="right">0.0005649</td>
+</tr>
+<tr class="odd">
+<td align="right">2010</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">1102</td>
+<td align="right">0.0005370</td>
+</tr>
+<tr class="even">
+<td align="right">2011</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">975</td>
+<td align="right">0.0004806</td>
+</tr>
+<tr class="odd">
+<td align="right">2012</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">957</td>
+<td align="right">0.0004724</td>
+</tr>
+<tr class="even">
+<td align="right">2013</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">887</td>
+<td align="right">0.0004398</td>
+</tr>
+<tr class="odd">
+<td align="right">2014</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">892</td>
+<td align="right">0.0004363</td>
+</tr>
+<tr class="even">
+<td align="right">2015</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">862</td>
+<td align="right">0.0004229</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">797</td>
+<td align="right">0.0003950</td>
+</tr>
+<tr class="even">
+<td align="right">2017</td>
+<td align="left">M</td>
+<td align="left">Ruben</td>
+<td align="right">745</td>
+<td align="right">0.0003795</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>
+# Vemos que el nombre de Ruben fue incrementando su popularidad en Estados Unidos a lo largo de los años, especialmente hasta 1992, y después, poco a poco, ha ido progresivamente perdiendo su atractivo. No obstante, no parece que Ruben haya sido un nombre muy recurrido en el país a lo largo de estos años. </code></pre>
+<p><br />
+</p>
+<p>Como se ha indicado previamente, las pipes <code>%&gt;%</code> sirven especialmente para encadenar funciones, pudiendo reducir el tamaño del código y facilitando su interpretación. Por ejemplo, en el caso de que nos interesara seleccionar únicamente el <strong>año y el nombre de los recién nacidos de sexo masculino en el año 2017</strong> indicaríamos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  select(year, sex, name) %&gt;%
+  filter(year == 2017 &amp; sex== &quot;M&quot;)
+## # A tibble: 14,160 x 3
+##     year sex   name    
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   
+##  1  2017 M     Liam    
+##  2  2017 M     Noah    
+##  3  2017 M     William 
+##  4  2017 M     James   
+##  5  2017 M     Logan   
+##  6  2017 M     Benjamin
+##  7  2017 M     Mason   
+##  8  2017 M     Elijah  
+##  9  2017 M     Oliver  
+## 10  2017 M     Jacob   
+## # ... with 14,150 more rows</code></pre>
+<p><br />
+</p>
+</div>
+<div id="group_by" class="section level1">
+<h1>group_by()</h1>
+<p><br />
+</p>
+<p>La función <code>group_by()</code> convierte el data frame original en una tabla agrupada según los parámetros de la función. La función <code>group_by()</code>, como veremos, funciona muy bien cuando se usa conjuntamente con otras funciones como <code>summarise()</code> o <code>mutate()</code>. Por tanto usaremos esta función conjuntamente con otras funciones en los apartados posteriores pero, a modo de ejemplo, veamos como se podría agrupar nuestro data frame según el sexo de los recién nacidos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# La tabla_1 sería el resultado de agrupar las filas por sexo utilizando group_by()
+
+tabla_1 &lt;- babynames %&gt;%
+  group_by(sex)
+
+# Una vez agrupada la tabla por sexo, con la función summarise() que veremos después, podemos identificar el número de observaciones según el sexo masculino o femenino del recién nacido. 
+
+tabla_1 %&gt;%
+  summarise(n = n())
+## # A tibble: 2 x 2
+##   sex         n
+##   &lt;chr&gt;   &lt;int&gt;
+## 1 F     1138293
+## 2 M      786372
+
+# Debemos recordar desagrupar las observaciones una vez realizado el análisis necesario utilizando la función ungroup()
+
+tabla_1 &lt;- tabla_1 %&gt;%
+  ungroup()
+
+# Vemos que una vez hemos desagrupado las observaciones, si aplicamos de nuevo la función summarise() el resultado obtenido es para el conjunto de observaciones y no para las observaciones agrupadas.
+
+tabla_1 %&gt;%
+  summarise(n = n())
+## # A tibble: 1 x 1
+##         n
+##     &lt;int&gt;
+## 1 1924665</code></pre>
+<p><br />
+</p>
+</div>
+<div id="mutate" class="section level1">
+<h1>mutate()</h1>
+<p><br />
+</p>
+<p>La función <code>mutate()</code> nos permite añadir columnas nuevas partiendo de las columnas del data frame original. A modo de ejemplo podemos crear una nueva columna, que denominaremos <code>prop_2</code>, como resultado de multiplicar la columna <code>prop</code> por 100. La función <code>mutate()</code> requiere, una vez indicado el data frame sobre el que se va a operar, que indiquemos el nombre de la nueva columna y la operación que determina el valor de la misma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  mutate( prop_2 = prop * 100)
+## # A tibble: 1,924,665 x 6
+##     year sex   name          n   prop prop_2
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary       7065 0.0724   7.24
+##  2  1880 F     Anna       2604 0.0267   2.67
+##  3  1880 F     Emma       2003 0.0205   2.05
+##  4  1880 F     Elizabeth  1939 0.0199   1.99
+##  5  1880 F     Minnie     1746 0.0179   1.79
+##  6  1880 F     Margaret   1578 0.0162   1.62
+##  7  1880 F     Ida        1472 0.0151   1.51
+##  8  1880 F     Alice      1414 0.0145   1.45
+##  9  1880 F     Bertha     1320 0.0135   1.35
+## 10  1880 F     Sarah      1288 0.0132   1.32
+## # ... with 1,924,655 more rows
+
+# De esta forma comprobamos de una forma más adecuada que Mary, el nombre femenino más utilizado en 1880, representa el 7,24 del total de nombres de recién nacidos en dicho año.  </code></pre>
+<p><br />
+</p>
+<p>Supongamos que nos interesa que en una nueva columna se indique el total de las observaciones del conjunto del data frame. En nuestro caso cabe la posibilidad que nos interese crear una nueva columna donde se indique la <strong>suma del total de los <em>babynames</em> </strong>, es decir, de <code>n</code>, bien sea la suma de todos los años del periodo (1880-2017), bien sea el total según el año. En dicho caso podemos utilizar la función <code>mutate()</code> de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# En el primero de los casos la columna sería igual para el total de observaciones, en tanto en cuanto indica el total de n (348120517).
+
+babynames %&gt;%
+  mutate( suma_total = sum(n))
+## # A tibble: 1,924,665 x 6
+##     year sex   name          n   prop suma_total
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;      &lt;int&gt;
+##  1  1880 F     Mary       7065 0.0724  348120517
+##  2  1880 F     Anna       2604 0.0267  348120517
+##  3  1880 F     Emma       2003 0.0205  348120517
+##  4  1880 F     Elizabeth  1939 0.0199  348120517
+##  5  1880 F     Minnie     1746 0.0179  348120517
+##  6  1880 F     Margaret   1578 0.0162  348120517
+##  7  1880 F     Ida        1472 0.0151  348120517
+##  8  1880 F     Alice      1414 0.0145  348120517
+##  9  1880 F     Bertha     1320 0.0135  348120517
+## 10  1880 F     Sarah      1288 0.0132  348120517
+## # ... with 1,924,655 more rows
+
+# En el segundo de los casos, agrupando por año, el valor de la columna sería distinta según el año. Así, por ejemplo, para 1880 la suma de n sería 201484. 
+
+babynames %&gt;%
+  group_by(year) %&gt;%
+  mutate( suma_by_year = sum(n))
+## # A tibble: 1,924,665 x 6
+## # Groups:   year [138]
+##     year sex   name          n   prop suma_by_year
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;        &lt;int&gt;
+##  1  1880 F     Mary       7065 0.0724       201484
+##  2  1880 F     Anna       2604 0.0267       201484
+##  3  1880 F     Emma       2003 0.0205       201484
+##  4  1880 F     Elizabeth  1939 0.0199       201484
+##  5  1880 F     Minnie     1746 0.0179       201484
+##  6  1880 F     Margaret   1578 0.0162       201484
+##  7  1880 F     Ida        1472 0.0151       201484
+##  8  1880 F     Alice      1414 0.0145       201484
+##  9  1880 F     Bertha     1320 0.0135       201484
+## 10  1880 F     Sarah      1288 0.0132       201484
+## # ... with 1,924,655 more rows
+
+# Al realizar este tipo de operaciones debemos siempre ser conscientes de los valores que estamos sumando (o con los que estamos operando) para evitar equívocos. Por ello, resulta de gran utilidad utilizar la función summarise() que vemos a continuación.</code></pre>
+</div>
+<div id="summarise" class="section level1">
+<h1>summarise()</h1>
+<p><br />
+</p>
+<p>La función <code>summarise()</code> provee un valor determinado en función de un conjunto de valores. Así, por ejemplo, para determinar el <strong>número de observaciones (filas)</strong> del data frame, o para determinar el <strong>número total de nacimientos (<code>n</code>)</strong> podemos utilizar esta función de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  summarise(num_observaciones = n(),
+            total_babynames = sum(n))
+## # A tibble: 1 x 2
+##   num_observaciones total_babynames
+##               &lt;int&gt;           &lt;int&gt;
+## 1           1924665       348120517
+
+# Esta operación nos permite comprobar el total de observaciones y el total de babynames del conjunto del dataframe. </code></pre>
+<p><br />
+</p>
+<p>No obstante, la función <code>summarise()</code> tiene una especial utilidad cuando se utiliza conjuntamente con la función <code>group_by()</code>. Así, por ejemplo, podemos estimar facilmente el <strong>número de nacimientos por cada año</strong> (o mejor dicho el número de solicitudes de la tarjeta de la SS por nacimiento en Estados Unidos cada año):</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  group_by (year) %&gt;%
+  summarise(suma = sum(n))
+## # A tibble: 138 x 2
+##     year   suma
+##    &lt;dbl&gt;  &lt;int&gt;
+##  1  1880 201484
+##  2  1881 192696
+##  3  1882 221533
+##  4  1883 216946
+##  5  1884 243462
+##  6  1885 240854
+##  7  1886 255317
+##  8  1887 247394
+##  9  1888 299473
+## 10  1889 288946
+## # ... with 128 more rows
+
+# El total del primer deberá coincidir con el valor de la nueva columna creada previamente (suma_by_year) en cada uno de los años del periodo analizado.</code></pre>
+<p><br />
+</p>
+<p>De forma similar podemos identificar el número de nacimientos por año y por sexo de los recién nacidos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(suma = sum(n))
+## # A tibble: 276 x 3
+## # Groups:   year [138]
+##     year sex     suma
+##    &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt;
+##  1  1880 F      90993
+##  2  1880 M     110491
+##  3  1881 F      91953
+##  4  1881 M     100743
+##  5  1882 F     107847
+##  6  1882 M     113686
+##  7  1883 F     112319
+##  8  1883 M     104627
+##  9  1884 F     129020
+## 10  1884 M     114442
+## # ... with 266 more rows
+
+# En los primeros años el registro es mayor en los niños que en las niñas. </code></pre>
+<p><br />
+</p>
+<p>También podemos estimar en una sola orden el valor de diversos indicadores. A modo de ejemplo, estimamos para cada año y según el sexo del recién nacido, el <strong>total de nacimientos, el valor máximo y el valor mínimo</strong> (que previsiblemente será 5 debido a que la base de datos proporciona información de los nombres que superen dicho valor)</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(suma = sum(n), max = max(n), min = min(n))
+## # A tibble: 276 x 5
+## # Groups:   year [138]
+##     year sex     suma   max   min
+##    &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  1880 F      90993  7065     5
+##  2  1880 M     110491  9655     5
+##  3  1881 F      91953  6919     5
+##  4  1881 M     100743  8769     5
+##  5  1882 F     107847  8148     5
+##  6  1882 M     113686  9557     5
+##  7  1883 F     112319  8012     5
+##  8  1883 M     104627  8894     5
+##  9  1884 F     129020  9217     5
+## 10  1884 M     114442  9388     5
+## # ... with 266 more rows</code></pre>
+<p><br />
+</p>
+<p>En el data frame anterior podemos observar las observaciones con mayor valor <code>n</code> en cada año y por sexo, entre otros aspectos. No obstante, puede que nos interese determinar qué nombres lideran el ranking cada año. Para ello podemos establecer el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Para establecer los nombres (F y M) que lideran el ranking entre 1880 y 1889:
+
+babynames %&gt;%
+  group_by (year, sex, name) %&gt;%
+  summarise(max = max(n)) %&gt;%
+  top_n(1) %&gt;%
+  head(n=20)
+## Selecting by max
+## # A tibble: 20 x 4
+## # Groups:   year, sex [20]
+##     year sex   name    max
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;
+##  1  1880 F     Mary   7065
+##  2  1880 M     John   9655
+##  3  1881 F     Mary   6919
+##  4  1881 M     John   8769
+##  5  1882 F     Mary   8148
+##  6  1882 M     John   9557
+##  7  1883 F     Mary   8012
+##  8  1883 M     John   8894
+##  9  1884 F     Mary   9217
+## 10  1884 M     John   9388
+## 11  1885 F     Mary   9128
+## 12  1885 M     John   8756
+## 13  1886 F     Mary   9889
+## 14  1886 M     John   9026
+## 15  1887 F     Mary   9888
+## 16  1887 M     John   8110
+## 17  1888 F     Mary  11754
+## 18  1888 M     John   9247
+## 19  1889 F     Mary  11648
+## 20  1889 M     John   8548
+
+# Para establecer los nombres (F y M) que lideran el ranking entre 2008 y 2017:
+
+babynames %&gt;%
+  group_by (year, sex, name) %&gt;%
+  summarise(max = max(n)) %&gt;%
+  top_n(1) %&gt;%
+  tail(n=20)
+## Selecting by max
+## # A tibble: 20 x 4
+## # Groups:   year, sex [20]
+##     year sex   name       max
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;int&gt;
+##  1  2008 F     Emma     18809
+##  2  2008 M     Jacob    22591
+##  3  2009 F     Isabella 22298
+##  4  2009 M     Jacob    21169
+##  5  2010 F     Isabella 22905
+##  6  2010 M     Jacob    22117
+##  7  2011 F     Sophia   21837
+##  8  2011 M     Jacob    20365
+##  9  2012 F     Sophia   22304
+## 10  2012 M     Jacob    19069
+## 11  2013 F     Sophia   21213
+## 12  2013 M     Noah     18241
+## 13  2014 F     Emma     20924
+## 14  2014 M     Noah     19286
+## 15  2015 F     Emma     20435
+## 16  2015 M     Noah     19613
+## 17  2016 F     Emma     19471
+## 18  2016 M     Noah     19082
+## 19  2017 F     Emma     19738
+## 20  2017 M     Liam     18728
+
+# Mary y John son, definitivamente, los nombres más recurrentes al inicio del periodo. Por el contrario, en la última década existe una mayor variabilidad en el nombre más escogido tanto para niño como para niña. No obstante, es fácil identificar un grupo de nombres de gran atractivo para la población en estos años, bien sea Emma, Isabella o Sophia para niña o Jacob y Noah para niño. </code></pre>
+<p><br />
+</p>
+<p>Una forma alternativa es indicando expresamente que queremos detectar la primera observación del rango deseado, la última o podemos establecer la posición de la observación deseada:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# La primera observación coincidirá con el resultado anterior, siendo Mary y John los nombres más comunes de los primeros años del periodo considerado. 
+
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(nombre = first(name), max = max(n))
+## # A tibble: 276 x 4
+## # Groups:   year [138]
+##     year sex   nombre   max
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;
+##  1  1880 F     Mary    7065
+##  2  1880 M     John    9655
+##  3  1881 F     Mary    6919
+##  4  1881 M     John    8769
+##  5  1882 F     Mary    8148
+##  6  1882 M     John    9557
+##  7  1883 F     Mary    8012
+##  8  1883 M     John    8894
+##  9  1884 F     Mary    9217
+## 10  1884 M     John    9388
+## # ... with 266 more rows
+
+# En este caso particular detectar la observación más baja carece de significado, en tanto en cuanto las observaciones más bajas serán de 5 (mínimo valor de la base de datos), pero puede resultar muy útil en otros análisis
+
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(nombre = last(name), min = min(n))
+## # A tibble: 276 x 4
+## # Groups:   year [138]
+##     year sex   nombre      min
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;
+##  1  1880 F     Wilma         5
+##  2  1880 M     Zachariah     5
+##  3  1881 F     Viney         5
+##  4  1881 M     Wright        5
+##  5  1882 F     Zilla         5
+##  6  1882 M     Zed           5
+##  7  1883 F     Zoa           5
+##  8  1883 M     Winthrop      5
+##  9  1884 F     Yetta         5
+## 10  1884 M     Zachariah     5
+## # ... with 266 more rows
+
+# Podemos indicar qué valor queremos, pongamos que en lugar de la observación de mayor valor queremos el segundo nombre más utilizado por año y sexo:
+
+babynames %&gt;%
+  group_by (year, sex) %&gt;%
+  summarise(nombre = nth(name, 2))
+## # A tibble: 276 x 3
+## # Groups:   year [138]
+##     year sex   nombre 
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  
+##  1  1880 F     Anna   
+##  2  1880 M     William
+##  3  1881 F     Anna   
+##  4  1881 M     William
+##  5  1882 F     Anna   
+##  6  1882 M     William
+##  7  1883 F     Anna   
+##  8  1883 M     William
+##  9  1884 F     Anna   
+## 10  1884 M     William
+## # ... with 266 more rows
+
+# Vemos que tras Mary y John los nombres que lideran el ranking, al menos en los primeros años del periodo, son Anna y William.</code></pre>
+<p><br />
+</p>
+<p>También es posible seleccionar las columnas indicando el número de filas. Así, por ejemplo, para seleccionar <strong>los dos primeros valores de cada año y sexo</strong> podemos indicar la siguiente orden:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  group_by(year, sex) %&gt;%
+  filter(row_number() &lt;=2)
+## # A tibble: 552 x 5
+## # Groups:   year, sex [276]
+##     year sex   name        n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary     7065 0.0724
+##  2  1880 F     Anna     2604 0.0267
+##  3  1880 M     John     9655 0.0815
+##  4  1880 M     William  9532 0.0805
+##  5  1881 F     Mary     6919 0.0700
+##  6  1881 F     Anna     2698 0.0273
+##  7  1881 M     John     8769 0.0810
+##  8  1881 M     William  8524 0.0787
+##  9  1882 F     Mary     8148 0.0704
+## 10  1882 F     Anna     3143 0.0272
+## # ... with 542 more rows
+
+# Evidentemente, los nombres detectados son los mismos que los obtenidos en los ejercicios previos </code></pre>
+<p><br />
+</p>
+</div>
+<div id="arrange" class="section level1">
+<h1>arrange()</h1>
+<p><br />
+</p>
+<p>La función <code>arrange()</code> nos permite ordenar los datos por filas según algún criterio establecido. Pongamos en este caso que queremos <strong>ordenar las observaciones por nombre, según un criterio alfabético</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Para ordenar las filas de la A a la Z: 
+
+babynames %&gt;%
+  arrange(name)
+## # A tibble: 1,924,665 x 5
+##     year sex   name      n       prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;      &lt;dbl&gt;
+##  1  2007 M     Aaban     5 0.00000226
+##  2  2009 M     Aaban     6 0.00000283
+##  3  2010 M     Aaban     9 0.00000439
+##  4  2011 M     Aaban    11 0.00000542
+##  5  2012 M     Aaban    11 0.00000543
+##  6  2013 M     Aaban    14 0.00000694
+##  7  2014 M     Aaban    16 0.00000783
+##  8  2015 M     Aaban    15 0.00000736
+##  9  2016 M     Aaban     9 0.00000446
+## 10  2017 M     Aaban    11 0.0000056 
+## # ... with 1,924,655 more rows
+
+# Para ordenarlas de la Z a la A:
+
+babynames %&gt;%
+  arrange(desc(name)) 
+## # A tibble: 1,924,665 x 5
+##     year sex   name          n       prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;      &lt;dbl&gt;
+##  1  2010 M     Zzyzx         5 0.00000244
+##  2  2014 M     Zyyon         6 0.00000293
+##  3  2010 F     Zyyanna       6 0.00000306
+##  4  2015 M     Zyvon         7 0.00000343
+##  5  2009 M     Zyvion        5 0.00000236
+##  6  2016 F     Zyva          8 0.00000415
+##  7  2017 F     Zyva          9 0.0000048 
+##  8  2015 M     Zyus          5 0.00000245
+##  9  2002 M     Zytavious     6 0.0000029 
+## 10  2004 M     Zytavious     6 0.00000284
+## # ... with 1,924,655 more rows
+
+# Resulta que Zzyzx, antes llamado Soda Springs, es una comunidad en el Condado de San Bernardino, en el desierto de Mojave en California. Según Wikipedia un tal Curtis Howe Springer se inventó el término y lo dio a dicho espacio, orgulloso de que dicho vocablo fuese la última palabra en el idioma inglés. Parece ser que la revista Reader´s Digest ha declarado a Zzyzx el lugar de California más difícil de pronunciar y que una encuesta de eBabyNames.com dice que Zzyzx (que se pronunciaría algo así como Zay-Zix) sería, según sus encuestados, el nombre más raro que habría existido jamás. </code></pre>
+<p><br />
+</p>
+<p>Podemos también organizar las observaciones según otros criterios. Si por ejemplo queremos detectar qué nombres, en qué año y a qué sexo corresponde las <strong>observaciones con mayor número de registros</strong>. Para ello podemos anotar la siguiente orden:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames %&gt;%
+  arrange(desc(n))
+## # A tibble: 1,924,665 x 5
+##     year sex   name        n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;  &lt;dbl&gt;
+##  1  1947 F     Linda   99686 0.0548
+##  2  1948 F     Linda   96209 0.0552
+##  3  1947 M     James   94756 0.0510
+##  4  1957 M     Michael 92695 0.0424
+##  5  1947 M     Robert  91642 0.0493
+##  6  1949 F     Linda   91016 0.0518
+##  7  1956 M     Michael 90620 0.0423
+##  8  1958 M     Michael 90520 0.0420
+##  9  1948 M     James   88588 0.0497
+## 10  1954 M     Michael 88514 0.0428
+## # ... with 1,924,655 more rows
+
+# En este caso vemos que Linda resultó ser la opción más popular para las niñas en 1947 y 1948, siendo estos años donde más gente coincidió en su decisión.</code></pre>
+<p><br />
+</p>
+</div>
+<div id="dplyr-y-ggplot2" class="section level1">
+<h1>dplyr y ggplot2</h1>
+<p><br />
+</p>
+<p>Dado que una imagen vale más que mil palabras conviene tener en cuenta que las funciones del paquete <code>dplyr</code>, utilizando pipes (<code>%</code>) para encadenar funciones, pueden utilizarse conjuntamente con los gráficos de ggplot como se observa en los siguientes ejemplos.</p>
+<p><br />
+</p>
+<p>Supongamos que queremos observar la evolución del número total de registros de solicitud de la tarjeta de la Seguridad Social por año, para lo que utilizaremos las funciones <code>group_by()</code> y <code>summarise()</code> seguido de las instrucciones de ggplot2.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Cargamos la librería ggplot2
+
+library(ggplot2)
+
+babynames %&gt;%
+  group_by(year) %&gt;% 
+  summarise(suma = sum(n)) %&gt;%
+  ggplot(aes(x= year, y = suma, fill = &quot;orange&quot;)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::comma) + 
+  theme_minimal() +
+  guides(fill=F) +
+  labs( x= &quot;year&quot;, 
+        y= &quot; &quot;,
+        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1880 a 2017&quot;,
+        subtitle = &quot;Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social&quot;,
+        caption =  &quot;US Social Security Administration&quot;)</code></pre>
+<p><img src="/babynames_files/figure-html/unnamed-chunk-26-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>En el caso de que quisieramos <strong>graficar los nombres más populares por sexo en 1880 y 2017</strong> podríamos establecer un código similar al siguiente:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Creamos un nuevo data frame, con información específica de 1880 y 2017 seleccionando los registros que lideran el ranking.
+
+
+babynames_2 &lt;- babynames %&gt;%
+  select(year, sex, name, n) %&gt;%
+  filter( year == 1880 | year == 2017) %&gt;%
+  group_by(year, sex, name, n) %&gt;%
+  arrange (year, sex, n) %&gt;%
+  group_by( year, sex) %&gt;%
+  top_n(20, n)
+</code></pre>
+<p><br />
+</p>
+<p>Para realizar los siguientes gráficos vamos a utilizar un theme diseñado por <a href="https://www.trafforddatalab.io/graphics_companion/">Tradfford Data Lab</a> llamado <code>theme_lab()</code> que particularmente encuentro muy agradable visualmente.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# La descarga de este theme se encuentra en el siguiente link: 
+
+source(&quot;https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R&quot;)</code></pre>
+<p><br />
+</p>
+<p>Utilizando el data frame creado (babynames_2), <strong>identificamos y graficamos para el año 1880 los 40 nombres, 20 de sexo masculino y 20 de sexo femenino</strong>, mediante el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+babynames_2 %&gt;%
+  filter( year == 1880) %&gt;%
+  arrange(desc(n)) %&gt;%
+  ggplot(aes(reorder(name, n), n)) +
+  geom_col(fill = &quot;#fc6721&quot;, 
+           alpha = 0.8)+
+  coord_flip() +
+  facet_wrap(~sex, scales= &quot;free_y&quot;, ncol=2)+
+  theme_lab() +
+  theme(panel.grid.major.x = element_blank())+
+  scale_y_continuous(labels = scales::comma) +
+  geom_text(aes(label=n, y=n + 1), 
+            hjust=1.1,
+            color=&quot;white&quot;,
+            size= 3.2)+
+  labs(title = &quot;Los 20 nombres más populares por sexo en 1880&quot;, 
+       subtitle = &quot;Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social&quot;, 
+       caption = &quot;Source: US Social Security Administration&quot;, 
+       x = &quot;&quot;, y = &quot;&quot;, 
+       fill = NULL) </code></pre>
+<p><img src="/babynames_files/figure-html/unnamed-chunk-29-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>
+# Como se comprobó previamente Mary y John lideran el ranking en 1880 aunque William, James, Charles o George también fueron nombres de notable popularidad. </code></pre>
+<p><br />
+</p>
+<p>De forma similar, modificando un par de líneas del comando anterior podemos realizar <strong>el mismo ejercicio para el año 2017</strong>, observando de esta forma la evolución de los nombres, y la mayor variedad</p>
+<p><br />
+</p>
+<pre class="r"><code>  
+
+babynames_2 %&gt;%
+  filter( year == 2017) %&gt;%
+  arrange(desc(n)) %&gt;%
+  ggplot(aes(reorder(name, n), n)) +
+  geom_col(fill = &quot;#fc6721&quot;, 
+           alpha = 0.8)+
+  coord_flip() +
+  facet_wrap(~sex, scales= &quot;free_y&quot;, ncol=2)+
+  theme_lab() +
+  theme(panel.grid.major.x = element_blank())+
+  scale_y_continuous(labels = scales::comma) +
+  geom_text(aes(label=n, y=n + 1), 
+            hjust=1.1,
+            color=&quot;white&quot;,
+            size= 3.2)+
+  labs(title = &quot;Los 20 nombres más populares por sexo en 2017&quot;, 
+       subtitle = &quot;Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social&quot;, 
+       caption = &quot;Source: US Social Security Administration&quot;, 
+       x = &quot;&quot;, y = &quot;&quot;, 
+       fill = NULL)</code></pre>
+<p><img src="/babynames_files/figure-html/unnamed-chunk-30-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>

@@ -6,22 +6,32 @@
     <description>Recent content in dplyr on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 06 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 08 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Aprendiendo dplyr con &#39;babynames`</title>
-      <link>/2015-07-23-r-rmarkdown/</link>
+      <title>Aproximación a la evolución de los nombres en España</title>
+      <link>/nombres/</link>
+      <pubDate>Tue, 08 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/nombres/</guid>
+      <description>Nombres en España
+En el post anterior, con el objetivo de exponer las principales funciones del paquete dplyr, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017, en función de los datos que provee la Administración de Seguridad Social de este país. Realizando dicho post me empecé a preguntar cómo habrán evolucionado los nombres en nuestro país en las últimas décadas.</description>
+    </item>
+    
+    <item>
+      <title>Aprendiendo dplyr con &#39;babynames&#39;</title>
+      <link>/babynames/</link>
       <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2015-07-23-r-rmarkdown/</guid>
+      <guid>/babynames/</guid>
       <description>¿Qué es dplyr?
 dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.
 
 Las funciones del paquete dplyr son las siguientes:
-select( )filter( )group_by()mutate( )summarise( )arrange( )</description>
+select()filter()group_by()mutate()summarise()arrange()</description>
     </item>
     
   </channel>
