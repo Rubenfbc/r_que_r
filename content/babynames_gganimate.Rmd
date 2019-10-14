@@ -1,9 +1,9 @@
 ---
-title: "gganimate con 'babynames'"
+title: "gganimate() con 'babynames'"
 author: "Rubén F. Bustillo"
-date: '2019-10-13'
+date: '2019-10-14'
 categories: ["R"]
-tags: ["dplyr", "tidyverse", "ggplot2"]
+tags: ["gganimate", "dplyr", "tidyverse", "ggplot2", "babynames"]
 ---
 
 
@@ -15,19 +15,24 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 \
 
-En este post vamos a realizar dos gráficos animados utilizando `gganimate()` utilizando el data frame `babynames`, del paquete `babynames()`, que ya utilizamos en un post anterior para explicar las funciones del paquete `dplyr()`. 
+**Res** 
+          
+En este post vamos a realizar gráficos animados con `gganimate()` usando el dataframe `babynames` del paquete `babynames()`. Este post es una extensión del post previo: Aprendiendo dplyr con 'babynames'.
+\
 
 \
 
-# Qué es gganimate()? 
+\
+
+# ¿Qué es gganimate()? 
 
 \
 
-`gganimate()` es una extensión del paquete `ggplot2()` diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años. A modo de ejemplo vamos a crear dos gráficos que servirán como continuación del post anterior donde se explicaba las principales funcionalidades del paquete `dplyr()`. 
+`gganimate()` es una extensión del paquete `ggplot2()` diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años. A modo de ejemplo vamos a crear tres gráficos, utilizando de nuevo el dataframe `babynames`, que servirán como continuación del post anterior donde expusimos las principales funcionalidades del paquete `dplyr()`. 
 
 \
 
-# Generamos un nuevo data frame con dplyr()
+# Generamos un nuevo data frame con dplyr() 
 
 \
 
@@ -47,7 +52,7 @@ library(babynames)
 
 \
 
-En primer lugar estimamos la cantidad de registros por año y por sexo utilizando la función `group_by()` y `summarize()` del paquete `dplyr()` tal y como vimos en el post previo. De esta forma, sumando el número de registros de cada nombre por sexo y año obtenemos un nuevo data frame del total de solicitudes de la tarjeta de la Seguridad Social por año desde 1880 hasta 2017. Llamaremos al nuevo data frame `babynames_year`. 
+En primer lugar identificamos la cantidad de registros de la tarjeta de la Seguridad Social en Estados Unidos por año y por sexo utilizando la función `group_by()` y `summarize()` del paquete `dplyr()` tal y como vimos en el post previo. De esta forma, sumando el número de registros de cada nombre por sexo y año obtenemos un nuevo data frame del total de solicitudes por año desde 1880 hasta 2017. Llamaremos al nuevo data frame `babynames_year`. 
 
 \
 
@@ -61,7 +66,7 @@ babynames_year <- babynames %>%
 
 \
 
-Las primeras filas del nuevo data frame son las siguientes:
+Las *primeras filas* del nuevo data frame son, por tanto, las siguientes:
 
 \
 
@@ -73,12 +78,15 @@ head(babynames_year)
 
 \
 
+Vemos que el dataframe `babynames_year` muestra para cada año del periodo (1880-2017) la suma de los registros para el sexo femenino (F) y para el sexo masculino (M). Utilizaremos este data frame para la realización de los gráficos en los siguientes apartados. 
 
-# Gráficos animados con gganimate()
+\
+
+# Gráficos de barras animados con gganimate()
 
 \ 
 
-Para hacer un gráfico dinámico donde podamos identificar dos columnas paralelas para cada uno de los sexos podemos utilizar un código similar al siguiente:
+Para hacer un primer gráfico dinámico donde podamos identificar **dos columnas paralelas para cada uno de los sexos** podemos utilizar un código similar al siguiente:
 
 \
 
@@ -118,18 +126,27 @@ plot_babynames_dodge <- babynames_year %>%
                                      face = "plain", 
                                      hjust = 0.5)) 
 
-
-# graficamos nuestro plot utilizando la funcion animate()
-
-animate(plot_babynames_dodge, nframes= 300, width = 600, height = 600, fps = 10)
-
-
 ```
-
 
 \
 
-Para hacer un gráfico dinámico donde podamos identificar en una sola columna los dos géneros (stacked) podemos realizar las siguientes modificaciones al gráfico original:
+**Graficamos el primer plot** con `gganimate()`
+
+\
+
+```{r, fig.align='center'}
+
+animate(plot_babynames_dodge, nframes= 300, width = 600, height = 600, fps = 10)
+
+# guardamos el gráfico en formato .gif
+
+anim_save("plot_babynames_dodge.gif")
+
+```
+
+\
+
+Para hacer un segundo gráfico dinámico donde podamos **identificar en una sola columna los dos géneros (stacked)** podemos realizar las siguientes modificaciones al gráfico original:
 
 \
 
@@ -167,11 +184,154 @@ plot_babynames_stack <- babynames_year %>%
         plot.subtitle = element_text(size=14, 
                                      face = "plain", 
                                      hjust = 0.5)) 
+```
 
+\
 
-# Graficamos el segundo plot con gganimate()
+**Graficamos el segundo plot** con `gganimate()`
+
+\
+
+```{r, fig.align='center'}
 
 animate(plot_babynames_stack, nframes= 300, width = 400, height = 700, fps = 10)
 
+# guardamos el gráfico en formato .gif
+
+anim_save("plot_babynames_stack.gif")
+
+```
+
+\
+
+# Transición con gganimate()
+
+\
+`gganimate()` permite también visualizar la transición de las observaciones a lo largo del tiempo. Para explicar esta nueva aplicación de `gganimate()` partimos del siguiente gráfico (utilizado en un post previo) donde se muestra la evolución del número total de registros de solicitud de la tarjeta de la Seguridad Social en Estados Unidos desde 1880 hasta 2017:
+
+\
+
+```{r, warning= FALSE, fig.width=10, fig.align='center'}
+
+babynames %>%
+  group_by(year) %>% 
+  summarise(suma = sum(n)) %>%
+  ggplot(aes(x= year, y = suma, fill = "orange")) +
+  geom_col() +
+  scale_y_continuous(labels = scales::comma) + 
+  theme_minimal() +
+  guides(fill=F) +
+  labs( x= "year", 
+        y= " ",
+        title = "Número de personas recién nacidas en Estados Unidos desde 1880 a 2017",
+        subtitle = "Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social",
+        caption =  "US Social Security Administration") +
+  theme(plot.title = element_text(size = 16, 
+                                  face = "bold", 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=12, 
+                                     face = "plain", 
+                                     hjust = 0.5))
+
+```
+
+\
+
+Partiendo de este gráfico podemos utilizar `gganimate()` para **visualizar la transición año tras año** a lo largo del periodo utilizando la siguiente orden:
+
+\
+
+```{r}
+
+plot_babynames_transition <- babynames %>%
+  group_by(year) %>% 
+  summarise(suma = sum(n)) %>%
+  ggplot(aes(x= year, y = suma, fill = "orange")) +
+  geom_col() +
+  scale_y_continuous(labels = scales::comma) + 
+  theme_minimal() +
+  guides(fill=F) +
+  labs( x= "year", 
+        y= " ",
+        title = "Número de personas recién nacidas en Estados Unidos desde 1880 a 2017 \n Year : {closest_state}", 
+        subtitle = "Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social",
+        caption =  "US Social Security Administration") +
+  transition_states(year, wrap = F) +
+  shadow_mark() +
+  enter_grow() +
+  enter_fade() +
+  theme(plot.title = element_text(size = 18, 
+                                  face = "bold", 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=14, 
+                                     face = "plain", 
+                                     hjust = 0.5))
+
+```
+
+\
+
+**Graficamos el tercer plot** con `gganimate()`
+
+\
+
+```{r, fig.align='center'}
+
+animate(plot_babynames_transition, nframes= 300, width = 900, height = 500, fps = 10)
+
+# guardamos el gráfico en archivo .gif
+
+anim_save("plot_babynames_transition.gif")
+
+```
+
+\
+
+Seleccionando un menor número de años se puede observar mejor como `gganimate()` visualiza la transición entre años. Seleccionamos del conjunto del dataframe, por ejemplo, los primeros años del siglo XX, periodo en el que tuvieron lugar hechos históricos importantes con un importante impacto sobre la natalidad de Estados Unidos. 
+
+\
+
+```{r}
+
+plot_babynames_transition_2 <- babynames %>%
+  filter(year > 1910 & year < 1951) %>%
+  group_by(year) %>% 
+  summarise(suma = sum(n)) %>%
+  ggplot(aes(x= year, y = suma, fill = "orange")) +
+  geom_col() +
+  scale_y_continuous(labels = scales::comma) + 
+  theme_minimal() +
+  guides(fill=F) +
+  labs( x= "year", 
+        y= " ",
+        title = "Número de personas recién nacidas en Estados Unidos desde 1910 a 1950 \n Year : {closest_state}", 
+        subtitle = "Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social",
+        caption =  "US Social Security Administration") +
+  transition_states(year, wrap = F) +
+  shadow_mark() +
+  enter_grow() +
+  enter_fade() +
+  theme(plot.title = element_text(size = 18, 
+                                  face = "bold", 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=14, 
+                                     face = "plain", 
+                                     hjust = 0.5))
+
+```
+
+\
+
+**Graficamos de el nuevo plot** con `gganimate()`
+
+\
+
+```{r, fig.align='center'}
+
+animate(plot_babynames_transition_2, nframes= 150, width = 900, height = 500, fps = 10)
+
+# guardamos el gráfico en archivo .gif
+
+anim_save("plot_babynames_transition_2.gif")
 
 ```

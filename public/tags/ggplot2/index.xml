@@ -6,20 +6,22 @@
     <description>Recent content in ggplot2 on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 13 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/ggplot2/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>gganimate con &#39;babynames&#39;</title>
+      <title>gganimate() con &#39;babynames&#39;</title>
       <link>/babynames_gganimate/</link>
-      <pubDate>Sun, 13 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/babynames_gganimate/</guid>
-      <description>En este post vamos a realizar dos gráficos animados utilizando gganimate() utilizando el data frame babynames, del paquete babynames(), que ya utilizamos en un post anterior para explicar las funciones del paquete dplyr().
+      <description>Res
+En este post vamos a realizar gráficos animados con gganimate() usando el dataframe babynames del paquete babynames(). Este post es una extensión del post previo: Aprendiendo dplyr con ‘babynames’.
 
-Qué es gganimate()?
+
+¿Qué es gganimate()?
 gganimate() es una extensión del paquete ggplot2() diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años.</description>
     </item>
     

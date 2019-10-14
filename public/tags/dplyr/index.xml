@@ -6,20 +6,22 @@
     <description>Recent content in dplyr on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 13 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>gganimate con &#39;babynames&#39;</title>
+      <title>gganimate() con &#39;babynames&#39;</title>
       <link>/babynames_gganimate/</link>
-      <pubDate>Sun, 13 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/babynames_gganimate/</guid>
-      <description>En este post vamos a realizar dos gráficos animados utilizando gganimate() utilizando el data frame babynames, del paquete babynames(), que ya utilizamos en un post anterior para explicar las funciones del paquete dplyr().
+      <description>Res
+En este post vamos a realizar gráficos animados con gganimate() usando el dataframe babynames del paquete babynames(). Este post es una extensión del post previo: Aprendiendo dplyr con ‘babynames’.
 
-Qué es gganimate()?
+
+¿Qué es gganimate()?
 gganimate() es una extensión del paquete ggplot2() diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años.</description>
     </item>
     
@@ -39,11 +41,13 @@ En el post anterior, con el objetivo de exponer las principales funciones del pa
       <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/babynames/</guid>
-      <description>¿Qué es dplyr?
-dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.
+      <description>Res
+El objetivo de este post es exponer las principales funciones del paquete dplyr() diseñadas para la manipulación de dataframes/tibbles. Utilizamos el dataframe ‘babynames’ del paquete babynames().
 
-Las funciones del paquete dplyr son las siguientes:
-select()filter()group_by()mutate()summarise()arrange()</description>
+
+
+¿Qué es dplyr?
+dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.</description>
     </item>
     
   </channel>

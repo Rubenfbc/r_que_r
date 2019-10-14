@@ -14,6 +14,16 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 \
 
+**Res**
+
+El objetivo  de este post es exponer las principales funciones del paquete `dplyr()` diseñadas para la manipulación de dataframes/tibbles. Utilizamos el dataframe ‘babynames’ del paquete `babynames()`.
+
+\
+
+\
+
+\
+
 # ¿Qué es dplyr? 
 
 \
