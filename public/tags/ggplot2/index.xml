@@ -26,13 +26,16 @@ gganimate() es una extensión del paquete ggplot2() diseñado para crear gráfic
     </item>
     
     <item>
-      <title>Aproximación a la evolución de los nombres en España</title>
+      <title>Aproximación a la evolución de los nombres en España según edad promedio</title>
       <link>/nombres/</link>
       <pubDate>Tue, 08 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/nombres/</guid>
-      <description>Nombres en España
-En el post anterior, con el objetivo de exponer las principales funciones del paquete dplyr, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017, en función de los datos que provee la Administración de Seguridad Social de este país. Realizando dicho post me empecé a preguntar cómo habrán evolucionado los nombres en nuestro país en las últimas décadas.</description>
+      <description>Res
+Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.
+
+Nombres en España
+En el post previo, con el objetivo de exponer las principales funciones del paquete dplyr(), examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017 en función de los datos que provee la Administración de Seguridad Social de este país.</description>
     </item>
     
   </channel>

@@ -1,5 +1,5 @@
 ---
-title: "Aproximación a la evolución de los nombres en España"
+title: "Aproximación a la evolución de los nombres en España según edad promedio"
 author: "Rubén F. Bustillo"
 date: 2019-10-08
 categories: ["R"]
@@ -9,38 +9,83 @@ tags: ["dplyr", "tidyverse", "ggplot2"]
 
 
 
+<p><strong>Res</strong></p>
+<p>Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.</p>
 <p><br />
 </p>
 <div id="nombres-en-espana" class="section level1">
 <h1>Nombres en España</h1>
 <p><br />
 </p>
-<p>En el post anterior, con el objetivo de exponer las principales funciones del paquete <code>dplyr</code>, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017, en función de los datos que provee la Administración de Seguridad Social de este país. Realizando dicho post me empecé a preguntar cómo habrán evolucionado los nombres en nuestro país en las últimas décadas.</p>
+<p>En el post previo, con el objetivo de exponer las principales funciones del paquete <code>dplyr()</code>, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017 en función de los datos que provee la Administración de Seguridad Social de este país. Para ello utilizamos el data frame <code>babynames</code>, que indica el número de registros de la tarjeta de la Seguridad Social norteamericana para cada nombre masculino y femenino que supere los diez registros. Mientras realizaba dicho post me empecé a preguntar cómo habrá sido la evolución de los nombres en España en las últimas décadas.</p>
 <p><br />
 </p>
-<pre class="r"><code>library(dplyr)
+<p>Para llevar a cabo este análisis haremos uso de los datos que provee el INEI. No obstante, a diferencia de la base de datos del post anterior para Estados Unidos donde se indicaba el número de personas que se registraba con cada uno de los nombres por año, en esta ocasión utilizaremos una base de datos que indica la edad promedio de cada uno de los nombres que aparecen en la lista.</p>
+<p><br />
+</p>
+<p>En primer lugar descargamos los paquetes necesarios para el análisis</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(dplyr)
 library(ggplot2)
 library(readxl)
 library(tidyverse)
 library(scales)</code></pre>
 <p><br />
 </p>
-<p>La base de datos del INEI.
-Pero a diferencia de la base de datos del post anterior, esta indica la edad promedio de cada uno de los nombres de la lista.</p>
+<div id="nombres-masculinos" class="section level2">
+<h2>Nombres masculinos</h2>
+<pre class="r"><code>hombres_por_edad_media &lt;- read_excel(&quot;./nombres_por_edad_media.xls&quot;, sheet = &quot;Hom&quot;)
+
+# las primeras observaciones del dataframe son:
+
+head(hombres_por_edad_media)
+## # A tibble: 6 x 4
+##   Orden Nombre      Frec Media
+##   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 1     ANTONIO   678425  55.9
+## 2 2     JOSE      594144  61.1
+## 3 3     MANUEL    590965  54.9
+## 4 4     FRANCISCO 498934  57.4
+## 5 5     DAVID     365196  30.5
+## 6 6     JUAN      346867  55.7
+
+# Vemos que, por ejemplo, según la base de datos utilizada existen 678425 personas con el nombre ANTONIO y su edad media sería de 55,9 años.</code></pre>
 <p><br />
 </p>
 </div>
-<div id="nombres-masculinos" class="section level1">
-<h1>Nombres masculinos</h1>
-<pre class="r"><code>hombres_por_edad_media &lt;- read_excel(&quot;./nombres_por_edad_media.xls&quot;, 
-                                     sheet = &quot;Hom&quot;)
+<div id="nombres-femeninos" class="section level2">
+<h2>Nombres femeninos</h2>
+<pre class="r"><code>
+mujeres_por_edad_media &lt;- read_excel(&quot;./nombres_por_edad_media.xls&quot;, sheet = &quot;Muj&quot;)
 
-str(hombres_por_edad_media)</code></pre>
-<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    25078 obs. of  4 variables:
-##  $ Orden : chr  &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
-##  $ Nombre: chr  &quot;ANTONIO&quot; &quot;JOSE&quot; &quot;MANUEL&quot; &quot;FRANCISCO&quot; ...
-##  $ Frec  : num  678425 594144 590965 498934 365196 ...
-##  $ Media : num  55.9 61.1 54.9 57.4 30.5 55.7 49.6 33 27 53.3 ...</code></pre>
+# las primeras observaciones son:
+
+head(mujeres_por_edad_media)
+## # A tibble: 6 x 4
+##   Orden Nombre         Frec Media
+##   &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
+## 1 1     MARIA CARMEN 656276  57  
+## 2 2     MARIA        606048  48.6
+## 3 3     CARMEN       391563  60.4
+## 4 4     JOSEFA       276682  68  
+## 5 5     ANA MARIA    273319  51.2
+## 6 6     ISABEL       266967  57.4
+
+# MARIA CARMEN es el nombre femenino más frecuente siendo su edad de 57 años. </code></pre>
+<p><br />
+</p>
+</div>
+</div>
+<div id="nombres-masculinos-mas-frecuentes-segun-su-edad-promedio." class="section level1">
+<h1>Nombres masculinos más frecuentes según su edad promedio.</h1>
+<p><br />
+</p>
+<p>Para nuestro análisis nos interesa clasificar los nombres según su edad promedio. Para ello establecemos una serie de rangos de edad promedio cada diez años. Sin embargo establecemos un rango de cinco años para los nombres cuya edad promedio es menor a 10 años debido a que intuimos que en este rango existe una mayor variabilidad en los nombres.</p>
+<p><br />
+</p>
+<p>Para crear los rangos de edad creamos una nueva columna utilizando la función <code>mutate()</code> del paquete <code>dplyr</code>y la función <code>case_when()</code> para identificar los nombres que corresponden a cada categoría. Además, tras ordenar las observaciones según los grupos de edad con <code>group_by()</code> seleccionamos únicamente las primeras 20 observaciones de cada uno de los grupos de edad establecidos.</p>
 <p><br />
 </p>
 <pre class="r"><code>hombres &lt;- hombres_por_edad_media %&gt;%
@@ -62,29 +107,29 @@ str(hombres_por_edad_media)</code></pre>
     ) %&gt;%
   group_by(grupos_edad,Nombre, Frec) %&gt;%
   select(grupos_edad, Nombre, Frec) %&gt;%
-  arrange(grupos_edad) %&gt;%
+  arrange(grupos_edad) %&gt;% 
   group_by(grupos_edad) %&gt;%
-  mutate(suma_grupo_edad = sum(Frec))%&gt;%
-  mutate(percent = Frec/suma_grupo_edad*100) %&gt;%
   top_n(20,Frec)
 
-hombres</code></pre>
-<pre><code>## # A tibble: 180 x 5
-## # Groups:   grupos_edad [9]
-##    grupos_edad                    Nombre  Frec suma_grupo_edad percent
-##    &lt;chr&gt;                          &lt;chr&gt;  &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;
-##  1 Edad promedio entre 0 y 5 años LEO    16593           51596   32.2 
-##  2 Edad promedio entre 0 y 5 años ENZO    9692           51596   18.8 
-##  3 Edad promedio entre 0 y 5 años DYLAN   6719           51596   13.0 
-##  4 Edad promedio entre 0 y 5 años THIAGO  5054           51596    9.80
-##  5 Edad promedio entre 0 y 5 años NEIZAN  1789           51596    3.47
-##  6 Edad promedio entre 0 y 5 años IZEI     788           51596    1.53
-##  7 Edad promedio entre 0 y 5 años EIDEN    677           51596    1.31
-##  8 Edad promedio entre 0 y 5 años EIDAN    662           51596    1.28
-##  9 Edad promedio entre 0 y 5 años HARON    661           51596    1.28
-## 10 Edad promedio entre 0 y 5 años IYAD     619           51596    1.20
-## # ... with 170 more rows</code></pre>
-<pre class="r"><code>hombres$Nombre &lt;- str_to_title(hombres$Nombre)
+# las primeras observaciones del nuevo data frame son:
+
+head(hombres)
+## # A tibble: 6 x 3
+## # Groups:   grupos_edad [1]
+##   grupos_edad                    Nombre  Frec
+##   &lt;chr&gt;                          &lt;chr&gt;  &lt;dbl&gt;
+## 1 Edad promedio entre 0 y 5 años LEO    16593
+## 2 Edad promedio entre 0 y 5 años ENZO    9692
+## 3 Edad promedio entre 0 y 5 años DYLAN   6719
+## 4 Edad promedio entre 0 y 5 años THIAGO  5054
+## 5 Edad promedio entre 0 y 5 años NEIZAN  1789
+## 6 Edad promedio entre 0 y 5 años IZEI     788</code></pre>
+<p><br />
+</p>
+<p>Debemos ordenar los rangos de edad creados y, para ello, convertimos dicha variable en factor y establecemos los niveles que nos interesan.</p>
+<p><br />
+</p>
+<pre class="r"><code>
 hombres$grupos_edad &lt;- factor(hombres$grupos_edad, 
                               levels=c(&quot;Edad promedio entre 0 y 5 años&quot;,
                                        &quot;Edad promedio entre 6 y 10 años&quot;,
@@ -103,12 +148,17 @@ hombres$grupos_edad &lt;- factor(hombres$grupos_edad,
                                        &quot;Edad promedio entre 41 y 50 años&quot;,
                                        &quot;Edad promedio entre 51 y 60 años&quot;,
                                        &quot;Edad promedio entre 60 y 70 años&quot;,
-                                       &quot;Edad promedio mayor de 71 años&quot;))
-
+                                       &quot;Edad promedio mayor de 71 años&quot;))</code></pre>
+<p><br />
+</p>
+<p>Utilizando la función <code>summarise()</code> podemos sumar las frecuencias de cada nombre que corresponde a cada grupo de edad. En este punto del ejercicio la variable <code>grupos_edad</code> estará ordenada según hemos establecido previamente.</p>
+<p><br />
+</p>
+<pre class="r"><code>
 hombres %&gt;%
   group_by(grupos_edad) %&gt;%
-  summarise(total_por_grupo=sum(Frec))</code></pre>
-<pre><code>## # A tibble: 9 x 2
+  summarise(total_por_grupo=sum(Frec))
+## # A tibble: 9 x 2
 ##   grupos_edad                      total_por_grupo
 ##   &lt;fct&gt;                                      &lt;dbl&gt;
 ## 1 Edad promedio entre 0 y 5 años             46773
@@ -120,19 +170,38 @@ hombres %&gt;%
 ## 7 Edad promedio entre 51 y 60 años         4353380
 ## 8 Edad promedio entre 60 y 70 años          935101
 ## 9 Edad promedio mayor de 71 años              8586</code></pre>
+<p><br />
+</p>
+<p>Como cabe esperar los rangos de edad 21-30, 31-40, 41-50 y 50-60 son los que tienen una mayor proporción de observaciones debido a motivos puramente demográficos. No obstante, nótese que el hecho de que el promedio de edad de alguno de los nombres se encuentre en esos rangos no significa que no existan personas con dichos nombres en otros rangos de edad.</p>
+<p><br />
+</p>
+<div id="visualizacion-de-los-nombres-masculinos-mas-frecuentes-segun-edad-promedio" class="section level2">
+<h2>Visualización de los nombres masculinos más frecuentes según edad promedio</h2>
+<p><br />
+</p>
+<p>En primer volvemos a cargar el theme diseñado por <a href="https://www.trafforddatalab.io/graphics_companion/">Tradfford Data Lab</a> llamado <code>theme_lab()</code>.</p>
+<p><br />
+</p>
 <pre class="r"><code>source(&quot;https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R&quot;)</code></pre>
-<pre class="r"><code>ggplot(hombres, aes(reorder(Nombre, Frec, sum),Frec)) +
+<p><br />
+</p>
+<p><br />
+</p>
+<pre class="r"><code>
+ggplot(hombres, aes(reorder(Nombre, Frec, sum),Frec)) +
   geom_col(fill = &quot;#fc6721&quot;, 
-           alpha = 0.8)+
+           alpha = 0.8,
+           size= 2)+
   coord_flip()+
   facet_wrap(~grupos_edad, scales= &quot;free_y&quot;, ncol=2)+
   theme_lab()+
   labs(title = &quot;Nombres masculinos más comunes&quot;, 
       subtitle = &quot;Organizados en categorías según su edad promedio&quot;, 
-      caption = &quot;Source: INE  |  @Ruben46563154&quot;, 
+      caption = &quot;Fuente: INE  |  @Ruben46563154&quot;, 
       x = &quot;&quot;, y = &quot;&quot;, 
       fill = NULL) + 
-  theme(panel.grid.major.x = element_blank())+
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.y= element_text(size=8))+
   scale_y_continuous(labels=comma)+
   geom_hline(yintercept=c(200000, 400000,600000), 
              color=&quot;lightgrey&quot;,
@@ -141,5 +210,6 @@ hombres %&gt;%
             hjust=0,
             color=&quot;grey40&quot;,
             size= 3.2)</code></pre>
-<p><img src="/nombres_files/figure-html/unnamed-chunk-6-1.png" width="960" /></p>
+<p><img src="/nombres_files/figure-html/unnamed-chunk-8-1.png" width="960" /></p>
+</div>
 </div>

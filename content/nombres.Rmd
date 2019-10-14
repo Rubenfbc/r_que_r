@@ -1,5 +1,5 @@
 ---
-title: "Aproximación a la evolución de los nombres en España"
+title: "Aproximación a la evolución de los nombres en España según edad promedio"
 author: "Rubén F. Bustillo"
 date: 2019-10-08
 categories: ["R"]
@@ -7,13 +7,30 @@ tags: ["dplyr", "tidyverse", "ggplot2"]
 
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+
+**Res**
+
+Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.
+
 \
 
 # Nombres en España
 
 \
 
-En el post anterior, con el objetivo de exponer las principales funciones del paquete `dplyr`, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017, en función de los datos que provee la Administración de Seguridad Social de este país. Realizando dicho post me empecé a preguntar cómo habrán evolucionado los nombres en nuestro país en las últimas décadas. 
+En el post previo, con el objetivo de exponer las principales funciones del paquete `dplyr()`, examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017 en función de los datos que provee la Administración de Seguridad Social de este país. Para ello utilizamos el data frame `babynames`, que indica el número de registros de la tarjeta de la Seguridad Social norteamericana para cada nombre masculino y femenino que supere los diez registros. Mientras realizaba dicho post me empecé a preguntar cómo habrá sido la evolución de los nombres en España en las últimas décadas. 
+
+\
+
+Para llevar a cabo este análisis haremos uso de los datos que provee el INEI. No obstante, a diferencia de la base de datos del post anterior para Estados Unidos donde se indicaba el número de personas que se registraba con cada uno de los nombres por año, en esta ocasión utilizaremos una base de datos que indica la edad promedio de cada uno de los nombres que aparecen en la lista.
+
+\
+
+En primer lugar descargamos los paquetes necesarios para el análisis 
 
 \
 
@@ -27,21 +44,49 @@ library(scales)
 
 ```
 
-\
-
-La base de datos del INEI. 
-Pero a diferencia de la base de datos del post anterior, esta indica la edad promedio de cada uno de los nombres de la lista. 
 
 \
 
-# Nombres masculinos
+## Nombres masculinos
 
 ```{r}
-hombres_por_edad_media <- read_excel("./nombres_por_edad_media.xls", 
-                                     sheet = "Hom")
+hombres_por_edad_media <- read_excel("./nombres_por_edad_media.xls", sheet = "Hom")
 
-str(hombres_por_edad_media)
+# las primeras observaciones del dataframe son:
+
+head(hombres_por_edad_media)
+
+# Vemos que, por ejemplo, según la base de datos utilizada existen 678425 personas con el nombre ANTONIO y su edad media sería de 55,9 años.
+
 ```
+
+\
+
+## Nombres femeninos
+
+```{r}
+
+mujeres_por_edad_media <- read_excel("./nombres_por_edad_media.xls", sheet = "Muj")
+
+# las primeras observaciones son:
+
+head(mujeres_por_edad_media)
+
+# MARIA CARMEN es el nombre femenino más frecuente siendo su edad de 57 años. 
+
+```
+
+\
+
+# Nombres masculinos más frecuentes según su edad promedio.
+
+\
+
+Para nuestro análisis nos interesa clasificar los nombres según su edad promedio. Para ello establecemos una serie de rangos de edad promedio cada diez años. Sin embargo establecemos un rango de cinco años para los nombres cuya edad promedio es menor a 10 años debido a que intuimos que en este rango existe una mayor variabilidad en los nombres. 
+
+\
+
+Para crear los rangos de edad creamos una nueva columna utilizando la función `mutate()` del paquete `dplyr`y la función `case_when()` para identificar los nombres que corresponden a cada categoría. Además, tras ordenar las observaciones según los grupos de edad con `group_by()` seleccionamos únicamente las primeras 20 observaciones de cada uno de los grupos de edad establecidos. 
 
 \
 
@@ -65,18 +110,24 @@ hombres <- hombres_por_edad_media %>%
     ) %>%
   group_by(grupos_edad,Nombre, Frec) %>%
   select(grupos_edad, Nombre, Frec) %>%
-  arrange(grupos_edad) %>%
+  arrange(grupos_edad) %>% 
   group_by(grupos_edad) %>%
-  mutate(suma_grupo_edad = sum(Frec))%>%
-  mutate(percent = Frec/suma_grupo_edad*100) %>%
   top_n(20,Frec)
 
-hombres
+# las primeras observaciones del nuevo data frame son:
+
+head(hombres)
+ 
 ```
 
+\
+
+Debemos ordenar los rangos de edad creados y, para ello, convertimos dicha variable en factor y establecemos los niveles que nos interesan.
+
+\
 
 ```{r}
-hombres$Nombre <- str_to_title(hombres$Nombre)
+
 hombres$grupos_edad <- factor(hombres$grupos_edad, 
                               levels=c("Edad promedio entre 0 y 5 años",
                                        "Edad promedio entre 6 y 10 años",
@@ -97,29 +148,62 @@ hombres$grupos_edad <- factor(hombres$grupos_edad,
                                        "Edad promedio entre 60 y 70 años",
                                        "Edad promedio mayor de 71 años"))
 
+```
+
+\
+
+Utilizando la función `summarise()` podemos sumar las frecuencias de cada nombre que corresponde a cada grupo de edad. En este punto del ejercicio la variable `grupos_edad` estará ordenada según hemos establecido previamente.
+
+\
+
+```{r}
+
 hombres %>%
   group_by(grupos_edad) %>%
   summarise(total_por_grupo=sum(Frec))
 
 ```
 
+\
+
+Como cabe esperar los rangos de edad 21-30, 31-40, 41-50 y 50-60 son los que tienen una mayor proporción de observaciones debido a motivos puramente demográficos. No obstante, nótese que el hecho de que el promedio de edad de alguno de los nombres se encuentre en esos rangos no significa que no existan personas con dichos nombres en otros rangos de edad. 
+
+\
+
+## Visualización de los nombres masculinos más frecuentes según edad promedio
+
+\
+
+En primer volvemos a cargar el theme diseñado por [Tradfford Data Lab](https://www.trafforddatalab.io/graphics_companion/) llamado `theme_lab()`.
+
+\
+
 ```{r}
 source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R")
 ```
 
+\
+
+
+
+\
+
 ```{r, fig.width= 10, fig.height=20}
+
 ggplot(hombres, aes(reorder(Nombre, Frec, sum),Frec)) +
   geom_col(fill = "#fc6721", 
-           alpha = 0.8)+
+           alpha = 0.8,
+           size= 2)+
   coord_flip()+
   facet_wrap(~grupos_edad, scales= "free_y", ncol=2)+
   theme_lab()+
   labs(title = "Nombres masculinos más comunes", 
       subtitle = "Organizados en categorías según su edad promedio", 
-      caption = "Source: INE  |  @Ruben46563154", 
+      caption = "Fuente: INE  |  @Ruben46563154", 
       x = "", y = "", 
       fill = NULL) + 
-  theme(panel.grid.major.x = element_blank())+
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.y= element_text(size=8))+
   scale_y_continuous(labels=comma)+
   geom_hline(yintercept=c(200000, 400000,600000), 
              color="lightgrey",
