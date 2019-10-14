@@ -1,0 +1,177 @@
+---
+title: "gganimate con 'babynames'"
+author: "Rubén F. Bustillo"
+date: '2019-10-13'
+categories: ["R"]
+tags: ["dplyr", "tidyverse", "ggplot2"]
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+
+
+\
+
+En este post vamos a realizar dos gráficos animados utilizando `gganimate()` utilizando el data frame `babynames`, del paquete `babynames()`, que ya utilizamos en un post anterior para explicar las funciones del paquete `dplyr()`. 
+
+\
+
+# Qué es gganimate()? 
+
+\
+
+`gganimate()` es una extensión del paquete `ggplot2()` diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años. A modo de ejemplo vamos a crear dos gráficos que servirán como continuación del post anterior donde se explicaba las principales funcionalidades del paquete `dplyr()`. 
+
+\
+
+# Generamos un nuevo data frame con dplyr()
+
+\
+
+Empezamos descargando los siguientes paquetes:
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(lubridate)
+library(gganimate)
+library(png)
+library(gifski)
+library(babynames)
+```
+
+\
+
+En primer lugar estimamos la cantidad de registros por año y por sexo utilizando la función `group_by()` y `summarize()` del paquete `dplyr()` tal y como vimos en el post previo. De esta forma, sumando el número de registros de cada nombre por sexo y año obtenemos un nuevo data frame del total de solicitudes de la tarjeta de la Seguridad Social por año desde 1880 hasta 2017. Llamaremos al nuevo data frame `babynames_year`. 
+
+\
+
+```{r}
+
+babynames_year <- babynames %>%
+  group_by(year, sex) %>%
+  summarize(suma=sum(n))
+
+```
+
+\
+
+Las primeras filas del nuevo data frame son las siguientes:
+
+\
+
+```{r}
+
+head(babynames_year)
+
+```
+
+\
+
+
+# Gráficos animados con gganimate()
+
+\ 
+
+Para hacer un gráfico dinámico donde podamos identificar dos columnas paralelas para cada uno de los sexos podemos utilizar un código similar al siguiente:
+
+\
+
+```{r}
+
+# En primer lugar guardamos el gráfico con el nombre plot_babynames_dodge
+
+plot_babynames_dodge <- babynames_year %>%
+  ggplot(aes(x = sex, 
+             y = suma, 
+             fill= sex )) +
+  geom_bar(stat= "identity", 
+           color = "white", 
+           show.legend = FALSE) +
+  geom_text(aes(label = as.numeric(suma)), 
+            position = position_dodge(0.9), 
+            vjust= 1.2, 
+            size = 5, 
+            color = "white")+
+  scale_fill_manual(values = c("orange", "darkgrey")) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()+
+  enter_appear() +
+  transition_states(year, 
+                    transition_length = 1.5, 
+                    state_length = 2) +
+  labs(title = " Recién nacidos en EE.UU por sexo \n Year : {closest_state}", 
+       subtitle = "Solicitudes de la tarjeta de la Seguridad Social",
+       y = "",
+       x = "", 
+       caption = "US Social Security Administration") +
+  theme(panel.grid.major.x = element_blank(),
+        plot.title = element_text(size = 18, 
+                                  face = "bold", 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=14, 
+                                     face = "plain", 
+                                     hjust = 0.5)) 
+
+
+# graficamos nuestro plot utilizando la funcion animate()
+
+animate(plot_babynames_dodge, nframes= 300, width = 600, height = 600, fps = 10)
+
+
+```
+
+
+\
+
+Para hacer un gráfico dinámico donde podamos identificar en una sola columna los dos géneros (stacked) podemos realizar las siguientes modificaciones al gráfico original:
+
+\
+
+```{r}
+
+# En primer lugar guardamos el gráfico con el nombre plot_babynames_stack
+
+plot_babynames_stack <- babynames_year %>%
+  ggplot(aes(x = " ", 
+             y = suma, 
+             fill= sex )) +
+  geom_bar(stat= "identity", 
+           color = "white", 
+           show.legend = TRUE) +
+  geom_text(aes(label = as.factor(suma)), 
+            position = position_stack(vjust = 0.5), 
+            size = 5, 
+            color = "white")+
+  scale_fill_manual(values = c("orange", "darkgrey")) +
+  scale_y_continuous(labels = scales::comma) +
+  enter_appear() +
+  transition_states(year, 
+                    transition_length = 1.5, 
+                    state_length = 2) +
+  labs(title = " Recién nacidos en EE.UU por sexo \n Year : {closest_state}", 
+       subtitle = "Solicitudes de la tarjeta de la Seguridad Social",
+       y = "",
+       x = "", 
+       caption = "US Social Security Administration") +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank(),
+        plot.title = element_text(size = 18, 
+                                  face = "bold", 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=14, 
+                                     face = "plain", 
+                                     hjust = 0.5)) 
+
+
+# Graficamos el segundo plot con gganimate()
+
+animate(plot_babynames_stack, nframes= 300, width = 400, height = 700, fps = 10)
+
+
+```

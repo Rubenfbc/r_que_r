@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gganimate on R que R</title>
+    <link>/tags/gganimate/</link>
+    <description>Recent content in gganimate on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 13 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/gganimate/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>gganimate con &#39;babynames&#39;</title>
+      <link>/babynames_gganimate/</link>
+      <pubDate>Sun, 13 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/babynames_gganimate/</guid>
+      <description>¿Qué es gganimate?
+library(tidyverse)library(lubridate)library(gganimate)library(png)library(gifski)library(babynames) babynames_year &amp;lt;- babynames %&amp;gt;%group_by(year, sex) %&amp;gt;%summarize(suma=sum(n))xxxx
+babynames_year %&amp;gt;%ggplot(aes(x = sex, y = suma, fill= sex )) +geom_bar(stat= &amp;quot;identity&amp;quot;, color = &amp;quot;white&amp;quot;, show.legend = FALSE) +geom_text(aes(label = as.numeric(suma)), position = position_dodge(0.9), vjust= 1.2, size = 5, color = &amp;quot;white&amp;quot;)+scale_fill_manual(values = c(&amp;quot;orange&amp;quot;, &amp;quot;darkgrey&amp;quot;)) +scale_y_continuous(labels = scales::comma) +theme_minimal()+enter_appear() +transition_states(year, transition_length = 1.</description>
+    </item>
+    
+  </channel>
+</rss>
