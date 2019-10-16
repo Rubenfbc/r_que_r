@@ -144,6 +144,8 @@ head(hombres_por_edad_media)
 <div id="nombres-femeninos" class="section level2">
 <h2>Nombres femeninos</h2>
 <p>De forma similar creamos un nuevo data frame para los nombres femeninos al que nombraremos: <code>mujeres_por_edad_media</code>.</p>
+<p><br />
+</p>
 <pre class="r"><code>
 mujeres_por_edad_media &lt;- read_excel(&quot;./nombres_por_edad_media.xls&quot;, sheet = &quot;Muj&quot;)
 
@@ -260,7 +262,7 @@ hombres$grupos_edad &lt;- factor(hombres$grupos_edad,
 source(&quot;https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R&quot;)</code></pre>
 <p><br />
 </p>
-<p>Utilizando facets queremos identificar, según los rangos de edad establecidos previamente, los 20 nombres en cada rango más comunes. Como hemos señalado, esto no quiere decir que dichos nombres se encuentren unicamente en dicho rango de edad, pero la información obtenida nos permite hacernos una idea de qué nombres están incrementando su popularidad recientemente, cuáles son los nombres más utilizados en 2018 y qué nombres están en camino de su desaparición (no obstante, tengamos en cuenta que la base de datos con la que trabajamos incluye solo los nombres con más de 20 registros, por lo que los nombres que de verdad se encuentran en gran peligro de desaparecer no se encuentran, lamentablemente, en nuestro data frame).</p>
+<p>Utilizando facets queremos identificar, según los rangos de edad establecidos previamente, los 20 nombres en cada rango más comunes. Como hemos señalado, esto no quiere decir que dichos nombres se encuentren únicamente en dicho rango de edad, pero la información obtenida nos permite hacernos una idea de qué nombres están incrementando su popularidad recientemente, cuáles son los nombres más utilizados en 2018 y qué nombres están en camino de su desaparición (no obstante, tengamos en cuenta que la base de datos con la que trabajamos incluye solo los nombres con más de 20 registros, por lo que los nombres que de verdad se encuentran en gran peligro de desaparecer no se encuentran, lamentablemente, en nuestro data frame).</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -298,8 +300,8 @@ ggplot(hombres, aes(reorder(Nombre, Frec), Frec)) +
 </p>
 <p>Este post no tiene como objetivo realizar un análisis exhaustivo de la evolución de los nombres en España sino que, con la excusa de los nombres mostrar un ejemplo de cómo manipular los datos, crear categorías en base a un criterio determinado y cómo realizar un gráfico que refleje dichas categorías. No obstante, del gráfico presentado podemos sacar algunas reflexiones interesantes.</p>
 <ul>
-<li><p>Entre los nombres de moda, es decir, entre los nombres de niños de menor edad, se observan notables influencias de deportistas famosos, como por ejemplo <strong>Leo</strong> o <strong>Neynmar</strong> para el rango de edad 0-5 o <strong>Iker</strong> Y <strong>Pau</strong> para el rango de edad 11-20.</p></li>
-<li><p>También encontramos nombres de origen extranjero practicamente desconocidos en el país hasta hace poco, como pueden ser <strong>Iyad</strong>, <strong>Siraj</strong>, <strong>Haron</strong>, nombres de origen Árabe fruto sin duda del creciente fenómeno de la inmigración.</p></li>
+<li><p>Entre los nombres de moda, es decir, entre los nombres de niños de menor edad, se observan notables influencias de deportistas famosos, como por ejemplo <strong>Leo</strong> o <strong>Neymar</strong> para el rango de edad 0-5 o <strong>Iker</strong> Y <strong>Pau</strong> para el rango de edad 11-20.</p></li>
+<li><p>También encontramos nombres de origen extranjero prácticamente desconocidos en el país hasta hace poco, como pueden ser <strong>Iyad</strong>, <strong>Siraj</strong>, <strong>Haron</strong>, nombres de origen Árabe fruto sin duda del creciente fenómeno de la inmigración.</p></li>
 <li><p>Resulta curioso encontrar distintas variedades de algún nombre de origen extranjero, en su mayoría inglés, donde no parece existir un claro consenso en su plasmación escrita, como por ejemplo <strong>Neizan</strong>-<strong>Neyzan</strong>-<strong>Eizan</strong>-<strong>Izan</strong> o <strong>Eiden</strong>-<strong>Eidan</strong>-<strong>Aiden</strong>.</p></li>
 <li><p>Es evidente que existe una creciente preferencia hacia nombres más cortos, siendo cada vez menos populares los nombres compuestos, e incluso estando de moda acotaciones de nombres ya existentes como <strong>Biel</strong>(<strong>Gabriel</strong>), <strong>Teo</strong> (<strong>Teodoro, Teófilo</strong>), <strong>Xavi</strong> (<strong>Xavier</strong>), <strong>Nacho</strong> (<strong>Ignacio</strong>) o <strong>Quim</strong> (<strong>Joaquim</strong>).</p></li>
 <li><p>Los nombres regionales, como por ejemplo nombres de origen catalán o del País Vasco, parecen también estar en auge. Véase por ejemplo los nombres de <strong>Izei</strong> y <strong>Oihan</strong> (abeto y bosque en Euskera), <strong>Irai</strong>, <strong>Aiur</strong>, <strong>Roc</strong>, <strong>Quim</strong> entre otros.</p></li>
@@ -332,7 +334,7 @@ hombres_por_edad_media %&gt;%
 <h1>Nombres femeninos más frecuentes según su edad promedio.</h1>
 <p><br />
 </p>
-<p>Al igual que hemos hecho con los nombres másculinos procedemos ahora a examinar la evolución de los nombres femeninos utilizando la misma metodología a la utilizada en el apartado previo.</p>
+<p>Al igual que hemos hecho con los nombres masculinos procedemos ahora a examinar la evolución de los nombres femeninos utilizando la misma metodología a la utilizada en el apartado previo.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -442,9 +444,9 @@ ggplot(mujeres, aes(reorder(Nombre, Frec, sum), Frec)) +
 <li><p>La influencia de personajes conocidos no escapa a los nombres femeninos de las niñas de menor edad, bien sea a consecuencia de populares series de televisión, cantantes o actrices. Véase por ejemplo los nombres de <strong>Aria</strong>, <strong>Arya</strong>, <strong>Brianna</strong>.</p></li>
 <li><p>También encontramos nuevos nombres de origen extranjero, algunos de los cuales yo personalmente no había oído jamás, vinculados posiblemente a la población migrante como puede <strong>Jannat</strong>, <strong>Ritaj</strong>, <strong>Hidaya</strong> o <strong>Abrar</strong>.</p></li>
 <li><p>Se observa también una creciente preferencia por nombres simples, y de menor longitud, en ocasiones fruto también de acotaciones de nombres conocidos como <strong>Lola</strong> (<strong>Dolores</strong> se llamaba <strong>Lola</strong>), <strong>Candela</strong> (<strong>Candelaria</strong>), <strong>Laia</strong> (<strong>Eulalia</strong>).</p></li>
-<li><p>La preferencia por los nombres compuestos, especialmente utilizando como primer nombre <strong>María</strong> fue especialmente notable en los nombres cuyo promedio se encuentra entre los 51-60 años, aunque tambien entre los 41-50 y los 60-70. Todo parece indicar que cada vez veremos menos niñas con los nombres de <strong>María Carmen</strong>, <strong>María Pilar</strong>, <strong>Maria Teresa</strong>, <strong>María Ángeles</strong>, <strong>María José</strong>, <strong>María Luisa</strong>, <strong>María Victoria</strong>, <strong>María Antonia</strong> o <strong>María Soledad</strong>, entre otros … A no ser, claro, que en el futuro se recuperen viejas tendencias.</p></li>
+<li><p>La preferencia por los nombres compuestos, especialmente utilizando como primer nombre <strong>María</strong> fue especialmente notable en los nombres cuyo promedio se encuentra entre los 51-60 años, aunque también entre los 41-50 y los 60-70. Todo parece indicar que cada vez veremos menos niñas con los nombres de <strong>María Carmen</strong>, <strong>María Pilar</strong>, <strong>María Teresa</strong>, <strong>María Ángeles</strong>, <strong>María José</strong>, <strong>María Luisa</strong>, <strong>María Victoria</strong>, <strong>María Antonia</strong> o <strong>María Soledad</strong>, entre otros … A no ser, claro, que en el futuro se recuperen viejas tendencias.</p></li>
 <li><p>Aún con todo, el nombre más común a principios de 2018 en España es <strong>María Carmen</strong>, seguido por <strong>María</strong> y <strong>Carmen</strong>. Nombres que se encuentran en rangos de edad promedio entre los 50 y los 70 años.</p></li>
-<li><p>De nuevo comprobamos la existencia de nombres femeninos también en importante peligro de extinción. A partir de los gráficos podemos identificar nombres como <strong>Ignacia</strong>, <strong>Feliciana</strong>, <strong>Balbina</strong>, <strong>Emiliana</strong> o <strong>Rufina</strong>, nombres cuya edad promedio está en másde 71 años. No obstante, y teniendo en cuenta que el INEI no informa de nombres de menos de 20 registros, podemos examinar los nombres femeninos en mayor peligro de extinción de la siguiente forma:</p></li>
+<li><p>De nuevo comprobamos la existencia de nombres femeninos también en importante peligro de extinción. A partir de los gráficos podemos identificar nombres como <strong>Ignacia</strong>, <strong>Feliciana</strong>, <strong>Balbina</strong>, <strong>Emiliana</strong> o <strong>Rufina</strong>, nombres cuya edad promedio está en más de 71 años. No obstante, y teniendo en cuenta que el INEI no informa de nombres de menos de 20 registros, podemos examinar los nombres femeninos en mayor peligro de extinción de la siguiente forma:</p></li>
 </ul>
 <p><br />
 </p>
