@@ -1,0 +1,55 @@
+---
+title: "Mapas en R usando coordenadas"
+author: "Rubén F. Bustillo"
+date: 2019-10-17
+categories: ["R"]
+tags: ["dplyr", "tidyverse"]
+
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+**Res**
+
+El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar. 
+
+\
+
+
+# Mapa Base
+
+\
+
+Existen diversas formas para realizar mapas en R. Para realizar el mapa base, que nos servirá de fondo sobre donde plasmar nuestras observaciones podríamos también utilizar distintas herramientas. 
+
+\
+
+Una forma de realizar mapas en R es utilizando el paquete `mapdata`. Para realizar un mapa del mundo podemos indicar la siguiente orden:
+
+\
+
+```{r, message = FALSE, warning = FALSE, out.width = "80%"}
+
+library(mapdata)
+library(ggplot2)
+
+# Guardamos la información en un nuevo dataframe llamado mapa_mundo
+
+mapa_mundo <- map_data("world")
+
+
+# Para visualizar el mapa utilizamos geom_polygon() 
+
+library(tidyverse)
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey80",
+               color = "white")
+
+```
+

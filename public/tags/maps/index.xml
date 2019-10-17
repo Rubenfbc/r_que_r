@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>maps on R que R</title>
+    <link>/tags/maps/</link>
+    <description>Recent content in maps on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 17 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/maps/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mapas en R mediante coordenadas</title>
+      <link>/mapa_cordenadas/</link>
+      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mapa_cordenadas/</guid>
+      <description>Res
+Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.</description>
+    </item>
+    
+  </channel>
+</rss>
