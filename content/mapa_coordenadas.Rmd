@@ -288,7 +288,7 @@ mapa_mundo %>%
 
 \
 
-# Generación de mapas animados con gganimate()
+# Generación de mapas animados con gganimate
 
 \
 
