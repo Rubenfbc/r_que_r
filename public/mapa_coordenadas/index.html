@@ -207,7 +207,7 @@ ggplot() +
 <h1>Visualización de mapas utilizando coordenadas geográficas</h1>
 <p><br />
 </p>
-<p>Para realizar este apartado vamos a utilizar el dataframe <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11">meteorites</a> del proyecto <a href="https://github.com/rfordatascience/tidytuesday">tidytuesday</a>. Este dataset, que se ha construido con datos de la Meteoritical Society de la NASA, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización).</p>
+<p>Para realizar este apartado vamos a utilizar el dataframe <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11">meteorites</a> del proyecto <a href="https://github.com/rfordatascience/tidytuesday">tidytuesday</a>. Este dataset, que se ha construido con datos de <strong>The Meteoritical Society</strong>, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización).</p>
 <p><br />
 </p>
 <p>En primer lugar descargamos el archivo .csv directamente del github de tidytuesday de la siguiente forma:</p>
@@ -290,7 +290,7 @@ mapa_mundo %&gt;%
   scale_size_continuous(name = &quot;Kg&quot;) +
   ggtitle( &quot;Meteoritos caídos y encontrados&quot;) +
   theme_map()</code></pre>
-<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-9-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Para visualizar los <strong>meteoritos en una región determinada</strong> del globo debemos indicar las coordenadas tal y como se expuso previamente. Pongamos por ejemplo que nos interesa visualizar los <strong>meteoritos caídos (fell) en Europa</strong>, para ello podemos indicar los siguientes comandos:</p>
@@ -335,6 +335,54 @@ mapa_mundo %&gt;%
 <p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
+</div>
+<div id="generacion-de-mapas-animados-con-gganimate" class="section level1">
+<h1>Generación de mapas animados con gganimate()</h1>
+<p><br />
+</p>
+<p>Utilizando el paquete <code>gganimate</code> es posible generar <strong>mapas animados</strong> partiendo de mapas como los creados en los apartados anteriores. Veamos por ejemplo algún ejemplo utilizando el mismo <em>dataset</em> de los meteoritos pero centrándonos en los caídos (fell) y, por lo tanto, obviando los meteoritos encontrados (found).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Cargamos el paquete gganimate
+
+library(gganimate)
+
+
+# Creamos un nuevo dataset en el que no se tenga en cuenta los meteoritos encontrados (found) ni los que cayeron antes de 1800. 
+
+meteoritos_Mundo &lt;- meteoritos %&gt;%
+  filter(fall == &quot;Fell&quot;) %&gt;%
+  filter(year &gt; 1800) %&gt;%
+  drop_na() %&gt;%
+  arrange(mass)
+
+
+# Generamos el mapa, que guardamos como mapa_animado y posteriormente generamos la animación con la función animate. 
+
+mapa_animado &lt;- mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey20&quot;,
+               color = &quot;white&quot;) +
+  geom_point(data= meteoritos_Mundo, 
+             x = meteoritos_Mundo$long, 
+             y = meteoritos_Mundo$lat, 
+             color = &quot;orange&quot;,
+             alpha = 0.7,
+             size = 0.2) +
+  transition_states(meteoritos_Mundo$year,
+                    transition_length = 1, 
+                    state_length = 1) +
+  shadow_mark(past = TRUE) +
+  labs( title = &quot;Caída de meteoritos desde 1800 hasta 2013 \n Year :{closest_state}&quot;,
+        caption = &quot;The Meteoritical Society | @Ruben46563154&quot;) +
+  theme_map() +
+  theme(plot.title = element_text(size = 18, hjust = 0.5))
+  
+
+animate(mapa_animado, nframes = 500, fps = 10) </code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-11-1.gif" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 
                 </section>

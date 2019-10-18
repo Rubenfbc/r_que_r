@@ -153,7 +153,7 @@ ggplot() +
 
 \
 
-Para realizar este apartado vamos a utilizar el dataframe [meteorites](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11) del proyecto [tidytuesday](https://github.com/rfordatascience/tidytuesday). Este dataset, que se ha construido con datos de la Meteoritical Society de la NASA, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización). 
+Para realizar este apartado vamos a utilizar el dataframe [meteorites](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11) del proyecto [tidytuesday](https://github.com/rfordatascience/tidytuesday). Este dataset, que se ha construido con datos de **The Meteoritical Society**, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización). 
 
 \
 
@@ -223,7 +223,7 @@ Para **diferenciar los meteoritos caidos (fell) y los encontrados (found)** pode
 
 \
 
-```{r, message = FALSE, warning = FALSE, out.width = "80%", fig.align = 'center'}
+```{r, message = FALSE, warning = FALSE, out.width = "90%", fig.align = 'center'}
 
 mapa_mundo %>%
   ggplot() +
@@ -287,5 +287,56 @@ mapa_mundo %>%
 ```
 
 \
+
+# Generación de mapas animados con gganimate()
+
+\
+
+Utilizando el paquete `gganimate` es posible generar **mapas animados** partiendo de mapas como los creados en los apartados anteriores. Veamos por ejemplo algún ejemplo utilizando el mismo *dataset* de los meteoritos pero centrándonos en los caídos (fell) y, por lo tanto, obviando los meteoritos encontrados (found).
+
+\
+
+```{r , message = FALSE, warning = FALSE, out.width = "100%", fig.align = 'center'}
+
+# Cargamos el paquete gganimate
+
+library(gganimate)
+
+
+# Creamos un nuevo dataset en el que no se tenga en cuenta los meteoritos encontrados (found) ni los que cayeron antes de 1800. 
+
+meteoritos_Mundo <- meteoritos %>%
+  filter(fall == "Fell") %>%
+  filter(year > 1800) %>%
+  drop_na() %>%
+  arrange(mass)
+
+
+# Generamos el mapa, que guardamos como mapa_animado y posteriormente generamos la animación con la función animate. 
+
+mapa_animado <- mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey20",
+               color = "white") +
+  geom_point(data= meteoritos_Mundo, 
+             x = meteoritos_Mundo$long, 
+             y = meteoritos_Mundo$lat, 
+             color = "orange",
+             alpha = 0.7,
+             size = 0.2) +
+  transition_states(meteoritos_Mundo$year,
+                    transition_length = 1, 
+                    state_length = 1) +
+  shadow_mark(past = TRUE) +
+  labs( title = "Caída de meteoritos desde 1800 hasta 2013 \n Year :{closest_state}",
+        caption = "The Meteoritical Society | @Ruben46563154") +
+  theme_map() +
+  theme(plot.title = element_text(size = 18, hjust = 0.5))
+  
+
+animate(mapa_animado, nframes = 500, fps = 10) 
+
+```
 
 
