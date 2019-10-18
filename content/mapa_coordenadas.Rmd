@@ -242,7 +242,7 @@ mapa_mundo %>%
 
 \
 
-Para visualizar los **meteoritos en una región determinada** del globo debemos indicar las coordenadas tal y como se expuso previamente. Pongamos por ejemplo que nos interesa visualizar los **meteoritos caídos (fell) en Europa** podemos indicar los siguientes comandos:
+Para visualizar los **meteoritos en una región determinada** del globo debemos indicar las coordenadas tal y como se expuso previamente. Pongamos por ejemplo que nos interesa visualizar los **meteoritos caídos (fell) en Europa**, para ello podemos indicar los siguientes comandos:
 
 \
 
@@ -258,12 +258,12 @@ meteoritos_Europa <- meteoritos %>%
   arrange(mass)
 
 
-# graficamos en un mapa de Europa
+# graficamos en un mapa de Europa (y escogemos un fondo oscuro)
 
 mapa_mundo %>%
   ggplot() + 
   geom_polygon(aes(x=long, y=lat, group=group),
-               fill= "grey80", color="white") +
+               fill= "grey30", color="white") +
   geom_point(data=meteoritos_Europa, aes(x=long, 
                                          y=lat, 
                                          size= mass/1000, 
@@ -281,8 +281,11 @@ mapa_mundo %>%
     axis.text = element_blank(),
     axis.title = element_blank(),
     axis.ticks = element_blank(),
-    panel.background = element_rect(colour= "grey", size= 1, fill= NA)
+    panel.background = element_rect(colour= "grey30", size= 1, fill= NA)
   ) 
 
 ```
+
+\
+
 

@@ -293,7 +293,7 @@ mapa_mundo %&gt;%
 <p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
-<p>Para visualizar los <strong>meteoritos en una región determinada</strong> del globo debemos indicar las coordenadas tal y como se expuso previamente. Pongamos por ejemplo que nos interesa visualizar los <strong>meteoritos caídos (fell) en Europa</strong> podemos indicar los siguientes comandos:</p>
+<p>Para visualizar los <strong>meteoritos en una región determinada</strong> del globo debemos indicar las coordenadas tal y como se expuso previamente. Pongamos por ejemplo que nos interesa visualizar los <strong>meteoritos caídos (fell) en Europa</strong>, para ello podemos indicar los siguientes comandos:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -307,12 +307,12 @@ meteoritos_Europa &lt;- meteoritos %&gt;%
   arrange(mass)
 
 
-# graficamos en un mapa de Europa
+# graficamos en un mapa de Europa (y escogemos un fondo oscuro)
 
 mapa_mundo %&gt;%
   ggplot() + 
   geom_polygon(aes(x=long, y=lat, group=group),
-               fill= &quot;grey80&quot;, color=&quot;white&quot;) +
+               fill= &quot;grey30&quot;, color=&quot;white&quot;) +
   geom_point(data=meteoritos_Europa, aes(x=long, 
                                          y=lat, 
                                          size= mass/1000, 
@@ -330,9 +330,11 @@ mapa_mundo %&gt;%
     axis.text = element_blank(),
     axis.title = element_blank(),
     axis.ticks = element_blank(),
-    panel.background = element_rect(colour= &quot;grey&quot;, size= 1, fill= NA)
+    panel.background = element_rect(colour= &quot;grey30&quot;, size= 1, fill= NA)
   ) </code></pre>
 <p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
 </div>
 
                 </section>
