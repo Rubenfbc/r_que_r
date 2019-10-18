@@ -229,33 +229,110 @@ meteoritos &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/rfordat
 ##   geolocation = col_character()
 ## )
 
+# Quitamos los elementos que faltan (na´s) para la representación gráfica
+
 meteoritos_mapa &lt;- meteoritos %&gt;%
   drop_na()</code></pre>
 <p> </p>
-<p>En primer lugar vamos a representar todos los meteoritos en el mapa del mundo, tanto los que se han detectado al caer (fell) como los encontrados (found)</p>
+<p>En primer lugar vamos a representar <strong>todos los meteoritos en el mapa del mundo</strong>, tanto los que se han detectado al caer (fell) como los encontrados (found). Para ello utilizaremos el <code>theme_map()</code> visto en el punto anterior y añadiremos un <code>geom_point()</code> con información de los meteoritos.</p>
 <p><br />
 </p>
 <pre class="r"><code>
-
 options(scipen = 999) # para evitar la anotación científica 
 
-
+# Graficamos indicando 
 
 mapa_mundo %&gt;%
   ggplot() +
   geom_polygon(aes( x= long, y = lat, group = group),
                fill = &quot;grey80&quot;,
                color = &quot;white&quot;) +
-  geom_point(data= meteoritos_mapa, aes(x=long, y = lat, size = mass), stroke = F) +
-  theme_minimal() +
+  geom_point(data= meteoritos_mapa, 
+             aes(x=long, y = lat, size = mass/1000), 
+             stroke = F) +
+  scale_size_continuous(name = &quot;Kg&quot;) +
+  ggtitle( &quot;Meteoritos&quot;) +
+  theme_map()</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Existe como vemos una gran diferencia de tamaño entre los meteoritos incluidos en el dataframe. Veamos, por curiosidad, cuales son los meteoritos de más de 30mil kilos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+meteoritos %&gt;%
+  select(name, year, mass, fall) %&gt;%
+  filter( mass &gt; 30000000) %&gt;%
+  arrange(desc(mass))
+## # A tibble: 3 x 4
+##   name             year     mass fall 
+##   &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;
+## 1 Hoba             1920 60000000 Found
+## 2 Cape York        1818 58200000 Found
+## 3 Campo del Cielo  1575 50000000 Found</code></pre>
+<p><br />
+</p>
+<p>Hoba, Cape York y Campo del Cielo, meteoritos encontrados en Namibia, Groenlandia y Argentina respectivamente, son los meteoritos de mayor masa. Se puede ver una foto de ellos en el siguiente <a href="https://en.wikipedia.org/wiki/List_of_largest_meteorites_on_Earth">enlace</a>.</p>
+<p><br />
+</p>
+<p>Para <strong>diferenciar los meteoritos caidos (fell) y los encontrados (found)</strong> podemos asociar a cada uno de ellos un color de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  geom_point(data= meteoritos_mapa, 
+             aes(x=long, y = lat, size = mass/1000, color = fall), 
+             stroke = F) +
+  scale_color_manual(values = c( &quot;black&quot;, &quot;orange&quot;), name = &quot; &quot;) + 
+  scale_size_continuous(name = &quot;Kg&quot;) +
+  ggtitle( &quot;Meteoritos caídos y encontrados&quot;) +
+  theme_map()</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Para visualizar los <strong>meteoritos en una región determinada</strong> del globo debemos indicar las coordenadas tal y como se expuso previamente. Pongamos por ejemplo que nos interesa visualizar los <strong>meteoritos caídos (fell) en Europa</strong> podemos indicar los siguientes comandos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# seleccionamos los meteoritos que nos interesa graficar
+
+meteoritos_Europa &lt;- meteoritos %&gt;%
+  filter(fall == &quot;Fell&quot;) %&gt;%
+  drop_na() %&gt;%
+  filter(between(long, -12, 25),
+         between(lat, 35, 65)) %&gt;%
+  arrange(mass)
+
+
+# graficamos en un mapa de Europa
+
+mapa_mundo %&gt;%
+  ggplot() + 
+  geom_polygon(aes(x=long, y=lat, group=group),
+               fill= &quot;grey80&quot;, color=&quot;white&quot;) +
+  geom_point(data=meteoritos_Europa, aes(x=long, 
+                                         y=lat, 
+                                         size= mass/1000, 
+                                         color= mass/1000), stroke=F) +
+  coord_fixed(xlim= c(-12,25),
+              ylim= c(35,65),
+              ratio= 1.3)+
+  ggtitle(&quot;Caída de meteoritos en Europa&quot;) +
+  scale_size_continuous(name = &quot;kg&quot;) +
+  scale_color_gradient(low= &quot;orange&quot;, high= &quot;brown&quot;, name= &quot;Kg&quot;) +
+  guides(color= guide_legend()) +
+  theme_classic() +
   theme(
     axis.line = element_blank(),
     axis.text = element_blank(),
     axis.title = element_blank(),
     axis.ticks = element_blank(),
-    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
-  ggtitle( &quot;Mapa Mundi&quot;) </code></pre>
-<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+    panel.background = element_rect(colour= &quot;grey&quot;, size= 1, fill= NA)
+  ) </code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 
                 </section>
