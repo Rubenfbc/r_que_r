@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>gganimate on R que R</title>
-    <link>/tags/gganimate/</link>
-    <description>Recent content in gganimate on R que R</description>
+    <title>mapdata on R que R</title>
+    <link>/tags/mapdata/</link>
+    <description>Recent content in mapdata on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 17 Oct 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/gganimate/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/mapdata/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -22,20 +22,6 @@ El objetivo de este post es exponer una posible forma de realizar mapas en R vis
 
 Creación de Mapas utilizando paquetes de R
 Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré como trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos.</description>
-    </item>
-    
-    <item>
-      <title>gganimate() con &#39;babynames&#39;</title>
-      <link>/babynames_gganimate/</link>
-      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/babynames_gganimate/</guid>
-      <description>Res
-En este post vamos a realizar gráficos animados con gganimate() usando el dataframe babynames del paquete babynames(). Este post es una extensión del post previo: Aprendiendo dplyr con ‘babynames’.
-
-
-¿Qué es gganimate()?
-gganimate() es una extensión del paquete ggplot2() diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años.</description>
     </item>
     
   </channel>

@@ -12,20 +12,29 @@
     
     
     <item>
-      <title>dplyr</title>
-      <link>/tags/dplyr/</link>
+      <title>gganimate</title>
+      <link>/tags/gganimate/</link>
       <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/dplyr/</guid>
+      <guid>/tags/gganimate/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>tidyverse</title>
-      <link>/tags/tidyverse/</link>
+      <title>mapdata</title>
+      <link>/tags/mapdata/</link>
       <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/tidyverse/</guid>
+      <guid>/tags/mapdata/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>maps</title>
+      <link>/tags/maps/</link>
+      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/maps/</guid>
       <description></description>
     </item>
     
@@ -39,11 +48,11 @@
     </item>
     
     <item>
-      <title>gganimate</title>
-      <link>/tags/gganimate/</link>
+      <title>dplyr</title>
+      <link>/tags/dplyr/</link>
       <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/gganimate/</guid>
+      <guid>/tags/dplyr/</guid>
       <description></description>
     </item>
     
@@ -53,6 +62,15 @@
       <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/ggplot2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     

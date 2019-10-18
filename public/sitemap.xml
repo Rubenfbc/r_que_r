@@ -8,12 +8,22 @@
   </url>
   
   <url>
-    <loc>/tags/dplyr/</loc>
+    <loc>/tags/gganimate/</loc>
     <lastmod>2019-10-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/mapa_coordenadas/</loc>
+    <lastmod>2019-10-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/mapdata/</loc>
+    <lastmod>2019-10-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/maps/</loc>
     <lastmod>2019-10-17T00:00:00+00:00</lastmod>
   </url>
   
@@ -33,17 +43,12 @@
   </url>
   
   <url>
-    <loc>/tags/tidyverse/</loc>
-    <lastmod>2019-10-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/babynames/</loc>
     <lastmod>2019-10-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/gganimate/</loc>
+    <loc>/tags/dplyr/</loc>
     <lastmod>2019-10-14T00:00:00+00:00</lastmod>
   </url>
   
@@ -54,6 +59,11 @@
   
   <url>
     <loc>/tags/ggplot2/</loc>
+    <lastmod>2019-10-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidyverse/</loc>
     <lastmod>2019-10-14T00:00:00+00:00</lastmod>
   </url>
   

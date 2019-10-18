@@ -1,9 +1,9 @@
 ---
-title: "Mapas en R usando coordenadas"
+title: "Mapas en R usando coordenadas geográficas"
 author: "Rubén F. Bustillo"
 date: 2019-10-17
 categories: ["R"]
-tags: ["dplyr", "tidyverse"]
+tags: ["maps", "mapdata", "gganimate"]
 
 ---
 
@@ -13,19 +13,17 @@ tags: ["dplyr", "tidyverse"]
 <p>El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.</p>
 <p><br />
 </p>
-<div id="mapa-base" class="section level1">
-<h1>Mapa Base</h1>
+<div id="creacion-de-mapas-utilizando-paquetes-de-r" class="section level1">
+<h1>Creación de Mapas utilizando paquetes de R</h1>
 <p><br />
 </p>
-<p>Existen diversas formas para realizar mapas en R. Para realizar el mapa base, que nos servirá de fondo sobre donde plasmar nuestras observaciones podríamos también utilizar distintas herramientas.</p>
-<p><br />
-</p>
-<p>Una forma de realizar mapas en R es utilizando el paquete <code>mapdata</code>. Para realizar un mapa del mundo podemos indicar la siguiente orden:</p>
+<p>Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré como trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos. No obstante, existen también diversos paquetes que podemos utilizar para realizar mapas en R y sobre ellos trabajaremos en este post. Por ejemplo, utilizando el paquetes <code>mapdata</code> con <code>ggplot2()</code> podemos generar un mapa del mundo estableciendo la siguiente orden:</p>
 <p><br />
 </p>
 <pre class="r"><code>
 library(mapdata)
 library(ggplot2)
+library(maps)
 
 # Guardamos la información en un nuevo dataframe llamado mapa_mundo
 
@@ -39,9 +37,12 @@ library(tidyverse)
 mapa_mundo %&gt;%
   ggplot() +
   geom_polygon(aes( x= long, y = lat, group = group),
-               fill = &quot;grey80&quot;,
+               fill = &quot;black&quot;,
                color = &quot;white&quot;)</code></pre>
-<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-1-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-1-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Además, el mapa anterior podemos <strong>customizarlo</strong> a nuestro gusto utilizando las operaciones clásicas del paquete <code>ggplot2()</code>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -56,6 +57,121 @@ mapa_mundo %&gt;%
     axis.text = element_blank(),
     axis.title = element_blank(),
     axis.ticks = element_blank(),
-    panel.background = element_rect(colour= &quot;black&quot;, size= 1))</code></pre>
-<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa Mundi&quot;) </code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-2-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Asimismo, podemos generar <strong>mapas regionales</strong> indicando las coordenadas. Para realizar un mapa de España peninsular y Baleares, Portugal, sur de Francia y norte de Africa podemos indicar las siguientes coordenadas:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa de la Península Ibérica&quot;) +
+  coord_fixed (xlim= c(-12,5),
+              ylim= c(35,45),
+              ratio = 1.3)</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>De forma similar podemos representar en un mapa, por ejemplo, la región de América del Sur y zonas colidantes indicando las coordenadas adecuadas:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa de América del Sur&quot;) +
+  coord_fixed (xlim= c(-100,-25),
+              ylim= c(-60,20),
+              ratio = 1.2)</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Existe también un <em>theme</em>, usando la función <code>theme_map()</code> del paquete <code>ggthemes</code>, diseñado para representar mapas visualmente bastante agradables.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(ggthemes)
+
+ggplot() +
+  borders(&quot;world&quot;, colour = &quot;white&quot;, fill = &quot;brown&quot;) +
+  theme_map()</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="visualizacion-de-mapas-utilizando-coordenadas-geograficas" class="section level1">
+<h1>Visualización de mapas utilizando coordenadas geográficas</h1>
+<p><br />
+</p>
+<p>Para realizar este apartado vamos a utilizar el dataframe <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11">meteorites</a> del proyecto <a href="https://github.com/rfordatascience/tidytuesday">tidytuesday</a>. Este dataset, que se ha construido con datos de la Meteoritical Society de la NASA, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización).</p>
+<p><br />
+</p>
+<p>En primer lugar descargamos el archivo .csv directamente del github de tidytuesday de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+meteoritos &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-11/meteorites.csv&quot;)
+## Parsed with column specification:
+## cols(
+##   name = col_character(),
+##   id = col_double(),
+##   name_type = col_character(),
+##   class = col_character(),
+##   mass = col_double(),
+##   fall = col_character(),
+##   year = col_double(),
+##   lat = col_double(),
+##   long = col_double(),
+##   geolocation = col_character()
+## )
+
+meteoritos_mapa &lt;- meteoritos %&gt;%
+  drop_na()</code></pre>
+<p> </p>
+<p>En primer lugar vamos a representar todos los meteoritos en el mapa del mundo, tanto los que se han detectado al caer (fell) como los encontrados (found)</p>
+<p><br />
+</p>
+<pre class="r"><code>
+
+options(scipen = 999) # para evitar la anotación científica 
+
+
+
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  geom_point(data= meteoritos_mapa, aes(x=long, y = lat, size = mass), stroke = F) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa Mundi&quot;) </code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>

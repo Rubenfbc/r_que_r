@@ -12,13 +12,16 @@
     
     
     <item>
-      <title>Mapas en R mediante coordenadas</title>
-      <link>/mapa_cordenadas/</link>
+      <title>Mapas en R usando coordenadas geográficas</title>
+      <link>/mapa_coordenadas/</link>
       <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/mapa_cordenadas/</guid>
+      <guid>/mapa_coordenadas/</guid>
       <description>Res
-Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.</description>
+El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.
+
+Creación de Mapas utilizando paquetes de R
+Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré como trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos.</description>
     </item>
     
   </channel>

@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>Mapas en R usando coordenadas</title>
+      <title>Mapas en R usando coordenadas geográficas</title>
       <link>/mapa_coordenadas/</link>
       <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -20,10 +20,8 @@
       <description>Res
 El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.
 
-Mapa Base
-Existen diversas formas para realizar mapas en R. Para realizar el mapa base, que nos servirá de fondo sobre donde plasmar nuestras observaciones podríamos también utilizar distintas herramientas.
-
-Una forma de realizar mapas en R es utilizando el paquete mapdata.</description>
+Creación de Mapas utilizando paquetes de R
+Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré como trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos.</description>
     </item>
     
     <item>
