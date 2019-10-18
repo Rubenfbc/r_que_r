@@ -31,7 +31,7 @@ Una forma de realizar mapas en R es utilizando el paquete `mapdata`. Para realiz
 
 \
 
-```{r, message = FALSE, warning = FALSE, out.width = "80%"}
+```{r, message = FALSE, warning = FALSE, out.width = "80%", fig.align='center'}
 
 library(mapdata)
 library(ggplot2)
@@ -50,6 +50,25 @@ mapa_mundo %>%
   geom_polygon(aes( x= long, y = lat, group = group),
                fill = "grey80",
                color = "white")
+
+```
+
+\
+
+```{r, , message = FALSE, warning = FALSE, out.width = "80%", fig.align='center'}
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey80",
+               color = "white") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "black", size= 1))
 
 ```
 

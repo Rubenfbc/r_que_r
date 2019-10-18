@@ -13,21 +13,6 @@
     
     <item>
       <title>Mapas en R usando coordenadas</title>
-      <link>/copyofbabynames/</link>
-      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/copyofbabynames/</guid>
-      <description>Res
-El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.
-
-Mapa Base
-Existen diversas formas para realizar mapas en R. Para realizar el mapa base, que nos servirá de fondo sobre donde plasmar nuestras observaciones podríamos también utilizar distintas herramientas.
-
-Una forma de realizar mapas en R es utilizando el paquete mapdata.</description>
-    </item>
-    
-    <item>
-      <title>Mapas en R usando coordenadas</title>
       <link>/mapa_coordenadas/</link>
       <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
       

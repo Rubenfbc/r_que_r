@@ -121,7 +121,23 @@ mapa_mundo %&gt;%
   geom_polygon(aes( x= long, y = lat, group = group),
                fill = &quot;grey80&quot;,
                color = &quot;white&quot;)</code></pre>
-<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-1-1.png" width="80%" /></p>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-1-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1))</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 
                 </section>
