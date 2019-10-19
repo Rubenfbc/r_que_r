@@ -538,7 +538,7 @@ Supongamos que queremos observar la evolución del número total de registros de
 \
 
 
-```{r, warning= FALSE, fig.width=10, fig.align='center'}
+```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "100%"}
 
 # Cargamos la librería ggplot2
 
@@ -606,7 +606,7 @@ Utilizando el data frame creado (babynames_2), **identificamos y graficamos para
 
 \
 
-```{r, warning= FALSE, fig.width=10, fig.height=8, fig.align='center'}
+```{r, warning= FALSE, fig.width=10, fig.height=8,  fig.align='center', out.width = "100%"}
 
 babynames_2 %>%
   filter( year == 1880) %>%
@@ -639,7 +639,7 @@ De forma similar, modificando un par de líneas del comando anterior podemos rea
 
 \
 
-```{r, warning= FALSE, fig.width=10, fig.height=8,  fig.align='center'}
+```{r, warning= FALSE, fig.width=10, fig.height=8,  fig.align='center', out.width = "100%"}
   
 
 babynames_2 %>%

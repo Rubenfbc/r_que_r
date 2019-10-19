@@ -1,5 +1,5 @@
 ---
-title: "gganimate() con 'babynames'"
+title: "gganimate con 'babynames'"
 author: "Rubén F. Bustillo"
 date: '2019-10-14'
 categories: ["R"]
@@ -134,7 +134,7 @@ plot_babynames_dodge <- babynames_year %>%
 
 \
 
-```{r, fig.align='center'}
+```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "60%"}
 
 animate(plot_babynames_dodge, nframes= 300, width = 600, height = 600, fps = 10)
 
@@ -192,9 +192,9 @@ plot_babynames_stack <- babynames_year %>%
 
 \
 
-```{r, fig.align='center'}
+```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "60%"}
 
-animate(plot_babynames_stack, nframes= 300, width = 400, height = 700, fps = 10)
+animate(plot_babynames_stack, nframes= 300, width = 400, height = 600, fps = 10)
 
 # guardamos el gráfico en formato .gif
 
@@ -211,7 +211,7 @@ anim_save("plot_babynames_stack.gif")
 
 \
 
-```{r, warning= FALSE, fig.width=10, fig.align='center'}
+```{r, , warning= FALSE, fig.width=10, fig.height= 5,  fig.align='center', out.width = "100%"}
 
 babynames %>%
   group_by(year) %>% 
@@ -275,7 +275,7 @@ plot_babynames_transition <- babynames %>%
 
 \
 
-```{r, fig.align='center'}
+```{r,, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "100%"}
 
 animate(plot_babynames_transition, nframes= 300, width = 900, height = 500, fps = 10)
 
@@ -322,11 +322,11 @@ plot_babynames_transition_2 <- babynames %>%
 
 \
 
-**Graficamos de el nuevo plot** con `gganimate()`
+**Graficamos el nuevo plot** con `gganimate()`
 
 \
 
-```{r, fig.align='center'}
+```{r, , warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "100%"}
 
 animate(plot_babynames_transition_2, nframes= 150, width = 900, height = 500, fps = 10)
 
