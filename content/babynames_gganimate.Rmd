@@ -194,7 +194,7 @@ plot_babynames_stack <- babynames_year %>%
 
 ```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "60%"}
 
-animate(plot_babynames_stack, nframes= 300, width = 400, height = 600, fps = 10)
+animate(plot_babynames_stack, nframes= 300, width = 600, height = 600, fps = 10)
 
 # guardamos el gráfico en formato .gif
 
@@ -223,7 +223,7 @@ babynames %>%
   guides(fill=F) +
   labs( x= "year", 
         y= " ",
-        title = "Número de personas recién nacidas en Estados Unidos desde 1880 a 2017",
+        title = "Número de personas recién nacidas en Estados Unidos desde 1880 hasta 2017",
         subtitle = "Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social",
         caption =  "US Social Security Administration") +
   theme(plot.title = element_text(size = 16, 
@@ -253,7 +253,7 @@ plot_babynames_transition <- babynames %>%
   guides(fill=F) +
   labs( x= "year", 
         y= " ",
-        title = "Número de personas recién nacidas en Estados Unidos desde 1880 a 2017 \n Year : {closest_state}", 
+        title = "Número de personas recién nacidas en Estados Unidos desde 1880 hasta 2017 \n Year : {closest_state}", 
         subtitle = "Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social",
         caption =  "US Social Security Administration") +
   transition_states(year, wrap = F) +
@@ -304,7 +304,7 @@ plot_babynames_transition_2 <- babynames %>%
   guides(fill=F) +
   labs( x= "year", 
         y= " ",
-        title = "Número de personas recién nacidas en Estados Unidos desde 1910 a 1950 \n Year : {closest_state}", 
+        title = "Número de personas recién nacidas en Estados Unidos desde 1910 hasta 1950 \n Year : {closest_state}", 
         subtitle = "Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social",
         caption =  "US Social Security Administration") +
   transition_states(year, wrap = F) +

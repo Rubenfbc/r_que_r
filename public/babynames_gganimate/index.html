@@ -254,7 +254,7 @@ plot_babynames_stack &lt;- babynames_year %&gt;%
 <p><br />
 </p>
 <pre class="r"><code>
-animate(plot_babynames_stack, nframes= 300, width = 400, height = 600, fps = 10)</code></pre>
+animate(plot_babynames_stack, nframes= 300, width = 600, height = 600, fps = 10)</code></pre>
 <p><img src="/babynames_gganimate_files/figure-html/unnamed-chunk-7-1.gif" width="60%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>
 # guardamos el gráfico en formato .gif
@@ -280,7 +280,7 @@ babynames %&gt;%
   guides(fill=F) +
   labs( x= &quot;year&quot;, 
         y= &quot; &quot;,
-        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1880 a 2017&quot;,
+        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1880 hasta 2017&quot;,
         subtitle = &quot;Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social&quot;,
         caption =  &quot;US Social Security Administration&quot;) +
   theme(plot.title = element_text(size = 16, 
@@ -306,7 +306,7 @@ plot_babynames_transition &lt;- babynames %&gt;%
   guides(fill=F) +
   labs( x= &quot;year&quot;, 
         y= &quot; &quot;,
-        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1880 a 2017 \n Year : {closest_state}&quot;, 
+        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1880 hasta 2017 \n Year : {closest_state}&quot;, 
         subtitle = &quot;Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social&quot;,
         caption =  &quot;US Social Security Administration&quot;) +
   transition_states(year, wrap = F) +
@@ -348,7 +348,7 @@ plot_babynames_transition_2 &lt;- babynames %&gt;%
   guides(fill=F) +
   labs( x= &quot;year&quot;, 
         y= &quot; &quot;,
-        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1910 a 1950 \n Year : {closest_state}&quot;, 
+        title = &quot;Número de personas recién nacidas en Estados Unidos desde 1910 hasta 1950 \n Year : {closest_state}&quot;, 
         subtitle = &quot;Estimado en base al número de solicitudes de la tarjeta de la Seguridad Social&quot;,
         caption =  &quot;US Social Security Administration&quot;) +
   transition_states(year, wrap = F) +
