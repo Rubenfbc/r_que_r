@@ -1,0 +1,416 @@
+---
+title: "Terciarización y desindustrialización en España (1980-2011) desde un enfoque territorial"
+author: "Rubén F. Bustillo"
+date: 2019-10-21
+categories: ["R"]
+tags: ["cambio estructural", "CCAA", "gganimate"]
+
+---
+
+
+
+<p><strong>Res</strong></p>
+<p>El presente post examina el proceso de cambio estructural del empleo en las CCAA españolas entre 1980 y 2011 evaluando la existencia de posibles dinámicas de desindustrialización y terciarización.</p>
+<p><br />
+</p>
+<div id="nocion-de-cambio-estructural" class="section level1">
+<h1>Noción de cambio estructural</h1>
+<p><br />
+</p>
+<p>El <strong>concepto de cambio estructural</strong> ha sido tradicionalmente un elemento muy aludido en economía, especialmente en economía del desarrollo. No obstante dicho concepto suele tratarse en la literatura de forma ambigua en tanto en cuanto suele hacer referencia a aspectos muy dispares y a transformaciones de naturaleza diversa y/o multidimensional que registran las sociedades a lo largo de sus procesos de desarrollo. Sin embargo, una de las acepciones más utilizadas en la literatura especializada es la que considera el cambio estructural de una economía como el <strong>proceso de transformación de sus estructuras productivas</strong>. Esta aproximación es sin duda heredera de las contribuciones de algunos de los llamados <em>pioneros del desarrollo</em>, los cuales defendían que un proceso de desarrollo económico genuino debía caracterizarse por la progresiva transición desde estructuras productivas con gran peso en actividades primarias, principalmente agricultura, hacia otras donde dominase la actividad industrial y actividades de servicios. Por ende, aquellas economías que fueran capaces de diversificar sus estructuras productivas y reducir el peso de la actividad agrícola, dirigiendo sus recursos hacia otros sectores, serían aquellas que presentarían mayores posibilidades de crecer de forma sostenida y reducir la pobreza.</p>
+<p><br />
+</p>
+<p>No obstante existen voces discordantes entre los expertos acerca de la inevitabilidad de un proceso de esas características en toda experiencia de desarrollo exitosa. De hecho, diversos autores replantean la existencia de configuraciones productivas ganadoras y perdedoras <em>per se</em>, encontrándose en la literatura discrepancias sobre las características específicas que debería presentar un proceso de cambio estructural que pudiera considerare inequívocamente virtuoso y que asegurase asentar las bases de un proceso de desarrollo genuino y sostenible en el tiempo. Sin embargo, la existencia de discrepancias en este sentido no significa que las transformaciones en las configuraciones productivas no jueguen un papel fundamental en el desempeño económico de una economía a lo largo del tiempo. Dichas transformaciones desempeñarán un papel esencial en el crecimiento económico y, además, a nivel territorial (subnacional) tendrán un impacto significativo sobre la convergencia económica entre las distintas regiones.</p>
+<p><br />
+</p>
+<p>De hecho, la convergencia territorial en los niveles de productividad y de renta per cápita estará estrechamente relacionada con los cambios en las configuraciones sectoriales del producto, pero también con los procesos de movilidad intersectorial de trabajadores. En este sentido algunos autores (McMillan et al. 2014) aseguran que un proceso de movilidad intersectorial del empleo que fuese favorable al crecimiento económico (<em>growth enhancing</em>) sería aquel en el que la dirección de dicho traspaso estuviera positivamente correlacionada con la productividad promedio de los sectores individualizados. Por el contrario, un proceso de traspaso de trabajadores que fuese perjudicial para el crecimiento del producto per cápita sería aquel en el que dicha correlación fuese negativa (<em>growth reducing</em>), donde el empleo estaría movilizándose hacia sectores de menor productividad promedio. En este sentido, ciertas voces aseguran que la creciente terciarización de las economías desarrolladas, y también de gran parte de economías emergentes, y las dinámicas de desindustrialización son reflejo de dinámicas de cambio estructural <em>growth reducing</em>.</p>
+<p><br />
+</p>
+<p>El <strong>objetivo de este post</strong> es modesto y no pretende rebatir o cuestionar ninguno de los planteamientos teóricos presentes en la literatura sobre las características idóneas que debería presentar un proceso de cambio estructural. Simplemente, en el marco planteado y con el pretexto de examinar los procesos de transformación de la estructura sectorial del empleo en las distintas Comunidades Autónomas Españolas en los últimos años, buscando determinar la posible existencia de procesos de cambio estructural <em>growth enhancing</em> o <em>growth reducing</em>, en este post se pretende mostrar cómo podríamos aproximarnos al análisis de dichas dinámicas utilizando algunas funciones de R y mostrar alguna forma de visualizar la evolución de dichos procesos de transformación estructural del empleo a lo largo del tiempo.</p>
+<p><br />
+</p>
+</div>
+<div id="base-de-datos-bdmores" class="section level1">
+<h1>Base de datos BDMORES</h1>
+<p><br />
+</p>
+<p>Para llevar a cabo nuestro objetivo utilizaremos, a precios corrientes, información obtenida de la base de datos <a href="https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/paginas/basesdatosestudiosregionales.aspx">BDMORES</a> (Base de datos regionales de España actualizada en junio de 2017) que incluye magnitudes económicas doblemente clasificadas por región y rama de actividad desde 1980 hasta 2011. Previamente he seleccionado información del valor añadido bruto a precios constantes de 2008 (en miles de euros) y de la población ocupada (miles de personas).</p>
+<p><br />
+</p>
+<p>En primer lugar, para cargar los datasets seleccionados (formato .xlsx) cargamos el paquete <code>readxl</code>. Por un lado tenemos un data frame con los valores del valor agregado bruto por CCAA y rama de actividad y por otro lado otro dataframe con información de la población ocupada. Podemos ver las primeras líneas de cada dataset utilizando la función <code>head()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(readxl)
+
+ce_vab &lt;- read_excel(&quot;datasets/cambioestructural.xlsx&quot;, 
+    sheet = &quot;vab&quot;)
+
+head(ce_vab)
+## # A tibble: 6 x 38
+##   Region CCAA  Sector Nombre Actividad Ramas `1980` `1981` `1982` `1983`
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 AND    Anda~ Agric~ AGR    Agro      Agri~ 2.78e6 2.67e6 2.51e6 2.51e6
+## 2 ARA    Arag~ Agric~ AGR    Agro      Agri~ 9.41e5 5.58e5 6.58e5 7.03e5
+## 3 AST    Astu~ Agric~ AGR    Agro      Agri~ 3.97e5 4.08e5 4.15e5 4.13e5
+## 4 BAL    Bale~ Agric~ AGR    Agro      Agri~ 2.20e5 1.85e5 1.75e5 1.83e5
+## 5 CAN    Cana~ Agric~ AGR    Agro      Agri~ 6.47e5 6.69e5 5.94e5 5.99e5
+## 6 CANT   Cant~ Agric~ AGR    Agro      Agri~ 2.68e5 2.86e5 2.60e5 2.76e5
+## # ... with 28 more variables: `1984` &lt;dbl&gt;, `1985` &lt;dbl&gt;, `1986` &lt;dbl&gt;,
+## #   `1987` &lt;dbl&gt;, `1988` &lt;dbl&gt;, `1989` &lt;dbl&gt;, `1990` &lt;dbl&gt;, `1991` &lt;dbl&gt;,
+## #   `1992` &lt;dbl&gt;, `1993` &lt;dbl&gt;, `1994` &lt;dbl&gt;, `1995` &lt;dbl&gt;, `1996` &lt;dbl&gt;,
+## #   `1997` &lt;dbl&gt;, `1998` &lt;dbl&gt;, `1999` &lt;dbl&gt;, `2000` &lt;dbl&gt;, `2001` &lt;dbl&gt;,
+## #   `2002` &lt;dbl&gt;, `2003` &lt;dbl&gt;, `2004` &lt;dbl&gt;, `2005` &lt;dbl&gt;, `2006` &lt;dbl&gt;,
+## #   `2007` &lt;dbl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;
+
+
+ce_peao &lt;- read_excel(&quot;datasets/cambioestructural.xlsx&quot;, 
+    sheet = &quot;peao&quot;)
+
+head(ce_peao)
+## # A tibble: 6 x 38
+##   Region CCAA  Sector Nombre Actividad Ramas `1980` `1981` `1982` `1983`
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 AND    Anda~ Agric~ AGR    Agro      Agri~  347.   318.   305.   292. 
+## 2 ARA    Arag~ Agric~ AGR    Agro      Agri~   87.7   84.1   83.7   80.6
+## 3 AST    Astu~ Agric~ AGR    Agro      Agri~  103.    92.2   74.9   75.2
+## 4 BAL    Bale~ Agric~ AGR    Agro      Agri~   24.7   21.4   20.3   21.5
+## 5 CAN    Cana~ Agric~ AGR    Agro      Agri~   86.9   81.1   83.9   79.9
+## 6 CANT   Cant~ Agric~ AGR    Agro      Agri~   40.2   38.4   34.8   34.8
+## # ... with 28 more variables: `1984` &lt;dbl&gt;, `1985` &lt;dbl&gt;, `1986` &lt;dbl&gt;,
+## #   `1987` &lt;dbl&gt;, `1988` &lt;dbl&gt;, `1989` &lt;dbl&gt;, `1990` &lt;dbl&gt;, `1991` &lt;dbl&gt;,
+## #   `1992` &lt;dbl&gt;, `1993` &lt;dbl&gt;, `1994` &lt;dbl&gt;, `1995` &lt;dbl&gt;, `1996` &lt;dbl&gt;,
+## #   `1997` &lt;dbl&gt;, `1998` &lt;dbl&gt;, `1999` &lt;dbl&gt;, `2000` &lt;dbl&gt;, `2001` &lt;dbl&gt;,
+## #   `2002` &lt;dbl&gt;, `2003` &lt;dbl&gt;, `2004` &lt;dbl&gt;, `2005` &lt;dbl&gt;, `2006` &lt;dbl&gt;,
+## #   `2007` &lt;dbl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;</code></pre>
+<p><br />
+</p>
+<p>Vemos que ambos datasets tienen un formato largo, es decir, en cada columna a partir de la columna 7 se muestra un año que va desde 1980 hasta 2011. Para trabajar de una forma sencilla estos dataframes conviene recopilar la información en dos columnas, una que indique el año y otra que indique el valor de la variable de interes (vab o población ocupada) por cada observación. Para ello podemos utilizar la función <code>gather()</code> del paquete <code>tidyverse</code>. Además, seleccionaremos las columnas que nos interese conservar con la función <code>select()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(tidyverse)
+
+
+# para el valor agregado bruto (ce_vab)
+
+ce_vab_gather &lt;- ce_vab %&gt;%
+  gather(key= &quot;year&quot;, value=&quot;vab&quot;, 7:38) %&gt;%
+  select(Region, CCAA, Nombre, Actividad, Ramas, year, vab)
+
+head(ce_vab_gather)
+## # A tibble: 6 x 7
+##   Region CCAA     Nombre Actividad Ramas                       year     vab
+##   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;                       &lt;chr&gt;  &lt;dbl&gt;
+## 1 AND    Andaluc~ AGR    Agro      Agricultura, ganadería, si~ 1980  2.78e6
+## 2 ARA    Aragón   AGR    Agro      Agricultura, ganadería, si~ 1980  9.41e5
+## 3 AST    Asturias AGR    Agro      Agricultura, ganadería, si~ 1980  3.97e5
+## 4 BAL    Baleares AGR    Agro      Agricultura, ganadería, si~ 1980  2.20e5
+## 5 CAN    Canarias AGR    Agro      Agricultura, ganadería, si~ 1980  6.47e5
+## 6 CANT   Cantabr~ AGR    Agro      Agricultura, ganadería, si~ 1980  2.68e5
+
+
+# para la población ocupada (ce_peao)
+
+ce_peao_gather &lt;- ce_peao %&gt;%
+  gather(key= &quot;year&quot;, value=&quot;peao&quot;, 7:38) %&gt;%
+  select(Region, CCAA, Nombre, Actividad, Ramas, year, peao)
+
+head(ce_peao_gather)
+## # A tibble: 6 x 7
+##   Region CCAA     Nombre Actividad Ramas                        year   peao
+##   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;                        &lt;chr&gt; &lt;dbl&gt;
+## 1 AND    Andaluc~ AGR    Agro      Agricultura, ganadería, sil~ 1980  347. 
+## 2 ARA    Aragón   AGR    Agro      Agricultura, ganadería, sil~ 1980   87.7
+## 3 AST    Asturias AGR    Agro      Agricultura, ganadería, sil~ 1980  103. 
+## 4 BAL    Baleares AGR    Agro      Agricultura, ganadería, sil~ 1980   24.7
+## 5 CAN    Canarias AGR    Agro      Agricultura, ganadería, sil~ 1980   86.9
+## 6 CANT   Cantabr~ AGR    Agro      Agricultura, ganadería, sil~ 1980   40.2</code></pre>
+<p><br />
+</p>
+<p>Una vez hemos dado un formato adecuado a los dos dataframes nos interesa unirlos en uno solo, conservando una columna con el valor del vab y otra con la población ocupada para cada una de las observaciones expuestas. Existen diversas formas para unir datasets (profundizaré en este aspecto en un futuro post), pero en esta ocasión utilizaremos la función <code>cbind()</code> para ello. Una vez unidos ambos datasets crearemos una nueva columna con la función <code>mutate()</code> para establecer la productividad del trabajo, resultado de dividir el valor agregado bruto entre la población ocupada, columna que llamaremos product.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+cambio_estr &lt;- cbind(ce_vab_gather, ce_peao_gather[,7])
+
+cambio_estructural &lt;- cambio_estr %&gt;%
+  mutate(product = vab/peao) 
+
+head(cambio_estructural)
+##   Region      CCAA Nombre Actividad
+## 1    AND Andalucía    AGR      Agro
+## 2    ARA    Aragón    AGR      Agro
+## 3    AST  Asturias    AGR      Agro
+## 4    BAL  Baleares    AGR      Agro
+## 5    CAN  Canarias    AGR      Agro
+## 6   CANT Cantabria    AGR      Agro
+##                                          Ramas year     vab  peao
+## 1 Agricultura, ganadería, silvicultura y pesca 1980 2776590 347.4
+## 2 Agricultura, ganadería, silvicultura y pesca 1980  941490  87.7
+## 3 Agricultura, ganadería, silvicultura y pesca 1980  397052 102.9
+## 4 Agricultura, ganadería, silvicultura y pesca 1980  220089  24.7
+## 5 Agricultura, ganadería, silvicultura y pesca 1980  646876  86.9
+## 6 Agricultura, ganadería, silvicultura y pesca 1980  268312  40.2
+##     product
+## 1  7992.487
+## 2 10735.348
+## 3  3858.620
+## 4  8910.486
+## 5  7443.913
+## 6  6674.428</code></pre>
+<p><br />
+</p>
+<p>Conviene conocer bien los datos sobre los que trabajamos. Por ello nos interesa examinar con un poco más de profundidad las variables y las observaciones que recoge el dataset sobre el que vamos a trabajar</p>
+<p><br />
+</p>
+<pre class="r"><code>
+unique(cambio_estructural$CCAA)
+##  [1] &quot;Andalucía&quot;          &quot;Aragón&quot;             &quot;Asturias&quot;          
+##  [4] &quot;Baleares&quot;           &quot;Canarias&quot;           &quot;Cantabria&quot;         
+##  [7] &quot;Castilla y León&quot;    &quot;Castilla la Mancha&quot; &quot;Cataluña&quot;          
+## [10] &quot;Valencia&quot;           &quot;Extremadura&quot;        &quot;Galicia&quot;           
+## [13] &quot;Madrid&quot;             &quot;Murcia&quot;             &quot;Navarra&quot;           
+## [16] &quot;País Vasco&quot;         &quot;Rioja&quot;
+unique(cambio_estructural$Region)
+##  [1] &quot;AND&quot;  &quot;ARA&quot;  &quot;AST&quot;  &quot;BAL&quot;  &quot;CAN&quot;  &quot;CANT&quot; &quot;CYL&quot;  &quot;CLM&quot;  &quot;CAT&quot;  &quot;VAL&quot; 
+## [11] &quot;EXT&quot;  &quot;GAL&quot;  &quot;MAD&quot;  &quot;MUR&quot;  &quot;NAV&quot;  &quot;PV&quot;   &quot;RIO&quot;
+
+# La base de datos incluye información sobre 17 CCAA y, por tanto, no incluye las ciudades autónomas de Ceuta y Melilla. CCAA y Region muestran información similar.
+
+unique(cambio_estructural$Actividad)
+## [1] &quot;Agro&quot;         &quot;Industria&quot;    &quot;Construcción&quot; &quot;Servicios&quot;
+unique(cambio_estructural$Ramas)
+##  [1] &quot;Agricultura, ganadería, silvicultura y pesca&quot;                                                                                                          
+##  [2] &quot;Industria de la alimentación, fabricación de bebidas e industria del tabaco&quot;                                                                           
+##  [3] &quot;Industria textil, confección de prendas de vestir e industria del cuero y del calzado&quot;                                                                 
+##  [4] &quot;Industria de la madera y del corcho, industria del papel y artes gráficas&quot;                                                                             
+##  [5] &quot;Coquerías y refino de petróleo; industria química; fabricación de productos farmacéuticos&quot;                                                             
+##  [6] &quot;Fabricación de productos de caucho y plásticos y de otros productos minerales no metálicos&quot;                                                            
+##  [7] &quot;Fabricación de productos informáticos, electrónicos y ópticos; fabricación de material y equipo eléctrico; fabricación de maquinaria y equipo n.c.o.p.&quot;
+##  [8] &quot;Fabricación de material de transporte&quot;                                                                                                                 
+##  [9] &quot;Fabricación de muebles; otras industrias manufactureras y reparación e instalación de maquinaria y equipo&quot;                                             
+## [10] &quot;Resto industria&quot;                                                                                                                                       
+## [11] &quot;Construcción&quot;                                                                                                                                          
+## [12] &quot;Comercio y hostelería&quot;                                                                                                                                 
+## [13] &quot;Transporte y comunicaciones&quot;                                                                                                                           
+## [14] &quot;Intermediación financiera&quot;                                                                                                                             
+## [15] &quot;Otros servicios&quot;
+unique(cambio_estructural$Nombre)
+##  [1] &quot;AGR&quot;       &quot;IND_ALIM&quot;  &quot;IND_TEXT&quot;  &quot;IND_MAD&quot;   &quot;IND_COQ&quot;  
+##  [6] &quot;IND_PLAS&quot;  &quot;IND_INF&quot;   &quot;IND_TRANS&quot; &quot;IND_MUE&quot;   &quot;IND_REST&quot; 
+## [11] &quot;CON&quot;       &quot;COM&quot;       &quot;TYC&quot;       &quot;IN_FIN&quot;    &quot;OS&quot;
+
+# La variable Actividad incluye los grandes sectores de la actividad económica: Agricultura, Industria, Construcción y Servicios. La variable Rama incluye 15 subramas de la actividad económica (y la variable Nombre sus abreviaturas). Nótese que en &quot;Resto industria&quot; se incluye también la &quot;Metalurgia y fabricación de productos metálicos, excepto maquinaria y equipo&quot; y en &quot;Otros Servicios&quot; se incluye también el &quot;Alquiler de inmuebles residenciales&quot;.
+
+unique(cambio_estructural$year)
+##  [1] &quot;1980&quot; &quot;1981&quot; &quot;1982&quot; &quot;1983&quot; &quot;1984&quot; &quot;1985&quot; &quot;1986&quot; &quot;1987&quot; &quot;1988&quot; &quot;1989&quot;
+## [11] &quot;1990&quot; &quot;1991&quot; &quot;1992&quot; &quot;1993&quot; &quot;1994&quot; &quot;1995&quot; &quot;1996&quot; &quot;1997&quot; &quot;1998&quot; &quot;1999&quot;
+## [21] &quot;2000&quot; &quot;2001&quot; &quot;2002&quot; &quot;2003&quot; &quot;2004&quot; &quot;2005&quot; &quot;2006&quot; &quot;2007&quot; &quot;2008&quot; &quot;2009&quot;
+## [31] &quot;2010&quot; &quot;2011&quot;
+
+# El dataset recoge información para el periodo 1980:2011 como indicamos previamente</code></pre>
+<p><br />
+</p>
+</div>
+<div id="estructura-sectorial-del-empleo-segun-productividad-promedio-de-las-ccaa-en-1980" class="section level1">
+<h1>Estructura sectorial del empleo según productividad promedio de las CCAA en 1980</h1>
+<p><br />
+</p>
+<p>En primer lugar vamos a ver cómo era la estructura ocupacional del empleo en 1980 por Comunidad Autónoma según la productividad promedio de cada sector. La idea que perseguimos es realizar un gráfico donde podamos establecer para cada una de las CCAA la relación entre la productividad relativa de cada una de las 15 ramas de la economía que incluye el dataset y la participación del empleo que cada una de dichas ramas representa sobre la población ocupada total de cada una de las regiones en 1980. Para ello realizaremos una serie de modificaciones sobre el dataset original <code>cambio_estructural</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+
+ce_1980 &lt;- cambio_estructural %&gt;%
+  filter(year == 1980) %&gt;%   
+  group_by(Region) %&gt;%       
+  arrange(Region) %&gt;%        
+  mutate( suma_vab = sum(vab)) %&gt;%      
+  mutate( suma_peao = sum(peao)) %&gt;%    
+  mutate( prod_ccaa = suma_vab / suma_peao ) %&gt;% 
+  mutate( prod_relat = log(product/ prod_ccaa)) %&gt;% 
+  mutate( peao_relat = 100*(peao / suma_peao)) %&gt;% 
+  select(Region, CCAA, Nombre, Actividad, vab, prod_relat, peao_relat)
+  
+# Las operaciones realizadas son:
+# 1. Identificamos el dataset original.
+# 2. Filtramos el dataset seleccionando el año 1980.
+# 3. Agrupamos el dataset por CCAA.
+# 4. Ordenamos el dataset por CCAA (alfabéticamente).
+# 5. Creamos una columna (suma_vab) que sume el VAB total por CCAA. 
+# 6. Creamos una columna (suma_peao) que sume el peao total por CCAA.
+# 7. Creamos una columna (prod_ccaa) que indique la productividad de cada CCAA. 
+# 8. Creamos una columna (prod_relat) que muestre la productividad relativa de cada rama con respecto a la productividad total de cada CCAA (en logaritmos).
+# 9. Creamos una columna (peao_relat) que indique la participación sectorial del empleo de cada rama con respecto al total del empleo de cada CCAA (%).
+# 10. Seleccionamos las columnas que nos interesa.
+
+
+head(ce_1980)
+## # A tibble: 6 x 7
+## # Groups:   Region [1]
+##   Region CCAA      Nombre   Actividad     vab prod_relat peao_relat
+##   &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 AND    Andalucía AGR      Agro      2776590    -1.42       19.2  
+## 2 AND    Andalucía IND_ALIM Industria 2418657    -0.130       4.61 
+## 3 AND    Andalucía IND_TEXT Industria  591322    -0.701       2.00 
+## 4 AND    Andalucía IND_MAD  Industria  561817    -0.0674      1.01 
+## 5 AND    Andalucía IND_COQ  Industria 1172748     1.10        0.653
+## 6 AND    Andalucía IND_PLAS Industria 1526154     0.456       1.62</code></pre>
+<p><br />
+</p>
+<p>Para diferenciar graficamente las distintas CCAA utilizaremos la función <code>facet_wrap()</code>. Por su parte identificaremos cuatro colores distintos según la actividad económica. En color verde se señalará el sector agricultura, en marrón la industria, en color gris la construcción y en naranja el sector servicios. El eje de abscisas representará la participación sectorial del empleo de cada una de las ramas, el eje de ordenadas indica la productividad relativa de cada rama con respecto a la productividad total de la economía y el tamaño de cada una de las burbujas representará el vab de dicho sector en miles de euros. Por consiguiente, aquellos subsectores que se sitúen por encima de la línea negra horizontal serán sectores que tienen una productividad promedio superior al de la economía en su conjunto y aquellos por debajo serán sectores de menor productividad promedio en el año analizado.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+
+library(ggrepel)
+
+source(&quot;https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R&quot;)
+
+
+
+ce_1980 %&gt;%
+  ggplot(aes(x = peao_relat, y = prod_relat)) +
+  geom_point(aes(fill= Actividad, 
+                 size = vab/1000), 
+             shape= 21, 
+             colour= &quot;white&quot;, 
+             alpha= 0.6) +
+  facet_wrap(~ CCAA, ncol = 2) +
+  scale_size_continuous(range= c(1,25)) +
+  scale_fill_manual(values = c(&quot;green&quot;, &quot;grey40&quot;,&quot;brown&quot;,&quot;#FF7A14&quot;)) +
+  geom_text_repel(aes(label= Nombre, size= 15)) +
+  theme_lab() +
+  theme(panel.grid.major.x = element_blank(), 
+        legend.position = &quot;up&quot;, 
+        legend.title = element_blank(),
+        plot.title = element_text(size = 18, hjust = 0.5),
+        plot.subtitle = element_text(size = 14, hjust = 0.5),
+        axis.text.x = element_text(size = 8),
+        axis.text.y = element_text(size = 8)) +
+  geom_hline(yintercept = 0, col= &quot;black&quot;, linetype = 1) +
+  geom_vline(xintercept = 0, col= &quot;black&quot;, linetype = 1) +
+  labs(title = &quot;Productividad sectorial relativa\n Vs.\n Participación sectorial del empleo&quot;, 
+       subtitle = &quot;Por Comunidades Autónomas en 1980&quot;, 
+       x = &quot;Employment share in 1980&quot;,  
+       y = &quot;log (sectoral y/ total y)&quot;,
+       caption = &quot;Fuente: BDMORES&quot;)</code></pre>
+<p><img src="/cambioestructural_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>
+
+# Una vez tenemos el código para uno de los años podemos facilmente modificarlo para examinar cualquier otro año del periodo.  </code></pre>
+<p><br />
+</p>
+</div>
+<div id="grafico-animado" class="section level1">
+<h1>Gráfico animado</h1>
+<p><br />
+</p>
+<p>Para observar en un gráfico cómo ha sido la evolución de la productividad relativa de cada rama de la estructura económica con respecto a la productividad de cada región conjuntamente con los cambios en la participación sectorial del empleo en cada uno de estos sectores podemos utilizar el paquete <code>gganimate</code> conjuntamente con <code>ggplot2</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+todas_ccaa &lt;- cambio_estructural %&gt;%
+  group_by(year, CCAA) %&gt;%
+  arrange(year, CCAA) %&gt;%
+  mutate( suma_vab = sum(vab)) %&gt;%
+  mutate( suma_peao = sum(peao)) %&gt;%
+  mutate( prod_ccaa = suma_vab / suma_peao ) %&gt;%
+  mutate( prod_relat = log(product/ prod_ccaa)) %&gt;%
+  mutate( peao_relat = 100*(peao / suma_peao)) %&gt;%
+  select(year, CCAA, Nombre, Actividad, vab, prod_relat, peao_relat)
+
+
+# las 20 primeras filas del nuevo dataset son:
+
+head(todas_ccaa, n = 20)
+## # A tibble: 20 x 7
+## # Groups:   year, CCAA [2]
+##    year  CCAA      Nombre    Actividad         vab prod_relat peao_relat
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+##  1 1980  Andalucía AGR       Agro          2776590    -1.42       19.2  
+##  2 1980  Andalucía IND_ALIM  Industria     2418657    -0.130       4.61 
+##  3 1980  Andalucía IND_TEXT  Industria      591322    -0.701       2.00 
+##  4 1980  Andalucía IND_MAD   Industria      561817    -0.0674      1.01 
+##  5 1980  Andalucía IND_COQ   Industria     1172748     1.10        0.653
+##  6 1980  Andalucía IND_PLAS  Industria     1526154     0.456       1.62 
+##  7 1980  Andalucía IND_INF   Industria      331774    -0.407       0.835
+##  8 1980  Andalucía IND_TRANS Industria      449915    -0.631       1.42 
+##  9 1980  Andalucía IND_MUE   Industria      496089    -0.0816      0.902
+## 10 1980  Andalucía IND_REST  Industria     3146472     0.546       3.05 
+## 11 1980  Andalucía CON       Construcción  7226562     0.236       9.56 
+## 12 1980  Andalucía COM       Servicios    11605641     0.124      17.2  
+## 13 1980  Andalucía TYC       Servicios     4010545    -0.0665      7.18 
+## 14 1980  Andalucía IN_FIN    Servicios     1959274     0.357       2.30 
+## 15 1980  Andalucía OS        Servicios    21430188     0.231      28.5  
+## 16 1980  Aragón    AGR       Agro           941490    -1.20       20.3  
+## 17 1980  Aragón    IND_ALIM  Industria      412068    -0.0306      2.75 
+## 18 1980  Aragón    IND_TEXT  Industria      195078    -0.941       3.23 
+## 19 1980  Aragón    IND_MAD   Industria      221043     0.155       1.22 
+## 20 1980  Aragón    IND_COQ   Industria      208260    -0.0447      1.41
+
+# las 20 últimas filas son:
+
+tail(todas_ccaa, n = 20)
+## # A tibble: 20 x 7
+## # Groups:   year, CCAA [2]
+##    year  CCAA     Nombre    Actividad         vab prod_relat peao_relat
+##    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+##  1 2011  Rioja    CON       Construcción   724266     0.146       8.41 
+##  2 2011  Rioja    COM       Servicios     1195240    -0.210      19.8  
+##  3 2011  Rioja    TYC       Servicios      372856     0.245       3.92 
+##  4 2011  Rioja    IN_FIN    Servicios      312681     0.941       1.64 
+##  5 2011  Rioja    OS        Servicios     2304941    -0.151      36.0  
+##  6 2011  Valencia AGR       Agro          1849193    -0.400       2.95 
+##  7 2011  Valencia IND_ALIM  Industria     2659836     0.261       2.19 
+##  8 2011  Valencia IND_TEXT  Industria     1392188    -0.604       2.73 
+##  9 2011  Valencia IND_MAD   Industria     1202060    -0.0264      1.32 
+## 10 2011  Valencia IND_COQ   Industria     1431293     0.825       0.671
+## 11 2011  Valencia IND_PLAS  Industria     2750229     0.227       2.35 
+## 12 2011  Valencia IND_INF   Industria     1016650     0.0392      1.05 
+## 13 2011  Valencia IND_TRANS Industria      884296     0.107       0.851
+## 14 2011  Valencia IND_MUE   Industria     1150060    -0.136       1.41 
+## 15 2011  Valencia IND_REST  Industria     3775421     0.462       2.55 
+## 16 2011  Valencia CON       Construcción 11449001     0.432       7.95 
+## 17 2011  Valencia COM       Servicios    18804581    -0.248      25.8  
+## 18 2011  Valencia TYC       Servicios     6936581     0.213       6.00 
+## 19 2011  Valencia IN_FIN    Servicios     4508844     0.841       2.08 
+## 20 2011  Valencia OS        Servicios    33594542    -0.109      40.1</code></pre>
+<p><br />
+</p>
+<p>Una vez hemos establecido el dataframe podemos realizar un gráfico animado donde se reflejen los <strong>cambios en las distintas variables que han tenido lugar entre 1980 y 2011</strong>. Para ello utilizaremos la función <code>transition_states()</code> de <code>gganimate</code> indicando que queremos hacer la transición por año.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(gganimate)
+
+todas_ccaa  %&gt;%
+  ggplot(aes(x = peao_relat, y = prod_relat)) +
+  geom_point(aes(fill= Actividad, 
+                 size = vab/1000), 
+             shape= 21, 
+             colour= &quot;white&quot;, 
+             alpha= 0.6) +
+  scale_size_continuous(range= c(1,30)) +
+  scale_fill_manual(values = c(&quot;green&quot;, &quot;grey40&quot;,&quot;brown&quot;,&quot;#FF7A14&quot;)) +
+  facet_wrap(~ CCAA,ncol= 2) +
+  transition_states(year) +
+  labs(title = &quot;Productividad sectorial relativa\n VS.\n Participación sectorial del empleo&quot;,
+       subtitle = &quot;Year: {closest_state}&quot;,
+       x = &quot;Employment share&quot;,  
+       y = &quot;log (sectoral y/ total y)&quot;,
+       caption = &quot;Fuente: BDMORES&quot;) +
+  shadow_wake(wake_length = 0.05, alpha = T) +
+  theme_lab() +
+  theme(panel.grid.major.x = element_blank(), 
+        legend.position = &quot;up&quot;,
+        legend.title = element_blank(),
+        plot.title = element_text(size = 18, hjust = 0.5),
+        plot.subtitle = element_text(size = 16, hjust = 0.5),
+        axis.text.x = element_text(size = 8),
+        axis.text.y = element_text(size = 8)) +
+  geom_hline(yintercept = 0, col= &quot;black&quot;, linetype = 1) +
+  geom_vline(xintercept = 0, col= &quot;black&quot;, linetype = 1) </code></pre>
+<p><img src="/cambioestructural_files/figure-html/unnamed-chunk-8-1.gif" width="80%" style="display: block; margin: auto;" /></p>
+</div>

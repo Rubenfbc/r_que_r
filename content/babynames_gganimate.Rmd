@@ -326,7 +326,7 @@ plot_babynames_transition_2 <- babynames %>%
 
 \
 
-```{r, , warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "100%"}
+```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "100%"}
 
 animate(plot_babynames_transition_2, nframes= 150, width = 900, height = 500, fps = 10)
 
