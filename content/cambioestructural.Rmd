@@ -1,5 +1,5 @@
 ---
-title: "Terciarización y desindustrialización en España (1980-2011) desde un enfoque territorial"
+title: "Cambio estructural en España (1980-2011) desde un enfoque territorial"
 author: "Rubén F. Bustillo"
 date: 2019-10-21
 categories: ["R"]
@@ -26,19 +26,19 @@ El presente post examina el proceso de cambio estructural del empleo en las CCAA
 
 \
 
-El **concepto de cambio estructural** ha sido tradicionalmente un elemento muy aludido en economía, especialmente en economía del desarrollo. No obstante dicho concepto suele tratarse en la literatura de forma ambigua en tanto en cuanto suele hacer referencia a aspectos muy dispares y a transformaciones de naturaleza diversa y/o multidimensional que registran las sociedades a lo largo de sus procesos de desarrollo. Sin embargo, una de las acepciones más utilizadas en la literatura especializada es la que considera el cambio estructural de una economía como el **proceso de transformación de sus estructuras productivas**. Esta aproximación es sin duda heredera de las contribuciones de algunos de los llamados *pioneros del desarrollo*, los cuales defendían que un proceso de desarrollo económico genuino debía caracterizarse por la progresiva transición desde estructuras productivas con gran peso en actividades primarias, principalmente agricultura, hacia otras donde dominase la actividad industrial y actividades de servicios. Por ende, aquellas economías que fueran capaces de diversificar sus estructuras productivas y reducir el peso de la actividad agrícola, dirigiendo sus recursos hacia otros sectores, serían aquellas que presentarían mayores posibilidades de crecer de forma sostenida y reducir la pobreza.
+El **concepto de cambio estructural** ha sido tradicionalmente un elemento frecuentemente aludido en economía, especialmente en economía del desarrollo. No obstante dicho concepto suele tratarse en la literatura de forma ambigua en tanto en cuanto suele hacer referencia a aspectos muy dispares y a transformaciones de naturaleza diversa y/o multidimensional que registran las sociedades a lo largo de sus procesos de desarrollo. Sin embargo, una de las acepciones más utilizadas en la literatura especializada es la que considera el cambio estructural de una economía como el **proceso de transformación de sus estructuras productivas**. Esta aproximación es sin duda heredera de las contribuciones de algunos de los llamados *pioneros del desarrollo*, los cuales defendían que un proceso de desarrollo económico genuino debía caracterizarse por la progresiva transición desde estructuras productivas con gran peso en actividades primarias, principalmente agricultura, hacia otras donde dominase la actividad industrial y actividades de servicios. Por ende, aquellas economías que fuesen capaces de diversificar sus estructuras productivas y reducir el peso de la actividad agrícola, dirigiendo sus recursos hacia otros sectores, serían aquellas que presentarían mayores posibilidades de crecer de forma sostenida y, progresivamente, reducir la pobreza y mejorar la calidad de vida de su población.
 
 \
 
-No obstante existen voces discordantes entre los expertos acerca de la inevitabilidad de un proceso de esas características en toda experiencia de desarrollo exitosa. De hecho, diversos autores replantean la existencia de configuraciones productivas ganadoras y perdedoras *per se*, encontrándose en la literatura discrepancias sobre las características específicas que debería presentar un proceso de cambio estructural que pudiera considerare inequívocamente virtuoso y que asegurase asentar las bases de un proceso de desarrollo genuino y sostenible en el tiempo. Sin embargo, la existencia de discrepancias en este sentido no significa que las transformaciones en las configuraciones productivas no jueguen un papel fundamental en el desempeño económico de una economía a lo largo del tiempo. Dichas transformaciones desempeñarán un papel esencial en el crecimiento económico y, además, a nivel territorial (subnacional) tendrán un impacto significativo sobre la convergencia económica entre las distintas regiones. 
+No obstante existen voces discordantes entre los expertos acerca de la inevitabilidad de un proceso de esas características en toda experiencia de desarrollo exitosa. De hecho, diversos autores replantean la existencia de configuraciones productivas ganadoras y perdedoras *per se*, encontrándose en la literatura discrepancias sobre las características específicas que debería presentar un proceso de cambio estructural que pudiera considerare inequívocamente virtuoso y que asegurase asentar las bases de un proceso de desarrollo genuino y sostenible en el tiempo. El papel que juega la actividad industrial sigue siendo motivo de especial interés por parte de muchos economistas como Peneder (2003), Rodrik (2013, 2014, 2016) o Torres y López (2017). Por el contrario, autores como Loayza y Raddatz (2010) o De Janvry y Sadolet (2009) enfatizan el papel de sectores intensivos en trabajo en el proceso de cambio estructural, por ejemplo la agricultura o la construcción, especialmente por impacto sobre el empleo y, con ello, su capacidad de contribuir a la reducción de la pobreza. Por su parte, investigadores como Kapsos (2006) o Fox y Gal (2008) destacan el papel de las actividades de servicios y enfatizan su papel en las economías desarrolladas. 
 
 \
 
-De hecho, la convergencia territorial en los niveles de productividad y de renta per cápita estará estrechamente relacionada con los cambios en las configuraciones sectoriales del producto, pero también con los procesos de movilidad intersectorial de trabajadores. En este sentido algunos autores (McMillan et al. 2014) aseguran que un proceso de movilidad intersectorial del empleo que fuese favorable al crecimiento económico (*growth enhancing*) sería aquel en el que la dirección de dicho traspaso estuviera positivamente correlacionada con la productividad promedio de los sectores individualizados. Por el contrario, un proceso de traspaso de trabajadores que fuese perjudicial para el crecimiento del producto per cápita sería aquel en el que dicha correlación fuese negativa (*growth reducing*), donde el empleo estaría movilizándose hacia sectores de menor productividad promedio. En este sentido, ciertas voces aseguran que la creciente terciarización de las economías desarrolladas, y también de gran parte de economías emergentes, y las dinámicas de desindustrialización son reflejo de dinámicas de cambio estructural *growth reducing*.  
+Sea como fuere, la existencia de discrepancias en el papel que juegan los sectores en el proceso de cambio estructural no significa que sus transformaciones a lo largo del tiempo no desempeñen un papel fundamental en el desempeño económico de las economía. Dichas transformaciones desempeñarán un papel esencial en el crecimiento económico y, además, a nivel territorial (subnacional) tendrán un impacto significativo sobre la convergencia económica entre las distintas regiones. De hecho, la convergencia territorial en los niveles de productividad y de renta per cápita estará estrechamente relacionada con los cambios en las configuraciones sectoriales del producto pero también con los procesos de movilidad intersectorial de trabajadores. En este sentido autores como McMillan et al (2014) aseguran que un proceso de movilidad intersectorial del empleo que fuese favorable al crecimiento económico (*growth enhancing*) sería aquel en el que la dirección de dicho traspaso estuviera positivamente correlacionada con la productividad promedio de los sectores individualizados. Por el contrario, un proceso de traspaso de trabajadores que fuese perjudicial para el crecimiento del producto per cápita sería aquel en el que dicha correlación fuese negativa (*growth reducing*), donde el empleo estaría movilizándose hacia sectores de menor productividad promedio. En esta línea ciertas voces aseguran que la creciente terciarización de las economías desarrolladas, y también de gran parte de economías emergentes, y las dinámicas de desindustrialización serían reflejo de dinámicas de cambio estructural *growth reducing* que tendrían lugar en las últimas décadas .  
 
 \
 
-El **objetivo de este post** es modesto y no pretende rebatir o cuestionar ninguno de los planteamientos teóricos presentes en la literatura sobre las características idóneas que debería presentar un proceso de cambio estructural. Simplemente, en el marco planteado y con el pretexto de examinar los procesos de transformación de la estructura sectorial del empleo en las distintas Comunidades Autónomas Españolas en los últimos años, buscando determinar la posible existencia de procesos de cambio estructural *growth enhancing* o *growth reducing*, en este post se pretende mostrar cómo podríamos aproximarnos al análisis de dichas dinámicas utilizando algunas funciones de R y mostrar alguna forma de visualizar la evolución de dichos procesos de transformación estructural del empleo a lo largo del tiempo.      
+El **objetivo de este post** es modesto y no pretende rebatir o cuestionar ninguno de los planteamientos teóricos presentes en la literatura sobre las características idóneas que debería presentar un proceso de cambio estructural. Simplemente, en el contexto planteado en los párrafos previos y con el pretexto de examinar los procesos de transformación de la estructura sectorial del empleo en las distintas Comunidades Autónomas Españolas en los últimos años, buscando con ello investigar la posible existencia de procesos de cambio estructural *growth enhancing* o *growth reducing*, en este post se pretende principalmente mostrar cómo podríamos aproximarnos al análisis de dichas dinámicas utilizando algunas funciones de R y exponer una posible forma de visualizar la evolución de dichos procesos de transformación estructural del empleo a lo largo del tiempo.      
 
 \
 
@@ -47,11 +47,11 @@ El **objetivo de este post** es modesto y no pretende rebatir o cuestionar ningu
 
 \
 
-Para llevar a cabo nuestro objetivo utilizaremos, a precios corrientes, información obtenida de la base de datos [BDMORES](https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/paginas/basesdatosestudiosregionales.aspx) (Base de datos regionales de España actualizada en junio de 2017) que incluye magnitudes económicas doblemente clasificadas por región y rama de actividad desde 1980 hasta 2011. Previamente he seleccionado información del valor añadido bruto a precios constantes de 2008 (en miles de euros) y de la población ocupada (miles de personas).
+Para llevar a cabo nuestro objetivo utilizaremos, a precios corrientes, información obtenida de la base de datos [BDMORES](https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/paginas/basesdatosestudiosregionales.aspx) (Base de datos regionales de España actualizada en junio de 2017) que incluye magnitudes económicas doblemente clasificadas por región y rama de actividad desde 1980 hasta 2011. Previamente se ha seleccionado la información relativa al valor añadido bruto a precios constantes de 2008 (en miles de euros) y de la población ocupada (miles de personas).
 
 \
 
-En primer lugar, para cargar los datasets seleccionados (formato .xlsx) cargamos el paquete `readxl`. Por un lado tenemos un data frame con los valores del valor agregado bruto por CCAA y rama de actividad y por otro lado otro dataframe con información de la población ocupada. Podemos ver las primeras líneas de cada dataset utilizando la función `head()`.  
+En primer lugar, para cargar los datasets seleccionados (formato .xlsx) almacenados en nuestro ordenador cargamos el paquete `readxl`. Por un lado tenemos un data frame con los valores del valor agregado bruto por CCAA y rama de actividad y por otro lado otro dataframe con información de la población ocupada. Podemos ver las primeras líneas de cada dataset utilizando la función `head()`.  
 
 \
 
@@ -74,7 +74,7 @@ head(ce_peao)
 
 \
 
-Vemos que ambos datasets tienen un formato largo, es decir, en cada columna a partir de la columna 7 se muestra un año que va desde 1980 hasta 2011. Para trabajar de una forma sencilla estos dataframes conviene recopilar la información en dos columnas, una que indique el año y otra que indique el valor de la variable de interes (vab o población ocupada) por cada observación. Para ello podemos utilizar la función `gather()` del paquete `tidyverse`. Además, seleccionaremos las columnas que nos interese conservar con la función `select()`. 
+Vemos que ambos datasets tienen un formato largo, es decir, en cada columna a partir de la columna 7 se muestra un año que va desde 1980 hasta 2011. Para trabajar de una forma sencilla estos dataframes conviene recopilar la información en dos columnas, una que indique el año y otra que indique el valor de la variable de interés (vab o población ocupada) por cada observación. Para ello podemos utilizar la función `gather()` del paquete `tidyverse`. Además, seleccionaremos las columnas que nos interese conservar con la función `select()`. 
 
 \
 
@@ -104,7 +104,7 @@ head(ce_peao_gather)
 
 \
 
-Una vez hemos dado un formato adecuado a los dos dataframes nos interesa unirlos en uno solo, conservando una columna con el valor del vab y otra con la población ocupada para cada una de las observaciones expuestas. Existen diversas formas para unir datasets (profundizaré en este aspecto en un futuro post), pero en esta ocasión utilizaremos la función `cbind()` para ello. Una vez unidos ambos datasets crearemos una nueva columna con la función `mutate()` para establecer la productividad del trabajo, resultado de dividir el valor agregado bruto entre la población ocupada, columna que llamaremos product.
+Una vez hemos dado un formato adecuado a los dos dataframes **nos interesa unirlos en un solo dataset**, conservando una columna con el valor del vab y otra con la población ocupada para cada una de las observaciones expuestas. Existen diversas formas para unir datasets (profundizaré en este aspecto en un futuro post), pero en esta ocasión utilizaremos la función `cbind()` conservando las columnas comunes para ambos data frames. Una vez unidos ambos datasets crearemos una nueva columna con la función `mutate()` para establecer la **productividad aparente del trabajo**, resultado de dividir el valor agregado bruto entre la población ocupada, columna que llamaremos product.
 
 \
 
@@ -115,13 +115,15 @@ cambio_estr <- cbind(ce_vab_gather, ce_peao_gather[,7])
 cambio_estructural <- cambio_estr %>%
   mutate(product = vab/peao) 
 
+# vemos las primeras columnas del nuevo dataset
+
 head(cambio_estructural)
 
 ```
 
 \
 
-Conviene conocer bien los datos sobre los que trabajamos. Por ello nos interesa examinar con un poco más de profundidad las variables y las observaciones que recoge el dataset sobre el que vamos a trabajar
+Conviene conocer bien los datos sobre los que trabajamos. Por ello nos interesa examinar con un poco más de profundidad las variables y las observaciones que recoge el dataset sobre el que vamos a trabajar. La función `unique()` resulta de gran utilidad al examinar las observaciones de los datasets. 
 
 \
 
@@ -151,12 +153,11 @@ unique(cambio_estructural$year)
 
 \
 
-En primer lugar vamos a ver cómo era la estructura ocupacional del empleo en 1980 por Comunidad Autónoma según la productividad promedio de cada sector. La idea que perseguimos es realizar un gráfico donde podamos establecer para cada una de las CCAA la relación entre la productividad relativa de cada una de las 15 ramas de la economía que incluye el dataset y la participación del empleo que cada una de dichas ramas representa sobre la población ocupada total de cada una de las regiones en 1980. Para ello realizaremos una serie de modificaciones sobre el dataset original `cambio_estructural`. 
+En primer lugar vamos a ver cómo era la **estructura ocupacional del empleo en 1980 por Comunidad Autónoma según la productividad promedio de cada sector productivo**. El objetivo que perseguimos es realizar un gráfico donde podamos establecer para cada una de las CCAA la relación entre la productividad relativa de cada una de las 15 ramas de la economía que incluye el dataset y la participación del empleo que cada una de dichas ramas representa sobre la población ocupada total de cada una de las regiones en 1980. Para ello realizaremos una serie de modificaciones sobre el dataset original `cambio_estructural`. 
 
 \
 
 ```{r}
-
 
 ce_1980 <- cambio_estructural %>%
   filter(year == 1980) %>%   
@@ -179,7 +180,7 @@ ce_1980 <- cambio_estructural %>%
 # 7. Creamos una columna (prod_ccaa) que indique la productividad de cada CCAA. 
 # 8. Creamos una columna (prod_relat) que muestre la productividad relativa de cada rama con respecto a la productividad total de cada CCAA (en logaritmos).
 # 9. Creamos una columna (peao_relat) que indique la participación sectorial del empleo de cada rama con respecto al total del empleo de cada CCAA (%).
-# 10. Seleccionamos las columnas que nos interesa.
+# 10. Seleccionamos las columnas que nos interesan.
 
 
 head(ce_1980)
@@ -188,17 +189,14 @@ head(ce_1980)
 
 \
 
-Para diferenciar gráficamente las distintas CCAA utilizaremos la función `facet_wrap()`. Por su parte identificaremos cuatro colores distintos según la actividad económica. En color verde se señalará el sector agricultura, en marrón la industria, en color gris la construcción y en naranja el sector servicios. El eje de abscisas representará la participación sectorial del empleo de cada una de las ramas, el eje de ordenadas indica la productividad relativa de cada rama con respecto a la productividad total de la economía y el tamaño de cada una de las burbujas representará el vab de dicho sector en miles de euros. Por consiguiente, aquellos subsectores que se sitúen por encima de la línea negra horizontal serán sectores que tienen una productividad promedio superior al de la economía en su conjunto y aquellos por debajo serán sectores de menor productividad promedio en el año analizado. 
+Para diferenciar gráficamente las distintas CCAA utilizaremos la función `facet_wrap()`. Por su parte identificaremos **cuatro colores distintos según la actividad económica**. En color verde se señalará el sector agricultura, en marrón la industria, en color gris la construcción y en naranja el sector servicios. El **eje de abscisas representará la participación sectorial del empleo de cada una de las ramas** mientras que **el eje de ordenadas indica la productividad relativa de cada rama con respecto a la productividad total de la economía**. Por consiguiente, aquellos subsectores que se sitúen por encima de la línea negra horizontal serán sectores que tienen una productividad promedio superior al de la economía en su conjunto y aquellos por debajo serán sectores de menor productividad promedio en el año analizado. Por su parte, **el tamaño de cada una de las burbujas representará el VAB de dicho sector** en miles de euros, mostrando con ello la importancia de cada uno de estos sectores sobre el VAB total de las CCAA y de la economía nacional en su conjunto.  
 
 \
 
 ```{r, warning= FALSE, fig.align='center', fig.height=20,  out.width = "80%"}
 
-
 library(ggrepel)
-
 source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R")
-
 
 
 ce_1980 %>%
@@ -207,7 +205,7 @@ ce_1980 %>%
                  size = vab/1000), 
              shape= 21, 
              colour= "white", 
-             alpha= 0.6) +
+             alpha= 0.8) +
   facet_wrap(~ CCAA, ncol = 2) +
   scale_size_continuous(range= c(1,25)) +
   scale_fill_manual(values = c("green", "grey40","brown","#FF7A14")) +
@@ -219,7 +217,9 @@ ce_1980 %>%
         plot.title = element_text(size = 18, hjust = 0.5),
         plot.subtitle = element_text(size = 14, hjust = 0.5),
         axis.text.x = element_text(size = 8),
-        axis.text.y = element_text(size = 8)) +
+        axis.text.y = element_text(size = 8),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_text(size = 10)) +
   geom_hline(yintercept = 0, col= "black", linetype = 1) +
   geom_vline(xintercept = 0, col= "black", linetype = 1) +
   labs(title = "Productividad sectorial relativa\n Vs.\n Participación sectorial del empleo", 
@@ -235,11 +235,16 @@ ce_1980 %>%
 
 \
 
+Resulta patente la importancia que ya en 1980 tenía el sector servicios en el empleo, especialmente los sectores "Otros Servicios" y el sector "Comercio" en gran parte de las economías regionales españolas, especialmente en Andalucía, Madrid, País Vasco o Valencia. Además, por lo general, a excepción de Madrid, estos sectores presentaban una productividad promedio superior al promedio de dichas economías. No obstante, las actividades que por lo general presentaban una mayor productividad promedio eran actividades del sector industrial, a pesar de que dichas actividades representaban una menor participación del empleo en todas las CCAA. Por su parte, como cabía esperar, el sector "Agricultura" es el sector que presenta menores niveles de productividad promedio en todas las regiones con respecto al resto de sectores. Además, como se observa en los gráficos, en algunas regiones este sector representaba una participación considerable del empleo total en 1980, especialmente en regiones como Andalucía, Aragón, Asturias, Cantabria, Extremadura, Castilla y León, Galicia o La Rioja. La actividad industrial, por el contrario, registra una menor participación del empleo y su productividad promedio depende en gran medida de la subrama a considerar, habiendo actividades industriales de alta productividad relativa y otras de menor productividad promedio, generalmente la industria textil o del transporte. A grandes rasgos, sin ánimo de ser exhaustivos, se podría decir que en la mayor parte de CCAA autónomas en España en 1980 la estructura ocupacional estaba dominada por actividades de servicios y por la actividad agrícola.  
+
+\
+
+
 # Gráfico animado
 
 \
 
-Para observar en un gráfico cómo ha sido la evolución de la productividad relativa de cada rama de la estructura económica con respecto a la productividad de cada región conjuntamente con los cambios en la participación sectorial del empleo en cada uno de estos sectores podemos utilizar el paquete `gganimate` conjuntamente con `ggplot2`. 
+Para observar en un único gráfico cómo ha sido la evolución de la productividad relativa de cada rama de la estructura económica con respecto a la productividad de cada región conjuntamente con los cambios en la participación sectorial del empleo en cada uno de estos sectores podemos realizar un gráfico animado utilizando el paquete `gganimate` conjuntamente con `ggplot2`. Para ello modificaremos el dataframe original (cambio_estructural), agrupando las observaciones por año y por Comunidad Autónoma. 
 
 \
 
@@ -268,7 +273,7 @@ tail(todas_ccaa, n = 20)
 
 \
 
-Una vez hemos establecido el dataframe podemos realizar un gráfico animado donde se reflejen los **cambios en las distintas variables que han tenido lugar entre 1980 y 2011**. Para ello utilizaremos la función `transition_states()` de `gganimate` indicando que queremos hacer la transición por año. 
+Una vez hemos establecido el dataframe podemos realizar un gráfico animado donde se reflejen los **cambios en las distintas variables que han tenido lugar entre 1980 y 2011**. Para ello utilizaremos la función `transition_states()` de `gganimate` indicando de esta forma que queremos hacer la transición año por año. 
 
 \
 
@@ -282,7 +287,7 @@ todas_ccaa  %>%
                  size = vab/1000), 
              shape= 21, 
              colour= "white", 
-             alpha= 0.6) +
+             alpha= 0.8) +
   scale_size_continuous(range= c(1,30)) +
   scale_fill_manual(values = c("green", "grey40","brown","#FF7A14")) +
   facet_wrap(~ CCAA,ncol= 2) +
@@ -300,10 +305,126 @@ todas_ccaa  %>%
         plot.title = element_text(size = 18, hjust = 0.5),
         plot.subtitle = element_text(size = 16, hjust = 0.5),
         axis.text.x = element_text(size = 8),
-        axis.text.y = element_text(size = 8)) +
+        axis.text.y = element_text(size = 8),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_text(size = 10)) +
   geom_hline(yintercept = 0, col= "black", linetype = 1) +
   geom_vline(xintercept = 0, col= "black", linetype = 1) 
 
 
 ```
+
+\
+
+El gráfico animado muestra claramente que el proceso de terciarización se ha profundizado progresivamente durante el periodo considerado (1980-2011) en prácticamente todas las regiones. Por el contrario, la evolución que refleja el gráfico indica claramente como con el paso de los años la participación del empleo en el sector "Agricultura" también ha tendido a reducirse en gran parte de las regiones españolas, especialmente aquellas que partían de una mayor proporción del empleo agrícola en sus estructuras ocupacionales en el año inicial del periodo. La evolución de la estructura del empleo de las regiones españolas entre 1980 y 2011 parece indicar que durante este periodo se ha profundizado, por tanto, en el proceso de terciarización y de desagrarización del empleo. La actividad industrial, por su parte, parece mantener una posición relativamente estable, con ciertas excepciones como por ejemplo el caso de Asturias donde ha tenido lugar una notable reducción de la participación del empleo industrial (especialmente de la industria metalúrgica) sobre el empleo total de dicha Comunidad Autónoma.
+
+\
+
+# ¿Cambio estructural *growth enhancing* o *growth reducing*?
+
+\
+
+Los gráficos realizados previamente nos permiten hacernos una idea de cómo era la estructura sectorial del empleo en 1980 y cómo ha ido evolucionando a lo largo del periodo considerado. No obstante, resulta necesario completar dicho análisis con alguna evidencia que nos permita considerar de una forma más adecuada si los procesos de movilidad laboral observados han sido favorables al crecimiento de las regiones o si, por el contrario, habrían sido perjudiciales para el mismo. Cómo señalamos en el apartado introductorio, según McMillan et al. (2014), un proceso de movilidad intersectorial de trabajadores que fuese favorable al crecimiento sería aquel en la cual dicho traspaso estuviera positivamente relacionada con la productividad relativa de los sectores seleccionados, redireccionándose el empleo hacia sectores de mayor productividad promedio. En dicha ocasión se podría considerar que dicho proceso ha sido *growht enhancing*. Por el contrario, si dicho proceso estuviera negativamente correlacionado, es decir, si el incremento de la participación del empleo hubiera tenido lugar en sectores de menor productividad promedio, dicha dinámica podría considerarse según estos autores como *growth reducing*. Gráficamente esta condición se representaría como la relación de la productividad relativa de los distintos sectores de cada economía (eje de abscisas) con respecto al cambio en la participación del empleo en cada uno de ellos (eje de ordenadas). 
+
+\
+
+Para llevar a cabo esta representación gráfica modificaremos los datasets utilizados previamente (ce_vab y ce_peao) aunque de forma ligeramente diferente a como lo hemos hecho para los gráficos previos. Centraremos el análisis en el año inicial y final aunque un análisis en mayor profundidad debería considerar subperiodos de tiempo. 
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+# seleccionamos únicamente los años 1980 y 2011 en ambos datasets (y renombramos las columnas)
+
+ce_vab$vab_1980 <- ce_vab$`1980`
+ce_vab$vab_2011 <- ce_vab$`2011`
+
+ce_vab_2 <- ce_vab  %>%
+  select(CCAA, Nombre, Actividad, vab_1980, vab_2011)
+
+ce_peao$peao_1980 <- ce_peao$`1980`
+ce_peao$peao_2011 <- ce_peao$`2011`
+
+ce_peao_2 <- ce_peao  %>%
+  select(CCAA, Nombre, Actividad, peao_1980, peao_2011)
+
+
+# Unimos ambos datasets en uno: 
+
+cambio_estr_2 <- cbind(ce_vab_2, ce_peao_2[,4:5])
+
+# Las primeras filas del dataset son:
+
+head(cambio_estr_2)
+
+```
+
+\
+
+Una vez unidos los dataframes modificamos el dataset final para obtener para cada región y subsector la productividad relativa de cada sector sobre la economía regional en su conjunto en el año final y el cambio en la participación relativa del empleo entre 1980 y 2011. 
+
+\
+
+```{r}
+
+ce_1980_2011 <- cambio_estr_2 %>%
+  arrange(CCAA) %>%
+  mutate(prod_sectorial_1980 = vab_1980/peao_1980, prod_sectorial_2011 = vab_2011/peao_2011) %>%
+  group_by(CCAA) %>%
+  mutate(suma_vab_1980 = sum(vab_1980), suma_peao_1980 = sum(peao_1980), suma_vab_2011 = sum(vab_2011), suma_peao_2011 = sum(peao_2011)) %>%
+  mutate(prod_ccaa_1980 = suma_vab_1980/suma_peao_1980, prod_ccaa_2011 = suma_vab_2011/suma_peao_2011) %>%
+  mutate(prod_relat_1980 = log(prod_sectorial_1980/prod_ccaa_1980), prod_relat_2011= log(prod_sectorial_2011/prod_ccaa_2011)) %>%
+  mutate(peao_relat_1980 = 100*(peao_1980/suma_peao_1980), peao_relat_2011 = 100*(peao_2011/suma_peao_2011)) %>%
+  mutate(cambio_peao = peao_relat_2011 - peao_relat_1980)
+
+
+```
+
+\
+
+Por último graficamos la información estimada en el paso anterior. En esta ocasión el tamaño de las burbujas representa el número de trabajadores en cada sector en el año final del periodo. En base a ello indicamos para cada Comunidad Autónoma la dirección de la correlación simple (línea continua) y ponderada por número de población ocupada (línea discontinua). Por tanto, como indicábamos previamente, una relación positiva de la línea de regresión sería indicio de un proceso de cambio estructural *growth enhancing* y una relación negativa indicaría un proceso de tipo *growth reducing*. 
+
+\
+
+
+```{r, warning= FALSE, fig.align='center', fig.height=20,  out.width = "100%"}
+
+ce_1980_2011 %>%
+  ggplot(aes(x= cambio_peao, y= prod_relat_2011)) +
+  geom_point(aes(fill= Actividad, 
+                 size = peao_1980/10), 
+             shape= 21, colour= "white", 
+             alpha= 0.8, 
+             stroke= 1.05) +
+  geom_smooth(method = "lm", se= FALSE, 
+              colour = "black", 
+              size = 0.5) +
+  geom_smooth(method = "lm", se= FALSE, 
+              colour = "black", 
+              aes(weight= peao_1980), 
+              linetype = 2, 
+              size = 0.5) +
+  scale_size_continuous(range = c(0,25)) +
+  scale_fill_manual(values= c("green", "grey40","brown","#FF7A14")) +
+  geom_text_repel(aes(label = Nombre, size = 0.3)) +
+  theme_lab() +
+  theme(panel.grid.major.x = element_blank(), 
+        legend.position = "up", 
+        legend.title = element_blank(),
+        axis.text.x = element_text(size = 8),
+        axis.text.y = element_text(size = 8),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_text(size = 10))+
+  labs(title = "¿Growth enhancing o growth reducing?", 
+       subtitle = "", 
+       x = "Change in employment share",  
+       y = "log (sectoral y/ total y)",
+       caption = "Fuente: BDMORES") +
+  geom_hline(yintercept=0, col="darkgrey", linetype=2)+
+  geom_vline(xintercept=0, col="darkgrey", linetype=2)+
+  facet_wrap(~ CCAA, ncol = 2)
+
+
+```
+
 
