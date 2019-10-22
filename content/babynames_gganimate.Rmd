@@ -134,9 +134,9 @@ plot_babynames_dodge <- babynames_year %>%
 
 \
 
-```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "60%"}
+```{r, warning= FALSE,  fig.align='center', out.width = "60%"}
 
-animate(plot_babynames_dodge, nframes= 300, width = 600, height = 600, fps = 10)
+animate(plot_babynames_dodge, nframes= 300, width = 600, height= 600, fps = 10)
 
 # guardamos el gráfico en formato .gif
 
@@ -192,9 +192,9 @@ plot_babynames_stack <- babynames_year %>%
 
 \
 
-```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "60%"}
+```{r, warning= FALSE, fig.align='center', out.width = "60%"}
 
-animate(plot_babynames_stack, nframes= 300, width = 600, height = 600, fps = 10)
+animate(plot_babynames_stack, nframes= 300, width = 600, height = 600, fps = 10) 
 
 # guardamos el gráfico en formato .gif
 
@@ -275,7 +275,7 @@ plot_babynames_transition <- babynames %>%
 
 \
 
-```{r,, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "100%"}
+```{r,, warning= FALSE, fig.align='center', out.width = "100%"}
 
 animate(plot_babynames_transition, nframes= 300, width = 900, height = 500, fps = 10)
 
@@ -326,7 +326,7 @@ plot_babynames_transition_2 <- babynames %>%
 
 \
 
-```{r, warning= FALSE, fig.width=10, fig.height= 6,  fig.align='center', out.width = "100%"}
+```{r, warning= FALSE,  fig.align='center', out.width = "100%"}
 
 animate(plot_babynames_transition_2, nframes= 150, width = 900, height = 500, fps = 10)
 

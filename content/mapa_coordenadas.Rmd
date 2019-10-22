@@ -296,7 +296,7 @@ Utilizando el paquete `gganimate` es posible generar **mapas animados** partiend
 
 \
 
-```{r , message = FALSE, warning = FALSE, out.width = "100%", fig.align = 'center'}
+```{r , message = FALSE, warning = FALSE, out.width = "90%", fig.align = 'center'}
 
 # Cargamos el paquete gganimate
 
@@ -335,7 +335,7 @@ mapa_animado <- mapa_mundo %>%
   theme(plot.title = element_text(size = 18, hjust = 0.5))
   
 
-animate(mapa_animado, nframes = 500, fps = 10) 
+animate(mapa_animado, nframes= 450, fps = 10) 
 
 ```
 
