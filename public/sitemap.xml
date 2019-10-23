@@ -3,6 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/categories/</loc>
+    <lastmod>2019-10-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2019-10-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-10-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/strings/</loc>
+    <lastmod>2019-10-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-10-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/trabajando_con_strings/</loc>
+    <lastmod>2019-10-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/cambio-estructural/</loc>
     <lastmod>2019-10-21T00:00:00+00:00</lastmod>
   </url>
@@ -13,37 +43,12 @@
   </url>
   
   <url>
-    <loc>/trabajando_con_strings/</loc>
-    <lastmod>2019-10-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-10-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/ccaa/</loc>
     <lastmod>2019-10-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/gganimate/</loc>
-    <lastmod>2019-10-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2019-10-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-10-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2019-10-21T00:00:00+00:00</lastmod>
   </url>
   
