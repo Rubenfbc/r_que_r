@@ -1,7 +1,7 @@
 ---
 title: "Cambio estructural en España (1980-2011) desde un enfoque territorial"
 author: "Rubén F. Bustillo"
-date: 2019-10-21
+date: 2019-10-23
 categories: ["R"]
 tags: ["cambio estructural", "CCAA", "gganimate"]
 
@@ -277,7 +277,7 @@ Una vez hemos establecido el dataframe podemos realizar un gráfico animado dond
 
 \
 
-```{r, warning= FALSE, fig.align='center', fig.height=20,  out.width = "80%", eval=FALSE}
+```{r, warning= FALSE, fig.align='center', fig.height=20,  out.width = "80%"}
 
 library(gganimate)
 
