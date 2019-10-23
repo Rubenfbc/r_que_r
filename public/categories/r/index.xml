@@ -12,13 +12,16 @@
     
     
     <item>
-      <title>Trabajando con strings</title>
+      <title>Cómo formatear números en R</title>
       <link>/trabajando_con_strings/</link>
       <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/trabajando_con_strings/</guid>
-      <description>Res
-Este post expone algunas herramientas que pueden ser útiles a la hora de trabajar con strings en R.</description>
+      <description>Re
+Este post presenta algunas herramientas que pueden resultar útiles a la hora de dar formato a los números. Utilizaremos datos del post anterior donde se analizaban dinámicas de cambio estructural.
+
+Dataset
+Los ejercicios realizados a lo largo de este post, que nos servirán para mostrar la aplicación de las funciones que queremos exponer, se harán sobre el dataset del Valor Agregado Bruto de las Comunidades Autónomas Españolas por sectores productivos utilizado en el post anterior.</description>
     </item>
     
     <item>
