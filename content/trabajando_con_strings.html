@@ -296,7 +296,7 @@ ce_1980 %&gt;%
        x = &quot;Employment share in 1980&quot;,  
        y = &quot;log (sectoral y/ total y)&quot;,
        caption = &quot;Fuente: BDMORES&quot;)</code></pre>
-<p><img src="/cambioestructural_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="/trabajando_con_strings_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>
 
 # Una vez tenemos el código para uno de los años podemos fácilmente modificarlo para examinar cualquier otro año del periodo.  </code></pre>
@@ -520,7 +520,7 @@ ce_1980_2011 %&gt;%
   geom_hline(yintercept=0, col=&quot;darkgrey&quot;, linetype=2)+
   geom_vline(xintercept=0, col=&quot;darkgrey&quot;, linetype=2)+
   facet_wrap(~ CCAA, ncol = 2)</code></pre>
-<p><img src="/cambioestructural_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="/trabajando_con_strings_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Como se vio en el apartado previo, la actividad comercial y otras actividades de servicios han incrementado su peso relativo de forma notable a lo largo de las últimas décadas en prácticamente todas las regiones del país, a pesar de que los niveles de productividad promedio de estos sectores (al menos al final del periodo) muestran un valor inferior al de la mayoría del resto de sectores. Sin embargo, la dirección de las rectas de regresión, que serían indicativos de la eficacia de los procesos de movilidad intersectorial de trabajadores, presentan características heterogéneas. Por lo general, en Comunidades Autónomas que registran un mayor nivel de renta por habitante con respecto al resto de CCAA, véase Madrid, Cataluña, País Vasco o Navarra, dichos procesos de movilidad laboral serían claramente <em>growth reducing</em>, independientemente de si tenemos en cuenta el tamaño relativo del sector (en número de ocupados) en la regresión o no. Por el contrario, regiones de menor nivel de VAB por habitante, que por lo general han reducido en mayor medida su población ocupada en la actividad agrícola, muestran una dinámica positiva, favorable al crecimiento en dichas regiones, a pesar de sufrir un proceso de desindustrialización similar a la del grupo anterior. Entre estas regiones destacan especialmente Extremadura, Murcia o Galicia. Por consiguiente, resulta patente que, en términos generales, las regiones de menor nivel de renta presentan una correlación favorable debido, fundamentalmente, a la mayor pérdida de peso relativo del empleo agrícola mientras que, por el contrario, las regiones de mayor VAB por habitante, entre ellas la región capitalina, registran movimientos intersectoriaes del empleo desfavorables a su crecimiento, en tanto que se dirigen mayoritariamente del sector manufacturero e industrial a sectores de servicios de menor productividad promedio. La creciente terciarización de las economías más ricas podría por tanto suponer un handicap importante para su crecimiento futuro.</p>
