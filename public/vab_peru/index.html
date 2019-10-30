@@ -273,7 +273,7 @@ plot_peru_top &lt;- ggplot(Peru_rangos_top, aes(rango, group = Nombre,
   geom_text(aes(y= vabpc, label = labels, hjust = 0)) +
   scale_y_continuous(labels = scales::comma) +
   scale_x_reverse() +
-  scale_fill_manual(values=c(&quot;royalblue&quot;, &quot;limegreen&quot;, &quot;chocolate4&quot;)) +
+  scale_fill_manual(values=c(&quot;royalblue&quot;, &quot;limegreen&quot;, &quot;goldenrod4&quot;)) +
   guides(color = FALSE, fill = FALSE) +
   transition_states(year, transition_length = 1, state_length = 1, wrap= F) + 
   labs(title = &#39;Perú. Regiones peruanas (Top 10) según su VAB per cápita&#39;,  
