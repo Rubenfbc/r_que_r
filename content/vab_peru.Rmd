@@ -1,0 +1,236 @@
+---
+title: "Evolución VAB per cápita en Perú (1996-2016) con gganimate"
+author: "Rubén F. Bustillo"
+date: 2019-10-25
+categories: ["R"]
+tags: ["dplyr", "tidyverse", "ggplot2"]
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+  
+
+**Res**
+
+En este post se mostrará cómo realizar, usando gganimate, un gráfico de barras dinámico que muestre la evolución del ranking de regiones peruanas atendiendo a VAB por habitante entre 1996 y 2016.
+
+
+\
+
+# Gráfico dinámico del VAB
+
+\
+
+Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado donde se muestra la evolución del *ranking* de distintas economías, generalmente países, según su PIB o su PIB por habitante. En estos gráficos, generalmente gráficos de barras, se va observando para cada año que países ocupan los primeros puestos en el ranking y cómo han ido evolucionando a lo largo del tiempo. Suele sorprender el rápido avance que ha registrado China, país que ha sufrido grandes transformaciones económicas y sociales en las últimas décadas.
+
+\
+
+En este post vamos a mostrar cómo realizar un gráfico de estas carcterísticas. En esta ocasión vamos a mostrar la evolución del *ranking* de regiones peruanas según su VAB per cápita para el periodo 1996-2016. Perú está dividido en 24 regiones y una Provincia Constitucional que es El Callao (en esta ocasión Lima y El Callao se contabilizan conjuntamente). Las series históricas, que deflactamos previamente para obtener una sóla coherente para todo el periodo en miles de Soles constantes de 1994, la obtenemos del [Instituto Nacional de Estadística e Informática del Perú (INEI)](https://www.inei.gob.pe/).
+
+\
+
+# Preparación del dataset
+
+\
+
+En primer lugar descargamos los siguientes paquetes en nuestra sesión: 
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(readxl)
+library(tidyverse)
+library(gganimate)
+
+```
+
+\
+
+Cargamos el dataset con `read_excel()` y observamos los datos, previamente deflactados, de las regiones peruanas obtenidos del INEI para el periodo de tiempo 1995-2016. **Las primeras diez observaciones** del dataset las podemos seleccionar con la función `head()`
+
+\
+
+```{r}
+
+Peru <- read_excel("./datasets/Peru_vabpc_95_16.xlsx")
+head(Peru, n = 10)
+
+```
+
+\
+
+Para **transformar el formato ancho a un formato largo**, más apropiado para su manejo, podemos utilizar la función `gather()` como se indica a continuación. El resultado serán cuatro columnas, una donde se indicará el nombre de la región, una segunda columna que indicará si la región es de Sierra, Selva o Costa (clasificación que suele utilizarse en Perú para clasificar las regiones aunque existen otras que seleccionan las regiones en un mayor número de subcategorías), una tercera columna que indicará el año que representa cada observacion y una última columna que indicará el valor del Valor Agregado Bruto por habitante para cada región en cada uno de los años del periodo. 
+
+\
+
+```{r}
+
+Peru <- Peru %>% 
+  gather(key= "year", value= "vabpc", 3:24 ) 
+head(Peru)
+
+```
+
+\
+
+Como el objetivo es realizar un gráfico que muestre el ranking de regiones por cada año según su VAB por habitante lo primero que debemos realizar es **identificar el puesto ocupa cada región para cada año** según dicho indicador. Para ello utilizamos la función `rank()` de la siguiente forma:
+
+\
+
+```{r}
+
+Peru_rangos <- Peru %>%
+  group_by(year) %>%
+  mutate(rango = rank(-vabpc),
+         labels = paste0(" ", round(vabpc)))
+
+```
+
+\
+
+Si **ordenamos nuestro nuevo data set por año y rango** con la función `arrange()` del paquete `tidyverse` podemos observar el resultado del *ranking* realizado. Se comprueba que para el año inicial, 1995, la región de Moquegua, una región costera pequeña situada en el sur del país, lidera el *ranking* seguido por las regiones de Tacna (costa), Lima (costa), Madre de Dios (selva) y Pasco (sierra). Esta clasificación se ha realizado para cada uno de los años del periodo. 
+
+\
+
+```{r}
+
+Peru_rangos %>%
+  arrange(year, rango) 
+
+```
+
+\
+
+# Gráfico animado con gganimate 
+
+\
+
+Una vez hemos preparado el dataset procedemos a realizar el **gráfico animado**. Llamaremos al gráfico `plot_peru` y lo guardamos con dicho nombre. Utilizaremos el color azul para identificar las regiones mayoritariamente costeras, el color verde las regiones selváticas y el color marrón indicará las regiones cuyo territorio es mayoritariamente montañoso. El nombre de los colores utilizados, seleccionados con la función `scale_fill_manual()` los he obtenido del link: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+
+\
+
+```{r, warning= FALSE}
+
+plot_peru <- ggplot(Peru_rangos, aes(rango, group = Nombre, 
+                            fill = Area)) +
+  geom_col(aes(y = vabpc), alpha = 0.9, color = "white") +
+  coord_flip(clip = "off", expand = FALSE) +
+  geom_text(aes(y = 0, label = paste(Nombre, " ")), vjust = 0.2, hjust = 1) +
+  geom_text(aes(y= vabpc, label = labels, hjust = 0)) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_reverse() +
+  scale_fill_manual(values=c("cornflowerblue", "green3", "darkorange")) +
+  guides(color = FALSE, fill = FALSE) +
+  transition_states(year, transition_length = 1, state_length = 1, wrap= F) + 
+  labs(title = 'Perú. Regiones según su VAB per cápita',  
+       subtitle  =  "Año : {closest_state}",
+       caption  = "Miles de Soles constantes de 1994 | Fuente: INEI") +
+  theme(
+    legend.position="none",
+    plot.title=element_text(size=18, hjust=0.5, face="bold", colour="grey20", vjust=-1),
+    plot.subtitle=element_text(size = 18, hjust=0.5, face="plain", color="grey20"),
+    plot.caption =element_text(size = 10, hjust=0.5, face="plain", color="grey20"),
+    axis.line=element_blank(),
+    plot.margin = margin(2,2, 2, 4, "cm"), 
+    plot.background=element_blank(),
+    axis.text.x=element_blank(),
+    axis.text.y=element_blank(),
+    axis.ticks=element_blank(),
+    axis.title.x=element_blank(),
+    axis.title.y=element_blank(),
+    panel.grid.minor=element_blank(),
+    panel.grid.major=element_blank(),
+    panel.background=element_blank(),
+    panel.border=element_blank(),
+    panel.grid.major.x = element_line( size=.1, color="grey80", linetype = "dashed" ),
+    panel.grid.minor.x = element_line( size=.1, color="grey80", linetype = "dashed" )
+  )
+
+```
+
+\
+
+Por último representamos el gráfico animado con `animate()`. Vemos claramente la totalidad de regiones y cómo van evolucionando en el *ranking* a lo largo de los años. La región de Moquegua mantiene su posición privilegiada a lo largo del periodo aunque se observa que otro conjunto de regiones, principalmente costeras (Lima, Arequipa, Ica o Tacna), van con el paso de los años acercando su nivel de renta per cápita con la de Moquegua. Por el contrario, en la parte inferior del *ranking*, un conjunto de regiones, principalmente regiones andinas, parecen consolidarse en posiciones más desfavorables con respecto al resto. 
+
+\
+
+```{r, fig.align='center'}
+
+animate(plot_peru, width = 600, height = 600, fps = 5)
+
+```
+
+\
+
+Pongamos que queremos seleccionar únicamente los primeros puestos en el *ranking* podemos filtrar nuestras observaciones con la función `filter()` de dplyr. A modo de ejemplo **seleccionamos los diez primeros puestos** del *ranking* tal y como vemos en el código siguiente. 
+
+\
+
+```{r}
+
+Peru_rangos_top <- Peru %>%
+  group_by(year) %>%
+  mutate(rango = rank(-vabpc),
+         labels = paste0(" ", round(vabpc))) %>%
+  group_by(Nombre) %>%
+  filter(rango <=10) %>%
+  ungroup()
+
+```
+
+\
+
+Consecuentemente, utilizando el nuevo dataframe `Peru_rangos_top`, y realizando pequeñas modificaciones al código anterior podemos visualizar la **evolución de las regiones que ocupaban los primeros diez puestos** en el *ranking* según su VAB por habitante. En esta ocasión cambiamos también los colores del gráfico. Cómo hicimos previamente guardamos el nuevo gráfico, en este caso como `plot_peru_top` y posteriormente procedemos a realizar la animación con `animate()`. 
+
+\
+
+```{r}
+
+plot_peru_top <- ggplot(Peru_rangos_top, aes(rango, group = Nombre, 
+                            fill = Area)) +
+  geom_col(aes(y = vabpc), alpha = 0.9, color = "grey20") +
+  coord_flip(clip = "off", expand = FALSE) +
+  geom_text(aes(y = 0, label = paste(Nombre, " ")), vjust = 0.2, hjust = 1) +
+  geom_text(aes(y= vabpc, label = labels, hjust = 0)) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_reverse() +
+  scale_fill_manual(values=c("royalblue", "limegreen", "chocolate4")) +
+  guides(color = FALSE, fill = FALSE) +
+  transition_states(year, transition_length = 1, state_length = 1, wrap= F) + 
+  labs(title = 'Perú. Regiones peruanas (Top 10) según su VAB per cápita',  
+       subtitle  =  "Año : {closest_state}",
+       caption  = "Miles de Soles constantes de 1994 | Fuente: INEI") +
+  theme(
+    legend.position="none",
+    plot.title=element_text(size=18, hjust=0.5, face="bold", colour="grey20", vjust=-1),
+    plot.subtitle=element_text(size = 26, hjust=0.5, face="plain", color="grey20"),
+    plot.caption =element_text(size = 10, hjust=0.5, face="plain", color="grey20"),
+    axis.line=element_blank(),
+    plot.margin = margin(2,2, 2, 4, "cm"), 
+    plot.background=element_blank(),
+    axis.text.x=element_blank(),
+    axis.text.y=element_blank(),
+    axis.ticks=element_blank(),
+    axis.title.x=element_blank(),
+    axis.title.y=element_blank(),
+    panel.grid.minor=element_blank(),
+    panel.grid.major=element_blank(),
+    panel.background=element_blank(),
+    panel.border=element_blank(),
+    panel.grid.major.x = element_line( size=.1, color="grey80", linetype = "dashed" ),
+    panel.grid.minor.x = element_line( size=.1, color="grey80", linetype = "dashed" )
+  )
+
+```
+
+\
+
+```{r, fig.align='center'}
+
+animate(plot_peru_top, width = 600, height = 600, fps = 7)
+
+```
+
