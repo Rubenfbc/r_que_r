@@ -1,7 +1,7 @@
 ---
-title: "Evolución VAB per cápita en Perú (1996-2016) con gganimate"
+title: "Evolución VAB per cápita en Perú (1995-2016) con gganimate"
 author: "Rubén F. Bustillo"
-date: 2019-10-25
+date: 2019-10-31
 categories: ["R"]
 tags: ["dplyr", "tidyverse", "ggplot2"]
 
@@ -118,7 +118,7 @@ Peru_rangos %&gt;%
 <h1>Gráfico animado con gganimate</h1>
 <p><br />
 </p>
-<p>Una vez hemos preparado el dataset procedemos a realizar el <strong>gráfico animado</strong>. Llamaremos al gráfico <code>plot_peru</code> y lo guardamos con dicho nombre. Utilizaremos el color azul para identificar las regiones mayoritariamente costeras, el color verde las regiones selváticas y el color marrón indicará las regiones cuyo territorio es mayoritariamente montañoso. El nombre de los colores utilizados, seleccionados con la función <code>scale_fill_manual()</code> los he obtenido del link: <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></p>
+<p>Una vez hemos preparado el dataset procedemos a realizar el <strong>gráfico animado</strong>. Llamaremos al gráfico <code>plot_peru</code> y lo guardamos con dicho nombre. Utilizaremos el color azul para identificar las regiones mayoritariamente costeras, el color verde las regiones selváticas y el color marrón indicará las regiones cuyo territorio es mayoritariamente de sierra o montañoso. El nombre de los colores utilizados, seleccionados con la función <code>scale_fill_manual()</code> se han obtenido del siguiente link: <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -158,15 +158,21 @@ plot_peru &lt;- ggplot(Peru_rangos, aes(rango, group = Nombre,
   )</code></pre>
 <p><br />
 </p>
-<p>Por último representamos el gráfico animado con <code>animate()</code>. Vemos claramente la totalidad de regiones y cómo van evolucionando en el <em>ranking</em> a lo largo de los años. La región de Moquegua mantiene su posición privilegiada a lo largo del periodo aunque se observa que otro conjunto de regiones, principalmente costeras (Lima, Arequipa, Ica o Tacna), van con el paso de los años acercando su nivel de renta per cápita con la de Moquegua. Por el contrario, en la parte inferior del <em>ranking</em>, un conjunto de regiones, principalmente regiones andinas, parecen consolidarse en posiciones más desfavorables con respecto al resto.</p>
+<p>Una vez tenemos el código <strong>representamos el gráfico animado</strong> con <code>animate()</code>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
 animate(plot_peru, width = 600, height = 600, fps = 5)</code></pre>
-<p><img src="/vab_peru_files/figure-html/unnamed-chunk-7-1.gif" style="display: block; margin: auto;" /></p>
+<p><img src="/vab_peru_files/figure-html/unnamed-chunk-7-1.gif" width="60%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
-<p>Pongamos que queremos seleccionar únicamente los primeros puestos en el <em>ranking</em> podemos filtrar nuestras observaciones con la función <code>filter()</code> de dplyr. A modo de ejemplo <strong>seleccionamos los diez primeros puestos</strong> del <em>ranking</em> tal y como vemos en el código siguiente.</p>
+<p>Vemos claramente la totalidad de regiones y cómo van evolucionando en el <em>ranking</em> a lo largo de los años. Entre ellas la región de Moquegua mantiene claramente una posición privilegiada a lo largo de todo el periodo. No obstante, se observa también que otro conjunto de regiones, principalmente regiones costeras como Lima, Arequipa, Ica o Tacna, han ido con el paso de los años acercando su nivel de renta per cápita con respecto al VAB por habitante de Moquegua. Por el contrario, en la parte inferior del <em>ranking</em>, un conjunto de regiones, principalmente regiones andinas, parecen consolidarse en las posiciones más desfavorables con respecto al resto de regiones peruanas. Sorprende especialmente el caso de Apurímac, región que se sitúa en la última posición a lo largo de la mayor parte del periodo analizado, pero que en 2016 mejora notablemente su posición en el <em>ranking</em> sitúandose en el quinto puesto. En este sentido conviene tener en cuenta el papel de la minería, actividad económica de gran productividad que representa una gran parte del VAB total en algunas regiones, especialmente en aquellas con economías menos desarrolladas y con una menor participación de actividades de servicios. El notable cambio sufrido por la región de Apurímac habrá tenido que ver, sin duda, con un incremento importante de la actividad extractiva en estos últimos años, lo que habrá contribuido sustancialmente al incremento del Valor Agregado Bruto de esta región. Consecuentemente, un posible análisis para un futuro post consistirá en identificar qué porcentaje del VAB por habitante de cada región responde a la actividad extractiva y en qué medida dicho sector influye en la posición relativa de las regiones mineras en el <em>ranking</em> que refleja nuestro gráfico.</p>
+<p><br />
+</p>
+<p>Otra dinámica que podemos extraer de la evolución que refleja el gráfico es la <strong>creciente brecha existente entre las regiones peruanas en términos de VAB por habitante a lo largo de las últimas décadas</strong>. Sin duda, las regiones costeras del país, especialmente aquellas que por lo general presentan economías más diversificadas y modernas, han ido incrementando a lo largo de los años su VAB por habitante en gran medida, especialmente en relación con la mayor parte de regiones de sierra y selva del país. Todo parece indicar que las disparidades territoriales presentes históricamente en el país, especialmente aquellas disparidades existentes entre algunas de las regiones del litoral peruano y el resto del país, se han incrementado a lo largo del periodo analizado. El llamado <em>milagro peruano</em> no parece haber sido un fenómeno territorialmente equilibrado sino que parece haber contribuido a incrementar los desequilibrios regionales existentes en el país latinoamericano.</p>
+<p><br />
+</p>
+<p>Por último, supongamos que queremos seleccionar únicamente los primeros puestos en el <em>ranking</em>. Para ello podemos filtrar nuestras observaciones con la función <code>filter()</code> de dplyr para reducir el número de observaciones a tener en cuenta en el gráfico final. A modo de ejemplo <strong>seleccionamos los diez primeros puestos</strong> del <em>ranking</em> tal y como vemos en el código siguiente.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -179,7 +185,7 @@ Peru_rangos_top &lt;- Peru %&gt;%
   ungroup()</code></pre>
 <p><br />
 </p>
-<p>Consecuentemente, utilizando el nuevo dataframe <code>Peru_rangos_top</code>, y realizando pequeñas modificaciones al código anterior podemos visualizar la <strong>evolución de las regiones que ocupaban los primeros diez puestos</strong> en el <em>ranking</em> según su VAB por habitante. En esta ocasión cambiamos también los colores del gráfico. Cómo hicimos previamente guardamos el nuevo gráfico, en este caso como <code>plot_peru_top</code> y posteriormente procedemos a realizar la animación con <code>animate()</code>.</p>
+<p>Consecuentemente, utilizando el nuevo dataframe <code>Peru_rangos_top</code>, y realizando pequeñas modificaciones al código anterior podemos visualizar la <strong>evolución de las regiones que ocupaban los primeros diez puestos</strong> en el <em>ranking</em> según su VAB por habitante. En esta ocasión cambiamos los colores utilizados en el gráfico previo, cambiamos el título, el subtítulo y algún otro aspecto del nuevo gráfico. Cómo hicimos previamente guardamos el nuevo gráfico, en este caso como <code>plot_peru_top</code>, y posteriormente procedemos a realizar la animación correspondiente con <code>animate()</code>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -188,19 +194,19 @@ plot_peru_top &lt;- ggplot(Peru_rangos_top, aes(rango, group = Nombre,
   geom_col(aes(y = vabpc), alpha = 0.9, color = &quot;grey20&quot;) +
   coord_flip(clip = &quot;off&quot;, expand = FALSE) +
   geom_text(aes(y = 0, label = paste(Nombre, &quot; &quot;)), vjust = 0.2, hjust = 1) +
-  geom_text(aes(y= vabpc, label = labels, hjust = 0)) +
+  geom_text(aes(y= vabpc, label = labels, hjust = 0, size = 1)) +
   scale_y_continuous(labels = scales::comma) +
   scale_x_reverse() +
   scale_fill_manual(values=c(&quot;royalblue&quot;, &quot;limegreen&quot;, &quot;goldenrod4&quot;)) +
   guides(color = FALSE, fill = FALSE) +
   transition_states(year, transition_length = 1, state_length = 1, wrap= F) + 
-  labs(title = &#39;Perú. Regiones peruanas (Top 10) según su VAB per cápita&#39;,  
+  labs(title = &#39;Perú. Regiones según su VAB per cápita (Top 10)&#39;,  
        subtitle  =  &quot;Año : {closest_state}&quot;,
        caption  = &quot;Miles de Soles constantes de 1994 | Fuente: INEI&quot;) +
   theme(
     legend.position=&quot;none&quot;,
     plot.title=element_text(size=18, hjust=0.5, face=&quot;bold&quot;, colour=&quot;grey20&quot;, vjust=-1),
-    plot.subtitle=element_text(size = 26, hjust=0.5, face=&quot;plain&quot;, color=&quot;grey20&quot;),
+    plot.subtitle=element_text(size = 26, hjust=0.5, face=&quot;bold&quot;, color=&quot;grey20&quot;),
     plot.caption =element_text(size = 10, hjust=0.5, face=&quot;plain&quot;, color=&quot;grey20&quot;),
     axis.line=element_blank(),
     plot.margin = margin(2,2, 2, 4, &quot;cm&quot;), 
@@ -221,5 +227,5 @@ plot_peru_top &lt;- ggplot(Peru_rangos_top, aes(rango, group = Nombre,
 </p>
 <pre class="r"><code>
 animate(plot_peru_top, width = 600, height = 600, fps = 7)</code></pre>
-<p><img src="/vab_peru_files/figure-html/unnamed-chunk-10-1.gif" style="display: block; margin: auto;" /></p>
+<p><img src="/vab_peru_files/figure-html/unnamed-chunk-10-1.gif" width="60%" style="display: block; margin: auto;" /></p>
 </div>
