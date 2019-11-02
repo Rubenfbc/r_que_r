@@ -1,0 +1,294 @@
+---
+title: "¿Cómo realizar mapas de España con archivos shapefile?"
+author: "Rubén F. Bustillo"
+date: 2019-11-01
+categories: ["R"]
+tags: ["maps", "mapas", "Spain", "España"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+**Re**
+
+En este post se expondrá cómo realizar mapas de España utilizando archivos shapefile y el paquete ggplot2. Los archivos shapefiles los descargaremos de la web y los datos los descargaremos del INE. 
+
+\
+
+## Paquetes de R
+
+```{r, warning=FALSE, message=FALSE}
+
+# para manipular dataframes
+library(tidyverse)
+
+# para importar archivos shapefiles
+library(rgdal)
+
+# Para transformar los archivos shapefiles 
+library(broom)
+
+```
+
+\
+
+# Comunidades Autónomas Españolas
+
+\
+
+En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando las distintas **Comunidades Autónomas** que la componen. Para ello descargamos el archivo shapefile con la información geográfica de las autonomías españolas de [arcgis.com](https://www.arcgis.com/home/item.html?id=5f689357238847bc823a2fb164544a77). Nótese que un archivo shapefile (SHP) es un formato de datos espaciales de representación vectorial desarrollado por la compañía ESRI que sirve para almacenar información de la ubicación de distintas entidades geográficas. Dicha información geométrica se puede representar con puntos, líneas o polígonos (áreas). 
+
+\
+
+La función `readOGR()`del paquete `rgdal` permite leer archivos shapefile (.shp) que en nuestro caso hemos descargado previamente desde la página mencionada y guardado en una carpeta de nuestro ordenador. Por su parte, con la función `tidy()` del paquete `broom` creamos un dataframe (data_ccaa) que nos servirá para su representación gráfica posterior. 
+
+\
+
+## Descarga y formato de archivos shapefile
+
+```{r message=FALSE, warning=FALSE}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/ComunidadesAutonomas_ETRS89_30N")
+
+# Guardamos el archivo shapefile
+
+shapefile_ccaa <- readOGR("Comunidades_Autonomas_ETRS89_30N.shp")
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_ccaa <- tidy(shapefile_ccaa)
+
+# primeras observaciones del dataset
+
+head(data_ccaa)
+
+```
+
+\
+
+Vemos que el dataframe creado no contiene los nombres de las distintas CCAA españolas pero, en cambio, dicho dataframe indica el "id" de las mismas. No obstante, el archivo shapefile original si contiene información de los nombres de las Comunidades Autónomas. Por tanto, podemos extraer los nombres en un nuevo dataframe (nombres_ccaa) y añadir el id de cada una de las regiones. El objetivo es, posteriormente, unir los dataframes por la columna "id".  
+
+\
+
+```{r}
+
+nombres_ccaa <- data.frame(shapefile_ccaa$Texto)
+
+head(nombres_ccaa)
+
+nombres_ccaa$id <- as.character(seq(0, nrow(nombres_ccaa)-1))
+
+head(nombres_ccaa)
+
+```
+
+\
+
+```{r}
+
+data_ccaa_mapa <- left_join(data_ccaa, nombres_ccaa, by = "id")
+
+head(data_ccaa_mapa)
+
+```
+
+\
+
+## Mapa de las Comunidades Autónomas usando ggplot
+
+Para representar en un mapa utilizando la información del dataframe obtenido del archivo shapefile podemos utilizar el paquete ggplot2 y la función `geom_polygon()`. De esta forma, utilizando el lenguage de este paquete, podemos customizar el gráfico y modificar su características. 
+
+\
+
+```{r, out.width = "80%", fig.align='center'}
+
+data_ccaa_mapa %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "violetred4",
+               color = "white") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "darkgrey", size= 0.5)) +
+  ggtitle("Comunidades Autónomas Españolas")
+
+```
+
+\
+
+# Provincias Españolas
+
+\
+
+En este subapartado vamos a realizar el mismo análisis realizado previamente pero identificando en esta ocasión **las provincas españolas**. Para ello, al igual que hicimos en el ejercicio previo descargamos el archivo shapefile de [arcgis.com](https://www.arcgis.com/home/item.html?id=83d81d9336c745fd839465beab885ab7). 
+
+\
+
+## Descarga y formato de archivos shapefile
+
+```{r message=FALSE, warning=FALSE}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Provincias_ETRS89_30N")
+
+# Guardamos el archivo shapefile
+
+shapefile_provincias <- readOGR("Provincias_ETRS89_30N.shp")
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_provincias <- tidy(shapefile_provincias)
+
+# primeras observaciones del dataset
+
+head(data_provincias)
+
+```
+
+\
+
+De nuevo vemos que el dataset creado contiene el "id" de las provincias pero no los nombres de las distintas provincias españolas. Obtenemos de nuevo los nombres del archivo shapefile original y realizamos el mismo ejercicio del punto anterior para obtener en nuestro dataframe una columna para el "id" y otro con el nombre de cada provincia española junto a la información de cada provincia para su representación gráfica.  
+
+\
+
+```{r}
+
+nombres_provincias <- data.frame(shapefile_provincias$Texto)
+
+head(nombres_provincias)
+
+nombres_provincias$id <- as.character(seq(0, nrow(nombres_provincias)-1))
+
+head(nombres_provincias)
+
+```
+
+\
+
+```{r}
+
+data_provincias_mapa <- left_join(data_provincias, nombres_provincias, by = "id")
+
+head(data_provincias_mapa)
+
+```
+
+\
+
+## Mapa de las Provincias usando ggplot
+
+Utilizamos el mismo código para realizar un mapa similar al anterior pero, en este caso, identificando las provincias españolas. 
+
+\
+
+```{r, out.width = "80%", fig.align='center'}
+
+data_provincias_mapa %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "violetred4",
+               color = "white") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "darkgrey", size= 0.5)) +
+  ggtitle("Provincias Españolas")
+
+```
+
+
+# Municipios Españoles
+ 
+\
+
+Por último realizamos un mapa donde se representen los distintos **municipios de España**. En este caso el archivo shapefile con información geográfica de los municipios españoles lo descargamos de [opendata.esri.es](https://opendata.esri.es/datasets/53229f5912e04f1ba6dddb70a5abeb72_0). La operativa similar aunque en lugar de utilizar los nombres de los municipios utilizaremos los códigos provistos por el INE (CODIGOINE).  
+
+\
+
+## Descarga y formato de archivos shapefile
+
+```{r message=FALSE, warning=FALSE}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Municipios_IGN")
+
+# Guardamos el archivo shapefile
+
+shapefile_municipios <- readOGR("Municipios_IGN.shp")
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_municipios <- tidy(shapefile_municipios)
+
+# primeras observaciones del dataset
+
+head(data_municipios)
+
+```
+
+\
+
+El código de los municipios se encuentra en el archivo original con el nombre CODIGOINE. Guardamos los códigos en un nuevo data frame llamado `codigo_municipios`. Al igual que hemos hecho anteriormente identificamos el "id" de cada municipio, que llamamos `codigo_municipios`, y, posteriormente, utilizando la función `left_join()` unimos los dos dataframes en uno llamado `data_municipios_mapa` que nos servirá para realizar el mapa final. 
+\
+
+```{r}
+
+codigo_municipios <- data.frame(shapefile_municipios$CODIGOINE)
+
+head(codigo_municipios)
+
+codigo_municipios$id <- as.character(seq(0, nrow(codigo_municipios)-1))
+
+head(codigo_municipios)
+
+```
+
+\
+
+```{r}
+
+data_municipios_mapa <- left_join(data_municipios, codigo_municipios, by = "id") %>%
+  mutate(codigo_ine = as.character("shapefile_municipios.CODIGOINE")) 
+
+head(data_municipios_mapa)
+
+```
+
+\
+
+## Mapa de los Municipios usando ggplot
+
+\
+
+Una vez tenemos el dataframe con la información geográfica de los municipios españoles junto al código (CODIGOINE) y el "id" de cada uno de ellos procedemos a realizar el mapa correspondiente utilizando `ggplot2` de la misma forma que hemos hecho en los subapartados previos. 
+
+\
+
+```{r, fig.align='center', out.width="100%"}
+
+data_municipios_mapa %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "violetred4",
+               color = "white") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "darkgrey", size= 0.5)) +
+  ggtitle("Municipios Españoles")
+
+```

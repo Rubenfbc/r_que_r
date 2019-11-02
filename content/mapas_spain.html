@@ -1,0 +1,346 @@
+---
+title: "¿Cómo realizar mapas de España con archivos shapefile?"
+author: "Rubén F. Bustillo"
+date: 2019-11-01
+categories: ["R"]
+tags: ["maps", "mapas", "Spain", "España"]
+
+---
+
+
+
+<p><strong>Re</strong></p>
+<p>En este post se expondrá cómo realizar mapas de España utilizando archivos shapefile y el paquete ggplot2. Los archivos shapefiles los descargaremos de la web y los datos los descargaremos del INE.</p>
+<p><br />
+</p>
+<div id="paquetes-de-r" class="section level2">
+<h2>Paquetes de R</h2>
+<pre class="r"><code>
+# para manipular dataframes
+library(tidyverse)
+
+# para importar archivos shapefiles
+library(rgdal)
+
+# Para transformar los archivos shapefiles 
+library(broom)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="comunidades-autónomas-españolas" class="section level1">
+<h1>Comunidades Autónomas Españolas</h1>
+<p><br />
+</p>
+<p>En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando las distintas <strong>Comunidades Autónomas</strong> que la componen. Para ello descargamos el archivo shapefile con la información geográfica de las autonomías españolas de <a href="https://www.arcgis.com/home/item.html?id=5f689357238847bc823a2fb164544a77">arcgis.com</a>. Nótese que un archivo shapefile (SHP) es un formato de datos espaciales de representación vectorial desarrollado por la compañía ESRI que sirve para almacenar información de la ubicación de distintas entidades geográficas. Dicha información geométrica se puede representar con puntos, líneas o polígonos (áreas).</p>
+<p><br />
+</p>
+<p>La función <code>readOGR()</code>del paquete <code>rgdal</code> permite leer archivos shapefile (.shp) que en nuestro caso hemos descargado previamente desde la página mencionada y guardado en una carpeta de nuestro ordenador. Por su parte, con la función <code>tidy()</code> del paquete <code>broom</code> creamos un dataframe (data_ccaa) que nos servirá para su representación gráfica posterior.</p>
+<p><br />
+</p>
+<div id="descarga-y-formato-de-archivos-shapefile" class="section level2">
+<h2>Descarga y formato de archivos shapefile</h2>
+<pre class="r"><code>
+setwd(&quot;C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/ComunidadesAutonomas_ETRS89_30N&quot;)
+
+# Guardamos el archivo shapefile
+
+shapefile_ccaa &lt;- readOGR(&quot;Comunidades_Autonomas_ETRS89_30N.shp&quot;)
+## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\Usuario\Desktop\r_que_r\r_que_r\content\datasets\ComunidadesAutonomas_ETRS89_30N\Comunidades_Autonomas_ETRS89_30N.shp&quot;, layer: &quot;Comunidades_Autonomas_ETRS89_30N&quot;
+## with 19 features
+## It has 3 fields
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_ccaa &lt;- tidy(shapefile_ccaa)
+
+# primeras observaciones del dataset
+
+head(data_ccaa)
+## # A tibble: 6 x 7
+##      long      lat order hole  piece group id   
+##     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 323065. 4288359.     1 FALSE 1     0.1   0    
+## 2 323295. 4288263.     2 FALSE 1     0.1   0    
+## 3 323997. 4288366.     3 FALSE 1     0.1   0    
+## 4 324629. 4287514.     4 FALSE 1     0.1   0    
+## 5 325061. 4287374.     5 FALSE 1     0.1   0    
+## 6 325720. 4286706.     6 FALSE 1     0.1   0</code></pre>
+<p><br />
+</p>
+<p>Vemos que el dataframe creado no contiene los nombres de las distintas CCAA españolas pero, en cambio, dicho dataframe indica el “id” de las mismas. No obstante, el archivo shapefile original si contiene información de los nombres de las Comunidades Autónomas. Por tanto, podemos extraer los nombres en un nuevo dataframe (nombres_ccaa) y añadir el id de cada una de las regiones. El objetivo es, posteriormente, unir los dataframes por la columna “id”.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+nombres_ccaa &lt;- data.frame(shapefile_ccaa$Texto)
+
+head(nombres_ccaa)
+##     shapefile_ccaa.Texto
+## 1             AndalucÃ­a
+## 2                AragÃ³n
+## 3 Principado de Asturias
+## 4         Islas Baleares
+## 5               Canarias
+## 6              Cantabria
+
+nombres_ccaa$id &lt;- as.character(seq(0, nrow(nombres_ccaa)-1))
+
+head(nombres_ccaa)
+##     shapefile_ccaa.Texto id
+## 1             AndalucÃ­a  0
+## 2                AragÃ³n  1
+## 3 Principado de Asturias  2
+## 4         Islas Baleares  3
+## 5               Canarias  4
+## 6              Cantabria  5</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+data_ccaa_mapa &lt;- left_join(data_ccaa, nombres_ccaa, by = &quot;id&quot;)
+
+head(data_ccaa_mapa)
+## # A tibble: 6 x 8
+##      long      lat order hole  piece group id    shapefile_ccaa.Texto
+##     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;               
+## 1 323065. 4288359.     1 FALSE 1     0.1   0     AndalucÃ­a           
+## 2 323295. 4288263.     2 FALSE 1     0.1   0     AndalucÃ­a           
+## 3 323997. 4288366.     3 FALSE 1     0.1   0     AndalucÃ­a           
+## 4 324629. 4287514.     4 FALSE 1     0.1   0     AndalucÃ­a           
+## 5 325061. 4287374.     5 FALSE 1     0.1   0     AndalucÃ­a           
+## 6 325720. 4286706.     6 FALSE 1     0.1   0     AndalucÃ­a</code></pre>
+<p><br />
+</p>
+</div>
+<div id="mapa-de-las-comunidades-autónomas-usando-ggplot" class="section level2">
+<h2>Mapa de las Comunidades Autónomas usando ggplot</h2>
+<p>Para representar en un mapa utilizando la información del dataframe obtenido del archivo shapefile podemos utilizar el paquete ggplot2 y la función <code>geom_polygon()</code>. De esta forma, utilizando el lenguage de este paquete, podemos customizar el gráfico y modificar su características.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+data_ccaa_mapa %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;violetred4&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;darkgrey&quot;, size= 0.5)) +
+  ggtitle(&quot;Comunidades Autónomas Españolas&quot;)</code></pre>
+<p><img src="/mapas_spain_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="provincias-españolas" class="section level1">
+<h1>Provincias Españolas</h1>
+<p><br />
+</p>
+<p>En este subapartado vamos a realizar el mismo análisis realizado previamente pero identificando en esta ocasión <strong>las provincas españolas</strong>. Para ello, al igual que hicimos en el ejercicio previo descargamos el archivo shapefile de <a href="https://www.arcgis.com/home/item.html?id=83d81d9336c745fd839465beab885ab7">arcgis.com</a>.</p>
+<p><br />
+</p>
+<div id="descarga-y-formato-de-archivos-shapefile-1" class="section level2">
+<h2>Descarga y formato de archivos shapefile</h2>
+<pre class="r"><code>
+setwd(&quot;C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Provincias_ETRS89_30N&quot;)
+
+# Guardamos el archivo shapefile
+
+shapefile_provincias &lt;- readOGR(&quot;Provincias_ETRS89_30N.shp&quot;)
+## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\Usuario\Desktop\r_que_r\r_que_r\content\datasets\Provincias_ETRS89_30N\Provincias_ETRS89_30N.shp&quot;, layer: &quot;Provincias_ETRS89_30N&quot;
+## with 52 features
+## It has 5 fields
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_provincias &lt;- tidy(shapefile_provincias)
+
+# primeras observaciones del dataset
+
+head(data_provincias)
+## # A tibble: 6 x 7
+##      long      lat order hole  piece group id   
+##     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 497824. 4784874.     1 FALSE 1     0.1   0    
+## 2 498457. 4784220.     2 FALSE 1     0.1   0    
+## 3 498532. 4783866.     3 FALSE 1     0.1   0    
+## 4 498382. 4783793.     4 FALSE 1     0.1   0    
+## 5 498946. 4783509.     5 FALSE 1     0.1   0    
+## 6 499046. 4782937.     6 FALSE 1     0.1   0</code></pre>
+<p><br />
+</p>
+<p>De nuevo vemos que el dataset creado contiene el “id” de las provincias pero no los nombres de las distintas provincias españolas. Obtenemos de nuevo los nombres del archivo shapefile original y realizamos el mismo ejercicio del punto anterior para obtener en nuestro dataframe una columna para el “id” y otro con el nombre de cada provincia española junto a la información de cada provincia para su representación gráfica.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+nombres_provincias &lt;- data.frame(shapefile_provincias$Texto)
+
+head(nombres_provincias)
+##   shapefile_provincias.Texto
+## 1                     Ã\201lava
+## 2                   Albacete
+## 3                   Alicante
+## 4                   AlmerÃ­a
+## 5                     Ã\201vila
+## 6                    Badajoz
+
+nombres_provincias$id &lt;- as.character(seq(0, nrow(nombres_provincias)-1))
+
+head(nombres_provincias)
+##   shapefile_provincias.Texto id
+## 1                     Ã\201lava  0
+## 2                   Albacete  1
+## 3                   Alicante  2
+## 4                   AlmerÃ­a  3
+## 5                     Ã\201vila  4
+## 6                    Badajoz  5</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+data_provincias_mapa &lt;- left_join(data_provincias, nombres_provincias, by = &quot;id&quot;)
+
+head(data_provincias_mapa)
+## # A tibble: 6 x 8
+##      long      lat order hole  piece group id    shapefile_provincias.Texto
+##     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;                     
+## 1 497824. 4784874.     1 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;             
+## 2 498457. 4784220.     2 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;             
+## 3 498532. 4783866.     3 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;             
+## 4 498382. 4783793.     4 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;             
+## 5 498946. 4783509.     5 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;             
+## 6 499046. 4782937.     6 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;</code></pre>
+<p><br />
+</p>
+</div>
+<div id="mapa-de-las-provincias-usando-ggplot" class="section level2">
+<h2>Mapa de las Provincias usando ggplot</h2>
+<p>Utilizamos el mismo código para realizar un mapa similar al anterior pero, en este caso, identificando las provincias españolas.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+data_provincias_mapa %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;violetred4&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;darkgrey&quot;, size= 0.5)) +
+  ggtitle(&quot;Provincias Españolas&quot;)</code></pre>
+<p><img src="/mapas_spain_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="municipios-españoles" class="section level1">
+<h1>Municipios Españoles</h1>
+<p><br />
+</p>
+<p>Por último realizamos un mapa donde se representen los distintos <strong>municipios de España</strong>. En este caso el archivo shapefile con información geográfica de los municipios españoles lo descargamos de <a href="https://opendata.esri.es/datasets/53229f5912e04f1ba6dddb70a5abeb72_0">opendata.esri.es</a>. La operativa similar aunque en lugar de utilizar los nombres de los municipios utilizaremos los códigos provistos por el INE (CODIGOINE).</p>
+<p><br />
+</p>
+<div id="descarga-y-formato-de-archivos-shapefile-2" class="section level2">
+<h2>Descarga y formato de archivos shapefile</h2>
+<pre class="r"><code>
+setwd(&quot;C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Municipios_IGN&quot;)
+
+# Guardamos el archivo shapefile
+
+shapefile_municipios &lt;- readOGR(&quot;Municipios_IGN.shp&quot;)
+## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;C:\Users\Usuario\Desktop\r_que_r\r_que_r\content\datasets\Municipios_IGN\Municipios_IGN.shp&quot;, layer: &quot;Municipios_IGN&quot;
+## with 8205 features
+## It has 10 fields
+## Integer64 fields read as strings:  OBJECTID
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_municipios &lt;- tidy(shapefile_municipios)
+
+# primeras observaciones del dataset
+
+head(data_municipios)
+## # A tibble: 6 x 7
+##    long   lat order hole  piece group id   
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 -1.58  42.4     1 FALSE 1     0.1   0    
+## 2 -1.58  42.4     2 FALSE 1     0.1   0    
+## 3 -1.58  42.4     3 FALSE 1     0.1   0    
+## 4 -1.58  42.4     4 FALSE 1     0.1   0    
+## 5 -1.58  42.4     5 FALSE 1     0.1   0    
+## 6 -1.58  42.4     6 FALSE 1     0.1   0</code></pre>
+<p><br />
+</p>
+<p>El código de los municipios se encuentra en el archivo original con el nombre CODIGOINE. Guardamos los códigos en un nuevo data frame llamado <code>codigo_municipios</code>. Al igual que hemos hecho anteriormente identificamos el “id” de cada municipio, que llamamos <code>codigo_municipios</code>, y, posteriormente, utilizando la función <code>left_join()</code> unimos los dos dataframes en uno llamado <code>data_municipios_mapa</code> que nos servirá para realizar el mapa final.<br />
+</p>
+<pre class="r"><code>
+codigo_municipios &lt;- data.frame(shapefile_municipios$CODIGOINE)
+
+head(codigo_municipios)
+##   shapefile_municipios.CODIGOINE
+## 1                          31164
+## 2                          31165
+## 3                          31166
+## 4                          31167
+## 5                          31168
+## 6                          19306
+
+codigo_municipios$id &lt;- as.character(seq(0, nrow(codigo_municipios)-1))
+
+head(codigo_municipios)
+##   shapefile_municipios.CODIGOINE id
+## 1                          31164  0
+## 2                          31165  1
+## 3                          31166  2
+## 4                          31167  3
+## 5                          31168  4
+## 6                          19306  5</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+data_municipios_mapa &lt;- left_join(data_municipios, codigo_municipios, by = &quot;id&quot;) %&gt;%
+  mutate(codigo_ine = as.character(&quot;shapefile_municipios.CODIGOINE&quot;)) 
+
+head(data_municipios_mapa)
+## # A tibble: 6 x 9
+##    long   lat order hole  piece group id    shapefile_municip~ codigo_ine  
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;              &lt;chr&gt;       
+## 1 -1.58  42.4     1 FALSE 1     0.1   0     31164              shapefile_m~
+## 2 -1.58  42.4     2 FALSE 1     0.1   0     31164              shapefile_m~
+## 3 -1.58  42.4     3 FALSE 1     0.1   0     31164              shapefile_m~
+## 4 -1.58  42.4     4 FALSE 1     0.1   0     31164              shapefile_m~
+## 5 -1.58  42.4     5 FALSE 1     0.1   0     31164              shapefile_m~
+## 6 -1.58  42.4     6 FALSE 1     0.1   0     31164              shapefile_m~</code></pre>
+<p><br />
+</p>
+</div>
+<div id="mapa-de-los-municipios-usando-ggplot" class="section level2">
+<h2>Mapa de los Municipios usando ggplot</h2>
+<p><br />
+</p>
+<p>Una vez tenemos el dataframe con la información geográfica de los municipios españoles junto al código (CODIGOINE) y el “id” de cada uno de ellos procedemos a realizar el mapa correspondiente utilizando <code>ggplot2</code> de la misma forma que hemos hecho en los subapartados previos.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+data_municipios_mapa %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;violetred4&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;darkgrey&quot;, size= 0.5)) +
+  ggtitle(&quot;Municipios Españoles&quot;)</code></pre>
+<p><img src="/mapas_spain_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>

@@ -6,10 +6,24 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 31 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>¿Cómo realizar mapas de España con archivos shapefile?</title>
+      <link>/mapas_spain/</link>
+      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mapas_spain/</guid>
+      <description>Re
+En este post se expondrá cómo realizar mapas de España utilizando archivos shapefile y el paquete ggplot2. Los archivos shapefiles los descargaremos de la web y los datos los descargaremos del INE.
+
+Paquetes de R# para manipular dataframeslibrary(tidyverse)# para importar archivos shapefileslibrary(rgdal)# Para transformar los archivos shapefiles library(broom)
+Comunidades Autónomas Españolas
+En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando las distintas Comunidades Autónomas que la componen.</description>
+    </item>
     
     <item>
       <title>Evolución VAB per cápita en Perú (1995-2016) con gganimate</title>
@@ -25,7 +39,7 @@ Gráfico dinámico del VAB
     </item>
     
     <item>
-      <title>Cómo formatear números en R</title>
+      <title>¿Cómo formatear números en R?</title>
       <link>/formatear_numeros/</link>
       <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
       
