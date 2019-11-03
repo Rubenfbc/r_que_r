@@ -68,7 +68,7 @@ head(data_ccaa)
 ## 6 325720. 4286706.     6 FALSE 1     0.1   0</code></pre>
 <p><br />
 </p>
-<p>Vemos que el dataframe creado no contiene los nombres de las distintas CCAA españolas pero, en cambio, dicho dataframe indica el “id” de las mismas. No obstante, el archivo shapefile original si contiene información de los nombres de las Comunidades Autónomas. Por tanto, podemos extraer los nombres en un nuevo dataframe (nombres_ccaa) y añadir el id de cada una de las regiones. El objetivo es, posteriormente, unir los dataframes por la columna “id”.</p>
+<p>Vemos que el dataframe creado no contiene los nombres de las distintas CCAA españolas pero, en cambio, dicho dataframe indica el “id” de las mismas. No obstante, el archivo shapefile original si contiene información de los nombres de las Comunidades Autónomas. Por tanto, podemos extraer los nombres en un nuevo dataframe (nombres_ccaa) y añadir el “id” de cada una de las regiones. El objetivo es, posteriormente, unir los dos dataframes por la columna común “id”.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -113,7 +113,7 @@ head(data_ccaa_mapa)
 </div>
 <div id="mapa-de-las-comunidades-autónomas-usando-ggplot" class="section level2">
 <h2>Mapa de las Comunidades Autónomas usando ggplot</h2>
-<p>Para representar en un mapa utilizando la información del dataframe obtenido del archivo shapefile podemos utilizar el paquete ggplot2 y la función <code>geom_polygon()</code>. De esta forma, utilizando el lenguage de este paquete, podemos customizar el gráfico y modificar su características.</p>
+<p>Para representar en un mapa utilizando la información del dataframe obtenido del archivo shapefile podemos utilizar el paquete ggplot2 y la función <code>geom_polygon()</code>. De esta forma, utilizando las funciones de este paquete, podemos customizar el gráfico y modificar su características.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -139,7 +139,7 @@ data_ccaa_mapa %&gt;%
 <h1>Provincias Españolas</h1>
 <p><br />
 </p>
-<p>En este subapartado vamos a realizar el mismo análisis realizado previamente pero identificando en esta ocasión <strong>las provincas españolas</strong>. Para ello, al igual que hicimos en el ejercicio previo descargamos el archivo shapefile de <a href="https://www.arcgis.com/home/item.html?id=83d81d9336c745fd839465beab885ab7">arcgis.com</a>.</p>
+<p>En este subapartado vamos a realizar el mismo análisis realizado previamente pero identificando en esta ocasión <strong>las provincas españolas</strong>. Para ello, al igual que hicimos en el ejercicio anterior descargamos el archivo shapefile de <a href="https://www.arcgis.com/home/item.html?id=83d81d9336c745fd839465beab885ab7">arcgis.com</a>.</p>
 <p><br />
 </p>
 <div id="descarga-y-formato-de-archivos-shapefile-1" class="section level2">
@@ -173,7 +173,7 @@ head(data_provincias)
 ## 6 499046. 4782937.     6 FALSE 1     0.1   0</code></pre>
 <p><br />
 </p>
-<p>De nuevo vemos que el dataset creado contiene el “id” de las provincias pero no los nombres de las distintas provincias españolas. Obtenemos de nuevo los nombres del archivo shapefile original y realizamos el mismo ejercicio del punto anterior para obtener en nuestro dataframe una columna para el “id” y otro con el nombre de cada provincia española junto a la información de cada provincia para su representación gráfica.</p>
+<p>De nuevo vemos que el dataset creado contiene información del “id” pero no los nombres de las distintas provincias españolas. Obtenemos de nuevo los nombres del archivo shapefile original y realizamos el mismo ejercicio del punto anterior para obtener en nuestro dataframe una columna para el “id” y otra con el nombre de cada provincia española junto a la información de cada provincia para su representación gráfica.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -218,7 +218,7 @@ head(data_provincias_mapa)
 </div>
 <div id="mapa-de-las-provincias-usando-ggplot" class="section level2">
 <h2>Mapa de las Provincias usando ggplot</h2>
-<p>Utilizamos el mismo código para realizar un mapa similar al anterior pero, en este caso, identificando las provincias españolas.</p>
+<p>Utilizamos el mismo código para realizar un mapa similar al anterior pero, en este caso, identificando las <strong>provincias españolas</strong>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -242,7 +242,7 @@ data_provincias_mapa %&gt;%
 <h1>Municipios Españoles</h1>
 <p><br />
 </p>
-<p>Por último realizamos un mapa donde se representen los distintos <strong>municipios de España</strong>. En este caso el archivo shapefile con información geográfica de los municipios españoles lo descargamos de <a href="https://opendata.esri.es/datasets/53229f5912e04f1ba6dddb70a5abeb72_0">opendata.esri.es</a>. La operativa similar aunque en lugar de utilizar los nombres de los municipios utilizaremos los códigos provistos por el INE (CODIGOINE).</p>
+<p>Por último realizamos un mapa donde se representen los distintos <strong>municipios de España</strong>. En este caso el archivo shapefile con información geográfica de los municipios españoles lo descargamos de <a href="https://opendata.esri.es/datasets/53229f5912e04f1ba6dddb70a5abeb72_0">opendata.esri.es</a>. La operativa es similar a la realizada en el punto anterior aunque en lugar de utilizar los nombres de los municipios <strong>utilizaremos los códigos provistos por el INE</strong> (CODIGOINE).</p>
 <p><br />
 </p>
 <div id="descarga-y-formato-de-archivos-shapefile-2" class="section level2">
@@ -322,9 +322,7 @@ head(data_municipios_mapa)
 </div>
 <div id="mapa-de-los-municipios-usando-ggplot" class="section level2">
 <h2>Mapa de los Municipios usando ggplot</h2>
-<p><br />
-</p>
-<p>Una vez tenemos el dataframe con la información geográfica de los municipios españoles junto al código (CODIGOINE) y el “id” de cada uno de ellos procedemos a realizar el mapa correspondiente utilizando <code>ggplot2</code> de la misma forma que hemos hecho en los subapartados previos.</p>
+<p>Una vez tenemos el dataframe con la información geográfica de los municipios españoles junto al código (CODIGOINE) y el “id” de cada uno de ellos <strong>procedemos a realizar el mapa correspondiente</strong> utilizando <code>ggplot2</code> de la misma forma que hemos hecho en los subapartados previos.</p>
 <p><br />
 </p>
 <pre class="r"><code>
