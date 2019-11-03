@@ -281,7 +281,8 @@ data_municipios_mapa %>%
   ggplot() +
   geom_polygon(aes( x= long, y = lat, group = group),
                fill = "violetred4",
-               color = "white") +
+               color = "white",
+               size = 0.1) +
   theme_minimal() +
   theme(
     axis.line = element_blank(),
