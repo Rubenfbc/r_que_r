@@ -275,14 +275,14 @@ Una vez tenemos el dataframe con la información geográfica de los municipios e
 
 \
 
-```{r, fig.align='center', out.width="100%"}
+```{r, fig.align = 'center', out.width = "100%", fig.height = 5, fig.width = 6}
 
 data_municipios_mapa %>%
   ggplot() +
   geom_polygon(aes( x= long, y = lat, group = group),
                fill = "violetred4",
                color = "white",
-               size = 0.1) +
+               size = 0.05) +
   theme_minimal() +
   theme(
     axis.line = element_blank(),
