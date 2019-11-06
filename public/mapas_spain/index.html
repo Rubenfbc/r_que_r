@@ -492,13 +492,13 @@ head(riesgo_pobreza_grafico)
 ## # ... with 1 more variable: Riesgo_pobreza &lt;dbl&gt;</code></pre>
 <p><br />
 </p>
-<p>Por último <strong>realizamos el gráfico</strong> utilizando <code>ggplot2</code> como hemos relizado previamente. Como ya se ha expuesto, podemos customizar nuestro grafico utilizando las funciones de dicho paquete. En el gráfico realizamos algunas modificaciones (color de fondo, tamaño del texto del título, subtítulo, leyenda, cambio en la posición de la leyenda, etc.) sobre el mapa previo para ejemplificar la forma en la que podemos aplicar dichas modificaciones a nuestro gusto.</p>
+<p>Por último <strong>realizamos el gráfico</strong> utilizando <code>ggplot2</code> como hemos hecho previamente. Como ya se ha expuesto, podemos customizar nuestro grafico utilizando las funciones de dicho paquete. En el siguiente mapa realizamos algunas modificaciones (color de fondo, tamaño del texto del título, subtítulo, leyenda, cambio en la posición de la leyenda, etc.) sobre el mapa previo para ejemplificar la forma en la que podemos aplicar dichas modificaciones a nuestro gusto.</p>
 <p><br />
 </p>
 <pre class="r"><code>
 riesgo_pobreza_grafico %&gt;%
   ggplot(aes(x=long, y= lat, group = group)) +
-  geom_polygon(aes(fill=Riesgo_pobreza), color= &quot;white&quot;) +
+  geom_polygon(aes(fill=Riesgo_pobreza), color= &quot;white&quot;, size = 0.2) +
   labs( title = &quot;Tasa de Riesgo de Pobreza por Comunidades Autónomas&quot;,
         subtitle = &quot;Unidades: Porcentaje&quot;,
         caption = &quot;Fuente: INE&quot;,
@@ -521,6 +521,76 @@ riesgo_pobreza_grafico %&gt;%
 <p><img src="/mapas_spain_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
+<p>Como utilizamos valorescontinúos R utiliza un rango de colores azules para su representación gráfica. No obstante, nos puede interesar establecer <strong>grupos o categorías de valores</strong> para su representación. En este caso podemos calcular, por ejemplo, los quintiles de los nuestros valores y asignarles una categoría.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+quantile(riesgo_pobreza_grafico$Riesgo_pobreza, probs = c(0.2, 0.4, 0.6, 0.8))
+##  20%  40%  60%  80% 
+## 14.2 16.1 18.8 32.0
+
+# En función de los resultados obtenidos establecemos nuestros cortes en los siguientes valores:
+corte &lt;- c(12, 18, 24, 30)
+
+
+# Los valores mínimo y máximo son:
+
+val_min &lt;- min(riesgo_pobreza_grafico$Riesgo_pobreza)
+val_max &lt;- max(riesgo_pobreza_grafico$Riesgo_pobreza)
+
+
+# Y por tanto, los rangos serán los siguientes:
+
+breaks &lt;- c(val_min, corte, val_max)
+
+riesgo_pobreza_grafico$breaks &lt;- cut(riesgo_pobreza_grafico$Riesgo_pobreza,
+                                     breaks = breaks,
+                                     include.lowest = T)
+
+breaks_scale &lt;- levels(riesgo_pobreza_grafico$breaks)
+labels_scale &lt;- rev(breaks_scale)</code></pre>
+<p><br />
+</p>
+<p>Con respecto a los colores a utilizar podemos indicar los colores de nuestra elección, como ya hemos realizado en algún post anterior, o podemos hacer uso de alguna <strong>paleta de colores existente</strong>. Un ejemplo de posibles paletas se encuentra en el paquete <code>wesanderson</code>, las cuales se pueden visualizar <a href="https://github.com/karthik/wesanderson">aquí</a>. Para ello cargamos la librería y guardamos una de las paletas (Darjeeling1).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(wesanderson)
+## Warning: package &#39;wesanderson&#39; was built under R version 3.6.1
+
+colores &lt;- wes_palette(&quot;Darjeeling1&quot;, 5, type = &quot;discrete&quot;)</code></pre>
+<p><br />
+</p>
+<p>Por último <strong>realizamos el gráfico</strong> indicando los cortes (rangos) que nos interesan y los colores para cada una de las categorías de la siguiente manera:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+riesgo_pobreza_grafico %&gt;%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=breaks), color= &quot;white&quot;, size = 0.2) +
+  labs( title = &quot;Tasa de Riesgo de Pobreza por Comunidades Autónomas&quot;,
+        subtitle = &quot;Unidades: Porcentaje&quot;,
+        caption = &quot;Fuente: INE&quot;,
+        fill = &quot;Tasa (%)&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_manual(
+    values = rev(colores),
+    breaks = rev(breaks_scale))</code></pre>
+<p><img src="/mapas_spain_files/figure-html/unnamed-chunk-19-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 
                 </section>

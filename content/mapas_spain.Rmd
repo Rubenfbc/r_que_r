@@ -335,7 +335,7 @@ head(riesgo_pobreza_grafico)
 
 \
 
-Por último **realizamos el gráfico** utilizando `ggplot2` como hemos relizado previamente. Como ya se ha expuesto, podemos customizar nuestro grafico utilizando las funciones de dicho paquete. En el gráfico realizamos algunas modificaciones (color de fondo, tamaño del texto del título, subtítulo, leyenda, cambio en la posición de la leyenda, etc.) sobre el mapa previo para ejemplificar la forma en la que podemos aplicar dichas modificaciones a nuestro gusto.
+Por último **realizamos el gráfico** utilizando `ggplot2` como hemos hecho previamente. Como ya se ha expuesto, podemos customizar nuestro grafico utilizando las funciones de dicho paquete. En el siguiente mapa realizamos algunas modificaciones (color de fondo, tamaño del texto del título, subtítulo, leyenda, cambio en la posición de la leyenda, etc.) sobre el mapa previo para ejemplificar la forma en la que podemos aplicar dichas modificaciones a nuestro gusto.
 
 \
 
@@ -343,7 +343,7 @@ Por último **realizamos el gráfico** utilizando `ggplot2` como hemos relizado 
 
 riesgo_pobreza_grafico %>%
   ggplot(aes(x=long, y= lat, group = group)) +
-  geom_polygon(aes(fill=Riesgo_pobreza), color= "white") +
+  geom_polygon(aes(fill=Riesgo_pobreza), color= "white", size = 0.2) +
   labs( title = "Tasa de Riesgo de Pobreza por Comunidades Autónomas",
         subtitle = "Unidades: Porcentaje",
         caption = "Fuente: INE",
@@ -368,4 +368,85 @@ riesgo_pobreza_grafico %>%
 ```
 
 \
+
+Como utilizamos valorescontinúos R utiliza un rango de colores azules para su representación gráfica. No obstante, nos puede interesar establecer **grupos o categorías de valores** para su representación. En este caso podemos calcular, por ejemplo, los quintiles de los nuestros valores y asignarles una categoría. 
+
+\
+
+```{r}
+
+quantile(riesgo_pobreza_grafico$Riesgo_pobreza, probs = c(0.2, 0.4, 0.6, 0.8))
+
+# En función de los resultados obtenidos establecemos nuestros cortes en los siguientes valores:
+corte <- c(12, 18, 24, 30)
+
+
+# Los valores mínimo y máximo son:
+
+val_min <- min(riesgo_pobreza_grafico$Riesgo_pobreza)
+val_max <- max(riesgo_pobreza_grafico$Riesgo_pobreza)
+
+
+# Y por tanto, los rangos serán los siguientes:
+
+breaks <- c(val_min, corte, val_max)
+
+riesgo_pobreza_grafico$breaks <- cut(riesgo_pobreza_grafico$Riesgo_pobreza,
+                                     breaks = breaks,
+                                     include.lowest = T)
+
+breaks_scale <- levels(riesgo_pobreza_grafico$breaks)
+labels_scale <- rev(breaks_scale)
+
+```
+
+\
+
+Con respecto a los colores a utilizar podemos indicar los colores de nuestra elección, como ya hemos realizado en algún post anterior, o podemos hacer uso de alguna **paleta de colores existente**. Un ejemplo de posibles paletas se encuentra en el paquete `wesanderson`, las cuales se pueden visualizar [aquí](https://github.com/karthik/wesanderson). Para ello cargamos la librería y guardamos una de las paletas (Darjeeling1).
+
+\
+
+```{r}
+
+library(wesanderson)
+
+colores <- wes_palette("Darjeeling1", 5, type = "discrete")
+
+```
+
+\
+
+Por último **realizamos el gráfico** indicando los cortes (rangos) que nos interesan y los colores para cada una de las categorías de la siguiente manera:
+
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+riesgo_pobreza_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=breaks), color= "white", size = 0.2) +
+  labs( title = "Tasa de Riesgo de Pobreza por Comunidades Autónomas",
+        subtitle = "Unidades: Porcentaje",
+        caption = "Fuente: INE",
+        fill = "Tasa (%)") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_manual(
+    values = rev(colores),
+    breaks = rev(breaks_scale))
+
+```
 
