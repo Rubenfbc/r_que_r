@@ -103,7 +103,7 @@ head(data_ccaa_mapa)
 
 ## Mapa de las Comunidades Autónomas usando ggplot
 
-Para representar en un mapa utilizando la información del dataframe obtenido del archivo shapefile podemos utilizar el paquete ggplot2 y la función `geom_polygon()`. De esta forma, utilizando las funciones de este paquete, podemos customizar el gráfico y modificar su características. 
+Para representar en un mapa utilizando la información del dataframe obtenido del archivo shapefile podemos utilizar el paquete ggplot2 y la función `geom_polygon()`. De esta forma, utilizando las funciones de este paquete, podemos customizar el gráfico y modificar sus características. 
 
 \
 
@@ -131,7 +131,7 @@ data_ccaa_mapa %>%
 
 \
 
-En este subapartado vamos a realizar el mismo análisis realizado previamente pero identificando en esta ocasión **las provincas españolas**. Para ello, al igual que hicimos en el ejercicio anterior descargamos el archivo shapefile de [arcgis.com](https://www.arcgis.com/home/item.html?id=83d81d9336c745fd839465beab885ab7). 
+En este subapartado vamos a realizar el mismo análisis realizado previamente pero identificando en esta ocasión **las provincias españolas**. Para ello, al igual que hicimos en el ejercicio anterior descargamos el archivo shapefile de [arcgis.com](https://www.arcgis.com/home/item.html?id=83d81d9336c745fd839465beab885ab7). 
 
 \
 
@@ -369,7 +369,7 @@ riesgo_pobreza_grafico %>%
 
 \
 
-Como utilizamos valorescontinúos R utiliza un rango de colores azules para su representación gráfica. No obstante, nos puede interesar establecer **grupos o categorías de valores** para su representación. En este caso podemos calcular, por ejemplo, los quintiles de los nuestros valores y asignarles una categoría. 
+Como utilizamos valores continuos R utiliza un rango de colores azules para su representación gráfica. No obstante, nos puede interesar establecer **grupos o categorías de valores** para su representación. En este caso podemos calcular, por ejemplo, los quintiles de los nuestros valores y asignarles una categoría. 
 
 \
 
@@ -402,7 +402,7 @@ labels_scale <- rev(breaks_scale)
 
 \
 
-Con respecto a los colores a utilizar podemos indicar los colores de nuestra elección, como ya hemos realizado en algún post anterior, o podemos hacer uso de alguna **paleta de colores existente**. Un ejemplo de posibles paletas se encuentra en el paquete `wesanderson`, las cuales se pueden visualizar [aquí](https://github.com/karthik/wesanderson). Para ello cargamos la librería y guardamos una de las paletas (Darjeeling1).
+Con respecto a los colores a utilizar podemos indicar los colores de nuestra elección, como ya hemos realizado en algún post anterior, o podemos hacer uso de alguna **paleta de colores existente**. Un ejemplo de posibles paletas se encuentra en el paquete `wesanderson`, las cuales se pueden visualizar [aquí](https://github.com/karthik/wesanderson). Para ello cargamos la librería y guardamos una de las paletas (Darjeeling1). 
 
 \
 
@@ -450,3 +450,155 @@ riesgo_pobreza_grafico %>%
 
 ```
 
+\ 
+
+En el último gráfico se visualiza claramente que las Comunidades Autónomas con menor tasa de riesgo de pobreza son el País Vasco y Navarra mientras que Extremadura, Andalucía y las Islas Canarias presentan los valores más elevados. 
+
+\
+
+#  Mapa de la Tasa de Mortalidad por Provincia
+
+\
+
+En esta ocasión vamos a representar en un mapa la **tasa de mortalidad (defunciones por mil habitantes) por provincia**. Los [datos](https://www.ine.es/FichasWeb/RegProvincias.do?fichas=4&busc_comu=&botonFichas=Ir+a+la+tabla+de+resultados), de nuevo, los obtenemos del Instituto Nacional de Estadística. 
+
+\
+
+```{r}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets")
+
+tasa_mortalidad <- read_excel("tasa_mortalidad.xls")
+
+head(tasa_mortalidad) 
+
+```
+
+\
+
+Utilizamos de nuevo la función `left_join()` para combinar el nuevo dataframe (`tasa_mortalidad`) con el que utilizamos previamente para realizar el mapa base (`data_provincias_mapa`). 
+
+\
+
+```{r}
+
+tasa_mortalidad$id <- as.character(tasa_mortalidad$id)
+
+tasa_mortalidad_grafico <- data_provincias_mapa %>%
+  left_join(tasa_mortalidad, by= "id")
+
+head(tasa_mortalidad_grafico)
+
+```
+
+\
+
+Por último **realizamos el gráfico** con `ggplot` usando el mismo theme que el utilizado en el mapa de las Comunidades Autónomas. Sin embargo, en esta ocasión, cambiamos la paleta de colores utilizando la función `scale_fill_gradient()` mediante la cual seleccionamos el color amarillo para los valores más bajos y el color rojo para los valores más altos. 
+ 
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+tasa_mortalidad_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= TM), color= "white", size = 0.2) +
+  labs( title = "Tasa Bruta de Mortalidad por Provincia",
+        subtitle = "Defunciones por mil habitantes",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_gradient(low = "yellow", high = "red")
+
+
+```
+
+\
+
+Para establecer **grupos o categorías de valores** como la realizada para las Comunidades Autónomas realizaremos una operativa similar a la realizada previamente. En primer lugar identificaremos los cortes el valor mínimo y máximo del rango.
+
+\
+
+```{r}
+
+quantile(tasa_mortalidad_grafico$TM, probs = c(0.2, 0.4, 0.6, 0.8))
+
+# En función de los resultados obtenidos establecemos nuestros cortes en los siguientes valores:
+corte <- c(8, 9.5, 10.5, 12)
+
+
+# Los valores mínimo y máximo son:
+
+val_min <- min(tasa_mortalidad_grafico$TM)
+val_max <- max(tasa_mortalidad_grafico$TM)
+
+
+# Y por tanto, los rangos serán los siguientes:
+
+breaks <- c(val_min, corte, val_max)
+
+tasa_mortalidad_grafico$breaks <- cut(tasa_mortalidad_grafico$TM,
+                                     breaks = breaks,
+                                     include.lowest = T)
+
+breaks_scale <- levels(tasa_mortalidad_grafico$breaks)
+labels_scale <- rev(breaks_scale)
+
+```
+
+\
+
+Por último **realizamos el gráfico** indicando los cortes (rangos) establecidos y los colores para cada una de las categorías. En esta ocasión cargamos una nueva paleta (Moonrise3) de la misma librería usada en previamente.
+
+\
+
+```{r}
+
+colores <- wes_palette("Moonrise3", 5, type = "discrete")
+
+```
+
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+tasa_mortalidad_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=breaks), color= "white", size = 0.2) +
+  labs( title = "Tasa Bruta de Mortalidad por Provincia",
+        subtitle = "Defunciones por mil habitantes",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_manual(
+    values = rev(colores),
+    breaks = rev(breaks_scale))
+
+```
