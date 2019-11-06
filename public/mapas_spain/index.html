@@ -126,6 +126,7 @@ library(broom)</code></pre>
 <pre class="r"><code>
 setwd(&quot;C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/ComunidadesAutonomas_ETRS89_30N&quot;)
 
+
 # Guardamos el archivo shapefile
 
 shapefile_ccaa &lt;- readOGR(&quot;Comunidades_Autonomas_ETRS89_30N.shp&quot;)
@@ -230,6 +231,7 @@ data_ccaa_mapa %&gt;%
 <h2>Descarga y formato de archivos shapefile</h2>
 <pre class="r"><code>
 setwd(&quot;C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Provincias_ETRS89_30N&quot;)
+
 
 # Guardamos el archivo shapefile
 
@@ -425,7 +427,100 @@ data_municipios_mapa %&gt;%
     panel.background = element_rect(colour= &quot;darkgrey&quot;, size= 0.5)) +
   ggtitle(&quot;Municipios Españoles&quot;)</code></pre>
 <p><img src="/mapas_spain_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
 </div>
+</div>
+<div id="mapa-del-porcentaje-de-riesgo-de-pobreza-por-comunidad-autónoma" class="section level1">
+<h1>Mapa del porcentaje de Riesgo de Pobreza por Comunidad Autónoma</h1>
+<p><br />
+</p>
+<p>A modo de ejemplo vamos a representar el <strong>porcentaje de Riesgo de Pobreza por Comunidad Autónoma</strong> en un mapa. Los <a href="https://www.ine.es/jaxiT3/Tabla.htm?t=9963&amp;L=0">datos</a>, referentes al año 2017, los obtenemos del Instituto Nacional de Estadística.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+setwd(&quot;C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets&quot;)
+
+library(readxl)
+
+riesgo_pobreza &lt;- read_excel(&quot;riesgo_pobreza.xls&quot;)
+
+head(riesgo_pobreza, n=20)
+## # A tibble: 19 x 3
+##       id Region                     Riesgo_pobreza
+##    &lt;dbl&gt; &lt;chr&gt;                               &lt;dbl&gt;
+##  1     0 Andalucía                            32  
+##  2     1 Aragón                               14.2
+##  3     2 Principado de Asturias               14  
+##  4     3 Balears, Illes                       15.4
+##  5     4 Canarias                             32.1
+##  6     5 Cantabria                            19.9
+##  7     6 Castilla y León                      16.1
+##  8     7 Castilla - La Mancha                 29.9
+##  9     8 Cataluña                             13.6
+## 10     9 Comunitat Valenciana                 26  
+## 11    10 Extremadura                          37.6
+## 12    11 Galicia                              18.8
+## 13    12 Comunidad de Madrid                  16.1
+## 14    13 Región de Murcia                     28.6
+## 15    14 Comunidad Foral de Navarra            8.9
+## 16    15 País Vasco                            8.6
+## 17    16 La Rioja                             16.6
+## 18    17 Ceuta                                38.3
+## 19    18 Melilla                              21.4</code></pre>
+<p><br />
+</p>
+<p>Utilizamos la función <code>left_join()</code> para combinar el nuevo dataframe (<code>riesgo_pobreza</code>) con el que utilizamos previamente para realizar el mapa base (<code>data_ccaa_mapa</code>).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+riesgo_pobreza$id &lt;- as.character(riesgo_pobreza$id)
+
+riesgo_pobreza_grafico &lt;- data_ccaa_mapa %&gt;%
+  left_join(riesgo_pobreza, by= &quot;id&quot;)
+
+head(riesgo_pobreza_grafico)
+## # A tibble: 6 x 10
+##     long    lat order hole  piece group id    shapefile_ccaa.~ Region
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;            &lt;chr&gt; 
+## 1 3.23e5 4.29e6     1 FALSE 1     0.1   0     AndalucÃ­a        Andal~
+## 2 3.23e5 4.29e6     2 FALSE 1     0.1   0     AndalucÃ­a        Andal~
+## 3 3.24e5 4.29e6     3 FALSE 1     0.1   0     AndalucÃ­a        Andal~
+## 4 3.25e5 4.29e6     4 FALSE 1     0.1   0     AndalucÃ­a        Andal~
+## 5 3.25e5 4.29e6     5 FALSE 1     0.1   0     AndalucÃ­a        Andal~
+## 6 3.26e5 4.29e6     6 FALSE 1     0.1   0     AndalucÃ­a        Andal~
+## # ... with 1 more variable: Riesgo_pobreza &lt;dbl&gt;</code></pre>
+<p><br />
+</p>
+<p>Por último <strong>realizamos el gráfico</strong> utilizando <code>ggplot2</code> como hemos relizado previamente. Como ya se ha expuesto, podemos customizar nuestro grafico utilizando las funciones de dicho paquete. En el gráfico realizamos algunas modificaciones (color de fondo, tamaño del texto del título, subtítulo, leyenda, cambio en la posición de la leyenda, etc.) sobre el mapa previo para ejemplificar la forma en la que podemos aplicar dichas modificaciones a nuestro gusto.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+riesgo_pobreza_grafico %&gt;%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=Riesgo_pobreza), color= &quot;white&quot;) +
+  labs( title = &quot;Tasa de Riesgo de Pobreza por Comunidades Autónomas&quot;,
+        subtitle = &quot;Unidades: Porcentaje&quot;,
+        caption = &quot;Fuente: INE&quot;,
+        fill = &quot;Tasa (%)&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;))</code></pre>
+<p><img src="/mapas_spain_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
 </div>
 
                 </section>

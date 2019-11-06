@@ -56,6 +56,7 @@ La función `readOGR()`del paquete `rgdal` permite leer archivos shapefile (.shp
 
 setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/ComunidadesAutonomas_ETRS89_30N")
 
+
 # Guardamos el archivo shapefile
 
 shapefile_ccaa <- readOGR("Comunidades_Autonomas_ETRS89_30N.shp")
@@ -139,6 +140,7 @@ En este subapartado vamos a realizar el mismo análisis realizado previamente pe
 ```{r message=FALSE, warning=FALSE}
 
 setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Provincias_ETRS89_30N")
+
 
 # Guardamos el archivo shapefile
 
@@ -273,7 +275,7 @@ Una vez tenemos el dataframe con la información geográfica de los municipios e
 
 \
 
-```{r, fig.align = 'center', out.width = "100%", fig.height = 5, fig.width = 6}
+```{r, fig.align='center', fig.height=5, fig.width=6, out.width="100%"}
 
 data_municipios_mapa %>%
   ggplot() +
@@ -291,3 +293,79 @@ data_municipios_mapa %>%
   ggtitle("Municipios Españoles")
 
 ```
+
+\
+
+#  Mapa del porcentaje de Riesgo de Pobreza por Comunidad Autónoma
+
+\
+
+A modo de ejemplo vamos a representar el **porcentaje de Riesgo de Pobreza por Comunidad Autónoma** en un mapa. Los [datos](https://www.ine.es/jaxiT3/Tabla.htm?t=9963&L=0), referentes al año 2017, los obtenemos del Instituto Nacional de Estadística.
+
+\
+
+```{r}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets")
+
+library(readxl)
+
+riesgo_pobreza <- read_excel("riesgo_pobreza.xls")
+
+head(riesgo_pobreza, n=20)
+
+```
+
+\
+
+Utilizamos la función `left_join()` para combinar el nuevo dataframe (`riesgo_pobreza`) con el que utilizamos previamente para realizar el mapa base (`data_ccaa_mapa`). 
+
+\
+
+```{r}
+
+riesgo_pobreza$id <- as.character(riesgo_pobreza$id)
+
+riesgo_pobreza_grafico <- data_ccaa_mapa %>%
+  left_join(riesgo_pobreza, by= "id")
+
+head(riesgo_pobreza_grafico)
+
+```
+
+\
+
+Por último **realizamos el gráfico** utilizando `ggplot2` como hemos relizado previamente. Como ya se ha expuesto, podemos customizar nuestro grafico utilizando las funciones de dicho paquete. En el gráfico realizamos algunas modificaciones (color de fondo, tamaño del texto del título, subtítulo, leyenda, cambio en la posición de la leyenda, etc.) sobre el mapa previo para ejemplificar la forma en la que podemos aplicar dichas modificaciones a nuestro gusto.
+
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+riesgo_pobreza_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=Riesgo_pobreza), color= "white") +
+  labs( title = "Tasa de Riesgo de Pobreza por Comunidades Autónomas",
+        subtitle = "Unidades: Porcentaje",
+        caption = "Fuente: INE",
+        fill = "Tasa (%)") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm"))
+  
+
+```
+
+\
+

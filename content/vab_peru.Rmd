@@ -241,4 +241,6 @@ plot_peru_top <- ggplot(Peru_rangos_top, aes(rango, group = Nombre,
 animate(plot_peru_top, width = 600, height = 600, fps = 7)
 
 ```
+ 
+
 
