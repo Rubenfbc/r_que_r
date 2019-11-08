@@ -1,9 +1,9 @@
 ---
 title: "¿Cómo realizar mapas de España con archivos shapefile?"
 author: "Rubén F. Bustillo"
-date: 2019-11-01
+date: 2019-11-08
 categories: ["R"]
-tags: ["maps", "mapas", "Spain", "España"]
+tags: ["maps", "mapas", "Spain", "España","Comunidades Autónomas", "Provincias", "Municipios", "ggplot2", "shapefiles"]
 
 ---
 
@@ -261,7 +261,8 @@ head(codigo_municipios)
 ```{r}
 
 data_municipios_mapa <- left_join(data_municipios, codigo_municipios, by = "id") %>%
-  mutate(codigo_ine = as.character("shapefile_municipios.CODIGOINE")) 
+  mutate(codigo_ine = as.character(`shapefile_municipios.CODIGOINE`)) %>%
+  select(-`shapefile_municipios.CODIGOINE`)
 
 head(data_municipios_mapa)
 
@@ -602,3 +603,278 @@ tasa_mortalidad_grafico %>%
     breaks = rev(breaks_scale))
 
 ```
+
+\
+
+# Mapa de la Renta Media por Persona por Municipios Españoles
+
+\
+
+Por último vamos a realizar un **mapa a nivel de Municipios** donde se exponga la Renta Media por Persona en el año 2016, según los [datos](https://www.ine.es/experimental/atlas/exp_atlas_tab.htm#) obtenidos del INE. 
+
+\
+
+En primer lugar, haciendo uso de los códigos de los municipios que se pueden consultar en el [INE](https://www.ine.es/daco/daco42/codmun/codmun10/10codmunmapa.htm), vamos a comprobar, de forma aleatoria, la existencia de algunos de ellos utilizando el dataset utilizado previamente (data_municipios_mapa) y los representaremos gráficamente:
+
+\
+
+```{r, out.width = "60%", fig.align='center', fig.height=5, fig.width=6}
+
+data_municipios_mapa$codigo_ine <- as.numeric(data_municipios_mapa$codigo_ine)
+
+
+# Probando Abengibre (02001) en la Provincia de Albacete (2)
+
+prueba <- data_municipios_mapa %>%
+  filter(codigo_ine == 22001)
+
+prueba %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "blueviolet",
+               color = "white", 
+               size = 0.1) +
+  theme_minimal()
+
+
+# Probando Agost (03002) en la Provincia de Alicante (3)
+
+prueba <- data_municipios_mapa %>%
+  filter(codigo_ine == 03002)
+
+prueba %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "blueviolet",
+               color = "white", 
+               size = 0.1) +
+  theme_minimal()
+
+
+# Probando Allande (33001) en la Provincia de Asturias (33)
+
+prueba <- data_municipios_mapa %>%
+  filter(codigo_ine == 33001)
+
+prueba %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "blueviolet",
+               color = "white", 
+               size = 0.1) +
+  theme_minimal()
+
+```
+
+\
+
+En segundo lugar cargamos el archivo donde se encuentra la información de la **Renta Media** (por persona) en cada Municipio. 
+
+\
+
+```{r}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets")
+
+renta_media <- read_excel("renta_media.xls")
+
+head(renta_media)
+
+```
+
+\
+
+En el dataframe el nombre del código y del municipio aparecen en la misma columna (Municipio). Para **separar ambos conceptos en dos columnas** utilizamos la función `separate()`.
+
+\
+
+```{r}
+
+renta_media_separado <- renta_media %>%
+  separate(Municipio, c("cod", "municipio"), 
+           sep = " ", 
+           extra = "merge") 
+
+head(renta_media_separado)
+
+
+# Nombramos la columna codigo_ine 
+
+renta_media_separado$codigo_ine <- as.numeric(renta_media_separado$cod)
+
+head(renta_media_separado)
+
+```
+
+\
+
+**Unimos los dos dataframes** usando `left_join()`.  
+
+\
+
+```{r}
+
+renta_media_grafico <- data_municipios_mapa %>%
+  left_join(renta_media_separado, by = "codigo_ine")
+
+```
+
+\
+
+Antes de realizar el mapa general vamos a visualizar previamente algunas provincias, también seleccionadas de forma aleatoria, con el objetivo de representar graficamente los distintos municipios de cada una de ellas atendiendo a su Renta Media. Aprovechamos este ejercicio para utilizar diferentes **opciones para seleccionar colores** a la hora de representar los municipios. Nótese que los municipios coloreados en gris son aquellos en los que el INE no provee información sobre la Renta Media. 
+
+\
+
+```{r, out.width = "60%", fig.align='center', warning=FALSE, fig.height=5, fig.width=6}
+
+
+# Provincia de Castellón
+
+renta_media_grafico %>%
+  filter(Provincia =="Castellón") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Castellón",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) 
+
+
+# Provincia de Gipuzkoa
+
+renta_media_grafico %>%
+  filter(Provincia =="Guipozkoa") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Gipuzkoa",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_gradient(low = "red", high = "green")
+
+
+# Provincia de Zaragoza
+
+renta_media_grafico %>%
+  filter(Provincia =="Zaragoza") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Zaragoza",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.8),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_gradientn(colours= terrain.colors(10))
+
+
+# Provincia de Valencia
+
+renta_media_grafico %>%
+  filter(Provincia =="Valencia") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Valencia",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.8),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm"))  +
+  scale_fill_gradientn(colours= rainbow(4))
+
+
+```
+
+\
+
+Para finalizar realizamos el **mapa general** donde representaremos el conjunto de Municipios Españoles según su Renta Media por persona. Sin entrar en detalle, siendo posible identificar diversas dinámicas, en términos generales el mapa refleja claramente la notable diferencia existente entre el norte y el sur del país en términos de Renta Media.  
+
+\
+
+```{r, out.width = "100%", fig.align = 'center', warning = FALSE, fig.height=5, fig.width=6}
+
+renta_media_grafico %>%
+  ggplot(aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = as.numeric(renta_media)), 
+               color = "snow", 
+               size = 0.001) +
+  labs( title = "Mapa de los Municipios Españoles",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "Renta Media") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_blank(),
+    panel.background = element_blank(),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 6, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 7),
+    legend.text = element_text(color = "grey40", size = 5, hjust = 0),
+    legend.position = c(0.93, 0.2)) +
+  scale_fill_gradientn(colours= rainbow(5))
+
+
+```
+
+ 

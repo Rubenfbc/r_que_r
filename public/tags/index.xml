@@ -6,24 +6,42 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 01 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 08 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Comunidades Autónomas</title>
+      <link>/tags/comunidades-aut%C3%B3nomas/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/comunidades-aut%C3%B3nomas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>España</title>
       <link>/tags/espa%C3%B1a/</link>
-      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/espa%C3%B1a/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>ggplot2</title>
+      <link>/tags/ggplot2/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ggplot2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>mapas</title>
       <link>/tags/mapas/</link>
-      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/mapas/</guid>
       <description></description>
@@ -32,16 +50,43 @@
     <item>
       <title>maps</title>
       <link>/tags/maps/</link>
-      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/maps/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>Municipios</title>
+      <link>/tags/municipios/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/municipios/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Provincias</title>
+      <link>/tags/provincias/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/provincias/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shapefiles</title>
+      <link>/tags/shapefiles/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/shapefiles/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Spain</title>
       <link>/tags/spain/</link>
-      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/spain/</guid>
       <description></description>
@@ -53,15 +98,6 @@
       <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/dplyr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ggplot2</title>
-      <link>/tags/ggplot2/</link>
-      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ggplot2/</guid>
       <description></description>
     </item>
     
