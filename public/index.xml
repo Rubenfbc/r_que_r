@@ -6,10 +6,25 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Treemap del VAB sectorial de las regiones peruanas en 2016</title>
+      <link>/treemap_peru/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/treemap_peru/</guid>
+      <description>Re
+El objetivo de este post es visualizar mediante un gráfico treemap el VAB sectorial de los distintos departamentos peruanos para el año 2016. Para ello utilizaremos los paquetes treemap y 3dtreeR.
+
+Paquetes y Dataset
+
+library(tidyverse)library(treemap)library(readxl)
+En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantesde 2007.</description>
+    </item>
     
     <item>
       <title>¿Cómo realizar mapas de España con archivos shapefile?</title>

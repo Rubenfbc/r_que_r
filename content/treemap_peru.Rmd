@@ -1,0 +1,181 @@
+---
+title: "Treemap del VAB sectorial de las regiones peruanas en 2016"
+author: "Rubén F. Bustillo"
+date: 2019-11-09
+categories: ["R"]
+tags: ["treemap", "3dtree"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+El objetivo de este post es visualizar mediante un gráfico *treemap* el VAB sectorial de los distintos departamentos peruanos para el año 2016. Para ello utilizaremos los paquetes `treemap` y `3dtreeR`.  
+
+\
+
+# Paquetes y Dataset
+ 
+\
+
+
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(treemap)
+library(readxl)
+
+```
+
+\
+
+En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantesde 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.
+
+\
+
+```{r}
+
+Peru_vab_sectores <- read_excel("datasets/Peru_vab_sectores.xlsx")
+head(Peru_vab_sectores)
+
+```
+
+\
+
+Como vemos, el dataframe sobre el que vamos a trabajar presenta en la primera columna los nombres de los distintos departamentos o regiones del país. En las siguientes columnas se recoge información de las actividades económicas, habiendo en cada una de ellas información relativa a cada uno de los 12 grandes sectores productivos. 
+
+\
+
+Para trabajar con este dataset nos interesa reorganizarla información mostrada. Para ello utilizaremos la función `gather()` como vemos en el comando siguiente. De esta forma sintetizamos el dataframe en tres columnas, una para el nombre de los departamentos, otro para el sector económico y otro para el valor agregado bruto de cada sector en cada región.
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+Peru_sectores <- Peru_vab_sectores %>%
+  gather(key = "sector", value = "vab", 2:13)
+
+head(Peru_sectores)
+
+```
+
+\
+
+Con la función `unique()` podemos ver los sectores económicos que contiene nuestro dataset. 
+
+\
+
+```{r}
+
+unique(Peru_sectores$sector)
+
+```
+
+\
+
+# Treemap con el paquete treemap
+
+\
+
+Una forma sencilla de realizar un **gráfico treemap** es mediante el paquete del mismo nombre. 
+
+\
+
+```{r, out.width = "100%", fig.height=4, fig.width=6}
+
+tree_sectores <- treemap(
+  Peru_sectores,
+  index=c("sector","Departamentos"),
+  vSize="vab",
+  title = "VAB por actividades económicas según departamento en 2016.",
+  vColor="sector",
+  type="index",
+  palette = "Set3",
+  force.print.labels = F,
+  border.col = c("black", "white"),
+  border.lwds = c(3,2),
+  align.labels = list(
+    c("center","center"),
+    c("center", "top")
+  )
+)
+
+```
+
+\
+
+El gráfico muestra claramente que **la actividad económica de mayor valor agregado bruto** es el sector Otros Servicios, seguido por la Manufactura, el sector extractivo y la actividad comercial. La Pesca es, sin duda, el sector productivo de menor valor agregado bruto del país. Por su parte Lima, centro indiscutible de la economía del país, representa una gran parte del VAB total procedente del sector Otros Servicios, pero también en los sectores Manufactura, Comercio, Construcción entre otros.
+
+\
+
+Sin embargo, para visualizar más fácilmente la **importancia de Lima sobre el VAB total** podemos modificar ligeramente el código anterior para generar un treemap alternativo. De esta forma obtenemos una imagen más sugerente de la enorme **concentración productiva** que existe en el país, donde domina enormemente la capital con respecto al resto de regiones del país. Asimismo, el nuevo treemap nos muestra claramente que la **actividad extractiva**, es decir, la extracción de petróleo, gas o la actividad minera, representa una parte muy importante del VAB total de algunas regiones peruanas, como por ejemplo Arequipa, Cusco, Ancash, Junín, Tacna, Apurímac o Pasco entre otras. Nótese además que la actividad extractiva tiende a ser una actividad caracterizada por su alto nivel de productividad pero, en el lado negativo, suele ser una actividad altamente intensiva en capital, es decir que es creadora de poco empleo y, por su parte, es una actividad potencialmente generadora de conflictos sociales y problemas medioambientales. 
+
+\
+
+```{r, out.width = "100%", fig.height=4, fig.width=6}
+
+tree_regiones <- treemap(
+  Peru_sectores,
+  index=c("Departamentos", "sector"),
+  vSize="vab",
+  title = "VAB por actividades económicas según departamento en 2016.",
+  vColor="sector",
+  type="index",
+  palette = "Set2",
+  force.print.labels = F,
+  border.col = c("white", "black"),
+  border.lwds = c(4,1),
+  align.labels = list(
+    c("center","center"),
+    c("center", "top")
+  )
+)
+
+```
+
+\
+
+# Treemap interactivo con d3treeR 
+
+\
+
+El paquete `d3treeR` nos permite realizar de forma sencilla **treemaps interactivos**. Por ejemplo, en los siguientes comandos realizamos treemaps interactivos partiendo de los treemaps realizados en el punto previo. 
+
+\
+
+El treemap inteactivo de `tree_sectores`: 
+
+\
+
+```{r, out.width = "100%", fig.height=5, fig.width=6}
+
+library(d3treeR)
+
+d3tree(tree_sectores, 
+       rootname = "VAB por actividades económicas según departamento en 2016. (valores a precios constantes de 2007)")
+
+
+```
+
+\
+
+El treemap interactivo de `tree_regiones`:
+
+\ 
+
+```{r, out.width = "100%", fig.height=5, fig.width=6}
+
+d3tree(tree_regiones, 
+       rootname = "VAB por actividades económicas según departamento en 2016. (valores a precios constantes de 2007)")
+
+```
+
