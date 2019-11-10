@@ -101,6 +101,7 @@
 <h1>Paquetes y Dataset</h1>
 <p><br />
 </p>
+<p>Cargamos los paquetes necesarios:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -111,7 +112,7 @@ library(stringr)
 library(knitr)</code></pre>
 <p><br />
 </p>
-<p>En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantes de 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.</p>
+<p>En esta ocasión utilizaremos el <strong>Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016</strong>. Los <a href="https://www.inei.gob.pe/estadisticas/indice-tematico/economia/">datos</a>, obtenidos del INEI, muestran los valores a precios constantes de 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -133,10 +134,10 @@ head(Peru_vab_sectores)
 ## #   `Administración Pública y Defensa` &lt;dbl&gt;, `Otros Servicios` &lt;dbl&gt;</code></pre>
 <p><br />
 </p>
-<p>Como vemos, el dataframe sobre el que vamos a trabajar presenta en la primera columna los nombres de los distintos departamentos o regiones del país. En las siguientes columnas se recoge información de las actividades económicas, habiendo en cada una de ellas información relativa a cada uno de los 12 grandes sectores productivos.</p>
+<p>Como vemos, el <strong>dataframe sobre el que vamos a trabajar</strong> presenta en la primera columna los nombres de los distintos departamentos o regiones del país. En las siguientes columnas se recoge información de las actividades económicas, habiendo en cada una de ellas información relativa a cada uno de los 12 grandes sectores productivos.</p>
 <p><br />
 </p>
-<p>Para trabajar con este dataset nos interesa reorganizarla información mostrada. Para ello utilizaremos la función <code>gather()</code> como vemos en el comando siguiente. De esta forma sintetizamos el dataframe en tres columnas, una para el nombre de los departamentos, otro para el sector económico y otro para el valor agregado bruto de cada sector en cada región.</p>
+<p>Para trabajar con este dataset nos interesa <strong>reorganizarla información</strong> mostrada. Para ello utilizaremos la función <code>gather()</code> como vemos en el comando siguiente. De esta forma sintetizamos el dataframe en tres columnas, una para el nombre de los departamentos, otro para el sector económico y otro para el valor agregado bruto de cada sector en cada región.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -155,7 +156,7 @@ head(Peru_sectores)
 ## 6 Cajamarca     Agricultura, Ganadería, Caza y Silvicultura 1286478</code></pre>
 <p><br />
 </p>
-<p>Con la función <code>unique()</code> podemos ver los sectores económicos que contiene nuestro dataset.</p>
+<p>Con la función <code>unique()</code> podemos ver los <strong>sectores económicos</strong> que contiene nuestro dataset.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -174,11 +175,11 @@ unique(Peru_sectores$sector)
 ## [12] &quot;Otros Servicios&quot;</code></pre>
 <p><br />
 </p>
-<p>El objetivo de los treemap es, en esencia, visualizar en un gráfico la participación de algunas observaciones sobre un agregado. En nuestro caso particular nos interesa identificar el <strong>peso de los sectores productivos sobre el VAB total de la economía peruana y de las respectivas economías regionales</strong>. Antes de proceder a realizar los gráficos podemos hacernos una serie de preguntas para profundizar en estos aspectos:</p>
+<p>El objetivo de los treemap es, en esencia, visualizar en un gráfico la participación de algunas observaciones sobre un agregado. En nuestro caso particular nos interesa identificar el <strong>peso de los sectores productivos sobre el VAB total de la economía peruana y de las respectivas economías regionales</strong>. Antes de proceder a realizar los gráficos podemos hacernos una serie de <strong>preguntas</strong> para profundizar en estos aspectos:</p>
 <p><br />
 </p>
-<div id="qué-peso-tiene-en-2016-cada-una-de-las-economías-regionales-sobre-el-valor-agregado-bruto-total-de-la-economía-peruana" class="section level3">
-<h3><strong>1. ¿Qué peso tiene (en 2016) cada una de las economías regionales sobre el valor agregado bruto total de la economía peruana?</strong></h3>
+<div id="qué-peso-tiene-cada-una-de-las-economías-regionales-sobre-el-valor-agregado-bruto-total-de-la-economía-peruana" class="section level3">
+<h3><strong>1. ¿Qué peso tiene cada una de las economías regionales sobre el valor agregado bruto total de la economía peruana?</strong></h3>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -304,8 +305,8 @@ kable(a)</code></pre>
 <p><br />
 </p>
 </div>
-<div id="qué-peso-tiene-en-2016-cada-sector-sobre-el-valor-agregado-total-de-la-economía-peruana-en-su-conjunto" class="section level3">
-<h3><strong>2. ¿Qué peso tiene (en 2016) cada sector sobre el valor agregado total de la economía peruana en su conjunto?</strong></h3>
+<div id="qué-peso-tiene-cada-sector-sobre-el-valor-agregado-total-de-la-economía-peruana-en-su-conjunto" class="section level3">
+<h3><strong>2. ¿Qué peso tiene cada sector sobre el valor agregado total de la economía peruana en su conjunto?</strong></h3>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -383,8 +384,8 @@ kable(b)</code></pre>
 <p><br />
 </p>
 </div>
-<div id="qué-sectores-a-nivel-regional-contribuyen-en-mayor-y-en-menor-medida-al-vab-total-de-la-economía-peruana-en-2016" class="section level3">
-<h3><strong>3. ¿Qué sectores a nivel regional contribuyen en mayor y en menor medida al VAB total de la economía peruana en 2016?</strong></h3>
+<div id="qué-sectores-a-nivel-regional-contribuyen-en-mayor-y-en-menor-medida-al-vab-total-de-la-economía-peruana" class="section level3">
+<h3><strong>3. ¿Qué sectores a nivel regional contribuyen en mayor y en menor medida al VAB total de la economía peruana?</strong></h3>
 <p><br />
 </p>
 <pre class="r"><code>

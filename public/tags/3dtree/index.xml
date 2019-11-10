@@ -21,9 +21,10 @@
 El objetivo de este post es visualizar mediante un gráfico treemap el VAB sectorial de los distintos departamentos peruanos para el año 2016. Para ello utilizaremos los paquetes treemap y 3dtreeR.
 
 Paquetes y Dataset
+Cargamos los paquetes necesarios:
 
 library(tidyverse)library(treemap)library(readxl)library(stringr)library(knitr)
-En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantes de 2007.</description>
+En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016.</description>
     </item>
     
   </channel>

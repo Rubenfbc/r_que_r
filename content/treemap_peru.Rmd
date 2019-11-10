@@ -24,7 +24,7 @@ El objetivo de este post es visualizar mediante un gráfico *treemap* el VAB sec
  
 \
 
-
+Cargamos los paquetes necesarios:
 
 \
 
@@ -40,7 +40,7 @@ library(knitr)
 
 \
 
-En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantes de 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.
+En esta ocasión utilizaremos el **Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016**. Los [datos](https://www.inei.gob.pe/estadisticas/indice-tematico/economia/), obtenidos del INEI, muestran los valores a precios constantes de 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.
 
 \
 
@@ -53,11 +53,11 @@ head(Peru_vab_sectores)
 
 \
 
-Como vemos, el dataframe sobre el que vamos a trabajar presenta en la primera columna los nombres de los distintos departamentos o regiones del país. En las siguientes columnas se recoge información de las actividades económicas, habiendo en cada una de ellas información relativa a cada uno de los 12 grandes sectores productivos. 
+Como vemos, el **dataframe sobre el que vamos a trabajar** presenta en la primera columna los nombres de los distintos departamentos o regiones del país. En las siguientes columnas se recoge información de las actividades económicas, habiendo en cada una de ellas información relativa a cada uno de los 12 grandes sectores productivos. 
 
 \
 
-Para trabajar con este dataset nos interesa reorganizarla información mostrada. Para ello utilizaremos la función `gather()` como vemos en el comando siguiente. De esta forma sintetizamos el dataframe en tres columnas, una para el nombre de los departamentos, otro para el sector económico y otro para el valor agregado bruto de cada sector en cada región.
+Para trabajar con este dataset nos interesa **reorganizarla información** mostrada. Para ello utilizaremos la función `gather()` como vemos en el comando siguiente. De esta forma sintetizamos el dataframe en tres columnas, una para el nombre de los departamentos, otro para el sector económico y otro para el valor agregado bruto de cada sector en cada región.
 
 \
 
@@ -72,7 +72,7 @@ head(Peru_sectores)
 
 \
 
-Con la función `unique()` podemos ver los sectores económicos que contiene nuestro dataset. 
+Con la función `unique()` podemos ver los **sectores económicos** que contiene nuestro dataset. 
 
 \
 
@@ -84,11 +84,11 @@ unique(Peru_sectores$sector)
 
 \
 
-El objetivo de los treemap es, en esencia, visualizar en un gráfico la participación de algunas observaciones sobre un agregado. En nuestro caso particular nos interesa identificar el **peso de los sectores productivos sobre el VAB total de la economía peruana y de las respectivas economías regionales**. Antes de proceder a realizar los gráficos podemos hacernos una serie de preguntas para profundizar en estos aspectos:  
+El objetivo de los treemap es, en esencia, visualizar en un gráfico la participación de algunas observaciones sobre un agregado. En nuestro caso particular nos interesa identificar el **peso de los sectores productivos sobre el VAB total de la economía peruana y de las respectivas economías regionales**. Antes de proceder a realizar los gráficos podemos hacernos una serie de **preguntas** para profundizar en estos aspectos:  
 
 \
 
-### **1. ¿Qué peso tiene (en 2016) cada una de las economías regionales sobre el valor agregado bruto total de la economía peruana?**
+### **1. ¿Qué peso tiene cada una de las economías regionales sobre el valor agregado bruto total de la economía peruana?**
 
 \
 
@@ -113,7 +113,7 @@ Resulta evidente la gran **concentración de la actividad productiva en la capit
 
 \
 
-### **2. ¿Qué peso tiene (en 2016) cada sector sobre el valor agregado total de la economía peruana en su conjunto?**
+### **2. ¿Qué peso tiene cada sector sobre el valor agregado total de la economía peruana en su conjunto?**
 
 \
 
@@ -138,7 +138,7 @@ Vemos que una cuarta parte del VAB total de la economía peruana corresponde al 
 
 \
 
-### **3. ¿Qué sectores a nivel regional contribuyen en mayor y en menor medida al VAB total de la economía peruana en 2016?** 
+### **3. ¿Qué sectores a nivel regional contribuyen en mayor y en menor medida al VAB total de la economía peruana?** 
 
 \
 
