@@ -26,10 +26,12 @@ tags: ["treemap", "3dtree"]
 <pre class="r"><code>
 library(tidyverse)
 library(treemap)
-library(readxl)</code></pre>
+library(readxl)
+library(stringr)
+library(knitr)</code></pre>
 <p><br />
 </p>
-<p>En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantesde 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.</p>
+<p>En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantes de 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -92,12 +94,714 @@ unique(Peru_sectores$sector)
 ## [12] &quot;Otros Servicios&quot;</code></pre>
 <p><br />
 </p>
+<p>El objetivo de los treemap es, en esencia, visualizar en un gráfico la participación de algunas observaciones sobre un agregado. En nuestro caso particular nos interesa identificar el <strong>peso de los sectores productivos sobre el VAB total de la economía peruana y de las respectivas economías regionales</strong>. Antes de proceder a realizar los gráficos podemos hacernos una serie de preguntas para profundizar en estos aspectos:</p>
+<p><br />
+</p>
+<div id="qué-peso-tiene-en-2016-cada-una-de-las-economías-regionales-sobre-el-valor-agregado-bruto-total-de-la-economía-peruana" class="section level3">
+<h3><strong>1. ¿Qué peso tiene (en 2016) cada una de las economías regionales sobre el valor agregado bruto total de la economía peruana?</strong></h3>
+<p><br />
+</p>
+<pre class="r"><code>
+a &lt;- Peru_sectores %&gt;%
+  group_by(Departamentos) %&gt;%
+  summarise(vab_regional = sum(vab)) %&gt;%
+  mutate(total= sum(vab_regional), porcentaje = 100*(vab_regional/total)) %&gt;%
+  arrange(desc(porcentaje)) %&gt;%
+  select(Departamentos, porcentaje) 
+
+a$porcentaje &lt;- formatC(a$porcentaje, format = &quot;f&quot;, digits = 2)
+
+kable(a)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Departamentos</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Lima</td>
+<td align="left">48.32</td>
+</tr>
+<tr class="even">
+<td align="left">Arequipa</td>
+<td align="left">6.52</td>
+</tr>
+<tr class="odd">
+<td align="left">Cusco</td>
+<td align="left">4.79</td>
+</tr>
+<tr class="even">
+<td align="left">La Libertad</td>
+<td align="left">4.49</td>
+</tr>
+<tr class="odd">
+<td align="left">Piura</td>
+<td align="left">4.18</td>
+</tr>
+<tr class="even">
+<td align="left">Ancash</td>
+<td align="left">4.03</td>
+</tr>
+<tr class="odd">
+<td align="left">Ica</td>
+<td align="left">3.35</td>
+</tr>
+<tr class="even">
+<td align="left">Junín</td>
+<td align="left">3.14</td>
+</tr>
+<tr class="odd">
+<td align="left">Lambayeque</td>
+<td align="left">2.43</td>
+</tr>
+<tr class="even">
+<td align="left">Cajamarca</td>
+<td align="left">2.32</td>
+</tr>
+<tr class="odd">
+<td align="left">Puno</td>
+<td align="left">1.99</td>
+</tr>
+<tr class="even">
+<td align="left">Moquegua</td>
+<td align="left">1.90</td>
+</tr>
+<tr class="odd">
+<td align="left">Loreto</td>
+<td align="left">1.65</td>
+</tr>
+<tr class="even">
+<td align="left">Tacna</td>
+<td align="left">1.43</td>
+</tr>
+<tr class="odd">
+<td align="left">Apurímac</td>
+<td align="left">1.39</td>
+</tr>
+<tr class="even">
+<td align="left">San Martín</td>
+<td align="left">1.23</td>
+</tr>
+<tr class="odd">
+<td align="left">Pasco</td>
+<td align="left">1.17</td>
+</tr>
+<tr class="even">
+<td align="left">Huánuco</td>
+<td align="left">1.17</td>
+</tr>
+<tr class="odd">
+<td align="left">Ayacucho</td>
+<td align="left">1.13</td>
+</tr>
+<tr class="even">
+<td align="left">Ucayali</td>
+<td align="left">0.91</td>
+</tr>
+<tr class="odd">
+<td align="left">Huancavelica</td>
+<td align="left">0.71</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">0.61</td>
+</tr>
+<tr class="odd">
+<td align="left">Madre de Dios</td>
+<td align="left">0.59</td>
+</tr>
+<tr class="even">
+<td align="left">Tumbes</td>
+<td align="left">0.55</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Resulta evidente la gran <strong>concentración de la actividad productiva en la capital</strong>, Lima, donde en 2016 se concentra el 48,32% de la actividad productiva del país. Por el contrario otras regiones, véase Tumbes, Madre de Dios, Amazonas, Huancavelica o Ucayali, no representan ni el 1% cada una del total del VAB total de la economía peruana.</p>
+<p><br />
+</p>
+</div>
+<div id="qué-peso-tiene-en-2016-cada-sector-sobre-el-valor-agregado-total-de-la-economía-peruana-en-su-conjunto" class="section level3">
+<h3><strong>2. ¿Qué peso tiene (en 2016) cada sector sobre el valor agregado total de la economía peruana en su conjunto?</strong></h3>
+<p><br />
+</p>
+<pre class="r"><code>
+b &lt;- Peru_sectores %&gt;%
+  group_by(sector) %&gt;%
+  summarise(vab_regional = sum(vab)) %&gt;%
+  mutate(total= sum(vab_regional), porcentaje = 100*(vab_regional/total)) %&gt;%
+  arrange(desc(porcentaje)) %&gt;%
+  select(sector, porcentaje) 
+
+b$porcentaje &lt;- formatC(b$porcentaje, format = &quot;f&quot;, digits = 2)
+
+kable(b)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">sector</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Otros Servicios</td>
+<td align="left">25.22</td>
+</tr>
+<tr class="even">
+<td align="left">Manufactura</td>
+<td align="left">14.59</td>
+</tr>
+<tr class="odd">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">14.32</td>
+</tr>
+<tr class="even">
+<td align="left">Comercio</td>
+<td align="left">11.72</td>
+</tr>
+<tr class="odd">
+<td align="left">Construcción</td>
+<td align="left">6.44</td>
+</tr>
+<tr class="even">
+<td align="left">Transporte, Almacen., Correo y Mensajería</td>
+<td align="left">6.01</td>
+</tr>
+<tr class="odd">
+<td align="left">Agricultura, Ganadería, Caza y Silvicultura</td>
+<td align="left">5.69</td>
+</tr>
+<tr class="even">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">5.52</td>
+</tr>
+<tr class="odd">
+<td align="left">Telecom. y Otros Serv. de Información</td>
+<td align="left">4.57</td>
+</tr>
+<tr class="even">
+<td align="left">Alojamiento y Restaurantes</td>
+<td align="left">3.51</td>
+</tr>
+<tr class="odd">
+<td align="left">Electricidad, Gas y Agua</td>
+<td align="left">2.05</td>
+</tr>
+<tr class="even">
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.36</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Vemos que una cuarta parte del VAB total de la economía peruana corresponde al sector Otros Servicios, un 14,6% a la actividad manufacturera/industrial y un 14,3% a la actividad extractiva (petróleo, gas y minería). El sector que contribuye en menor medida al valor agregado bruto total del país es el sector pesquero (0,36%).</p>
+<p><br />
+</p>
+</div>
+<div id="qué-sectores-a-nivel-regional-contribuyen-en-mayor-y-en-menor-medida-al-vab-total-de-la-economía-peruana-en-2016" class="section level3">
+<h3><strong>3. ¿Qué sectores a nivel regional contribuyen en mayor y en menor medida al VAB total de la economía peruana en 2016?</strong></h3>
+<p><br />
+</p>
+<pre class="r"><code>
+c &lt;- Peru_sectores %&gt;%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %&gt;%
+  select(Departamentos, sector,porcentaje) %&gt;%
+  arrange(desc(porcentaje)) 
+
+c$porcentaje &lt;- formatC(c$porcentaje, format = &quot;f&quot;, digits = 4)
+  
+library(knitr)
+
+# Los diez sectores a nivel regional que más contribuyen
+
+knitr::kable(c %&gt;%
+  head(n=10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Departamentos</th>
+<th align="left">sector</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Lima</td>
+<td align="left">Otros Servicios</td>
+<td align="left">16.2317</td>
+</tr>
+<tr class="even">
+<td align="left">Lima</td>
+<td align="left">Manufactura</td>
+<td align="left">8.9247</td>
+</tr>
+<tr class="odd">
+<td align="left">Lima</td>
+<td align="left">Comercio</td>
+<td align="left">6.3806</td>
+</tr>
+<tr class="even">
+<td align="left">Lima</td>
+<td align="left">Transporte, Almacen., Correo y Mensajería</td>
+<td align="left">3.3633</td>
+</tr>
+<tr class="odd">
+<td align="left">Lima</td>
+<td align="left">Telecom. y Otros Serv. de Información</td>
+<td align="left">2.9291</td>
+</tr>
+<tr class="even">
+<td align="left">Lima</td>
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">2.7299</td>
+</tr>
+<tr class="odd">
+<td align="left">Lima</td>
+<td align="left">Construcción</td>
+<td align="left">2.5621</td>
+</tr>
+<tr class="even">
+<td align="left">Arequipa</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">2.4061</td>
+</tr>
+<tr class="odd">
+<td align="left">Cusco</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">2.3587</td>
+</tr>
+<tr class="even">
+<td align="left">Lima</td>
+<td align="left">Alojamiento y Restaurantes</td>
+<td align="left">2.2963</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>
+# Los diez sectores a nivel regional que menos contribuyen
+
+knitr::kable(c %&gt;%
+  tail(n=10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Departamentos</th>
+<th align="left">sector</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Huancavelica</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0013</td>
+</tr>
+<tr class="even">
+<td align="left">San Martín</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0009</td>
+</tr>
+<tr class="odd">
+<td align="left">Madre de Dios</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0003</td>
+</tr>
+<tr class="even">
+<td align="left">Ayacucho</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0002</td>
+</tr>
+<tr class="odd">
+<td align="left">Cajamarca</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0002</td>
+</tr>
+<tr class="even">
+<td align="left">Cusco</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0002</td>
+</tr>
+<tr class="odd">
+<td align="left">Huánuco</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0001</td>
+</tr>
+<tr class="even">
+<td align="left">Apurímac</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0001</td>
+</tr>
+<tr class="odd">
+<td align="left">Amazonas</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0001</td>
+</tr>
+<tr class="even">
+<td align="left">Pasco</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.0001</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>El sector Otros Servicios en Lima contribuye al 16,2% del VAB peruano total mientras que la actividad pesquera en Pasco, Amazonas, Apurímac o Huánuco lo hacen un 0,0001%.</p>
+<p><br />
+</p>
+</div>
+<div id="qué-peso-tiene-en-2016-cada-sector-sobre-el-vab-de-cada-región" class="section level3">
+<h3><strong>4. ¿Qué peso tiene (en 2016) cada sector sobre el VAB de cada región?</strong></h3>
+<p><br />
+</p>
+<p>Si ordenamos las regiones por orden alfabético y de mayor a menor participación podemos identificar los <strong>sectores más importantes en cada región</strong> (ie. Agropecuario en Amazonas, Extractivo en Ancash, Apurímac o Arequipa, etc.) y el peso de cada actividad sobre la economía regional. No obstante, por motivos de espacio mostramos únicamente los primeros 12 valores del dataset creado (que corresponden a la región Amazonas).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+d &lt;- Peru_sectores %&gt;%
+  group_by(Departamentos) %&gt;%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %&gt;%
+  select(Departamentos, sector, porcentaje) %&gt;%
+  arrange(Departamentos, desc(porcentaje)) %&gt;%
+  head(n=12)
+
+d$porcentaje &lt;- formatC(d$porcentaje, format = &quot;f&quot;, digits = 2)
+
+kable(d)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Departamentos</th>
+<th align="left">sector</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Amazonas</td>
+<td align="left">Agricultura, Ganadería, Caza y Silvicultura</td>
+<td align="left">32.03</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">Otros Servicios</td>
+<td align="left">19.62</td>
+</tr>
+<tr class="odd">
+<td align="left">Amazonas</td>
+<td align="left">Comercio</td>
+<td align="left">11.54</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">Construcción</td>
+<td align="left">10.26</td>
+</tr>
+<tr class="odd">
+<td align="left">Amazonas</td>
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">10.06</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">Manufactura</td>
+<td align="left">4.40</td>
+</tr>
+<tr class="odd">
+<td align="left">Amazonas</td>
+<td align="left">Transporte, Almacen., Correo y Mensajería</td>
+<td align="left">4.28</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">3.19</td>
+</tr>
+<tr class="odd">
+<td align="left">Amazonas</td>
+<td align="left">Telecom. y Otros Serv. de Información</td>
+<td align="left">1.95</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">Alojamiento y Restaurantes</td>
+<td align="left">1.47</td>
+</tr>
+<tr class="odd">
+<td align="left">Amazonas</td>
+<td align="left">Electricidad, Gas y Agua</td>
+<td align="left">1.17</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.02</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Para <strong>observar la composición sectorial de una región en concreto</strong>, pongamos por ejemplo Ica, podríamos indicar el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+d_b &lt;- Peru_sectores %&gt;%
+  group_by(Departamentos) %&gt;%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %&gt;%
+  select(Departamentos, sector, porcentaje) %&gt;%
+  arrange(Departamentos, desc(porcentaje)) %&gt;%
+  filter(Departamentos == &quot;Ica&quot;)
+
+d_b$porcentaje &lt;- formatC(d_b$porcentaje, format = &quot;f&quot;, digits = 2)
+
+kable(d_b)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Departamentos</th>
+<th align="left">sector</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Ica</td>
+<td align="left">Manufactura</td>
+<td align="left">19.45</td>
+</tr>
+<tr class="even">
+<td align="left">Ica</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">15.76</td>
+</tr>
+<tr class="odd">
+<td align="left">Ica</td>
+<td align="left">Otros Servicios</td>
+<td align="left">14.78</td>
+</tr>
+<tr class="even">
+<td align="left">Ica</td>
+<td align="left">Agricultura, Ganadería, Caza y Silvicultura</td>
+<td align="left">13.10</td>
+</tr>
+<tr class="odd">
+<td align="left">Ica</td>
+<td align="left">Construcción</td>
+<td align="left">11.09</td>
+</tr>
+<tr class="even">
+<td align="left">Ica</td>
+<td align="left">Comercio</td>
+<td align="left">9.58</td>
+</tr>
+<tr class="odd">
+<td align="left">Ica</td>
+<td align="left">Transporte, Almacen., Correo y Mensajería</td>
+<td align="left">6.49</td>
+</tr>
+<tr class="even">
+<td align="left">Ica</td>
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">3.32</td>
+</tr>
+<tr class="odd">
+<td align="left">Ica</td>
+<td align="left">Telecom. y Otros Serv. de Información</td>
+<td align="left">2.76</td>
+</tr>
+<tr class="even">
+<td align="left">Ica</td>
+<td align="left">Alojamiento y Restaurantes</td>
+<td align="left">1.57</td>
+</tr>
+<tr class="odd">
+<td align="left">Ica</td>
+<td align="left">Electricidad, Gas y Agua</td>
+<td align="left">1.57</td>
+</tr>
+<tr class="even">
+<td align="left">Ica</td>
+<td align="left">Pesca y Acuicultura</td>
+<td align="left">0.55</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+</div>
+<div id="en-qué-medida-contribuyen-las-regiones-peruanas-al-vab-agregado-de-cada-uno-de-los-grandes-sectores-productivos-en-2016" class="section level3">
+<h3><strong>5. ¿En qué medida contribuyen las regiones peruanas al VAB agregado de cada uno de los grandes sectores productivos en 2016?</strong></h3>
+<p><br />
+</p>
+<p>Esta pregunta es similar a la anterior. No obstante, en lugar de querer identificar el peso de cada sector en cada región pretende identificar el <strong>peso de cada región en el agregado total de cada actividad productiva del país</strong>. Esto lo conseguimos realizando ligeros cambios al código inicial (de nuevo, por motivos de espacio, mostramos los primeros valores que corresponden, por estar ordenados de forma alfabética, a la Administración Pública y Defensa).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+e &lt;- Peru_sectores %&gt;%
+  group_by(sector) %&gt;%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %&gt;%
+  select(sector, Departamentos,porcentaje) %&gt;%
+  arrange(sector, desc(porcentaje)) %&gt;%
+  head(n=10)
+
+e$porcentaje &lt;- formatC(e$porcentaje, format = &quot;f&quot;, digits = 2)
+
+kable(e)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">sector</th>
+<th align="left">Departamentos</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Lima</td>
+<td align="left">49.46</td>
+</tr>
+<tr class="even">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Piura</td>
+<td align="left">4.54</td>
+</tr>
+<tr class="odd">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">La Libertad</td>
+<td align="left">3.95</td>
+</tr>
+<tr class="even">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Cajamarca</td>
+<td align="left">3.48</td>
+</tr>
+<tr class="odd">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Arequipa</td>
+<td align="left">3.43</td>
+</tr>
+<tr class="even">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Ancash</td>
+<td align="left">3.39</td>
+</tr>
+<tr class="odd">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Junín</td>
+<td align="left">3.29</td>
+</tr>
+<tr class="even">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Cusco</td>
+<td align="left">3.18</td>
+</tr>
+<tr class="odd">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Lambayeque</td>
+<td align="left">3.04</td>
+</tr>
+<tr class="even">
+<td align="left">Administración Pública y Defensa</td>
+<td align="left">Puno</td>
+<td align="left">2.81</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Al igual que hemos hecho previamente, podemos identificar la <strong>participación de cada región sobre una actividad productiva en concreto</strong>, por ejemplo la actividad extractiva, realizando algún pequeño cambio al código anterior.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+e_b &lt;- Peru_sectores %&gt;%
+  group_by(sector) %&gt;%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %&gt;%
+  select(sector, Departamentos,porcentaje) %&gt;%
+  arrange(sector, desc(porcentaje)) %&gt;%
+  filter(sector == &quot;Extracción de Petróleo, Gas y Minerales&quot;) %&gt;%
+  head(n=10)
+
+e_b$porcentaje &lt;- formatC(e_b$porcentaje, format = &quot;f&quot;, digits = 2)
+
+kable(e_b)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">sector</th>
+<th align="left">Departamentos</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Arequipa</td>
+<td align="left">16.80</td>
+</tr>
+<tr class="even">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Cusco</td>
+<td align="left">16.47</td>
+</tr>
+<tr class="odd">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Ancash</td>
+<td align="left">13.37</td>
+</tr>
+<tr class="even">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Junín</td>
+<td align="left">6.40</td>
+</tr>
+<tr class="odd">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Apurímac</td>
+<td align="left">5.93</td>
+</tr>
+<tr class="even">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Lima</td>
+<td align="left">5.65</td>
+</tr>
+<tr class="odd">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Pasco</td>
+<td align="left">4.99</td>
+</tr>
+<tr class="even">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Moquegua</td>
+<td align="left">3.86</td>
+</tr>
+<tr class="odd">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Tacna</td>
+<td align="left">3.77</td>
+</tr>
+<tr class="even">
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">Ica</td>
+<td align="left">3.69</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>La tabla anterior indica claramente cuáles son las <strong>principales regiones productoras</strong> de minerales, petróleo o gas del Perú en 2016. Las regiones de Arequipa, Cusco y Ancash contribuyeron a más del 45% del valor agregado bruto de la actividad extractiva del país en el año 2016.</p>
+<p><br />
+</p>
+</div>
 </div>
 <div id="treemap-con-el-paquete-treemap" class="section level1">
 <h1>Treemap con el paquete treemap</h1>
 <p><br />
 </p>
-<p>Una forma sencilla de realizar un <strong>gráfico treemap</strong> es mediante el paquete del mismo nombre.</p>
+<p>No obstante, bien es sabido que una imagen es mejor que mil palabras. Para ello una buena opción son los gráficos treemap que permiten visualizar el peso de cada región o de cada sector sobre el conjunto de la economía. Una forma sencilla de realizar <strong>gráficos treemap</strong> es mediante el paquete del mismo nombre.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -117,13 +821,13 @@ tree_sectores &lt;- treemap(
     c(&quot;center&quot;, &quot;top&quot;)
   )
 )</code></pre>
-<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
+<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-12-1.png" width="100%" /></p>
 <p><br />
 </p>
-<p>El gráfico muestra claramente que <strong>la actividad económica de mayor valor agregado bruto</strong> es el sector Otros Servicios, seguido por la Manufactura, el sector extractivo y la actividad comercial. La Pesca es, sin duda, el sector productivo de menor valor agregado bruto del país. Por su parte Lima, centro indiscutible de la economía del país, representa una gran parte del VAB total procedente del sector Otros Servicios, pero también en los sectores Manufactura, Comercio, Construcción entre otros.</p>
+<p>El gráfico muestra claramente que, como vimos, <strong>la actividad económica de mayor valor agregado bruto</strong> es el sector Otros Servicios, seguido por la Manufactura, el sector extractivo y la actividad comercial. La Pesca es, sin duda, el sector productivo de menor valor agregado bruto del país. Por su parte comprobamos que Lima, centro indiscutible de la economía del país, representa una gran parte del VAB total procedente del sector Otros Servicios, pero también en los sectores Manufactura, Comercio, Construcción entre otros.</p>
 <p><br />
 </p>
-<p>Sin embargo, para visualizar más fácilmente la <strong>importancia de Lima sobre el VAB total</strong> podemos modificar ligeramente el código anterior para generar un treemap alternativo. De esta forma obtenemos una imagen más sugerente de la enorme <strong>concentración productiva</strong> que existe en el país, donde domina enormemente la capital con respecto al resto de regiones del país. Asimismo, el nuevo treemap nos muestra claramente que la <strong>actividad extractiva</strong>, es decir, la extracción de petróleo, gas o la actividad minera, representa una parte muy importante del VAB total de algunas regiones peruanas, como por ejemplo Arequipa, Cusco, Ancash, Junín, Tacna, Apurímac o Pasco entre otras. Nótese además que la actividad extractiva tiende a ser una actividad caracterizada por su alto nivel de productividad pero, en el lado negativo, suele ser una actividad altamente intensiva en capital, es decir que es creadora de poco empleo y, por su parte, es una actividad potencialmente generadora de conflictos sociales y problemas medioambientales.</p>
+<p>Sin embargo, para visualizar más fácilmente la <strong>importancia de Lima sobre el VAB total</strong> podemos modificar ligeramente el código anterior para generar un treemap alternativo. De esta forma obtenemos una imagen más sugerente de la enorme <strong>concentración productiva</strong> que existe en Perú, donde domina enormemente la capital con respecto al resto de regiones del país. Asimismo, el nuevo treemap nos muestra claramente que la <strong>actividad extractiva</strong>, es decir, la extracción de petróleo, gas o la actividad minera, representa una parte muy importante del VAB total de algunas regiones peruanas, como por ejemplo Arequipa, Cusco, Ancash, Junín, Tacna, Apurímac o Pasco entre otras. Nótese además que la actividad extractiva tiende a ser una actividad caracterizada por su alto nivel de productividad pero, en el lado negativo, suele ser una actividad altamente intensiva en capital, es decir que es creadora de poco empleo y, por su parte, es una actividad potencialmente generadora de conflictos sociales y problemas medioambientales.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -143,7 +847,7 @@ tree_regiones &lt;- treemap(
     c(&quot;center&quot;, &quot;top&quot;)
   )
 )</code></pre>
-<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
+<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-13-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -151,7 +855,10 @@ tree_regiones &lt;- treemap(
 <h1>Treemap interactivo con d3treeR</h1>
 <p><br />
 </p>
-<p>El paquete <code>d3treeR</code> nos permite realizar de forma sencilla <strong>treemaps interactivos</strong>. Por ejemplo, en los siguientes comandos realizamos treemaps interactivos partiendo de los treemaps realizados en el punto previo.</p>
+<p>Los gráficos anteriores nos permite hacernos una imagen general de qué sectores y regiones representan una mayor proporción con respecto al valor agregado bruto total de la economía peruana y cuáles tienen un menor peso en la economía en su conjunto. No obstante, estos gráficos estáticos <strong>no permiten ver de forma adecuada los valores más pequeños</strong>, los cuales quedan difuminados e invisibilizados con respecto a los de mayor peso debido a su menor participación relativa (en nuestro caso con respecto a otros sectores o regiones). Para solucionar esto podemos realizar <strong>treemaps dinámicos o interactivos</strong>, que nos permitan visualizar fácilmente todas las categorías incluidas en el treemap.</p>
+<p><br />
+</p>
+<p>Para ello, el paquete <code>d3treeR</code> nos permite realizar de forma sencilla <strong>treemaps interactivos</strong>. Por ejemplo, en los siguientes comandos realizamos treemaps interactivos partiendo de los treemaps realizados en el punto previo.</p>
 <p><br />
 </p>
 <p>El treemap inteactivo de <code>tree_sectores</code>:</p>
@@ -167,7 +874,8 @@ d3tree(tree_sectores,
 <p><br />
 </p>
 <p>El treemap interactivo de <code>tree_regiones</code>:</p>
-<p> </p>
+<p><br />
+</p>
 <pre class="r"><code>
 d3tree(tree_regiones, 
        rootname = &quot;VAB por actividades económicas según departamento en 2016. (valores a precios constantes de 2007)&quot;)</code></pre>

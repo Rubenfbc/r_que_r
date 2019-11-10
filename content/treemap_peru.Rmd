@@ -33,12 +33,14 @@ El objetivo de este post es visualizar mediante un gráfico *treemap* el VAB sec
 library(tidyverse)
 library(treemap)
 library(readxl)
+library(stringr)
+library(knitr)
 
 ```
 
 \
 
-En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantesde 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.
+En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016. Los datos, obtenidos del INEI, muestran los valores a precios constantes de 2007. Por su parte, la región de Lima incluye también la Provincia Constitucional del Callao.
 
 \
 
@@ -82,11 +84,195 @@ unique(Peru_sectores$sector)
 
 \
 
+El objetivo de los treemap es, en esencia, visualizar en un gráfico la participación de algunas observaciones sobre un agregado. En nuestro caso particular nos interesa identificar el **peso de los sectores productivos sobre el VAB total de la economía peruana y de las respectivas economías regionales**. Antes de proceder a realizar los gráficos podemos hacernos una serie de preguntas para profundizar en estos aspectos:  
+
+\
+
+### **1. ¿Qué peso tiene (en 2016) cada una de las economías regionales sobre el valor agregado bruto total de la economía peruana?**
+
+\
+
+```{r}
+
+a <- Peru_sectores %>%
+  group_by(Departamentos) %>%
+  summarise(vab_regional = sum(vab)) %>%
+  mutate(total= sum(vab_regional), porcentaje = 100*(vab_regional/total)) %>%
+  arrange(desc(porcentaje)) %>%
+  select(Departamentos, porcentaje) 
+
+a$porcentaje <- formatC(a$porcentaje, format = "f", digits = 2)
+
+kable(a)
+
+```
+
+\
+
+Resulta evidente la gran **concentración de la actividad productiva en la capital**, Lima, donde en 2016 se concentra el 48,32% de la actividad productiva del país. Por el contrario otras regiones, véase Tumbes, Madre de Dios, Amazonas, Huancavelica o Ucayali, no representan ni el 1% cada una del total del VAB total de la economía peruana.
+
+\
+
+### **2. ¿Qué peso tiene (en 2016) cada sector sobre el valor agregado total de la economía peruana en su conjunto?**
+
+\
+
+```{r}
+
+b <- Peru_sectores %>%
+  group_by(sector) %>%
+  summarise(vab_regional = sum(vab)) %>%
+  mutate(total= sum(vab_regional), porcentaje = 100*(vab_regional/total)) %>%
+  arrange(desc(porcentaje)) %>%
+  select(sector, porcentaje) 
+
+b$porcentaje <- formatC(b$porcentaje, format = "f", digits = 2)
+
+kable(b)
+
+```
+
+\
+
+Vemos que una cuarta parte del VAB total de la economía peruana corresponde al sector Otros Servicios, un 14,6% a la actividad manufacturera/industrial y un 14,3% a la actividad extractiva (petróleo, gas y minería). El sector que contribuye en menor medida al valor agregado bruto total del país es el sector pesquero (0,36%). 
+
+\
+
+### **3. ¿Qué sectores a nivel regional contribuyen en mayor y en menor medida al VAB total de la economía peruana en 2016?** 
+
+\
+
+
+```{r, warning=FALSE}
+
+c <- Peru_sectores %>%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %>%
+  select(Departamentos, sector,porcentaje) %>%
+  arrange(desc(porcentaje)) 
+
+c$porcentaje <- formatC(c$porcentaje, format = "f", digits = 4)
+  
+library(knitr)
+
+# Los diez sectores a nivel regional que más contribuyen
+
+knitr::kable(c %>%
+  head(n=10))
+
+# Los diez sectores a nivel regional que menos contribuyen
+
+knitr::kable(c %>%
+  tail(n=10))
+
+```
+
+\
+
+El sector Otros Servicios en Lima contribuye al 16,2% del VAB peruano total mientras que la actividad pesquera en Pasco, Amazonas, Apurímac o Huánuco lo hacen un 0,0001%.  
+
+\
+
+### **4. ¿Qué peso tiene (en 2016) cada sector sobre el VAB de cada región?**
+
+\
+
+Si ordenamos las regiones por orden alfabético y de mayor a menor participación podemos identificar los **sectores más importantes en cada región** (ie. Agropecuario en Amazonas, Extractivo en Ancash, Apurímac o Arequipa, etc.) y el peso de cada actividad sobre la economía regional. No obstante, por motivos de espacio mostramos únicamente los primeros 12 valores del dataset creado (que corresponden a la región Amazonas). 
+
+\
+
+```{r}
+
+d <- Peru_sectores %>%
+  group_by(Departamentos) %>%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %>%
+  select(Departamentos, sector, porcentaje) %>%
+  arrange(Departamentos, desc(porcentaje)) %>%
+  head(n=12)
+
+d$porcentaje <- formatC(d$porcentaje, format = "f", digits = 2)
+
+kable(d)
+
+```
+
+\
+
+Para **observar la composición sectorial de una región en concreto**, pongamos por ejemplo Ica, podríamos indicar el siguiente código:
+
+\
+
+```{r}
+
+d_b <- Peru_sectores %>%
+  group_by(Departamentos) %>%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %>%
+  select(Departamentos, sector, porcentaje) %>%
+  arrange(Departamentos, desc(porcentaje)) %>%
+  filter(Departamentos == "Ica")
+
+d_b$porcentaje <- formatC(d_b$porcentaje, format = "f", digits = 2)
+
+kable(d_b)
+
+```
+
+\
+
+### **5. ¿En qué medida contribuyen las regiones peruanas al VAB agregado de cada uno de los grandes sectores productivos en 2016?**
+
+\
+
+Esta pregunta es similar a la anterior. No obstante, en lugar de querer identificar el peso de cada sector en cada región pretende identificar el **peso de cada región en el agregado total de cada actividad productiva del país**. Esto lo conseguimos realizando ligeros cambios al código inicial (de nuevo, por motivos de espacio, mostramos los primeros valores que corresponden, por estar ordenados de forma alfabética, a la Administración Pública y Defensa).
+
+\
+
+```{r}
+
+e <- Peru_sectores %>%
+  group_by(sector) %>%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %>%
+  select(sector, Departamentos,porcentaje) %>%
+  arrange(sector, desc(porcentaje)) %>%
+  head(n=10)
+
+e$porcentaje <- formatC(e$porcentaje, format = "f", digits = 2)
+
+kable(e)
+```
+
+\
+
+Al igual que hemos hecho previamente, podemos identificar la **participación de cada región sobre una actividad productiva en concreto**, por ejemplo la actividad extractiva, realizando algún pequeño cambio al código anterior.
+
+\
+
+```{r}
+
+e_b <- Peru_sectores %>%
+  group_by(sector) %>%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %>%
+  select(sector, Departamentos,porcentaje) %>%
+  arrange(sector, desc(porcentaje)) %>%
+  filter(sector == "Extracción de Petróleo, Gas y Minerales") %>%
+  head(n=10)
+
+e_b$porcentaje <- formatC(e_b$porcentaje, format = "f", digits = 2)
+
+kable(e_b)
+
+```
+
+\
+
+La tabla anterior indica claramente cuáles son las **principales regiones productoras** de minerales, petróleo o gas del Perú en 2016. Las regiones de Arequipa, Cusco y Ancash contribuyeron a más del 45% del valor agregado bruto de la actividad extractiva del país en el año 2016. 
+
+\
+
 # Treemap con el paquete treemap
 
 \
 
-Una forma sencilla de realizar un **gráfico treemap** es mediante el paquete del mismo nombre. 
+No obstante, bien es sabido que una imagen es mejor que mil palabras. Para ello una buena opción son los gráficos treemap que permiten visualizar el peso de cada región o de cada sector sobre el conjunto de la economía. Una forma sencilla de realizar **gráficos treemap** es mediante el paquete del mismo nombre. 
 
 \
 
@@ -113,11 +299,11 @@ tree_sectores <- treemap(
 
 \
 
-El gráfico muestra claramente que **la actividad económica de mayor valor agregado bruto** es el sector Otros Servicios, seguido por la Manufactura, el sector extractivo y la actividad comercial. La Pesca es, sin duda, el sector productivo de menor valor agregado bruto del país. Por su parte Lima, centro indiscutible de la economía del país, representa una gran parte del VAB total procedente del sector Otros Servicios, pero también en los sectores Manufactura, Comercio, Construcción entre otros.
+El gráfico muestra claramente que, como vimos, **la actividad económica de mayor valor agregado bruto** es el sector Otros Servicios, seguido por la Manufactura, el sector extractivo y la actividad comercial. La Pesca es, sin duda, el sector productivo de menor valor agregado bruto del país. Por su parte comprobamos que Lima, centro indiscutible de la economía del país, representa una gran parte del VAB total procedente del sector Otros Servicios, pero también en los sectores Manufactura, Comercio, Construcción entre otros.
 
 \
 
-Sin embargo, para visualizar más fácilmente la **importancia de Lima sobre el VAB total** podemos modificar ligeramente el código anterior para generar un treemap alternativo. De esta forma obtenemos una imagen más sugerente de la enorme **concentración productiva** que existe en el país, donde domina enormemente la capital con respecto al resto de regiones del país. Asimismo, el nuevo treemap nos muestra claramente que la **actividad extractiva**, es decir, la extracción de petróleo, gas o la actividad minera, representa una parte muy importante del VAB total de algunas regiones peruanas, como por ejemplo Arequipa, Cusco, Ancash, Junín, Tacna, Apurímac o Pasco entre otras. Nótese además que la actividad extractiva tiende a ser una actividad caracterizada por su alto nivel de productividad pero, en el lado negativo, suele ser una actividad altamente intensiva en capital, es decir que es creadora de poco empleo y, por su parte, es una actividad potencialmente generadora de conflictos sociales y problemas medioambientales. 
+Sin embargo, para visualizar más fácilmente la **importancia de Lima sobre el VAB total** podemos modificar ligeramente el código anterior para generar un treemap alternativo. De esta forma obtenemos una imagen más sugerente de la enorme **concentración productiva** que existe en Perú, donde domina enormemente la capital con respecto al resto de regiones del país. Asimismo, el nuevo treemap nos muestra claramente que la **actividad extractiva**, es decir, la extracción de petróleo, gas o la actividad minera, representa una parte muy importante del VAB total de algunas regiones peruanas, como por ejemplo Arequipa, Cusco, Ancash, Junín, Tacna, Apurímac o Pasco entre otras. Nótese además que la actividad extractiva tiende a ser una actividad caracterizada por su alto nivel de productividad pero, en el lado negativo, suele ser una actividad altamente intensiva en capital, es decir que es creadora de poco empleo y, por su parte, es una actividad potencialmente generadora de conflictos sociales y problemas medioambientales. 
 
 \
 
@@ -148,7 +334,11 @@ tree_regiones <- treemap(
 
 \
 
-El paquete `d3treeR` nos permite realizar de forma sencilla **treemaps interactivos**. Por ejemplo, en los siguientes comandos realizamos treemaps interactivos partiendo de los treemaps realizados en el punto previo. 
+Los gráficos anteriores nos permite hacernos una imagen general de qué sectores y regiones representan una mayor proporción con respecto al valor agregado bruto total de la economía peruana y cuáles tienen un menor peso en la economía en su conjunto. No obstante, estos gráficos estáticos **no permiten ver de forma adecuada los valores más pequeños**, los cuales quedan difuminados e invisibilizados con respecto a los de mayor peso debido a su menor participación relativa (en nuestro caso con respecto a otros sectores o regiones). Para solucionar esto podemos realizar **treemaps dinámicos o interactivos**, que nos permitan visualizar fácilmente todas las categorías incluidas en el treemap.
+
+\
+
+Para ello, el paquete `d3treeR` nos permite realizar de forma sencilla **treemaps interactivos**. Por ejemplo, en los siguientes comandos realizamos treemaps interactivos partiendo de los treemaps realizados en el punto previo. 
 
 \
 
@@ -170,7 +360,7 @@ d3tree(tree_sectores,
 
 El treemap interactivo de `tree_regiones`:
 
-\ 
+\
 
 ```{r, out.width = "100%", fig.height=5, fig.width=6}
 
