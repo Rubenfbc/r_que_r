@@ -325,7 +325,7 @@ Resulta patente la gran **concentración productiva** en la actividad extractiva
 
 \
 
-No obstante, bien es sabido que una imagen es mejor que mil palabras. Para ello una buena opción son los gráficos treemap que permiten visualizar el peso de cada región o de cada sector sobre el conjunto de la economía. Una forma sencilla de realizar **gráficos treemap** es mediante el paquete del mismo nombre. 
+No obstante, bien es sabido que **una imagen vale más que mil palabras**. Para ello una buena opción son los gráficos treemap que permiten visualizar el peso de cada región o de cada sector sobre el conjunto de la economía. Una forma sencilla de realizar **gráficos treemap** es mediante el paquete del mismo nombre. 
 
 \
 
