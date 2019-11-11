@@ -3,7 +3,7 @@ title: "Treemap del VAB sectorial de las regiones peruanas en 2016"
 author: "Rubén F. Bustillo"
 date: 2019-11-09
 categories: ["R"]
-tags: ["treemap", "3dtree"]
+tags: ["treemap", "3dtree", "Perú", "VAB", "PIB"]
 
 ---
 
@@ -24,7 +24,7 @@ El objetivo de este post es visualizar mediante un gráfico *treemap* el VAB sec
  
 \
 
-Cargamos los paquetes necesarios:
+**Cargamos los paquetes** necesarios:
 
 \
 
@@ -172,7 +172,7 @@ El sector Otros Servicios en Lima contribuye al 16,2% del VAB peruano total mien
 
 \
 
-### **4. ¿Qué peso tiene (en 2016) cada sector sobre el VAB de cada región?**
+### **4. ¿Qué peso tiene cada sector sobre el VAB de cada región?**
 
 \
 
@@ -218,7 +218,7 @@ kable(d_b)
 
 \
 
-### **5. ¿En qué medida contribuyen las regiones peruanas al VAB agregado de cada uno de los grandes sectores productivos en 2016?**
+### **5. ¿En qué medida contribuyen las regiones peruanas al VAB agregado de cada uno de los grandes sectores productivos?**
 
 \
 
@@ -238,6 +238,7 @@ e <- Peru_sectores %>%
 e$porcentaje <- formatC(e$porcentaje, format = "f", digits = 2)
 
 kable(e)
+
 ```
 
 \
@@ -265,6 +266,58 @@ kable(e_b)
 \
 
 La tabla anterior indica claramente cuáles son las **principales regiones productoras** de minerales, petróleo o gas del Perú en 2016. Las regiones de Arequipa, Cusco y Ancash contribuyeron a más del 45% del valor agregado bruto de la actividad extractiva del país en el año 2016. 
+
+\
+
+### **6. ¿Cuál es el sector en cada región que más contribuye al VAB nacional y al VAB de dicha región?**
+
+\
+
+Si queremos **identificar únicamente el sector en cada una de las regiones peruanas que más contribuye al VAB nacional** podemos modificar el código utilizado en la pregunta 3 (mostramos solo las 10 primeras observaciones).
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+f <- Peru_sectores %>%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %>%
+  select(Departamentos, sector,porcentaje) %>%
+  arrange(desc(porcentaje)) %>%
+  group_by(Departamentos) %>%
+  top_n(1) %>%
+  head(n=10)
+
+f$porcentaje <- formatC(f$porcentaje, format = "f", digits = 2)
+  
+kable(f)
+
+```
+
+\
+
+Por su parte, si queremos **identificar únicamente el sector de cada departamento que más contribuye al VAB de dicha región**, comprobando de forma indirecta el grado de concentración productiva existente en las regiones peruanas, podemos también realizar alguna pequeña modificación al código previo (mostramos de nuevo solo las 10 primeras observaciones). 
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+f_b <- Peru_sectores %>%
+  group_by(Departamentos) %>%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %>%
+  select(Departamentos, sector,porcentaje) %>%
+  arrange(desc(porcentaje)) %>%
+  top_n(1) %>%
+  head(n=10)
+
+f_b$porcentaje <- formatC(f_b$porcentaje, format = "f", digits = 2)
+  
+kable(f_b)
+
+```
+
+\
+
+Resulta patente la gran **concentración productiva** en la actividad extractiva existente en regiones como Pasco, Apurímac, Cusco, Ancash, Madre de Dios, Tacna o Arequipa. Moquegua registra una gran concentración de su actividad productiva en Manufactura, actividad que en dicha región está también fuertemente vinculada a la producción y refinado de minerales, principalmente cobre. 
 
 \
 

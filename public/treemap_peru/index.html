@@ -75,6 +75,12 @@
             
                 <a href="/tags/3dtree">#3dtree</a>
             
+                <a href="/tags/per%C3%BA">#Perú</a>
+            
+                <a href="/tags/vab">#VAB</a>
+            
+                <a href="/tags/pib">#PIB</a>
+            
         </div>
 
 
@@ -101,7 +107,7 @@
 <h1>Paquetes y Dataset</h1>
 <p><br />
 </p>
-<p>Cargamos los paquetes necesarios:</p>
+<p><strong>Cargamos los paquetes</strong> necesarios:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -535,8 +541,8 @@ knitr::kable(c %&gt;%
 <p><br />
 </p>
 </div>
-<div id="qué-peso-tiene-en-2016-cada-sector-sobre-el-vab-de-cada-región" class="section level3">
-<h3><strong>4. ¿Qué peso tiene (en 2016) cada sector sobre el VAB de cada región?</strong></h3>
+<div id="qué-peso-tiene-cada-sector-sobre-el-vab-de-cada-región" class="section level3">
+<h3><strong>4. ¿Qué peso tiene cada sector sobre el VAB de cada región?</strong></h3>
 <p><br />
 </p>
 <p>Si ordenamos las regiones por orden alfabético y de mayor a menor participación podemos identificar los <strong>sectores más importantes en cada región</strong> (ie. Agropecuario en Amazonas, Extractivo en Ancash, Apurímac o Arequipa, etc.) y el peso de cada actividad sobre la economía regional. No obstante, por motivos de espacio mostramos únicamente los primeros 12 valores del dataset creado (que corresponden a la región Amazonas).</p>
@@ -714,8 +720,8 @@ kable(d_b)</code></pre>
 <p><br />
 </p>
 </div>
-<div id="en-qué-medida-contribuyen-las-regiones-peruanas-al-vab-agregado-de-cada-uno-de-los-grandes-sectores-productivos-en-2016" class="section level3">
-<h3><strong>5. ¿En qué medida contribuyen las regiones peruanas al VAB agregado de cada uno de los grandes sectores productivos en 2016?</strong></h3>
+<div id="en-qué-medida-contribuyen-las-regiones-peruanas-al-vab-agregado-de-cada-uno-de-los-grandes-sectores-productivos" class="section level3">
+<h3><strong>5. ¿En qué medida contribuyen las regiones peruanas al VAB agregado de cada uno de los grandes sectores productivos?</strong></h3>
 <p><br />
 </p>
 <p>Esta pregunta es similar a la anterior. No obstante, en lugar de querer identificar el peso de cada sector en cada región pretende identificar el <strong>peso de cada región en el agregado total de cada actividad productiva del país</strong>. Esto lo conseguimos realizando ligeros cambios al código inicial (de nuevo, por motivos de espacio, mostramos los primeros valores que corresponden, por estar ordenados de forma alfabética, a la Administración Pública y Defensa).</p>
@@ -877,6 +883,170 @@ kable(e_b)</code></pre>
 <p><br />
 </p>
 </div>
+<div id="cuál-es-el-sector-en-cada-región-que-más-contribuye-al-vab-nacional-y-al-vab-de-dicha-región" class="section level3">
+<h3><strong>6. ¿Cuál es el sector en cada región que más contribuye al VAB nacional y al VAB de dicha región?</strong></h3>
+<p><br />
+</p>
+<p>Si queremos <strong>identificar únicamente el sector en cada una de las regiones peruanas que más contribuye al VAB nacional</strong> podemos modificar el código utilizado en la pregunta 3 (mostramos solo las 10 primeras observaciones).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+f &lt;- Peru_sectores %&gt;%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %&gt;%
+  select(Departamentos, sector,porcentaje) %&gt;%
+  arrange(desc(porcentaje)) %&gt;%
+  group_by(Departamentos) %&gt;%
+  top_n(1) %&gt;%
+  head(n=10)
+
+f$porcentaje &lt;- formatC(f$porcentaje, format = &quot;f&quot;, digits = 2)
+  
+kable(f)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Departamentos</th>
+<th align="left">sector</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Lima</td>
+<td align="left">Otros Servicios</td>
+<td align="left">16.23</td>
+</tr>
+<tr class="even">
+<td align="left">Arequipa</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">2.41</td>
+</tr>
+<tr class="odd">
+<td align="left">Cusco</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">2.36</td>
+</tr>
+<tr class="even">
+<td align="left">Ancash</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">1.91</td>
+</tr>
+<tr class="odd">
+<td align="left">La Libertad</td>
+<td align="left">Otros Servicios</td>
+<td align="left">0.96</td>
+</tr>
+<tr class="even">
+<td align="left">Junín</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">0.92</td>
+</tr>
+<tr class="odd">
+<td align="left">Apurímac</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">0.85</td>
+</tr>
+<tr class="even">
+<td align="left">Piura</td>
+<td align="left">Otros Servicios</td>
+<td align="left">0.84</td>
+</tr>
+<tr class="odd">
+<td align="left">Moquegua</td>
+<td align="left">Manufactura</td>
+<td align="left">0.82</td>
+</tr>
+<tr class="even">
+<td align="left">Pasco</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">0.72</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Por su parte, si queremos <strong>identificar únicamente el sector de cada departamento que más contribuye al VAB de dicha región</strong>, comprobando de forma indirecta el grado de concentración productiva existente en las regiones peruanas, podemos también realizar alguna pequeña modificación al código previo (mostramos de nuevo solo las 10 primeras observaciones).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+f_b &lt;- Peru_sectores %&gt;%
+  group_by(Departamentos) %&gt;%
+  mutate(suma_total= sum(vab), porcentaje= 100*(vab/suma_total)) %&gt;%
+  select(Departamentos, sector,porcentaje) %&gt;%
+  arrange(desc(porcentaje)) %&gt;%
+  top_n(1) %&gt;%
+  head(n=10)
+
+f_b$porcentaje &lt;- formatC(f_b$porcentaje, format = &quot;f&quot;, digits = 2)
+  
+kable(f_b)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Departamentos</th>
+<th align="left">sector</th>
+<th align="left">porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Pasco</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">61.08</td>
+</tr>
+<tr class="even">
+<td align="left">Apurímac</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">60.91</td>
+</tr>
+<tr class="odd">
+<td align="left">Cusco</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">49.23</td>
+</tr>
+<tr class="even">
+<td align="left">Ancash</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">47.50</td>
+</tr>
+<tr class="odd">
+<td align="left">Madre de Dios</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">46.53</td>
+</tr>
+<tr class="even">
+<td align="left">Moquegua</td>
+<td align="left">Manufactura</td>
+<td align="left">43.38</td>
+</tr>
+<tr class="odd">
+<td align="left">Tacna</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">37.76</td>
+</tr>
+<tr class="even">
+<td align="left">Arequipa</td>
+<td align="left">Extracción de Petróleo, Gas y Minerales</td>
+<td align="left">36.91</td>
+</tr>
+<tr class="odd">
+<td align="left">Lima</td>
+<td align="left">Otros Servicios</td>
+<td align="left">33.59</td>
+</tr>
+<tr class="even">
+<td align="left">Amazonas</td>
+<td align="left">Agricultura, Ganadería, Caza y Silvicultura</td>
+<td align="left">32.03</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Resulta patente la gran <strong>concentración productiva</strong> en la actividad extractiva existente en regiones como Pasco, Apurímac, Cusco, Ancash, Madre de Dios, Tacna o Arequipa. Moquegua registra una gran concentración de su actividad productiva en Manufactura, actividad que en dicha región está también fuertemente vinculada a la producción y refinado de minerales, principalmente cobre.</p>
+<p><br />
+</p>
+</div>
 </div>
 <div id="treemap-con-el-paquete-treemap" class="section level1">
 <h1>Treemap con el paquete treemap</h1>
@@ -902,7 +1072,7 @@ tree_sectores &lt;- treemap(
     c(&quot;center&quot;, &quot;top&quot;)
   )
 )</code></pre>
-<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-12-1.png" width="100%" /></p>
+<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
 <p><br />
 </p>
 <p>El gráfico muestra claramente que, como vimos, <strong>la actividad económica de mayor valor agregado bruto</strong> es el sector Otros Servicios, seguido por la Manufactura, el sector extractivo y la actividad comercial. La Pesca es, sin duda, el sector productivo de menor valor agregado bruto del país. Por su parte comprobamos que Lima, centro indiscutible de la economía del país, representa una gran parte del VAB total procedente del sector Otros Servicios, pero también en los sectores Manufactura, Comercio, Construcción entre otros.</p>
@@ -928,7 +1098,7 @@ tree_regiones &lt;- treemap(
     c(&quot;center&quot;, &quot;top&quot;)
   )
 )</code></pre>
-<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-13-1.png" width="100%" /></p>
+<p><img src="/treemap_peru_files/figure-html/unnamed-chunk-15-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>

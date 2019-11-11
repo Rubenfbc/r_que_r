@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PIB on R que R</title>
+    <link>/tags/pib/</link>
+    <description>Recent content in PIB on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 09 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/pib/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Treemap del VAB sectorial de las regiones peruanas en 2016</title>
+      <link>/treemap_peru/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/treemap_peru/</guid>
+      <description>Re
+El objetivo de este post es visualizar mediante un gráfico treemap el VAB sectorial de los distintos departamentos peruanos para el año 2016. Para ello utilizaremos los paquetes treemap y 3dtreeR.
+
+Paquetes y Dataset
+Cargamos los paquetes necesarios:
+
+library(tidyverse)library(treemap)library(readxl)library(stringr)library(knitr)
+En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016.</description>
+    </item>
+    
+  </channel>
+</rss>
