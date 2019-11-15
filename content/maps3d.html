@@ -1,0 +1,122 @@
+---
+title: "Mapas en 3D con echarts4r y e_geo_3d"
+author: "Rubén F. Bustillo"
+date: 2019-11-13
+categories: ["R"]
+tags: ["Mapas", "e_geo_3d", "Maps", "echarts4r"]
+
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="/rmarkdown-libs/echarts4r/plugins/leaflet/leaflet.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/echarts4r/echarts.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/echarts-gl.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/ecStat.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/dataTool.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/world.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-wordcloud.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-liquidfill.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-graph-modularity.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/leaflet/leaflet.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/leaflet/echarts-leaflet.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/dark.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/vintage.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/westeros.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/essos.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/wonderland.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/walden.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/chalk.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/infographic.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/macarons.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/roma.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/shine.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/purple-passion.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/halloween.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/wef.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/weforum.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/auritus.js"></script>
+<script src="/rmarkdown-libs/echarts4r/custom/renderers.js"></script>
+<link href="/rmarkdown-libs/mapbox/mapbox-gl.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/mapbox/mapbox-gl.js"></script>
+<script src="/rmarkdown-libs/echarts4r-binding/echarts4r.js"></script>
+
+
+<p><strong>Re</strong></p>
+<p>Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función <code>e_geo_3d</code> del paquete <code>echarts4r</code> en R.</p>
+<p><br />
+</p>
+<div id="paquetes" class="section level1">
+<h1>Paquetes</h1>
+<p><br />
+</p>
+<p>Cargamos el paquete <code>echarts4r</code></p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(echarts4r)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="mapa-destacando-españa" class="section level1">
+<h1>Mapa destacando España</h1>
+<p><br />
+</p>
+<p>Para realizar un Mapamundi donde destaque, por ejemplo, España, podemos especificar el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_1 &lt;- data.frame(
+  pais = &quot;Spain&quot;,
+  altura = 10,
+  color = c(&quot;orange&quot;)
+)
+
+mapa_1 %&gt;%
+  e_charts(pais) %&gt;%
+  e_geo_3d(altura, color) %&gt;%
+  e_title(&quot;España&quot;)</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"geo3D":{"map":"world","regions":[{"name":"Spain","height":"10","itemStyle":{"color":"orange"}}]},"title":[{"text":"España"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+</div>
+<div id="selección-de-varios-países" class="section level1">
+<h1>Selección de varios países</h1>
+<p><br />
+</p>
+<p>De forma similar, para destacar un <strong>conjunto de países</strong>, que en este caso serán seleccionados al azar, modificamos el código anterior de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_2 &lt;- data.frame(
+  pais = c(&quot;Peru&quot;, &quot;United States&quot;, &quot;Mozambique&quot;, &quot;India&quot;, &quot;China&quot;),
+  altura = c(5,5,5,5,5),
+  color = c(&quot;orange&quot;,&quot;orange&quot;,&quot;orange&quot;,&quot;orange&quot;,&quot;orange&quot;)
+)
+
+mapa_2 %&gt;%
+  e_charts(pais) %&gt;%
+  e_geo_3d(altura, color) %&gt;%
+  e_title(&quot;Perú, Estados Unidos, Mozambique, India, China&quot;)</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"geo3D":{"map":"world","regions":[{"name":"Peru","height":"5","itemStyle":{"color":"orange"}},{"name":"United States","height":"5","itemStyle":{"color":"orange"}},{"name":"Mozambique","height":"5","itemStyle":{"color":"orange"}},{"name":"India","height":"5","itemStyle":{"color":"orange"}},{"name":"China","height":"5","itemStyle":{"color":"orange"}}]},"title":[{"text":"Perú, Estados Unidos, Mozambique, India, China"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+<p>Podemos dar distintos valores a los países seleccionados, que se traducirá en distintos relieves de los mismos sobre el resto de países. En esta ocasión cogemos una serie de países al azar y les asignamos también unos valores (y unos colores) de forma completamente aleatoria.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_3 &lt;- data.frame(
+  pais = c(&quot;Colombia&quot;, &quot;Iran&quot;, &quot;Myanmar&quot;, &quot;Nigeria&quot;, &quot;Paraguay&quot;),
+  altura = c(9,15,5,22,13),
+  color = c(&quot;gold&quot;,&quot;darkred&quot;,&quot;violet&quot;,&quot;hotpink&quot;,&quot;lawgreen&quot;)
+)
+
+mapa_3 %&gt;%
+  e_charts(pais) %&gt;%
+  e_geo_3d(altura, color) %&gt;%
+  e_title(&quot;Colombia, Irán, Myanmar, Nigeria, Paraguay&quot;) %&gt;%
+  e_theme(&quot;dark&quot;)</code></pre>
+<div id="htmlwidget-3" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"theme":"dark","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"geo3D":{"map":"world","regions":[{"name":"Colombia","height":" 9","itemStyle":{"color":"gold"}},{"name":"Iran","height":"15","itemStyle":{"color":"darkred"}},{"name":"Myanmar","height":" 5","itemStyle":{"color":"violet"}},{"name":"Nigeria","height":"22","itemStyle":{"color":"hotpink"}},{"name":"Paraguay","height":"13","itemStyle":{"color":"lawgreen"}}]},"title":[{"text":"Colombia, Irán, Myanmar, Nigeria, Paraguay"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+</div>

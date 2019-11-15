@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pictograms on R que R</title>
+    <link>/tags/pictograms/</link>
+    <description>Recent content in Pictograms on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 14 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/pictograms/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Pictogramas e infografías con R</title>
+      <link>/infographics/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/infographics/</guid>
+      <description>Re
+En este post se presentarán algunas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función e_chart( ) del paquete echarts4r e iconos del paquete extrafont.
+
+Paquetes
+Cargamos los paquetes requeridos:
+
+library(tidyverse)library(echarts4r)library(extrafont)</description>
+    </item>
+    
+  </channel>
+</rss>

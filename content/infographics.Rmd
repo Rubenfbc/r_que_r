@@ -1,0 +1,259 @@
+---
+title: "Pictogramas e infografías con R"
+author: "Rubén F. Bustillo"
+date: 2019-11-14
+categories: ["R"]
+tags: ["Pictogramas", "Pictograms", "Infografías", "Infographics"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+En este post se presentarán algunas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función `e_chart( )` del paquete `echarts4r` e iconos del paquete `extrafont`.   
+
+\
+
+# Paquetes
+
+\
+
+Cargamos los paquetes requeridos:
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(echarts4r)
+library(extrafont)
+
+```
+
+\
+
+# Utilizar imagenes en un gráfico
+
+\
+
+Una posibilidad a la hora de utilizar imágenes en nuestros gráficos es utilizar alguna imagen para representar las variables de interés y cambiar su tamaño en función de un valor detarminado. Pongamos, por ejemplo, que queremos representar el porcentaje de lanzamientos espaciales en 2015 por país, siguiendo la información recogida en el siguiente [enlace](https://danielmarin.naukas.com/2015/12/31/el-panorama-espacial-en-2015/). Para ello podemos seleccionar un imagen que nos parezca apropiada, realizar un dataframe para su posterior representación gráfica y, finalmente, realizar el gráfico con la función `e_charts()`del paquete `library(echarts4r)`.
+
+\
+
+```{r}
+
+cohete <- "https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg"
+
+cohete_plot <- data.frame(
+  x = c("Rusia", "EE.UU","China", "EU","India", "Japón"), 
+  valor = c(33,23,22,10,6,5),
+  imagen = c(paste0("image://", cohete),
+             paste0("image://", cohete),
+             paste0("image://", cohete),
+             paste0("image://", cohete),
+             paste0("image://", cohete),
+             paste0("image://", cohete))
+)
+
+```
+
+\ 
+
+```{r, out.width = "100%"}
+
+cohete_plot %>% 
+  e_charts(x) %>% 
+  e_pictorial(valor, 
+              imagen) %>% 
+  e_theme("westeros") %>% 
+  e_legend(F) %>% 
+  e_title("Lanzamientos espaciales en 2015", left='center') %>%
+  e_labels(show=TRUE) %>%
+  e_x_axis(splitLine=list(show = T)) %>%
+  e_y_axis(show=T, min=0, max=35, interval=5, splitLine=list(show = T))
+
+
+```
+
+\
+
+Podemos guardar la imagen como archivo .png y subirlo al documento utilizando los paquetes `png` y `grid`.
+
+\
+
+```{r, out.width = "100%"}
+
+library(png)
+library(grid)
+img_cohete <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\cohetes.png")
+grid.raster(img_cohete)
+
+```
+
+\
+
+Podemos también utilizar distintas fotos para cada una de las variables de nuestro gráfico. Pongamos, por ejemplo, que queremos representar los principales personajes de Los Simpsons otorgándole a cada uno un valor predeterminado. Para ello podemos seleccionar las imagenes para cada uno de ellos, crear el dataset pertinente (asignamos un valor aleatorio a cada uno de los personajes) y realizar el gráfico de forma similar al realizado previamente.
+
+\
+
+```{r}
+
+homer <- "https://upload.wikimedia.org/wikipedia/en/0/02/Homer_Simpson_2006.png"
+marge <- "https://upload.wikimedia.org/wikipedia/en/0/0b/Marge_Simpson.png"
+bart <-"https://i.pinimg.com/originals/78/fa/13/78fa132a644b0f3ebb2c41616542d83f.png"
+lisa <- "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Lisa_Simpson.png/220px-Lisa_Simpson.png"
+maggie <- "https://upload.wikimedia.org/wikipedia/en/9/9d/Maggie_Simpson.png"
+
+cohete_plot_2 <- data.frame(
+  x = c("Homer", "Marge","Bart", "Lisa", "Maggie"), 
+  valor = c(7,9,5,5,4),
+  imagen = c(paste0("image://", homer),
+             paste0("image://", marge),
+             paste0("image://", bart),
+             paste0("image://", lisa),
+             paste0("image://", maggie))
+)
+
+
+```
+
+\
+
+```{r, out.width = "100%", fig.height=2, fig.width=8}
+
+cohete_plot_2 %>% 
+  e_charts(x) %>% 
+  e_pictorial(valor, imagen) %>% 
+  e_theme("westeros") %>% 
+  e_legend(F) %>% 
+  e_title("Los Simpsons", left='center', padding=10) %>%
+  e_labels(show=TRUE) %>%
+  e_x_axis(splitLine=list(show = F)) %>%
+  e_y_axis(show=F, min=0, max=10, interval=5, splitLine=list(show = F))
+
+
+```
+
+\
+
+Pongamos el valor más alto a Marge, que sin duda se lo merece.
+
+\
+
+# Realizar infografías con e_charts()
+
+\
+
+Otra posibilidad es crear infografías utilizando iconos, como los que podemos encontrar en la página [iconmonstr](https://iconmonstr.com/). Por ejemplo pongamos que queremos representar en un gráfico la producción de cerveza en España en 2017. Para ello utilizaremos un icono adecuado, en nuestro caso una jarra de cerveza, con el que construiremos nuestro dataset. 
+
+\
+
+Los datos utilzados para el gráfico los obtenemos de [Cerveceros de España](https://www.abc.es/economia/abci-motivos-gusta-mas-marca-cerveza-segun-donde-vives-201807260304_noticia.html) aunque seleccionamos únicamente los cuatro mayores productores. 
+
+\
+
+```{r, out.width = "100%"}
+
+bebida = data.frame(bebida=c("Mahou- \nSan Miguel", "Heineken \nEspaña", "Damm", "Hijos de \nRivera"), 
+                    value=c(12.3, 10.5, 9.7, 2.8),
+                    path = c("path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z",
+                             "path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z",
+                             "path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z",
+                             "path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z")
+                    )
+
+bebida %>% 
+  e_charts(bebida) %>% 
+  e_x_axis(splitLine=list(show = FALSE), 
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel= list(show=FALSE)) %>%
+  e_y_axis(max=15, 
+           splitLine=list(show = FALSE),
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel=list(show=FALSE)) %>%
+  e_color(color = c('orange','lightgrey')) %>%
+  e_pictorial(value, symbol = path, z=10, name= 'realValue', 
+              symbolBoundingData= 15, symbolClip= TRUE) %>% 
+  e_pictorial(value, symbol = path, name= 'background', 
+              symbolBoundingData= 15) %>% 
+  e_labels(position = "bottom", offset= c(0, 10), 
+           textStyle =list(fontSize= 12, fontFamily= 'Arial', 
+                           fontWeight ='bold', 
+                           color= 'orange'),
+           formatter="{@[1]}hL \n{@[0]}") %>%
+  e_legend(show = FALSE) %>%
+  e_theme("dark") %>%
+  e_title("Producción de cerveza en España en 2017 \nEn millones de hectolitros",  padding=c(10,50,50,0))
+
+
+```
+
+\
+
+El gráfico muestra la gran concentración existente en términos de producción cervecera en España. Como muestra el gráfico el principal productor en 2017 fue Mahou-San Miguel (Mahou, San Miguel, Cervezas Alhambra), seguido por Heineken España (Cruzcampo, Amstel, Heineken), Damm (Estrella Damm, Estrella Levante, EStrella del Sur, Keler entre otras) e Hijos de Rivera (Estrella Galicia). 
+
+\
+
+Pongamos que nos interesa reflejar en una infograma información sobre las redes sociales más activas en España. Utilizando información de un informe de la agencia [We Are Social](https://wearesocial.com/es/digital-2019-espana) donde se analizan tendencias digitales y de redes sociales en todo el mundo podemos, por ejemplo, comparar Facebook con Instagram. Para ello utilizamos los iconos de estas dos redes sociales, realizamos el dataset y graficamos el plot utilizando la función `e_charts()`. 
+
+\
+
+```{r, out.width = "100%"}
+
+redes = data.frame(redes = c("Facebook", "Instagram"), 
+                   value=c(82, 54),
+                   path = c('path://M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-3 7h-1.924c-.615 0-1.076.252-1.076.889v1.111h3l-.238 3h-2.762v8h-3v-8h-2v-3h2v-1.923c0-2.022 1.064-3.077 3.461-3.077h2.539v3z"/></svg>', 
+                             'path://M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>'))
+
+redes %>% 
+  e_charts(redes) %>% 
+  e_x_axis(splitLine=list(show = FALSE), 
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel= list(show=FALSE)) %>%
+  e_y_axis(max=100, 
+           splitLine=list(show = FALSE),
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel=list(show=FALSE)) %>%
+  e_color(color = c('lawngreen','white')) %>%
+  e_pictorial(value, symbol = path, z = 20, 
+              name= 'realValue', 
+              symbolBoundingData= 100, symbolClip= TRUE) %>% 
+  e_pictorial(value, symbol = path, name= 'background', 
+              symbolBoundingData= 100) %>% 
+  e_labels(position = "bottom", offset= c(0, 10), 
+           textStyle =list(fontSize= 20, fontFamily= 'Arial', 
+                           fontWeight ='bold', 
+                           color= 'lawngreen'),
+           formatter="{@[1]}% {@[0]}") %>%
+  e_legend(show = FALSE) %>%
+  e_theme("dark") %>%
+  e_title("Las redes sociales más activas \nPorcentaje de Usuarios de internet que afirman usar Facebook e Instagram",  padding=c(10,20,0,0))
+  
+
+```
+
+\
+
+Al igual que realizamos previamente podemos cargar un archivo .png que tengamos almacenado en nuestro ordenador de la siguiente forma
+
+\
+
+```{r, out.width = "100%"}
+
+library(png)
+library(grid)
+img_redes <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\redes.png")
+grid.raster(img_redes)
+
+```
+

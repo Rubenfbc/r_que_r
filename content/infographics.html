@@ -1,0 +1,246 @@
+---
+title: "Pictogramas e infografías con R"
+author: "Rubén F. Bustillo"
+date: 2019-11-14
+categories: ["R"]
+tags: ["Pictogramas", "Pictograms", "Infografías", "Infographics"]
+
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="/rmarkdown-libs/echarts4r/plugins/leaflet/leaflet.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/echarts4r/echarts.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/echarts-gl.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/ecStat.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/dataTool.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/world.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-wordcloud.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-liquidfill.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-graph-modularity.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/leaflet/leaflet.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/leaflet/echarts-leaflet.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/dark.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/vintage.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/westeros.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/essos.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/wonderland.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/walden.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/chalk.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/infographic.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/macarons.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/roma.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/shine.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/purple-passion.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/halloween.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/wef.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/weforum.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/auritus.js"></script>
+<script src="/rmarkdown-libs/echarts4r/custom/renderers.js"></script>
+<link href="/rmarkdown-libs/mapbox/mapbox-gl.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/mapbox/mapbox-gl.js"></script>
+<script src="/rmarkdown-libs/echarts4r-binding/echarts4r.js"></script>
+
+
+<p><strong>Re</strong></p>
+<p>En este post se presentarán algunas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función <code>e_chart( )</code> del paquete <code>echarts4r</code> e iconos del paquete <code>extrafont</code>.</p>
+<p><br />
+</p>
+<div id="paquetes" class="section level1">
+<h1>Paquetes</h1>
+<p><br />
+</p>
+<p>Cargamos los paquetes requeridos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(tidyverse)
+library(echarts4r)
+library(extrafont)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="utilizar-imagenes-en-un-gráfico" class="section level1">
+<h1>Utilizar imagenes en un gráfico</h1>
+<p><br />
+</p>
+<p>Una posibilidad a la hora de utilizar imágenes en nuestros gráficos es utilizar alguna imagen para representar las variables de interés y cambiar su tamaño en función de un valor detarminado. Pongamos, por ejemplo, que queremos representar el porcentaje de lanzamientos espaciales en 2015 por país, siguiendo la información recogida en el siguiente <a href="https://danielmarin.naukas.com/2015/12/31/el-panorama-espacial-en-2015/">enlace</a>. Para ello podemos seleccionar un imagen que nos parezca apropiada, realizar un dataframe para su posterior representación gráfica y, finalmente, realizar el gráfico con la función <code>e_charts()</code>del paquete <code>library(echarts4r)</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+cohete &lt;- &quot;https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg&quot;
+
+cohete_plot &lt;- data.frame(
+  x = c(&quot;Rusia&quot;, &quot;EE.UU&quot;,&quot;China&quot;, &quot;EU&quot;,&quot;India&quot;, &quot;Japón&quot;), 
+  valor = c(33,23,22,10,6,5),
+  imagen = c(paste0(&quot;image://&quot;, cohete),
+             paste0(&quot;image://&quot;, cohete),
+             paste0(&quot;image://&quot;, cohete),
+             paste0(&quot;image://&quot;, cohete),
+             paste0(&quot;image://&quot;, cohete),
+             paste0(&quot;image://&quot;, cohete))
+)</code></pre>
+<p> </p>
+<pre class="r"><code>
+cohete_plot %&gt;% 
+  e_charts(x) %&gt;% 
+  e_pictorial(valor, 
+              imagen) %&gt;% 
+  e_theme(&quot;westeros&quot;) %&gt;% 
+  e_legend(F) %&gt;% 
+  e_title(&quot;Lanzamientos espaciales en 2015&quot;, left=&#39;center&#39;) %&gt;%
+  e_labels(show=TRUE) %&gt;%
+  e_x_axis(splitLine=list(show = T)) %&gt;%
+  e_y_axis(show=T, min=0, max=35, interval=5, splitLine=list(show = T))</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"theme":"westeros","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true,"min":0,"max":35,"interval":5,"splitLine":{"show":true}}],"xAxis":[{"data":["Rusia","EE.UU","China","EU","India","Japón"],"type":"category","boundaryGap":true,"splitLine":{"show":true}}],"legend":{"data":["valor"],"show":false,"type":"plain"},"series":[{"data":[{"value":["Rusia","33"],"symbol":"image://https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg"},{"value":["EE.UU","23"],"symbol":"image://https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg"},{"value":["China","22"],"symbol":"image://https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg"},{"value":["EU","10"],"symbol":"image://https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg"},{"value":["India"," 6"],"symbol":"image://https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg"},{"value":["Japón"," 5"],"symbol":"image://https://image.spreadshirtmedia.net/image-server/v1/mp/compositions/T1188A70MPA2649PT10X15Y37D148622428FS2502/views/1,width=550,height=550,appearanceId=70,backgroundColor=FFFFFF,noPt=true,version=1550539062/cohete-de-dibujos-animados-funda-para-iphone-7-8.jpg"}],"name":"valor","type":"pictorialBar","yAxisIndex":0,"xAxisIndex":0,"label":{"show":true,"position":"top"}}],"title":[{"left":"center","text":"Lanzamientos espaciales en 2015"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+<p>Podemos guardar la imagen como archivo .png y subirlo al documento utilizando los paquetes <code>png</code> y <code>grid</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(png)
+library(grid)
+img_cohete &lt;- readPNG(&quot;C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\cohetes.png&quot;)
+grid.raster(img_cohete)</code></pre>
+<p><img src="/infographics_files/figure-html/unnamed-chunk-4-1.png" width="100%" /></p>
+<p><br />
+</p>
+<p>Podemos también utilizar distintas fotos para cada una de las variables de nuestro gráfico. Pongamos, por ejemplo, que queremos representar los principales personajes de Los Simpsons otorgándole a cada uno un valor predeterminado. Para ello podemos seleccionar las imagenes para cada uno de ellos, crear el dataset pertinente (asignamos un valor aleatorio a cada uno de los personajes) y realizar el gráfico de forma similar al realizado previamente.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+homer &lt;- &quot;https://upload.wikimedia.org/wikipedia/en/0/02/Homer_Simpson_2006.png&quot;
+marge &lt;- &quot;https://upload.wikimedia.org/wikipedia/en/0/0b/Marge_Simpson.png&quot;
+bart &lt;-&quot;https://i.pinimg.com/originals/78/fa/13/78fa132a644b0f3ebb2c41616542d83f.png&quot;
+lisa &lt;- &quot;https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Lisa_Simpson.png/220px-Lisa_Simpson.png&quot;
+maggie &lt;- &quot;https://upload.wikimedia.org/wikipedia/en/9/9d/Maggie_Simpson.png&quot;
+
+cohete_plot_2 &lt;- data.frame(
+  x = c(&quot;Homer&quot;, &quot;Marge&quot;,&quot;Bart&quot;, &quot;Lisa&quot;, &quot;Maggie&quot;), 
+  valor = c(7,9,5,5,4),
+  imagen = c(paste0(&quot;image://&quot;, homer),
+             paste0(&quot;image://&quot;, marge),
+             paste0(&quot;image://&quot;, bart),
+             paste0(&quot;image://&quot;, lisa),
+             paste0(&quot;image://&quot;, maggie))
+)
+</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+cohete_plot_2 %&gt;% 
+  e_charts(x) %&gt;% 
+  e_pictorial(valor, imagen) %&gt;% 
+  e_theme(&quot;westeros&quot;) %&gt;% 
+  e_legend(F) %&gt;% 
+  e_title(&quot;Los Simpsons&quot;, left=&#39;center&#39;, padding=10) %&gt;%
+  e_labels(show=TRUE) %&gt;%
+  e_x_axis(splitLine=list(show = F)) %&gt;%
+  e_y_axis(show=F, min=0, max=10, interval=5, splitLine=list(show = F))</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"theme":"westeros","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":false,"min":0,"max":10,"interval":5,"splitLine":{"show":false}}],"xAxis":[{"data":["Homer","Marge","Bart","Lisa","Maggie"],"type":"category","boundaryGap":true,"splitLine":{"show":false}}],"legend":{"data":["valor"],"show":false,"type":"plain"},"series":[{"data":[{"value":["Homer","7"],"symbol":"image://https://upload.wikimedia.org/wikipedia/en/0/02/Homer_Simpson_2006.png"},{"value":["Marge","9"],"symbol":"image://https://upload.wikimedia.org/wikipedia/en/0/0b/Marge_Simpson.png"},{"value":["Bart","5"],"symbol":"image://https://i.pinimg.com/originals/78/fa/13/78fa132a644b0f3ebb2c41616542d83f.png"},{"value":["Lisa","5"],"symbol":"image://https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Lisa_Simpson.png/220px-Lisa_Simpson.png"},{"value":["Maggie","4"],"symbol":"image://https://upload.wikimedia.org/wikipedia/en/9/9d/Maggie_Simpson.png"}],"name":"valor","type":"pictorialBar","yAxisIndex":0,"xAxisIndex":0,"label":{"show":true,"position":"top"}}],"title":[{"left":"center","padding":10,"text":"Los Simpsons"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+<p>Pongamos el valor más alto a Marge, que sin duda se lo merece.</p>
+<p><br />
+</p>
+</div>
+<div id="realizar-infografías-con-e_charts" class="section level1">
+<h1>Realizar infografías con e_charts()</h1>
+<p><br />
+</p>
+<p>Otra posibilidad es crear infografías utilizando iconos, como los que podemos encontrar en la página <a href="https://iconmonstr.com/">iconmonstr</a>. Por ejemplo pongamos que queremos representar en un gráfico la producción de cerveza en España en 2017. Para ello utilizaremos un icono adecuado, en nuestro caso una jarra de cerveza, con el que construiremos nuestro dataset.</p>
+<p><br />
+</p>
+<p>Los datos utilzados para el gráfico los obtenemos de <a href="https://www.abc.es/economia/abci-motivos-gusta-mas-marca-cerveza-segun-donde-vives-201807260304_noticia.html">Cerveceros de España</a> aunque seleccionamos únicamente los cuatro mayores productores.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+bebida = data.frame(bebida=c(&quot;Mahou- \nSan Miguel&quot;, &quot;Heineken \nEspaña&quot;, &quot;Damm&quot;, &quot;Hijos de \nRivera&quot;), 
+                    value=c(12.3, 10.5, 9.7, 2.8),
+                    path = c(&quot;path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z&quot;,
+                             &quot;path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z&quot;,
+                             &quot;path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z&quot;,
+                             &quot;path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z&quot;)
+                    )
+
+bebida %&gt;% 
+  e_charts(bebida) %&gt;% 
+  e_x_axis(splitLine=list(show = FALSE), 
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel= list(show=FALSE)) %&gt;%
+  e_y_axis(max=15, 
+           splitLine=list(show = FALSE),
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel=list(show=FALSE)) %&gt;%
+  e_color(color = c(&#39;orange&#39;,&#39;lightgrey&#39;)) %&gt;%
+  e_pictorial(value, symbol = path, z=10, name= &#39;realValue&#39;, 
+              symbolBoundingData= 15, symbolClip= TRUE) %&gt;% 
+  e_pictorial(value, symbol = path, name= &#39;background&#39;, 
+              symbolBoundingData= 15) %&gt;% 
+  e_labels(position = &quot;bottom&quot;, offset= c(0, 10), 
+           textStyle =list(fontSize= 12, fontFamily= &#39;Arial&#39;, 
+                           fontWeight =&#39;bold&#39;, 
+                           color= &#39;orange&#39;),
+           formatter=&quot;{@[1]}hL \n{@[0]}&quot;) %&gt;%
+  e_legend(show = FALSE) %&gt;%
+  e_theme(&quot;dark&quot;) %&gt;%
+  e_title(&quot;Producción de cerveza en España en 2017 \nEn millones de hectolitros&quot;,  padding=c(10,50,50,0))</code></pre>
+<div id="htmlwidget-3" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"theme":"dark","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true,"max":15,"splitLine":{"show":false},"axisTick":{"show":false},"axisLine":{"show":false},"axisLabel":{"show":false}}],"xAxis":[{"data":["Mahou- \nSan Miguel","Heineken \nEspaña","Damm","Hijos de \nRivera"],"type":"category","boundaryGap":true,"splitLine":{"show":false},"axisTick":{"show":false},"axisLine":{"show":false},"axisLabel":{"show":false}}],"color":["orange","lightgrey"],"legend":{"data":["realValue","background"],"show":false,"type":"plain"},"series":[{"data":[{"value":["Mahou- \nSan Miguel","12.3"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"},{"value":["Heineken \nEspaña","10.5"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"},{"value":["Damm"," 9.7"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"},{"value":["Hijos de \nRivera"," 2.8"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"}],"name":"realValue","type":"pictorialBar","yAxisIndex":0,"xAxisIndex":0,"z":10,"symbolBoundingData":15,"symbolClip":true,"label":{"show":true,"position":"bottom","offset":[0,10],"textStyle":{"fontSize":12,"fontFamily":"Arial","fontWeight":"bold","color":"orange"},"formatter":"{@[1]}hL \n{@[0]}"}},{"data":[{"value":["Mahou- \nSan Miguel","12.3"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"},{"value":["Heineken \nEspaña","10.5"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"},{"value":["Damm"," 9.7"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"},{"value":["Hijos de \nRivera"," 2.8"],"symbol":"path://M17 21.224v-12.772c1.106-.594 1.674-1.762 1.674-3.104 0-1.874-1.473-3.411-3.32-3.515-.768-1.068-2.221-1.833-3.739-1.833-.971 0-1.78.322-2.582.964-1.292-.422-2.747-.143-3.795.792-2.155-.342-4.238 1.244-4.238 3.501 0 1.396.819 2.581 2 3.15v12.817c0 .664-.336 1.203-1 1.203v1.573h16v-1.573c-.664 0-1-.539-1-1.203zm-9-.224h-2v-12.719c.672.422 1.516.406 2 .267v12.452zm7.154-13.707c-.627 0-1.184-.296-1.539-.756l-.451.316c-1.522 1.178-.113 3.303-.01 4.324.102.977-.505 1.712-1.458 1.712-.93 0-1.475-.786-1.401-1.712.078-.978 1.562-2.918-.083-4.438l-.623-.568c-.425.497-1.056.813-1.761.813-.605 0-1.155-.231-1.568-.611-.354.487-.927.804-1.575.804-2.716 0-2.817-3.889 0-3.889.398 0 .77.12 1.077.326.384-.751 1.163-1.266 2.065-1.266.591 0 1.131.222 1.54.586.494-.814 1.39-1.359 2.412-1.359 1.255 0 2.32.82 2.685 1.955.213-.082.445-.126.689-.126 1.072 0 1.943.871 1.943 1.944s-.869 1.945-1.942 1.945zm7.846 5.159c0 2.539-1.791 5.75-5 6.963v-2.16c3.154-1.83 3.969-6.255 1.553-6.255h-1.553v-2h1.912c2.144 0 3.088 1.534 3.088 3.452z"}],"name":"background","type":"pictorialBar","yAxisIndex":0,"xAxisIndex":0,"symbolBoundingData":15,"label":{"show":true,"position":"bottom","offset":[0,10],"textStyle":{"fontSize":12,"fontFamily":"Arial","fontWeight":"bold","color":"orange"},"formatter":"{@[1]}hL \n{@[0]}"}}],"title":[{"padding":[10,50,50,0],"text":"Producción de cerveza en España en 2017 \nEn millones de hectolitros"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+<p>El gráfico muestra la gran concentración existente en términos de producción cervecera en España. Como muestra el gráfico el principal productor en 2017 fue Mahou-San Miguel (Mahou, San Miguel, Cervezas Alhambra), seguido por Heineken España (Cruzcampo, Amstel, Heineken), Damm (Estrella Damm, Estrella Levante, EStrella del Sur, Keler entre otras) e Hijos de Rivera (Estrella Galicia).</p>
+<p><br />
+</p>
+<p>Pongamos que nos interesa reflejar en una infograma información sobre las redes sociales más activas en España. Utilizando información de un informe de la agencia <a href="https://wearesocial.com/es/digital-2019-espana">We Are Social</a> donde se analizan tendencias digitales y de redes sociales en todo el mundo podemos, por ejemplo, comparar Facebook con Instagram. Para ello utilizamos los iconos de estas dos redes sociales, realizamos el dataset y graficamos el plot utilizando la función <code>e_charts()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+redes = data.frame(redes = c(&quot;Facebook&quot;, &quot;Instagram&quot;), 
+                   value=c(82, 54),
+                   path = c(&#39;path://M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-3 7h-1.924c-.615 0-1.076.252-1.076.889v1.111h3l-.238 3h-2.762v8h-3v-8h-2v-3h2v-1.923c0-2.022 1.064-3.077 3.461-3.077h2.539v3z&quot;/&gt;&lt;/svg&gt;&#39;, 
+                             &#39;path://M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z&quot;/&gt;&lt;/svg&gt;&#39;))
+
+redes %&gt;% 
+  e_charts(redes) %&gt;% 
+  e_x_axis(splitLine=list(show = FALSE), 
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel= list(show=FALSE)) %&gt;%
+  e_y_axis(max=100, 
+           splitLine=list(show = FALSE),
+           axisTick=list(show=FALSE),
+           axisLine=list(show=FALSE),
+           axisLabel=list(show=FALSE)) %&gt;%
+  e_color(color = c(&#39;lawngreen&#39;,&#39;white&#39;)) %&gt;%
+  e_pictorial(value, symbol = path, z = 20, 
+              name= &#39;realValue&#39;, 
+              symbolBoundingData= 100, symbolClip= TRUE) %&gt;% 
+  e_pictorial(value, symbol = path, name= &#39;background&#39;, 
+              symbolBoundingData= 100) %&gt;% 
+  e_labels(position = &quot;bottom&quot;, offset= c(0, 10), 
+           textStyle =list(fontSize= 20, fontFamily= &#39;Arial&#39;, 
+                           fontWeight =&#39;bold&#39;, 
+                           color= &#39;lawngreen&#39;),
+           formatter=&quot;{@[1]}% {@[0]}&quot;) %&gt;%
+  e_legend(show = FALSE) %&gt;%
+  e_theme(&quot;dark&quot;) %&gt;%
+  e_title(&quot;Las redes sociales más activas \nPorcentaje de Usuarios de internet que afirman usar Facebook e Instagram&quot;,  padding=c(10,20,0,0))</code></pre>
+<div id="htmlwidget-4" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"theme":"dark","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true,"max":100,"splitLine":{"show":false},"axisTick":{"show":false},"axisLine":{"show":false},"axisLabel":{"show":false}}],"xAxis":[{"data":["Facebook","Instagram"],"type":"category","boundaryGap":true,"splitLine":{"show":false},"axisTick":{"show":false},"axisLine":{"show":false},"axisLabel":{"show":false}}],"color":["lawngreen","white"],"legend":{"data":["realValue","background"],"show":false,"type":"plain"},"series":[{"data":[{"value":["Facebook","82"],"symbol":"path://M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-3 7h-1.924c-.615 0-1.076.252-1.076.889v1.111h3l-.238 3h-2.762v8h-3v-8h-2v-3h2v-1.923c0-2.022 1.064-3.077 3.461-3.077h2.539v3z\"/><\/svg>"},{"value":["Instagram","54"],"symbol":"path://M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z\"/><\/svg>"}],"name":"realValue","type":"pictorialBar","yAxisIndex":0,"xAxisIndex":0,"z":20,"symbolBoundingData":100,"symbolClip":true,"label":{"show":true,"position":"bottom","offset":[0,10],"textStyle":{"fontSize":20,"fontFamily":"Arial","fontWeight":"bold","color":"lawngreen"},"formatter":"{@[1]}% {@[0]}"}},{"data":[{"value":["Facebook","82"],"symbol":"path://M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-3 7h-1.924c-.615 0-1.076.252-1.076.889v1.111h3l-.238 3h-2.762v8h-3v-8h-2v-3h2v-1.923c0-2.022 1.064-3.077 3.461-3.077h2.539v3z\"/><\/svg>"},{"value":["Instagram","54"],"symbol":"path://M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z\"/><\/svg>"}],"name":"background","type":"pictorialBar","yAxisIndex":0,"xAxisIndex":0,"symbolBoundingData":100,"label":{"show":true,"position":"bottom","offset":[0,10],"textStyle":{"fontSize":20,"fontFamily":"Arial","fontWeight":"bold","color":"lawngreen"},"formatter":"{@[1]}% {@[0]}"}}],"title":[{"padding":[10,20,0,0],"text":"Las redes sociales más activas \nPorcentaje de Usuarios de internet que afirman usar Facebook e Instagram"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+<p>Al igual que realizamos previamente podemos cargar un archivo .png que tengamos almacenado en nuestro ordenador de la siguiente forma</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(png)
+library(grid)
+img_redes &lt;- readPNG(&quot;C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\redes.png&quot;)
+grid.raster(img_redes)</code></pre>
+<p><img src="/infographics_files/figure-html/unnamed-chunk-9-1.png" width="100%" /></p>
+</div>

@@ -6,10 +6,82 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 09 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 14 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Infografías</title>
+      <link>/tags/infograf%C3%ADas/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/infograf%C3%ADas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Infographics</title>
+      <link>/tags/infographics/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/infographics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pictogramas</title>
+      <link>/tags/pictogramas/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pictogramas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pictograms</title>
+      <link>/tags/pictograms/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pictograms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>e_geo_3d</title>
+      <link>/tags/e_geo_3d/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/e_geo_3d/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>echarts4r</title>
+      <link>/tags/echarts4r/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/echarts4r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mapas</title>
+      <link>/tags/mapas/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mapas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>maps</title>
+      <link>/tags/maps/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/maps/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>3dtree</title>
@@ -80,24 +152,6 @@
       <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/ggplot2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>mapas</title>
-      <link>/tags/mapas/</link>
-      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/mapas/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>maps</title>
-      <link>/tags/maps/</link>
-      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/maps/</guid>
       <description></description>
     </item>
     

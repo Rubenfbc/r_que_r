@@ -1,0 +1,109 @@
+---
+title: "Mapas en 3D con echarts4r y e_geo_3d"
+author: "Rubén F. Bustillo"
+date: 2019-11-13
+categories: ["R"]
+tags: ["Mapas", "e_geo_3d", "Maps", "echarts4r"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función `e_geo_3d` del paquete `echarts4r` en R.   
+
+\
+
+# Paquetes
+ 
+\
+
+Cargamos el paquete `echarts4r`
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(echarts4r)
+
+```
+
+\
+
+# Mapa destacando España
+
+\
+
+Para realizar un Mapamundi donde destaque, por ejemplo, España, podemos especificar el siguiente código:
+
+\
+
+```{r, out.width= "100%"}
+
+mapa_1 <- data.frame(
+  pais = "Spain",
+  altura = 10,
+  color = c("orange")
+)
+
+mapa_1 %>%
+  e_charts(pais) %>%
+  e_geo_3d(altura, color) %>%
+  e_title("España")
+
+```
+
+\
+
+# Selección de varios países
+
+\
+
+De forma similar, para destacar un **conjunto de países**, que en este caso serán seleccionados al azar, modificamos el código anterior de la siguiente forma:
+
+\
+
+```{r, out.width= "100%"}
+
+mapa_2 <- data.frame(
+  pais = c("Peru", "United States", "Mozambique", "India", "China"),
+  altura = c(5,5,5,5,5),
+  color = c("orange","orange","orange","orange","orange")
+)
+
+mapa_2 %>%
+  e_charts(pais) %>%
+  e_geo_3d(altura, color) %>%
+  e_title("Perú, Estados Unidos, Mozambique, India, China")
+
+
+```
+
+\
+
+Podemos dar distintos valores a los países seleccionados, que se traducirá en distintos relieves de los mismos sobre el resto de países. En esta ocasión cogemos una serie de países al azar y les asignamos también unos valores (y unos colores) de forma completamente aleatoria.
+
+\
+
+```{r, out.width= "100%"}
+
+mapa_3 <- data.frame(
+  pais = c("Colombia", "Iran", "Myanmar", "Nigeria", "Paraguay"),
+  altura = c(9,15,5,22,13),
+  color = c("gold","darkred","violet","hotpink","lawgreen")
+)
+
+mapa_3 %>%
+  e_charts(pais) %>%
+  e_geo_3d(altura, color) %>%
+  e_title("Colombia, Irán, Myanmar, Nigeria, Paraguay") %>%
+  e_theme("dark")
+
+
+```
