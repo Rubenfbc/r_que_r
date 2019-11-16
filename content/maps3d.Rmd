@@ -128,6 +128,41 @@ mapa_3 %>%
 
 \
 
+Como complemento podemos utilizar `e_map_toggle_select()` para crear botones de selección de algunos países. Pongamos que queremos seleccionar los países para los que tenemos datos en el dataframe anterior más España. En ese caso podemos indicar la siguiente orden:
+
+\
+
+```{r}
+
+mapa_3 %>%
+  e_charts(pais) %>%
+  e_title("Colombia, Irán, Myanmar, Nigeria, Paraguay, Canadá, Russia", "Selección de países", left= "center") %>%
+  e_theme("vintage") %>%
+  e_map(valores) %>%
+  e_visual_map(min=5, max=22) %>%
+  e_map_toggle_select(name = "Colombia", btn = "btn_1") %>%
+  e_button ("btn_1", "Select Colombia") %>%
+  e_map_toggle_select(name = "Iran", btn = "btn_2") %>%
+  e_button ("btn_2", "Select Iran") %>%
+  e_map_toggle_select(name = "Myanmar", btn = "btn_3") %>%
+  e_button ("btn_3", "Select Myanmar") %>%
+  e_map_toggle_select(name = "Nigeria", btn = "btn_4") %>%
+  e_button ("btn_4", "Select Nigeria") %>%
+  e_map_toggle_select(name = "Paraguay", btn = "btn_5") %>%
+  e_button ("btn_5", "Select Paraguay") %>%
+  e_map_toggle_select(name = "Canada", btn = "btn_6") %>%
+  e_button ("btn_6", "Select Canada") %>%
+  e_map_toggle_select(name = "Russia", btn = "btn_7") %>%
+  e_button ("btn_7", "Select Russia") %>%
+  e_map_toggle_select(name = "Spain", btn = "btn_8") %>%
+  e_button ("btn_8", "Select Spain")
+
+```
+
+
+
+
+
 # Representación de la evolución temporal
 
 \
