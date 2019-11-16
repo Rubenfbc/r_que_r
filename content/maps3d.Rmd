@@ -88,7 +88,7 @@ mapa_2 %>%
 \
 
 
-Podemos dar distintos valores a los países seleccionados, que se traducirá en distintos relieves de los mismos sobre el resto de países. En esta ocasión cogemos una serie de países al azar y les asignamos también unos valores (y unos colores) de forma completamente aleatoria.
+Podemos dar **distintos valores a los países seleccionados**, que se traducirá en distintos relieves de los mismos sobre el resto de países. En esta ocasión cogemos una serie de países al azar y les asignamos también unos valores (y unos colores) de forma completamente aleatoria.
 
 \
 
@@ -111,7 +111,7 @@ mapa_3 %>%
 
 \
 
-Si queremos convertir el mapa 3D anterior a un choropleth mapa habitual que muestre los valores indicados en una escala de valores podemos realizar la siguiente operación:
+Si queremos convertir el mapa 3D anterior a un **mapa choropleth habitual** que muestre los valores indicados en una escala de valores podemos realizar la siguiente operación:
 
 \
 
@@ -132,7 +132,7 @@ mapa_3 %>%
 
 \
 
-Podemos, mediante una representación geográfica con mapas, examinar la evolución temporal de una variable determinada en los países seleccionados. A modo de ejemplo vamos a realizar un mapa 3d que nos muestre la evolución, año por año, de la inversión en I+D realizada por algunos países seleccionados durante el periodo 2000-2016. En esta ocasión los datos los obtenemos de la [página web del Banco Mundial](https://data.worldbank.org/indicator/GB.XPD.RSDV.GD.ZS?view=chart). Para ello en primer lugar cargamos el dataframe con la información obtenida del Banco Mundial. 
+Podemos, mediante una representación geográfica con mapas, examinar la **evolución temporal** de una variable determinada en los países seleccionados. A modo de ejemplo vamos a realizar un mapa 3D que nos muestre la evolución, año por año, de la inversión en I+D realizada por algunos países seleccionados durante el periodo 2000-2016. En esta ocasión los datos los obtenemos de la [página web del Banco Mundial](https://data.worldbank.org/indicator/GB.XPD.RSDV.GD.ZS?view=chart). Para ello en primer lugar importamos el dataframe con la información obtenida del dicha institución. 
 
 \
 
@@ -147,7 +147,7 @@ head(paises_ID)
 
 \
 
-Antes de proceder a realizar el mapa conviene reconfigurar el dataframe con el objetivo de hacerlo más funcional para su análisis. Utilizamos la función `gather()` del paquete `tidyverse`. 
+Antes de proceder a realizar el mapa conviene reconfigurar el dataset con el objetivo de hacerlo más funcional para su análisis. Utilizamos la función `gather()` del paquete `tidyverse`. 
 
 \
 
@@ -164,7 +164,7 @@ head(ID)
 
 \
 
-Una vez tenemos el dataframe con la información del porcentage de la inversión en I+D en algunos países seleccionados procedemos a realizar el mapa 3d utilizando la función `e_map_3d()`. De esta forma podemos ver de forma sencilla el valor de dicha variable para cada país en cada uno de los años del periodo escogido así como la evolución temporal de dicho indicador.
+Una vez tenemos el dataframe con la información del porcentage de la inversión en I+D en algunos países seleccionados procedemos a realizar el **mapa 3D** utilizando la función `e_map_3d()`. De esta forma podemos observar de forma sencilla el valor de dicha variable para cada país en cada uno de los años del periodo escogido así como su evolución temporal a lo largo de los años.
 
 \
 
@@ -181,7 +181,7 @@ ID %>%
 
 \
 
-Al igual que hicimos previamente podemos realizar un ejercicio similar utilizando un mapa choropleth en lugar de 3D utilizando la función `e_map()`. 
+Al igual que hicimos previamente podemos realizar un ejercicio similar utilizando un **mapa choropleth** en lugar de 3D utilizando la función `e_map()`. 
 
 \
 
