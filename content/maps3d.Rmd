@@ -55,7 +55,7 @@ mapa_1 <- data.frame(
 mapa_1 %>%
   e_charts(pais) %>%
   e_geo_3d(altura, color) %>%
-  e_title("España")
+  e_title("España", left = "center")
 
 ```
 
@@ -73,19 +73,20 @@ De forma similar, para destacar un **conjunto de países**, que en este caso ser
 
 mapa_2 <- data.frame(
   pais = c("Peru", "United States", "Mozambique", "India", "China"),
-  altura = c(5,5,5,5,5),
+  valores = c(5,5,5,5,5),
   color = c("orange","orange","orange","orange","orange")
 )
 
 mapa_2 %>%
   e_charts(pais) %>%
-  e_geo_3d(altura, color) %>%
-  e_title("Perú, Estados Unidos, Mozambique, India, China")
+  e_geo_3d(valores, color) %>%
+  e_title("Perú, Estados Unidos, Mozambique, India, China", "Selección de países", left = "center")
 
 
 ```
 
 \
+
 
 Podemos dar distintos valores a los países seleccionados, que se traducirá en distintos relieves de los mismos sobre el resto de países. En esta ocasión cogemos una serie de países al azar y les asignamos también unos valores (y unos colores) de forma completamente aleatoria.
 
@@ -94,16 +95,106 @@ Podemos dar distintos valores a los países seleccionados, que se traducirá en 
 ```{r, out.width= "100%"}
 
 mapa_3 <- data.frame(
-  pais = c("Colombia", "Iran", "Myanmar", "Nigeria", "Paraguay"),
-  altura = c(9,15,5,22,13),
-  color = c("gold","darkred","violet","hotpink","lawgreen")
+  pais = c("Colombia", "Iran", "Myanmar", "Nigeria", "Paraguay", "Canada", "Russia"),
+  valores = c(9, 15, 5, 22, 13, 8, 10),
+  color = c("gold","darkred","violet","hotpink","lawgreen", "green", "lightblue")
 )
 
 mapa_3 %>%
   e_charts(pais) %>%
-  e_geo_3d(altura, color) %>%
-  e_title("Colombia, Irán, Myanmar, Nigeria, Paraguay") %>%
+  e_geo_3d(valores, color) %>%
+  e_title("Colombia, Irán, Myanmar, Nigeria, Paraguay, Canadá, Russia", "Selección de países", left= "center") %>%
   e_theme("dark")
 
 
 ```
+
+\
+
+Si queremos convertir el mapa 3D anterior a un choropleth mapa habitual que muestre los valores indicados en una escala de valores podemos realizar la siguiente operación:
+
+\
+
+```{r}
+
+mapa_3 %>%
+  e_charts(pais) %>%
+  e_title("Colombia, Irán, Myanmar, Nigeria, Paraguay, Canadá, Russia", "Selección de países", left= "center") %>%
+  e_theme("vintage") %>%
+  e_map(valores) %>%
+  e_visual_map(min=5, max=22)
+
+```
+
+\
+
+# Representación de la evolución temporal
+
+\
+
+Podemos, mediante una representación geográfica con mapas, examinar la evolución temporal de una variable determinada en los países seleccionados. A modo de ejemplo vamos a realizar un mapa 3d que nos muestre la evolución, año por año, de la inversión en I+D realizada por algunos países seleccionados durante el periodo 2000-2016. En esta ocasión los datos los obtenemos de la [página web del Banco Mundial](https://data.worldbank.org/indicator/GB.XPD.RSDV.GD.ZS?view=chart). Para ello en primer lugar cargamos el dataframe con la información obtenida del Banco Mundial. 
+
+\
+
+```{r}
+
+library(readxl)
+paises_ID <- read_excel("./datasets/paises_ID.xls")
+
+head(paises_ID)
+
+```
+
+\
+
+Antes de proceder a realizar el mapa conviene reconfigurar el dataframe con el objetivo de hacerlo más funcional para su análisis. Utilizamos la función `gather()` del paquete `tidyverse`. 
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+
+ID <- paises_ID %>%
+  gather(key="year", value = "ID", 2:18)
+
+head(ID)
+
+```
+
+\
+
+Una vez tenemos el dataframe con la información del porcentage de la inversión en I+D en algunos países seleccionados procedemos a realizar el mapa 3d utilizando la función `e_map_3d()`. De esta forma podemos ver de forma sencilla el valor de dicha variable para cada país en cada uno de los años del periodo escogido así como la evolución temporal de dicho indicador.
+
+\
+
+```{r, out.width=  "100%"}
+
+ID %>%
+  group_by(year) %>%
+  e_charts(Name, timeline = TRUE) %>%
+  e_title("Research and development expenditure (% of GDP)", left = "center") %>%
+  e_map_3d(ID) %>%
+  e_visual_map(min = 0, max = 5)
+
+```
+
+\
+
+Al igual que hicimos previamente podemos realizar un ejercicio similar utilizando un mapa choropleth en lugar de 3D utilizando la función `e_map()`. 
+
+\
+
+```{r, out.width=  "100%"}
+
+ID %>%
+  group_by(year) %>%
+  e_charts(Name, timeline = TRUE) %>%
+  e_title("Research and development expenditure (% GDP)", left = "center") %>%
+  e_map(ID) %>%
+  e_visual_map(min = 0, max = 5)
+
+```
+
+\
+
