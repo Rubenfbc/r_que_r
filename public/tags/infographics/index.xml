@@ -18,12 +18,12 @@
       
       <guid>/infographics/</guid>
       <description>Re
-En este post se presentarán algunas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función e_chart( ) del paquete echarts4r e iconos del paquete extrafont.
+En este post se presentarán diversas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función e_chart( ) del paquete echarts4r e iconos de diversos orígenes.
 
 Paquetes
 Cargamos los paquetes requeridos:
 
-library(tidyverse)library(echarts4r)library(extrafont)</description>
+library(tidyverse)library(echarts4r)</description>
     </item>
     
   </channel>
