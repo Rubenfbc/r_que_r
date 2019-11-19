@@ -1,5 +1,5 @@
 ---
-title: "Importar datos de Eurostat con el paquete eurostat()"
+title: "Importar datos de Eurostat en R con el paquete eurostat"
 author: "Rubén F. Bustillo"
 date: 2019-11-18
 categories: ["R"]

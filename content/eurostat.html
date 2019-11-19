@@ -1,5 +1,5 @@
 ---
-title: "Importar datos de Eurostat con el paquete eurostat()"
+title: "Importar datos de Eurostat en R con el paquete eurostat"
 author: "Rubén F. Bustillo"
 date: 2019-11-18
 categories: ["R"]
@@ -286,7 +286,7 @@ head(homicidios)
 </p>
 <pre class="r"><code>
 homicidios &lt;- get_eurostat(id=&quot;crim_hom_ocit&quot;, time_format = &quot;num&quot;)
-## Table crim_hom_ocit cached at C:\Users\Usuario\AppData\Local\Temp\Rtmpo5sfkK/eurostat/crim_hom_ocit_num_code_TF.rds
+## Table crim_hom_ocit cached at C:\Users\Usuario\AppData\Local\Temp\RtmpAjsd5K/eurostat/crim_hom_ocit_num_code_TF.rds
 head(homicidios)
 ## # A tibble: 6 x 4
 ##   unit  cities   time values
