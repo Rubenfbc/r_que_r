@@ -12,11 +12,38 @@
     
     
     <item>
+      <title>Europa</title>
+      <link>/tags/europa/</link>
+      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/europa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Europe</title>
+      <link>/tags/europe/</link>
+      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/europe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Eurostat</title>
       <link>/tags/eurostat/</link>
       <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/eurostat/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mapas</title>
+      <link>/tags/mapas/</link>
+      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mapas/</guid>
       <description></description>
     </item>
     
@@ -84,16 +111,7 @@
     </item>
     
     <item>
-      <title>Mapas</title>
-      <link>/tags/mapas/</link>
-      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/mapas/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Maps</title>
+      <title>maps</title>
       <link>/tags/maps/</link>
       <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
       
