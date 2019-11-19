@@ -1,0 +1,1004 @@
+---
+title: "Importar datos de Eurostat con el paquete eurostat()"
+author: "Rubén F. Bustillo"
+date: 2019-11-18
+categories: ["R"]
+tags: ["Eurostat", "tidyverse"]
+
+---
+
+
+
+<p><strong>Re</strong></p>
+<p>En este post se explica las principales funcionalidades del paquete eurostat(), que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.</p>
+<p><br />
+</p>
+<div id="introducción" class="section level1">
+<h1>Introducción</h1>
+<p><br />
+</p>
+<p>Eurostat es la Oficina de Estadística de la Comisión Europea, organismo que se encarga de producir datos, publicar estadísticas e indicadores sobre la Unión Europea promoviendo la armonización de los métodos estadísticos entre los Estados que la conforman. La función de este organismo es fundamental para realizar análisis y comparaciones entre países y entre regiones de la zona euro.</p>
+<p><br />
+</p>
+<p>El paquete <code>eurostat</code> consiste en un conjunto de herramientas que tiene como finalidad facilitar la descarga de información desde la base de datos de Eurostat. Los autores de este paquete son Leo Lahti, Janne Huovari, Markus Kainu y Przemyslaw Biecek, quienes han puesto a disposición del público información que facilita su utilización y el aprendizaje de sus funcionalidades (véase el <a href="https://journal.r-project.org/archive/2017/RJ-2017-019/RJ-2017-019.pdf">artículo</a> en R Journal, el <a href="http://ropengov.github.io/eurostat/articles/eurostat_tutorial.html">tutorial/ vignette</a>, el <a href="http://ropengov.github.io/eurostat/articles/cheatsheet.html">cheatsheet del paquete</a>, la documentación sobre sus <a href="http://ropengov.github.io/eurostat/reference/index.html">funcionalidades</a> o el <a href="https://cran.r-project.org/web/packages/eurostat/eurostat.pdf">documento</a> de CRAN.r-project ).</p>
+<p><br />
+</p>
+<p>La información de la presente entrada dificílmente podrá superar e incluso complementar a la disponible en los enlaces mencionados. No obstante cabe señalar que este post no pretende tener un carácter divulgativo sino que más bien nace con un objetivo de índole personal, en tanto en cuanto espero que sirva principalmente como proceso para familiarizarme con la utilización de dicho paquete. Dicho esto, si este post sirve de apoyo o ayuda a alguna persona interesada en aprender la utilización del paquete <code>eurostat</code> pues bienvenido sea.</p>
+<p><br />
+</p>
+</div>
+<div id="el-paquete-eurostat" class="section level1">
+<h1>El paquete eurostat()</h1>
+<p><br />
+</p>
+<p>Como siempre, en primer lugar cargamos los paquetes necesarios. Evidentemente cargamos el paquete <code>eurostat</code> y, adicionalmente, cargamos el paquete <code>tidyverse</code> cuyas funcionalidades se ajustan muy bien con el anterior.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(eurostat)
+library(tidyverse)</code></pre>
+<p><br />
+</p>
+<p>Las funciones disponibles del paquete <code>eurostat</code> se pueden encontrar en el <a href="http://ropengov.github.io/eurostat/reference/index.html">link</a> previamente mencionado o indicando:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(help= &quot;eurostat&quot;)</code></pre>
+<p><br />
+</p>
+<p>Para ver el contenido (table of contents - TOC) del paquete podemos utilizar la función <code>get_eurostat_toc()</code>. Esta función nos da como resultado un tibble de 9863 observaciones y 8 variables (esta información se puede consultar en el siguiente <a href="http://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?sort=1&amp;file=table_of_contents_en.txt">archivo de texto</a>). A modo de ejemplo seleccionamos las primeras diez observaciones del mismo.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+contenido_eurostat &lt;- get_eurostat_toc()
+
+library(knitr)
+
+kable(head(contenido_eurostat, n= 10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">title</th>
+<th align="left">code</th>
+<th align="left">type</th>
+<th align="left">last update of data</th>
+<th align="left">last table structure change</th>
+<th align="left">data start</th>
+<th align="left">data end</th>
+<th align="left">values</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Database by themes</td>
+<td align="left">data</td>
+<td align="left">folder</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">General and regional statistics</td>
+<td align="left">general</td>
+<td align="left">folder</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">European and national indicators for short-term analysis</td>
+<td align="left">euroind</td>
+<td align="left">folder</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Business and consumer surveys (source: DG ECFIN)</td>
+<td align="left">ei_bcs</td>
+<td align="left">folder</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Consumer surveys (source: DG ECFIN)</td>
+<td align="left">ei_bcs_cs</td>
+<td align="left">folder</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Consumers - monthly data</td>
+<td align="left">ei_bsco_m</td>
+<td align="left">dataset</td>
+<td align="left">30.10.2019</td>
+<td align="left">30.10.2019</td>
+<td align="left">1980M01</td>
+<td align="left">2019M10</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Consumers - quarterly data</td>
+<td align="left">ei_bsco_q</td>
+<td align="left">dataset</td>
+<td align="left">30.10.2019</td>
+<td align="left">30.10.2019</td>
+<td align="left">1990Q1</td>
+<td align="left">2019Q4</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Business surveys - NACE Rev. 2 activity (source: DG ECFIN)</td>
+<td align="left">ei_bcs_bs</td>
+<td align="left">folder</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Industry - monthly data</td>
+<td align="left">ei_bsin_m_r2</td>
+<td align="left">dataset</td>
+<td align="left">30.10.2019</td>
+<td align="left">30.10.2019</td>
+<td align="left">1980M01</td>
+<td align="left">2019M10</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Industry - quarterly data</td>
+<td align="left">ei_bsin_q_r2</td>
+<td align="left">dataset</td>
+<td align="left">30.10.2019</td>
+<td align="left">30.10.2019</td>
+<td align="left">1980Q1</td>
+<td align="left">2019Q4</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Vemos que el dataset muestra el <strong>título o nombre</strong> de cada dataset, su <strong>código</strong>, si es folder o table (<strong>type</strong>) e información sobre la fecha de la <strong>última actualización</strong> u otros <strong>cambios</strong> o sobre las <strong>fechas o periodos</strong> que incluye cada dataset.</p>
+<p><br />
+</p>
+</div>
+<div id="ejemplo-1.-homicidios" class="section level1">
+<h1>Ejemplo 1. Homicidios</h1>
+<p><br />
+</p>
+<p>Para <strong>buscar información en función de algun patrón o de alguna palabra clave</strong> que sirva como pauta podemos utilizar la función <code>search_eurostat()</code>. A modo de ejemplo, y siendo un poco macabros, buscamos las TOC (tablas de contenidos) que estén relacionados con la palabra homicidio</p>
+<p><br />
+</p>
+<pre class="r"><code>
+kable(search_eurostat(&quot;homicide&quot;))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">title</th>
+<th align="left">code</th>
+<th align="left">type</th>
+<th align="left">last update of data</th>
+<th align="left">last table structure change</th>
+<th align="left">data start</th>
+<th align="left">data end</th>
+<th align="left">values</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Intentional homicide and sexual offences by legal status and sex of the person involved - number and rate for the relevant sex group</td>
+<td align="left">crim_hom_soff</td>
+<td align="left">dataset</td>
+<td align="left">11.09.2019</td>
+<td align="left">27.06.2019</td>
+<td align="left">2008</td>
+<td align="left">2017</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Intentional homicide victims by victim-offender relationship and sex - number and rate for the relevant sex group</td>
+<td align="left">crim_hom_vrel</td>
+<td align="left">dataset</td>
+<td align="left">29.08.2019</td>
+<td align="left">27.06.2019</td>
+<td align="left">2008</td>
+<td align="left">2017</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Intentional homicide victims by age and sex - number and rate for the relevant sex and age groups</td>
+<td align="left">crim_hom_vage</td>
+<td align="left">dataset</td>
+<td align="left">27.06.2019</td>
+<td align="left">27.06.2019</td>
+<td align="left">2008</td>
+<td align="left">2017</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Intentional homicide victims in largest cities by sex</td>
+<td align="left">crim_hom_vcit</td>
+<td align="left">dataset</td>
+<td align="left">27.06.2019</td>
+<td align="left">27.06.2019</td>
+<td align="left">2008</td>
+<td align="left">2017</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Intentional homicide offences in largest cities</td>
+<td align="left">crim_hom_ocit</td>
+<td align="left">dataset</td>
+<td align="left">28.06.2019</td>
+<td align="left">28.06.2019</td>
+<td align="left">2008</td>
+<td align="left">2017</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Crimes recorded by the police: homicide in cities</td>
+<td align="left">crim_hom_city</td>
+<td align="left">dataset</td>
+<td align="left">17.09.2015</td>
+<td align="left">17.09.2015</td>
+<td align="left">1993</td>
+<td align="left">2007</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Examinaremos los homicidios intencionados en las grandes ciudades cuyo id es <code>crim_hom_ocit</code>. Para ello utilizamos la función <code>get_eurostat()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+homicidios &lt;- get_eurostat(id=&quot;crim_hom_ocit&quot;)
+head(homicidios)
+## # A tibble: 6 x 4
+##   unit  cities  time       values
+##   &lt;fct&gt; &lt;fct&gt;   &lt;date&gt;      &lt;dbl&gt;
+## 1 NR    AL001C1 2017-01-01     10
+## 2 NR    BA001C1 2017-01-01      8
+## 3 NR    BG001C1 2017-01-01     12
+## 4 NR    CH001C1 2017-01-01      2
+## 5 NR    CZ001C1 2017-01-01     12
+## 6 NR    DE001C1 2017-01-01     50</code></pre>
+<p><br />
+</p>
+<p>Utilizaremos la orden <code>time_format = "num"</code> dado que la información es anual y, por tanto, resulta más conveniente convertir la fecha a una variable numérica que continuar utilizando la variable <code>date</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+homicidios &lt;- get_eurostat(id=&quot;crim_hom_ocit&quot;, time_format = &quot;num&quot;)
+## Table crim_hom_ocit cached at C:\Users\Usuario\AppData\Local\Temp\Rtmpo5sfkK/eurostat/crim_hom_ocit_num_code_TF.rds
+head(homicidios)
+## # A tibble: 6 x 4
+##   unit  cities   time values
+##   &lt;fct&gt; &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 NR    AL001C1  2017     10
+## 2 NR    BA001C1  2017      8
+## 3 NR    BG001C1  2017     12
+## 4 NR    CH001C1  2017      2
+## 5 NR    CZ001C1  2017     12
+## 6 NR    DE001C1  2017     50</code></pre>
+<p><br />
+</p>
+<p>Por otro lado, para remplazar los códigos del dataset por etiquetas (labels) usaremos la función <code>label_eurostat()</code> de la siguiente forma. De forma alternativa, al obtener el dataframe con la función <code>get_eurostat()</code> podemos utilizar <code>type= "label"</code> para obtener directamente las variables con etiquetas.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+homicidios_labels &lt;- label_eurostat(homicidios)
+
+head(homicidios_labels)
+## # A tibble: 6 x 4
+##   unit   cities    time values
+##   &lt;fct&gt;  &lt;fct&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Number Tiranë    2017     10
+## 2 Number Sarajevo  2017      8
+## 3 Number Sofia     2017     12
+## 4 Number Zürich    2017      2
+## 5 Number Praha     2017     12
+## 6 Number Berlin    2017     50
+
+str(homicidios_labels)
+## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    622 obs. of  4 variables:
+##  $ unit  : Factor w/ 2 levels &quot;Number&quot;,&quot;Per hundred thousand inhabitants&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ cities: Factor w/ 39 levels &quot;Tiranë&quot;,&quot;Sarajevo&quot;,..: 1 2 3 4 5 6 7 8 9 10 ...
+##  $ time  : num  2017 2017 2017 2017 2017 ...
+##  $ values: num  10 8 12 2 12 50 15 17 35 16 ...
+
+summary(homicidios_labels)
+##                                unit                        cities   
+##  Number                          :351   Sofia                 : 20  
+##  Per hundred thousand inhabitants:271   Madrid                : 20  
+##                                         Helsinki / Helsingfors: 20  
+##                                         Ljubljana             : 20  
+##                                         Bratislava            : 20  
+##                                         London (greater city) : 20  
+##                                         (Other)               :502  
+##       time          values      
+##  Min.   :2008   Min.   :  0.00  
+##  1st Qu.:2010   1st Qu.:  1.28  
+##  Median :2012   Median :  4.00  
+##  Mean   :2012   Mean   : 14.93  
+##  3rd Qu.:2014   3rd Qu.: 16.00  
+##  Max.   :2017   Max.   :348.00  
+## </code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+label_eurostat_vars(names(homicidios_labels))
+## [1] &quot;Unit of measure&quot;                                                                     
+## [2] &quot;Geopolitical entity (declaring)&quot;                                                     
+## [3] &quot;Period of time (a=annual, q=quarterly, m=monthly, d=daily, c=cumulated from January)&quot;
+
+levels(homicidios_labels$unit)
+## [1] &quot;Number&quot;                           &quot;Per hundred thousand inhabitants&quot;
+
+levels(homicidios_labels$cities)
+##  [1] &quot;Tiranë&quot;                 &quot;Sarajevo&quot;              
+##  [3] &quot;Sofia&quot;                  &quot;Zürich&quot;                
+##  [5] &quot;Praha&quot;                  &quot;Berlin&quot;                
+##  [7] &quot;København&quot;              &quot;Tallinn&quot;               
+##  [9] &quot;Athina&quot;                 &quot;Madrid&quot;                
+## [11] &quot;Helsinki / Helsingfors&quot; &quot;Paris&quot;                 
+## [13] &quot;Zagreb&quot;                 &quot;Budapest&quot;              
+## [15] &quot;Reykjavík&quot;              &quot;Roma&quot;                  
+## [17] &quot;Vilnius&quot;                &quot;Riga&quot;                  
+## [19] &quot;Podgorica&quot;              &quot;Valletta&quot;              
+## [21] &quot;Amsterdam&quot;              &quot;Oslo&quot;                  
+## [23] &quot;Warszawa&quot;               &quot;Lisboa&quot;                
+## [25] &quot;Bucuresti&quot;              &quot;Beograd&quot;               
+## [27] &quot;Ljubljana&quot;              &quot;Bratislava&quot;            
+## [29] &quot;London (greater city)&quot;  &quot;Pristinë&quot;              
+## [31] &quot;Wien&quot;                   &quot;Lefkosia&quot;              
+## [33] &quot;Glasgow City&quot;           &quot;Belfast&quot;               
+## [35] &quot;Bruxelles / Brussel&quot;    &quot;Schaan&quot;                
+## [37] &quot;Luxembourg&quot;             &quot;Skopje&quot;                
+## [39] &quot;Istanbul&quot;</code></pre>
+<p><br />
+</p>
+<div id="homicidios-intencionados-por-100.000-habitantes-en-2008" class="section level2">
+<h2>Homicidios intencionados por 100.000 habitantes en 2008</h2>
+<p>A modo de ejemplo supongamos que queremos graficar el número de homicidios por cada cien mil habitantes en el año 2008 en las ciudades seleccionadas por Eurostat.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+homicidios_labels_mil_2008 &lt;- homicidios_labels %&gt;%
+  filter(unit == &quot;Per hundred thousand inhabitants&quot; &amp; time == &quot;2008&quot; &amp; values &gt; 0.1) %&gt;%
+  mutate(cities = gsub(cities, pattern = &quot; \\(.*&quot;, replacement=&quot;&quot;)) %&gt;%
+  mutate(cities = gsub(cities, pattern =&quot; \\/.*&quot;, replacement =&quot;&quot;)) %&gt;%
+  arrange(desc(values)) 
+
+head(homicidios_labels_mil_2008) 
+## # A tibble: 6 x 4
+##   unit                             cities        time values
+##   &lt;fct&gt;                            &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Per hundred thousand inhabitants Vilnius       2008  10.4 
+## 2 Per hundred thousand inhabitants Tiranë        2008   5.26
+## 3 Per hundred thousand inhabitants Riga          2008   4.19
+## 4 Per hundred thousand inhabitants Bruxelles     2008   4.12
+## 5 Per hundred thousand inhabitants Glasgow City  2008   3.99
+## 6 Per hundred thousand inhabitants Podgorica     2008   3.64</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+ggplot(homicidios_labels_mil_2008, aes(x = reorder(cities, values), y = values)) +
+  geom_col(color= &quot;white&quot;, 
+           fill= &quot;#fc6721&quot;,
+           alpha = 0.8,
+           size = 2) +
+  labs(title = &quot;Homicidios por 100.000 habitantes en 2008&quot;,
+       subtitle = &quot;Selección de países&quot;,
+       caption = &quot;Fuente: Eurostat&quot;,
+       y = &quot;&quot;, x=&quot;&quot;) +
+  coord_flip() +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.y= element_text(size = 12, hjust = 1),
+        axis.text.x= element_text(size = 10),
+        plot.title = element_text(size = 18, 
+                                  face = &quot;bold&quot;, 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=14, 
+                                     face = &quot;plain&quot;, 
+                                     hjust = 0.5))+
+  geom_text(aes(label = values, y = values + 0.05), 
+            hjust = 0,
+            color = &quot;grey40&quot;,
+            size = 2.8)</code></pre>
+<p><img src="/eurostat_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="evolución-de-los-homicidios-intencionados-en-madrid-paris-y-londres" class="section level2">
+<h2>Evolución de los homicidios intencionados en Madrid, Paris y Londres</h2>
+<p>Veamos ahora la evolución de los homicidios (por 100.000 habitantes) en tres de las ciudades presentes en el dataframe: Madrid, Londres y Paris. El nuevo dataset lo llamaremos <code>homicidios_MPL</code></p>
+<p><br />
+</p>
+<pre class="r"><code>
+homicidios_MLP &lt;- homicidios_labels %&gt;%
+  filter(unit == &quot;Per hundred thousand inhabitants&quot;) %&gt;%
+  mutate(cities = gsub(cities, pattern = &quot; \\(.*&quot;, replacement=&quot;&quot;)) %&gt;%
+  filter(cities == &quot;Madrid&quot; | cities == &quot;London&quot; | cities == &quot;Paris&quot;) 
+
+head(homicidios_MLP) 
+## # A tibble: 6 x 4
+##   unit                             cities  time values
+##   &lt;fct&gt;                            &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Per hundred thousand inhabitants Madrid  2017  0.5  
+## 2 Per hundred thousand inhabitants London  2017  0.07 
+## 3 Per hundred thousand inhabitants Madrid  2016  0.6  
+## 4 Per hundred thousand inhabitants London  2016  1.23 
+## 5 Per hundred thousand inhabitants Madrid  2015  0.570
+## 6 Per hundred thousand inhabitants London  2015  0.18</code></pre>
+<p> </p>
+<pre class="r"><code>
+ggplot(homicidios_MLP, aes(x= time, y= values, shape = cities, color = cities))+
+  geom_point(size =2) +
+  geom_line() +
+  theme_minimal() +
+  labs(title =&quot;Homicidios intencionados por 100.000 habitantes&quot;,
+       subtitle = &quot;Selección de países&quot;,
+       caption = &quot;Fuente: Eurostat&quot;,
+       x= &quot;Year&quot;, y = &quot;&quot;) </code></pre>
+<p><img src="/eurostat_files/figure-html/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="ejemplo-2.-consumo-de-alcohol" class="section level1">
+<h1>Ejemplo 2. Consumo de Alcohol</h1>
+<p><br />
+</p>
+<p>En primer lugar buscamos un dataframe que pueda servirnos para el objetivo marcado. El objetivo en este caso es examinar las diferencias en el consumo de alcohol por país.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+kable(search_eurostat(&quot;alcohol consumption&quot;))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">title</th>
+<th align="left">code</th>
+<th align="left">type</th>
+<th align="left">last update of data</th>
+<th align="left">last table structure change</th>
+<th align="left">data start</th>
+<th align="left">data end</th>
+<th align="left">values</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Frequency of alcohol consumption by sex, age and educational attainment level</td>
+<td align="left">hlth_ehis_al1e</td>
+<td align="left">dataset</td>
+<td align="left">21.03.2019</td>
+<td align="left">21.03.2019</td>
+<td align="left">2014</td>
+<td align="left">2014</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Frequency of alcohol consumption by sex, age and income quintile</td>
+<td align="left">hlth_ehis_al1i</td>
+<td align="left">dataset</td>
+<td align="left">21.03.2019</td>
+<td align="left">21.03.2019</td>
+<td align="left">2014</td>
+<td align="left">2014</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Frequency of alcohol consumption by sex, age and degree of urbanisation</td>
+<td align="left">hlth_ehis_al1u</td>
+<td align="left">dataset</td>
+<td align="left">21.03.2019</td>
+<td align="left">21.03.2019</td>
+<td align="left">2014</td>
+<td align="left">2014</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Frequency of alcohol consumption by sex, age and country of birth</td>
+<td align="left">hlth_ehis_al1b</td>
+<td align="left">dataset</td>
+<td align="left">21.03.2019</td>
+<td align="left">21.03.2019</td>
+<td align="left">2014</td>
+<td align="left">2014</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Frequency of alcohol consumption by sex, age and country of citizenship</td>
+<td align="left">hlth_ehis_al1c</td>
+<td align="left">dataset</td>
+<td align="left">21.03.2019</td>
+<td align="left">21.03.2019</td>
+<td align="left">2014</td>
+<td align="left">2014</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Frequency of alcohol consumption by sex, age and educational attainment level (%)</td>
+<td align="left">hlth_ehis_de10</td>
+<td align="left">dataset</td>
+<td align="left">20.03.2014</td>
+<td align="left">15.10.2014</td>
+<td align="left">2008</td>
+<td align="left">2008</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Frequency of alcohol consumption by sex, age and country of birth</td>
+<td align="left">hlth_ehis_al1b</td>
+<td align="left">dataset</td>
+<td align="left">21.03.2019</td>
+<td align="left">21.03.2019</td>
+<td align="left">2014</td>
+<td align="left">2014</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Frequency of alcohol consumption by sex, age and country of citizenship</td>
+<td align="left">hlth_ehis_al1c</td>
+<td align="left">dataset</td>
+<td align="left">21.03.2019</td>
+<td align="left">21.03.2019</td>
+<td align="left">2014</td>
+<td align="left">2014</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Seleccionamos el dataset que lleva como nombre <em>Frequency of alcohol consumption by sex, age and country of citizenship</em>. Al igual que sucedía con el ejemplo previo identificamos el formato para las fechas como valor númerico dado que los datos del dataset corresponden al año 2014. Para examinar las características del dataframe existen diversas alternativas:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+consumo &lt;- get_eurostat(id=&quot;hlth_ehis_al1c&quot;, time_format = &quot;num&quot;)
+
+head(consumo)
+## # A tibble: 6 x 8
+##   unit  frequenc sex   age    citizen   geo    time values
+##   &lt;fct&gt; &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;     &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 PC    DAY      F     TOTAL  EU28_FOR  EU28   2014    5.2
+## 2 PC    DAY      F     TOTAL  FOR       EU28   2014    4.3
+## 3 PC    DAY      F     TOTAL  NAT       EU28   2014    5  
+## 4 PC    DAY      F     TOTAL  NEU28_FOR EU28   2014    3.4
+## 5 PC    DAY      F     Y15-24 EU28_FOR  EU28   2014    0  
+## 6 PC    DAY      F     Y15-24 FOR       EU28   2014    0
+
+consumo_labels &lt;- label_eurostat(consumo)
+
+head(consumo_labels)
+## # A tibble: 6 x 8
+##   unit    frequenc  sex   age      citizen         geo          time values
+##   &lt;fct&gt;   &lt;fct&gt;     &lt;fct&gt; &lt;fct&gt;    &lt;fct&gt;           &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Percen~ Every day Fema~ Total    EU28 countries~ European U~  2014    5.2
+## 2 Percen~ Every day Fema~ Total    Foreign country European U~  2014    4.3
+## 3 Percen~ Every day Fema~ Total    Reporting coun~ European U~  2014    5  
+## 4 Percen~ Every day Fema~ Total    Non-EU28 count~ European U~  2014    3.4
+## 5 Percen~ Every day Fema~ From 15~ EU28 countries~ European U~  2014    0  
+## 6 Percen~ Every day Fema~ From 15~ Foreign country European U~  2014    0
+
+str(consumo_labels)
+## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    42840 obs. of  8 variables:
+##  $ unit    : Factor w/ 1 level &quot;Percentage&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ frequenc: Factor w/ 7 levels &quot;Every day&quot;,&quot;Less than once a month&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ sex     : Factor w/ 3 levels &quot;Females&quot;,&quot;Males&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ age     : Factor w/ 17 levels &quot;Total&quot;,&quot;From 15 to 24 years&quot;,..: 1 1 1 1 2 2 2 2 3 3 ...
+##  $ citizen : Factor w/ 4 levels &quot;EU28 countries except reporting country&quot;,..: 1 2 3 4 1 2 3 4 1 2 ...
+##  $ geo     : Factor w/ 30 levels &quot;European Union - 28 countries&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ time    : num  2014 2014 2014 2014 2014 ...
+##  $ values  : num  5.2 4.3 5 3.4 0 0 0.2 0 0.2 0.4 ...
+
+summary(consumo_labels)
+##          unit                                     frequenc   
+##  Percentage:42840   Every day                         :6120  
+##                     Less than once a month            :6120  
+##                     Every month                       :6120  
+##                     Not in the last 12 months         :6120  
+##                     Never                             :6120  
+##                     Never or not in the last 12 months:6120  
+##                     Every week                        :6120  
+##       sex                         age       
+##  Females:14280   Total              : 2520  
+##  Males  :14280   From 15 to 24 years: 2520  
+##  Total  :14280   From 15 to 29 years: 2520  
+##                  From 15 to 64 years: 2520  
+##                  From 18 to 24 years: 2520  
+##                  From 18 to 44 years: 2520  
+##                  (Other)            :27720  
+##                                      citizen     
+##  EU28 countries except reporting country :10710  
+##  Foreign country                         :10710  
+##  Reporting country                       :10710  
+##  Non-EU28 countries nor reporting country:10710  
+##                                                  
+##                                                  
+##                                                  
+##                                                geo             time     
+##  European Union - 28 countries                   : 1428   Min.   :2014  
+##  Belgium                                         : 1428   1st Qu.:2014  
+##  Bulgaria                                        : 1428   Median :2014  
+##  Czechia                                         : 1428   Mean   :2014  
+##  Denmark                                         : 1428   3rd Qu.:2014  
+##  Germany (until 1990 former territory of the FRG): 1428   Max.   :2014  
+##  (Other)                                         :34272                 
+##      values     
+##  Min.   : 0.00  
+##  1st Qu.: 4.50  
+##  Median :13.20  
+##  Mean   :16.65  
+##  3rd Qu.:25.30  
+##  Max.   :99.50  
+##  NA&#39;s   :13545</code></pre>
+<p><br />
+</p>
+<p>El dataset contiene información del consumo según frecuencia (cada día, menos de una vez al mes, etc.), de sexo (femenino, masculino o total), por rangos de edad, por ciudadanía y por país. Para consultar el nombre completo de las variables del data set podemos utilizar la función <code>label_eurostat_vars(names())</code> y para comprobar las distintas categorías de las observaciones podemos examinar los levels como se expone a continuación. De esta forma podemos tener una imagen más adecuada del dataset sobre el que estamos trabajando:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+label_eurostat_vars(names(consumo_labels))
+## [1] &quot;Unit of measure&quot;                                                                     
+## [2] &quot;Frequency&quot;                                                                           
+## [3] &quot;Sex&quot;                                                                                 
+## [4] &quot;Age class&quot;                                                                           
+## [5] &quot;Country of citizenship&quot;                                                              
+## [6] &quot;Geopolitical entity (reporting)&quot;                                                     
+## [7] &quot;Period of time (a=annual, q=quarterly, m=monthly, d=daily, c=cumulated from January)&quot;
+
+levels(consumo_labels$unit)
+## [1] &quot;Percentage&quot;
+
+levels(consumo_labels$frequenc)
+## [1] &quot;Every day&quot;                         
+## [2] &quot;Less than once a month&quot;            
+## [3] &quot;Every month&quot;                       
+## [4] &quot;Not in the last 12 months&quot;         
+## [5] &quot;Never&quot;                             
+## [6] &quot;Never or not in the last 12 months&quot;
+## [7] &quot;Every week&quot;
+
+levels(consumo_labels$sex)
+## [1] &quot;Females&quot; &quot;Males&quot;   &quot;Total&quot;
+
+levels(consumo_labels$age)
+##  [1] &quot;Total&quot;               &quot;From 15 to 24 years&quot; &quot;From 15 to 29 years&quot;
+##  [4] &quot;From 15 to 64 years&quot; &quot;From 18 to 24 years&quot; &quot;From 18 to 44 years&quot;
+##  [7] &quot;From 18 to 64 years&quot; &quot;From 25 to 34 years&quot; &quot;From 25 to 64 years&quot;
+## [10] &quot;From 35 to 44 years&quot; &quot;From 45 to 54 years&quot; &quot;From 45 to 64 years&quot;
+## [13] &quot;From 55 to 64 years&quot; &quot;From 65 to 74 years&quot; &quot;18 years or over&quot;   
+## [16] &quot;65 years or over&quot;    &quot;75 years or over&quot;
+
+levels(consumo_labels$citizen)
+## [1] &quot;EU28 countries except reporting country&quot; 
+## [2] &quot;Foreign country&quot;                         
+## [3] &quot;Reporting country&quot;                       
+## [4] &quot;Non-EU28 countries nor reporting country&quot;
+
+levels(consumo_labels$geo)
+##  [1] &quot;European Union - 28 countries&quot;                   
+##  [2] &quot;Belgium&quot;                                         
+##  [3] &quot;Bulgaria&quot;                                        
+##  [4] &quot;Czechia&quot;                                         
+##  [5] &quot;Denmark&quot;                                         
+##  [6] &quot;Germany (until 1990 former territory of the FRG)&quot;
+##  [7] &quot;Estonia&quot;                                         
+##  [8] &quot;Ireland&quot;                                         
+##  [9] &quot;Greece&quot;                                          
+## [10] &quot;Spain&quot;                                           
+## [11] &quot;Croatia&quot;                                         
+## [12] &quot;Italy&quot;                                           
+## [13] &quot;Cyprus&quot;                                          
+## [14] &quot;Latvia&quot;                                          
+## [15] &quot;Lithuania&quot;                                       
+## [16] &quot;Luxembourg&quot;                                      
+## [17] &quot;Hungary&quot;                                         
+## [18] &quot;Malta&quot;                                           
+## [19] &quot;Austria&quot;                                         
+## [20] &quot;Poland&quot;                                          
+## [21] &quot;Portugal&quot;                                        
+## [22] &quot;Romania&quot;                                         
+## [23] &quot;Slovenia&quot;                                        
+## [24] &quot;Slovakia&quot;                                        
+## [25] &quot;Finland&quot;                                         
+## [26] &quot;Sweden&quot;                                          
+## [27] &quot;United Kingdom&quot;                                  
+## [28] &quot;Iceland&quot;                                         
+## [29] &quot;Norway&quot;                                          
+## [30] &quot;Turkey&quot;
+
+levels(consumo$geo)
+##  [1] &quot;EU28&quot; &quot;BE&quot;   &quot;BG&quot;   &quot;CZ&quot;   &quot;DK&quot;   &quot;DE&quot;   &quot;EE&quot;   &quot;IE&quot;   &quot;EL&quot;   &quot;ES&quot;  
+## [11] &quot;HR&quot;   &quot;IT&quot;   &quot;CY&quot;   &quot;LV&quot;   &quot;LT&quot;   &quot;LU&quot;   &quot;HU&quot;   &quot;MT&quot;   &quot;AT&quot;   &quot;PL&quot;  
+## [21] &quot;PT&quot;   &quot;RO&quot;   &quot;SI&quot;   &quot;SK&quot;   &quot;FI&quot;   &quot;SE&quot;   &quot;UK&quot;   &quot;IS&quot;   &quot;NO&quot;   &quot;TR&quot;</code></pre>
+<p><br />
+</p>
+<p>Resulta curioso comprobar que el dataset seleccionado, obtenido de Eurostat, no contiene información sobre Francia.</p>
+<p><br />
+</p>
+<p>A modo de ejercicios, partiendo del dataset obtenido de Eurostat, vamos a responder algunas preguntas:</p>
+<p><br />
+</p>
+<div id="cuál-es-la-proporción-de-personas-por-país-que-consumen-alcohol-de-forma-diaria" class="section level3">
+<h3>1. ¿Cuál es la proporción de personas por país que consumen alcohol de forma diaria?</h3>
+<p><br />
+</p>
+<pre class="r"><code>
+consumo &lt;- get_eurostat(id=&quot;hlth_ehis_al1c&quot;, time_format = &quot;num&quot;)
+
+consumo_total &lt;- consumo %&gt;%
+  filter(frequenc == &quot;DAY&quot;) %&gt;%
+  filter(sex == &quot;T&quot;) %&gt;%
+  filter(age == &quot;TOTAL&quot;) %&gt;%
+  filter(citizen == &quot;NAT&quot;) %&gt;%
+  filter(geo != &quot;EU28&quot;)
+
+head(consumo_total)
+## # A tibble: 6 x 8
+##   unit  frequenc sex   age   citizen geo    time values
+##   &lt;fct&gt; &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;   &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 PC    DAY      T     TOTAL NAT     BE     2014   14.5
+## 2 PC    DAY      T     TOTAL NAT     BG     2014    8.8
+## 3 PC    DAY      T     TOTAL NAT     CZ     2014    9.5
+## 4 PC    DAY      T     TOTAL NAT     DK     2014   11.6
+## 5 PC    DAY      T     TOTAL NAT     DE     2014    9.2
+## 6 PC    DAY      T     TOTAL NAT     EE     2014    2.1</code></pre>
+<p> </p>
+<p>Realizamos el mapa utilizando la función <code>get_eurostat_geospatial()</code>, estableciendo 10 rangos para los valores y utilizando como <a href="http://rstudio-pubs-static.s3.amazonaws.com/5312_98fc1aba2d5740dd849a5ab797cc2c8d.html">paleta de colores</a> la llamada <em>Spectral</em>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+
+consumo_total_mapa &lt;- get_eurostat_geospatial(nuts_level = 0) %&gt;%
+  right_join(consumo_total) %&gt;%
+  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+
+head(select(consumo_total_mapa, geo, values, categorias), 3)
+## Simple feature collection with 3 features and 3 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 41.23824 xmax: 28.60746 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   geo values   categorias                       geometry
+## 1  BE   14.5 12.4 ~&lt; 14.8 MULTIPOLYGON (((5.10218 51....
+## 2  BG    8.8  7.7 ~&lt; 10.1 MULTIPOLYGON (((22.99717 43...
+## 3  CZ    9.5  7.7 ~&lt; 10.1 MULTIPOLYGON (((14.49122 51...
+
+
+ggplot(consumo_total_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha(&quot;white&quot;, 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = &quot;Frequency of alcohol consumption, 2014&quot;,
+       subtitle = &quot;Citizenship: National (has the citizenship of the reporting country)&quot;,
+       caption = &quot;Source: Eurostat&quot;,
+       fill= &quot;%&quot;)+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_brewer(palette= &quot;Spectral&quot;)</code></pre>
+<p><img src="/eurostat_files/figure-html/unnamed-chunk-17-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="cuál-es-la-proporción-de-mujeres-por-país-que-consumen-alcohol-de-forma-diaria" class="section level3">
+<h3>2. ¿Cuál es la proporción de mujeres por país que consumen alcohol de forma diaria?</h3>
+<p><br />
+</p>
+<pre class="r"><code>
+consumo &lt;- get_eurostat(id=&quot;hlth_ehis_al1c&quot;, time_format = &quot;num&quot;)
+
+consumo_F &lt;- consumo %&gt;%
+  filter(frequenc == &quot;DAY&quot;) %&gt;%
+  filter(sex == &quot;F&quot;) %&gt;%
+  filter(age == &quot;TOTAL&quot;) %&gt;%
+  filter(citizen == &quot;NAT&quot;) %&gt;%
+  filter(geo != &quot;EU28&quot;)</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+
+consumo_F_mapa &lt;- get_eurostat_geospatial(nuts_level = 0) %&gt;%
+  right_join(consumo_F) %&gt;%
+  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+
+head(select(consumo_F_mapa, geo, values, categorias), 3)
+## Simple feature collection with 3 features and 3 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 41.23824 xmax: 28.60746 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   geo values  categorias                       geometry
+## 1  BE    9.9 9.5 ~&lt; 10.7 MULTIPOLYGON (((5.10218 51....
+## 2  BG    3.6  2.5 ~&lt; 3.6 MULTIPOLYGON (((22.99717 43...
+## 3  CZ    3.2  2.5 ~&lt; 3.6 MULTIPOLYGON (((14.49122 51...
+
+
+ggplot(consumo_F_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha(&quot;white&quot;, 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = &quot;Frequency of female alcohol consumption, 2014&quot;,
+       subtitle = &quot;Citizenship: National (has the citizenship of the reporting country)&quot;,
+       caption = &quot;Source: Eurostat&quot;,
+       fill= &quot;%&quot;)+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_brewer(palette= &quot;Spectral&quot;)</code></pre>
+<p><img src="/eurostat_files/figure-html/unnamed-chunk-19-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="cuál-es-la-proporción-de-hombres-por-país-que-consumen-alcohol-de-forma-diaria" class="section level3">
+<h3>3. ¿Cuál es la proporción de hombres por país que consumen alcohol de forma diaria?</h3>
+<p><br />
+</p>
+<pre class="r"><code>
+consumo &lt;- get_eurostat(id=&quot;hlth_ehis_al1c&quot;, time_format = &quot;num&quot;)
+
+consumo_M &lt;- consumo %&gt;%
+  filter(frequenc == &quot;DAY&quot;) %&gt;%
+  filter(sex == &quot;M&quot;) %&gt;%
+  filter(age == &quot;TOTAL&quot;) %&gt;%
+  filter(citizen == &quot;NAT&quot;) %&gt;%
+  filter(geo != &quot;EU28&quot;)</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+
+consumo_M_mapa &lt;- get_eurostat_geospatial(nuts_level = 0) %&gt;%
+  right_join(consumo_M) %&gt;%
+  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+
+head(select(consumo_M_mapa, geo, values, categorias), 3)
+## Simple feature collection with 3 features and 3 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 41.23824 xmax: 28.60746 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   geo values   categorias                       geometry
+## 1  BE   19.5 15.9 ~&lt; 19.7 MULTIPOLYGON (((5.10218 51....
+## 2  BG   14.8 12.1 ~&lt; 15.9 MULTIPOLYGON (((22.99717 43...
+## 3  CZ   16.3 15.9 ~&lt; 19.7 MULTIPOLYGON (((14.49122 51...
+
+
+ggplot(consumo_M_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha(&quot;white&quot;, 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = &quot;Frequency of male alcohol consumption, 2014&quot;,
+       subtitle = &quot;Citizenship: National (has the citizenship of the reporting country)&quot;,
+       caption = &quot;Source: Eurostat&quot;,
+       fill= &quot;%&quot;)+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_brewer(palette= &quot;Spectral&quot;)</code></pre>
+<p><img src="/eurostat_files/figure-html/unnamed-chunk-21-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="cuál-es-la-proporción-de-población-de-entre-15-y-24-años-por-país-que-consumen-alcohol-de-forma-diaria" class="section level3">
+<h3>4. ¿Cuál es la proporción de población de entre 15 y 24 años por país que consumen alcohol de forma diaria?</h3>
+<p><br />
+</p>
+<pre class="r"><code>
+consumo &lt;- get_eurostat(id=&quot;hlth_ehis_al1c&quot;, time_format = &quot;num&quot;)
+
+consumo_1524 &lt;- consumo %&gt;%
+  filter(frequenc == &quot;DAY&quot;) %&gt;%
+  filter(sex == &quot;T&quot;) %&gt;%
+  filter(age == &quot;Y15-24&quot;) %&gt;%
+  filter(citizen == &quot;NAT&quot;) %&gt;%
+  filter(geo != &quot;EU28&quot;)</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+
+consumo_1524_mapa &lt;- get_eurostat_geospatial(nuts_level = 0) %&gt;%
+  right_join(consumo_1524) %&gt;%
+  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+
+head(select(consumo_1524_mapa, geo, values, categorias), 3)
+## Simple feature collection with 3 features and 3 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 41.23824 xmax: 28.60746 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   geo values categorias                       geometry
+## 1  BE    1.1   1 ~&lt; 1.2 MULTIPOLYGON (((5.10218 51....
+## 2  BG    2.4 2.2 ~&lt; 2.4 MULTIPOLYGON (((22.99717 43...
+## 3  CZ    1.3 1.2 ~&lt; 1.4 MULTIPOLYGON (((14.49122 51...
+
+
+ggplot(consumo_1524_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha(&quot;white&quot;, 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = &quot;Frequency of alcohol consumption, Age: 15-24 yrs, 2014&quot;,
+       subtitle = &quot;Citizenship: National (has the citizenship of the reporting country)&quot;,
+       caption = &quot;Source: Eurostat&quot;,
+       fill= &quot;%&quot;)+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_brewer(palette= &quot;Spectral&quot;)</code></pre>
+<p><img src="/eurostat_files/figure-html/unnamed-chunk-23-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+</div>

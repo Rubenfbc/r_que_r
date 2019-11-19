@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Eurostat on R que R</title>
+    <link>/tags/eurostat/</link>
+    <description>Recent content in Eurostat on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 18 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/eurostat/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Importar datos de Eurostat con el paquete eurostat()</title>
+      <link>/eurostat/</link>
+      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/eurostat/</guid>
+      <description>Re
+En este post se explica las principales funcionalidades del paquete eurostat(), que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.
+
+Introducción
+Eurostat es la Oficina de Estadística de la Comisión Europea, organismo que se encarga de producir datos, publicar estadísticas e indicadores sobre la Unión Europea promoviendo la armonización de los métodos estadísticos entre los Estados que la conforman.</description>
+    </item>
+    
+  </channel>
+</rss>
