@@ -330,10 +330,10 @@ ggplot(homicidios_labels_mil_2008, aes(x = reorder(cities, values), y = values))
   theme(panel.grid.major.x = element_blank(),
         axis.text.y= element_text(size = 12, hjust = 1),
         axis.text.x= element_text(size = 10),
-        plot.title = element_text(size = 18, 
+        plot.title = element_text(size = 15, 
                                   face = &quot;bold&quot;, 
                                   hjust = 0.5),
-        plot.subtitle = element_text(size=14, 
+        plot.subtitle = element_text(size=12, 
                                      face = &quot;plain&quot;, 
                                      hjust = 0.5))+
   geom_text(aes(label = values, y = values + 0.05), 
