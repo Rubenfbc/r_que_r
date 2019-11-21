@@ -69,13 +69,13 @@ Para **ver el contenido** (table of contents - TOC) del paquete podemos utilizar
  
 \
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, , out.width="100%"}
 
 contenido_eurostat <- get_eurostat_toc()
 
-library(knitr)
+library(DT)
 
-kable(head(contenido_eurostat, n= 10))
+datatable(contenido_eurostat)
 
 ```
 
@@ -93,9 +93,9 @@ Para **buscar información en función de algun patrón o de alguna palabra clav
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
-kable(search_eurostat("homicide"))
+datatable(search_eurostat("homicide"))
 
 ```
 
@@ -273,9 +273,9 @@ En primer lugar **buscamos un dataframe** en Eurostat que pueda servirnos para e
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
-kable(search_eurostat("alcohol consumption"))
+datatable(search_eurostat("alcohol consumption"))
 
 ```
 
@@ -303,7 +303,7 @@ summary(consumo_labels)
 
 \
 
-El datafrem contiene información del consumo según frecuencia (cada día, menos de una vez al mes, etc.), de sexo (femenino, masculino o total), por rangos de edad, por ciudadanía y por país. Para consultar el nombre completo de las variables del data set podemos utilizar la función `label_eurostat_vars(names())` y para comprobar las distintas categorías de las observaciones podemos examinar los levels como se expone a continuación. De esta forma podemos tener una imagen más adecuada del dataset sobre el que estamos trabajando:
+El dataframe contiene información del consumo según frecuencia (cada día, menos de una vez al mes, etc.), de sexo (femenino, masculino o total), por rangos de edad, por ciudadanía y por país. Para consultar el nombre completo de las variables del data set podemos utilizar la función `label_eurostat_vars(names())` y para comprobar las distintas categorías de las observaciones podemos examinar los levels como se expone a continuación. De esta forma podemos tener una imagen más adecuada del dataset sobre el que estamos trabajando:
 
 \
 
@@ -364,7 +364,7 @@ head(consumo_total)
 
 \
 
-```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE}
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
 
 
 consumo_total_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
@@ -429,7 +429,7 @@ consumo_F <- consumo %>%
 
 \
 
-```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE}
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
 
 
 consumo_F_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
@@ -493,7 +493,7 @@ Y **graficamos**:
 
 \
 
-```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE}
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
 
 
 consumo_M_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
@@ -557,7 +557,7 @@ consumo_1524 <- consumo %>%
 
 \
 
-```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE}
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
 
 
 consumo_1524_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
@@ -595,3 +595,169 @@ ggplot(consumo_1524_mapa, aes(fill=categorias)) +
 ```
 
 \
+
+# Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)
+
+\
+
+Las **Nomenclaturas de las Unidades Territoriales Estadísticas** (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población. 
+
+\
+
+La [actual clasificación NUTS](https://ec.europa.eu/eurostat/web/nuts/background) es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59).
+
+\
+
+Eurostat ofrece un *Spatial Polygon Dataframe* que podemos usar con el paquete `sp` donde encontramos todos los NUTS levels (0-3) que podemos utilizar para trabajar con el nivel NUTS deseado. Para ello utilizamos la función `get_eurostat_geospatial()` y utilizamos las funciones características de `tidyverse` y `ggplot2` para modificar el dataframe.
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.width= 9, fig.height= 7, fig.align='center'}
+
+spdf60 <- get_eurostat_geospatial(output_class = "spdf", resolution = 60)
+
+# NUTS 0
+spdf60[spdf60$LEVL_CODE == 0,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))
+
+# NUTS 1
+spdf60[spdf60$LEVL_CODE == 1,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))
+
+# NUTS 2
+spdf60[spdf60$LEVL_CODE == 2,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))
+
+# NUTS 3
+spdf60[spdf60$LEVL_CODE == 3,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))
+
+```
+
+\
+
+Alternativamente podemos utilizar un **dataframe** con la información de todos los niveles de NUTS.
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "100%", fig.width= 9, fig.height= 7, fig.align='center'}
+
+# Guardamos el dataframe con resolución 60
+
+df_60 <- get_eurostat_geospatial(output_class = "df", resolution = 60)
+head(df_60)
+
+# 
+
+NUTS_0 <- df_60 %>%
+  filter(LEVL_CODE == 0)
+
+NUTS_1 <- df_60 %>%
+  filter(LEVL_CODE == 1)
+
+NUTS_2 <- df_60 %>%
+  filter(LEVL_CODE == 2)
+
+NUTS_3 <- df_60 %>%
+  filter(LEVL_CODE == 3)
+
+
+df_60 %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+ 
+  facet_wrap(~LEVL_CODE)
+
+```
+
+\
+
+Podemos, a modo de ejemplo, sustraer los **códigos de los países** del dataframe utilizando la función `unique()` y, a partir de ahí seleccionar los distintos niveles NUTS para examinar la diferencia de niveles NUTS en algunos países de la Unión Europea.
+
+\
+
+```{r}
+
+unique(df_60$CNTR_CODE)
+
+```
+
+\
+
+## España
+
+```{r, out.width="80%", fig.width= 9, fig.height= 8, fig.align='center'}
+
+spain <- df_60 %>% filter(grepl("ES", NUTS_ID))
+
+ggplot(spain, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()
+
+```
+
+\
+
+## Italia
+
+```{r, out.width="70%", fig.width= 8, fig.height= 8, fig.align='center'}
+
+italy <- df_60 %>% filter(grepl("IT", NUTS_ID))
+
+ggplot(italy, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()
+
+```
+
+\
+
+## Francia
+
+```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+
+france <- df_60 %>% filter(grepl("FR", NUTS_ID))
+
+ggplot(france, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  xlim(c(-8, 12)) +
+  ylim(c(40, 53)) +
+  theme_minimal()
+
+```
+
+\
+
+## Alemania
+
+```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+
+germany <- df_60 %>% filter(grepl("DE", NUTS_ID))
+
+ggplot(germany, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()
+
+```
