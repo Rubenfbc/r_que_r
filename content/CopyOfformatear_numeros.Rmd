@@ -119,7 +119,7 @@ NUTS_3 <- df_60 %>%
 
 df_60 %>% 
   ggplot(., aes(x=long,y=lat,group=group)) +
-  geom_polygon(fill="orange", color="white") +
+  geom_polygon(fill="orange", color="white", size = 0.2) +
   theme_minimal()+
   xlim(c(-30, 44)) +
   ylim(c(35, 75))+ 

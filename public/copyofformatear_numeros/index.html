@@ -201,7 +201,7 @@ NUTS_3 &lt;- df_60 %&gt;%
 
 df_60 %&gt;% 
   ggplot(., aes(x=long,y=lat,group=group)) +
-  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.2) +
   theme_minimal()+
   xlim(c(-30, 44)) +
   ylim(c(35, 75))+ 
