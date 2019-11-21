@@ -1,0 +1,204 @@
+---
+title: "¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) en R?"
+author: "Rubén F. Bustillo"
+date: 2019-11-21
+categories: ["R"]
+tags: ["Eurostat", "NUTS", "Europa", "Mapas"]
+
+---
+
+
+
+<p><strong>Re</strong></p>
+<p>Este post es una continuación del anterior donde se explicó el paquete eurostat(). En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.</p>
+<p><br />
+</p>
+<div id="nomenclaturas-de-las-unidades-territoriales-estadísticas-nuts" class="section level1">
+<h1>Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)</h1>
+<p><br />
+</p>
+<p>Las <strong>Nomenclaturas de las Unidades Territoriales Estadísticas</strong> (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población.</p>
+<p><br />
+</p>
+<p>La <a href="https://ec.europa.eu/eurostat/web/nuts/background">actual clasificación NUTS</a> es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59).</p>
+<p><br />
+</p>
+<p>Eurostat ofrece un <em>Spatial Polygon Dataframe</em> que podemos usar con el paquete <code>sf</code> donde encontramos todos los NUTS levels (0-3) que podemos utilizar para trabajar con el nivel NUTS deseado. Para ello utilizamos la función <code>get_eurostat_geospatial()</code> y utilizamos las funciones características de <code>tidyverse</code> y <code>ggplot2</code> para modificar el dataframe.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(eurostat)
+library(tidyverse)
+library(sf)
+
+# El Spatial Polygon Dataframe:
+
+spdf60 &lt;- get_eurostat_geospatial(output_class = &quot;spdf&quot;, resolution = 60)
+
+# NUTS 0
+
+spdf60[spdf60$LEVL_CODE == 0,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  ggtitle(&quot;NUTS-0&quot;)</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-1-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>
+# NUTS 1
+
+spdf60[spdf60$LEVL_CODE == 1,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  ggtitle(&quot;NUTS-1&quot;)</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-1-2.png" width="60%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>
+# NUTS 2
+
+spdf60[spdf60$LEVL_CODE == 2,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  ggtitle(&quot;NUTS-2&quot;)</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-1-3.png" width="60%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>
+# NUTS 3
+
+spdf60[spdf60$LEVL_CODE == 3,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  ggtitle(&quot;NUTS-3&quot;)</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-1-4.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Alternativamente podemos descargar un <strong>dataframe</strong> donde viene recopilada la información de todos los niveles de NUTS.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Guardamos el dataframe con resolución 60
+
+df_60 &lt;- get_eurostat_geospatial(output_class = &quot;df&quot;, resolution = 60)
+head(df_60)
+## # A tibble: 6 x 13
+##    long   lat order hole  piece group id    CNTR_CODE NUTS_NAME LEVL_CODE
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;
+## 1  23.0  43.8     1 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0
+## 2  23.1  43.8     2 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0
+## 3  23.1  43.8     3 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0
+## 4  23.2  43.8     4 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0
+## 5  23.3  43.8     5 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0
+## 6  23.3  43.8     6 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0
+## # ... with 3 more variables: FID &lt;chr&gt;, NUTS_ID &lt;chr&gt;, geo &lt;chr&gt;
+
+# Aquí podemos guardar un dataframe específico para cada nivel de NUTS
+
+NUTS_0 &lt;- df_60 %&gt;%
+  filter(LEVL_CODE == 0)
+
+NUTS_1 &lt;- df_60 %&gt;%
+  filter(LEVL_CODE == 1)
+
+NUTS_2 &lt;- df_60 %&gt;%
+  filter(LEVL_CODE == 2)
+
+NUTS_3 &lt;- df_60 %&gt;%
+  filter(LEVL_CODE == 3)
+
+# Usando la función facet_wrap() podemos visualizar los cuatro niveles de forma conjunta
+
+df_60 %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+ 
+  facet_wrap(~LEVL_CODE) +
+  ggtitle(&quot;Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)&quot;)</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Podemos, a modo de ejemplo, sustraer los <strong>códigos de los países</strong> del dataframe utilizando la función <code>unique()</code> y, a partir de ahí seleccionar los distintos niveles NUTS para examinar sus particularidades en algunos países de la Unión Europea elegidos de forma aleatoria.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+unique(df_60$CNTR_CODE)
+##  [1] &quot;BG&quot; &quot;CH&quot; &quot;CY&quot; &quot;AL&quot; &quot;CZ&quot; &quot;BE&quot; &quot;AT&quot; &quot;DE&quot; &quot;DK&quot; &quot;EE&quot; &quot;EL&quot; &quot;ES&quot; &quot;FI&quot; &quot;HR&quot;
+## [15] &quot;FR&quot; &quot;HU&quot; &quot;IE&quot; &quot;IS&quot; &quot;IT&quot; &quot;LI&quot; &quot;LT&quot; &quot;LU&quot; &quot;LV&quot; &quot;ME&quot; &quot;MK&quot; &quot;MT&quot; &quot;NL&quot; &quot;NO&quot;
+## [29] &quot;PL&quot; &quot;PT&quot; &quot;RO&quot; &quot;RS&quot; &quot;SE&quot; &quot;SI&quot; &quot;SK&quot; &quot;TR&quot; &quot;UK&quot;</code></pre>
+<p><br />
+</p>
+<div id="españa" class="section level2">
+<h2>España</h2>
+<pre class="r"><code>
+spain &lt;- df_60 %&gt;% filter(grepl(&quot;ES&quot;, NUTS_ID))
+
+ggplot(spain, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="italia" class="section level2">
+<h2>Italia</h2>
+<pre class="r"><code>
+italy &lt;- df_60 %&gt;% filter(grepl(&quot;IT&quot;, NUTS_ID))
+
+ggplot(italy, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="francia" class="section level2">
+<h2>Francia</h2>
+<pre class="r"><code>
+france &lt;- df_60 %&gt;% filter(grepl(&quot;FR&quot;, NUTS_ID))
+
+ggplot(france, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
+  xlim(c(-8, 12)) +
+  ylim(c(40, 53)) +
+  theme_minimal()</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="alemania" class="section level2">
+<h2>Alemania</h2>
+<pre class="r"><code>
+germany &lt;- df_60 %&gt;% filter(grepl(&quot;DE&quot;, NUTS_ID))
+
+ggplot(germany, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="bélgica" class="section level2">
+<h2>Bélgica</h2>
+<pre class="r"><code>
+belgica &lt;- df_60 %&gt;% filter(grepl(&quot;BG&quot;, NUTS_ID))
+
+ggplot(belgica, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="/CopyOfformatear_numeros_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>

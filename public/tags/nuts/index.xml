@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Eurostat on R que R</title>
-    <link>/tags/eurostat/</link>
-    <description>Recent content in Eurostat on R que R</description>
+    <title>NUTS on R que R</title>
+    <link>/tags/nuts/</link>
+    <description>Recent content in NUTS on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 21 Nov 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/eurostat/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/nuts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -22,19 +22,6 @@ Este post es una continuación del anterior donde se explicó el paquete eurosta
 
 Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)
 Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos.</description>
-    </item>
-    
-    <item>
-      <title>Importar datos de Eurostat en R con el paquete eurostat</title>
-      <link>/eurostat/</link>
-      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/eurostat/</guid>
-      <description>Re
-En este post se explica las principales funcionalidades del paquete eurostat(), que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.
-
-Introducción
-Eurostat es la Oficina de Estadística de la Comisión Europea, organismo que se encarga de producir datos, publicar estadísticas e indicadores sobre la Unión Europea promoviendo la armonización de los métodos estadísticos entre los Estados que la conforman.</description>
     </item>
     
   </channel>

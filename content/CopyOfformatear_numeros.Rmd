@@ -1,0 +1,218 @@
+---
+title: "¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) en R?"
+author: "Rubén F. Bustillo"
+date: 2019-11-21
+categories: ["R"]
+tags: ["Eurostat", "NUTS", "Europa", "Mapas"]
+
+---
+ 
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+Este post es una continuación del anterior donde se explicó el paquete eurostat(). En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.
+
+\
+
+# Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)
+
+\
+
+Las **Nomenclaturas de las Unidades Territoriales Estadísticas** (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población. 
+
+\
+
+La [actual clasificación NUTS](https://ec.europa.eu/eurostat/web/nuts/background) es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59).
+
+\
+
+Eurostat ofrece un *Spatial Polygon Dataframe* que podemos usar con el paquete `sf` donde encontramos todos los NUTS levels (0-3) que podemos utilizar para trabajar con el nivel NUTS deseado. Para ello utilizamos la función `get_eurostat_geospatial()` y utilizamos las funciones características de `tidyverse` y `ggplot2` para modificar el dataframe.
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.width= 9, fig.height= 7, fig.align='center'}
+
+library(eurostat)
+library(tidyverse)
+library(sf)
+
+# El Spatial Polygon Dataframe:
+
+spdf60 <- get_eurostat_geospatial(output_class = "spdf", resolution = 60)
+
+# NUTS 0
+
+spdf60[spdf60$LEVL_CODE == 0,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  ggtitle("NUTS-0")
+
+# NUTS 1
+
+spdf60[spdf60$LEVL_CODE == 1,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  ggtitle("NUTS-1")
+
+# NUTS 2
+
+spdf60[spdf60$LEVL_CODE == 2,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  ggtitle("NUTS-2")
+
+# NUTS 3
+
+spdf60[spdf60$LEVL_CODE == 3,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="violetred4", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  ggtitle("NUTS-3")
+
+```
+
+\
+
+Alternativamente podemos descargar un **dataframe** donde viene recopilada la información de todos los niveles de NUTS.
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "100%", fig.width= 9, fig.height= 7, fig.align='center'}
+
+# Guardamos el dataframe con resolución 60
+
+df_60 <- get_eurostat_geospatial(output_class = "df", resolution = 60)
+head(df_60)
+
+# Aquí podemos guardar un dataframe específico para cada nivel de NUTS
+
+NUTS_0 <- df_60 %>%
+  filter(LEVL_CODE == 0)
+
+NUTS_1 <- df_60 %>%
+  filter(LEVL_CODE == 1)
+
+NUTS_2 <- df_60 %>%
+  filter(LEVL_CODE == 2)
+
+NUTS_3 <- df_60 %>%
+  filter(LEVL_CODE == 3)
+
+# Usando la función facet_wrap() podemos visualizar los cuatro niveles de forma conjunta
+
+df_60 %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+ 
+  facet_wrap(~LEVL_CODE) +
+  ggtitle("Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)")
+
+```
+
+\
+
+Podemos, a modo de ejemplo, sustraer los **códigos de los países** del dataframe utilizando la función `unique()` y, a partir de ahí seleccionar los distintos niveles NUTS para examinar sus particularidades en algunos países de la Unión Europea elegidos de forma aleatoria.
+
+\
+
+```{r}
+
+unique(df_60$CNTR_CODE)
+
+```
+
+\
+
+## España
+
+```{r, out.width="80%", fig.width= 9, fig.height= 8, fig.align='center'}
+
+spain <- df_60 %>% filter(grepl("ES", NUTS_ID))
+
+ggplot(spain, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()
+
+```
+
+\
+
+## Italia
+
+```{r, out.width="70%", fig.width= 8, fig.height= 8, fig.align='center'}
+
+italy <- df_60 %>% filter(grepl("IT", NUTS_ID))
+
+ggplot(italy, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()
+
+```
+
+\
+
+## Francia
+
+```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+
+france <- df_60 %>% filter(grepl("FR", NUTS_ID))
+
+ggplot(france, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  xlim(c(-8, 12)) +
+  ylim(c(40, 53)) +
+  theme_minimal()
+
+```
+
+\
+
+## Alemania
+
+```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+
+germany <- df_60 %>% filter(grepl("DE", NUTS_ID))
+
+ggplot(germany, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()
+
+```
+
+\
+
+## Bélgica
+
+```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+
+belgica <- df_60 %>% filter(grepl("BG", NUTS_ID))
+
+ggplot(belgica, aes(x=long,y=lat,group=group)) +
+  facet_wrap(~LEVL_CODE) +
+  geom_polygon(fill="orange", color="white") +
+  theme_minimal()
+
+```
