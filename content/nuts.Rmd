@@ -159,7 +159,7 @@ ggplot(spain, aes(x=long,y=lat,group=group)) +
 
 ## Italia
 
-```{r, out.width="70%", fig.width= 8, fig.height= 8, fig.align='center'}
+```{r, out.width="70%", fig.width= 7, fig.height= 8, fig.align='center'}
 
 italy <- df_60 %>% filter(grepl("IT", NUTS_ID))
 
@@ -174,7 +174,7 @@ ggplot(italy, aes(x=long,y=lat,group=group)) +
 
 ## Francia
 
-```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+```{r, out.width="70%", fig.width= 8, fig.height= 8, fig.align='center'}
 
 france <- df_60 %>% filter(grepl("FR", NUTS_ID))
 
@@ -191,7 +191,7 @@ ggplot(france, aes(x=long,y=lat,group=group)) +
 
 ## Alemania
 
-```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+```{r, out.width="70%", fig.width= 6, fig.height= 8, fig.align='center'}
 
 germany <- df_60 %>% filter(grepl("DE", NUTS_ID))
 
@@ -204,15 +204,18 @@ ggplot(germany, aes(x=long,y=lat,group=group)) +
 
 \
 
-## Bélgica
+## Reino Unido
 
-```{r, out.width="70%", fig.width= 9, fig.height= 8, fig.align='center'}
+```{r, out.width="70%", fig.width= 6, fig.height= 8, fig.align='center'}
 
-belgica <- df_60 %>% filter(grepl("BG", NUTS_ID))
+unitedkingdom <- df_60 %>% filter(grepl("UK", NUTS_ID))
 
-ggplot(belgica, aes(x=long,y=lat,group=group)) +
+ggplot(unitedkingdom, aes(x = long,y=lat,group = group)) +
   facet_wrap(~LEVL_CODE) +
   geom_polygon(fill="orange", color="white") +
   theme_minimal()
 
 ```
+
+\
+
