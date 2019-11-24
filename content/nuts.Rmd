@@ -36,7 +36,7 @@ Utilizaremos la función `get_eurostat_geospatial()` para descargar la informaci
 
 \
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 
 library(eurostat)
 library(tidyverse)
@@ -52,10 +52,15 @@ library(DT)
 \
 
 Como se expone [aquí](https://r-spatial.github.io/sf/articles/sf1.html), *simple feature* o *simple feature access* hace referencia al *International Organization for Standarization (ISO 19125)* que describe y especifica cómo los objetos en el mundo real pueden ser representados en los ordenadores, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica. 
+\
+
+Para realizar mapas base a cada uno de los niveles NUTS podemos obtener el sf con la función `get_eurostat_geospatial()` y representar el mapa al nivel deseado utilizando los siguientes comandos:
 
 \
 
-```{r, message= FALSE, warning= FALSE, fig.align='center'}
+## NUTS-0
+
+```{r, message= FALSE, warning= FALSE, out.width= "70%", fig.align='center'}
 
 # NUTS-0
 mapdata_0 <- get_eurostat_geospatial(nuts_level = 0)
@@ -73,7 +78,9 @@ mapdata_0 %>%
 
 \
 
-```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.align='center'}
+## NUTS-1
+
+```{r, message= FALSE, warning= FALSE, out.width= "70%", fig.align='center'}
 
 # NUTS-1
 mapdata_1 <- get_eurostat_geospatial(nuts_level = 1)
@@ -91,7 +98,9 @@ mapdata_1 %>%
 
 \
 
-```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.align='center'}
+## NUTS-2
+
+```{r, message= FALSE, warning= FALSE, out.width= "70%", fig.align='center'}
 
 # NUTS-2
 mapdata_2 <- get_eurostat_geospatial(nuts_level = 2)
@@ -109,7 +118,9 @@ mapdata_2 %>%
 
 \
 
-```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.align='center'}
+## NUTS-3
+
+```{r, message= FALSE, warning= FALSE, out.width= "70%", fig.align='center'}
 
 # NUTS-3
 mapdata_3 <- get_eurostat_geospatial(nuts_level = 3)
@@ -127,20 +138,23 @@ mapdata_3 %>%
 
 \
 
-```{r, message= FALSE, warning= FALSE}
+## ALL LEVELS
+
+```{r, message= FALSE, warning= FALSE, out.width= "90%", fig.align='center'}
 
 # ALL NUTS
 mapdata_all <- get_eurostat_geospatial(nuts_level = "all")
 head(mapdata_all)
 
 mapdata_all %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
   ggplot(., aes()) +
   geom_sf(fill="purple", color="white", size = 0.1) +
   theme_minimal() +
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) + 
-  facet_wrap(~LEVL_CODE) +
-  ggtitle("Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)")
+  facet_wrap(~LEVL_CODE_2) +
+  ggtitle("Unidades Territoriales Estadísticas (NUTS)")
 
 ```
 

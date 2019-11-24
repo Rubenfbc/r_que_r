@@ -112,26 +112,9 @@
 </p>
 <pre class="r"><code>
 library(eurostat)
-## Warning: package &#39;eurostat&#39; was built under R version 3.6.1
 library(tidyverse)
-## Warning: package &#39;tidyverse&#39; was built under R version 3.6.1
-## -- Attaching packages --------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
-## v ggplot2 3.2.1     v purrr   0.3.3
-## v tibble  2.1.3     v dplyr   0.8.3
-## v tidyr   1.0.0     v stringr 1.4.0
-## v readr   1.3.1     v forcats 0.4.0
-## Warning: package &#39;ggplot2&#39; was built under R version 3.6.1
-## Warning: package &#39;tidyr&#39; was built under R version 3.6.1
-## Warning: package &#39;purrr&#39; was built under R version 3.6.1
-## Warning: package &#39;dplyr&#39; was built under R version 3.6.1
-## -- Conflicts ------------------------------------------------------------------------------------------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
 library(sf)
-## Warning: package &#39;sf&#39; was built under R version 3.6.1
-## Linking to GEOS 3.6.1, GDAL 2.2.3, PROJ 4.9.3
-library(DT)
-## Warning: package &#39;DT&#39; was built under R version 3.6.1</code></pre>
+library(DT)</code></pre>
 <p><br />
 </p>
 </div>
@@ -139,9 +122,13 @@ library(DT)
 <h1>Simple feature (sf)</h1>
 <p><br />
 </p>
-<p>Como se expone <a href="https://r-spatial.github.io/sf/articles/sf1.html">aquí</a>, <em>simple feature</em> o <em>simple feature access</em> hace referencia al <em>International Organization for Standarization (ISO 19125)</em> que describe y especifica cómo los objetos en el mundo real pueden ser representados en los ordenadores, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica.</p>
+<p>Como se expone <a href="https://r-spatial.github.io/sf/articles/sf1.html">aquí</a>, <em>simple feature</em> o <em>simple feature access</em> hace referencia al <em>International Organization for Standarization (ISO 19125)</em> que describe y especifica cómo los objetos en el mundo real pueden ser representados en los ordenadores, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica.<br />
+</p>
+<p>Para realizar mapas base a cada uno de los niveles NUTS podemos obtener el sf con la función <code>get_eurostat_geospatial()</code> y representar el mapa al nivel deseado utilizando los siguientes comandos:</p>
 <p><br />
 </p>
+<div id="nuts-0" class="section level2">
+<h2>NUTS-0</h2>
 <pre class="r"><code>
 # NUTS-0
 mapdata_0 &lt;- get_eurostat_geospatial(nuts_level = 0)
@@ -181,9 +168,12 @@ mapdata_0 %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) + 
   ggtitle(&quot;NUTS-0&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
+</div>
+<div id="nuts-1" class="section level2">
+<h2>NUTS-1</h2>
 <pre class="r"><code>
 # NUTS-1
 mapdata_1 &lt;- get_eurostat_geospatial(nuts_level = 1)
@@ -223,9 +213,12 @@ mapdata_1 %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) + 
   ggtitle(&quot;NUTS-1&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
+</div>
+<div id="nuts-2" class="section level2">
+<h2>NUTS-2</h2>
 <pre class="r"><code>
 # NUTS-2
 mapdata_2 &lt;- get_eurostat_geospatial(nuts_level = 2)
@@ -258,9 +251,12 @@ mapdata_2 %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) + 
   ggtitle(&quot;NUTS-2&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
+</div>
+<div id="nuts-3" class="section level2">
+<h2>NUTS-3</h2>
 <pre class="r"><code>
 # NUTS-3
 mapdata_3 &lt;- get_eurostat_geospatial(nuts_level = 3)
@@ -300,9 +296,12 @@ mapdata_3 %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) + 
   ggtitle(&quot;NUTS-3&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
+</div>
+<div id="all-levels" class="section level2">
+<h2>ALL LEVELS</h2>
 <pre class="r"><code>
 # ALL NUTS
 mapdata_all &lt;- get_eurostat_geospatial(nuts_level = &quot;all&quot;)
@@ -336,16 +335,18 @@ head(mapdata_all)
 ## 6         0  BE      BE MULTIPOLYGON (((5.10218 51....  BE
 
 mapdata_all %&gt;% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= &quot;NUTS-0&quot;, `1`= &quot;NUTS-1&quot;, `2`= &quot;NUTS-2&quot;, `3`= &quot;NUTS-3&quot; )) %&gt;%
   ggplot(., aes()) +
   geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
   theme_minimal() +
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) + 
-  facet_wrap(~LEVL_CODE) +
-  ggtitle(&quot;Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+  facet_wrap(~LEVL_CODE_2) +
+  ggtitle(&quot;Unidades Territoriales Estadísticas (NUTS)&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-6-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
+</div>
 </div>
 <div id="spatial-polygon-dataframe-spdf" class="section level1">
 <h1>Spatial Polygon Dataframe (spdf)</h1>
