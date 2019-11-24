@@ -101,20 +101,260 @@
 <h1>Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)</h1>
 <p><br />
 </p>
-<p>Las <strong>Nomenclaturas de las Unidades Territoriales Estadísticas</strong> (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población.</p>
+<p>Las <strong>Nomenclaturas de las Unidades Territoriales Estadísticas</strong> (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países que confoman la región Euro. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población.</p>
 <p><br />
 </p>
-<p>La <a href="https://ec.europa.eu/eurostat/web/nuts/background">actual clasificación NUTS</a> es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59).</p>
+<p>La <a href="https://ec.europa.eu/eurostat/web/nuts/background">actual clasificación NUTS</a> es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59). Se puede consultar las regiones NUTS de cada país en el siguiente <a href="https://ec.europa.eu/eurostat/web/nuts/nuts-maps">enlace</a> de Eurostat.</p>
 <p><br />
 </p>
-<p>Eurostat ofrece un <em>Spatial Polygon Dataframe</em> que podemos usar con el paquete <code>sf</code> donde encontramos todos los NUTS levels (0-3) que podemos utilizar para trabajar con el nivel NUTS deseado. Para ello utilizamos la función <code>get_eurostat_geospatial()</code> y utilizamos las funciones características de <code>tidyverse</code> y <code>ggplot2</code> para modificar el dataframe.</p>
+<p>Utilizaremos la función <code>get_eurostat_geospatial()</code> para descargar la información geográfica de <a href="https://ec.europa.eu/eurostat/web/gisco">Gisco</a>, el organismo responsable de generar y actualizar la información geográfica de la Comisión Europea. El paquete <code>get_eurostat_geospatial()</code> descarga tres tipos de información:</p>
 <p><br />
 </p>
 <pre class="r"><code>
 library(eurostat)
+## Warning: package &#39;eurostat&#39; was built under R version 3.6.1
 library(tidyverse)
+## Warning: package &#39;tidyverse&#39; was built under R version 3.6.1
+## -- Attaching packages --------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+## v ggplot2 3.2.1     v purrr   0.3.3
+## v tibble  2.1.3     v dplyr   0.8.3
+## v tidyr   1.0.0     v stringr 1.4.0
+## v readr   1.3.1     v forcats 0.4.0
+## Warning: package &#39;ggplot2&#39; was built under R version 3.6.1
+## Warning: package &#39;tidyr&#39; was built under R version 3.6.1
+## Warning: package &#39;purrr&#39; was built under R version 3.6.1
+## Warning: package &#39;dplyr&#39; was built under R version 3.6.1
+## -- Conflicts ------------------------------------------------------------------------------------------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
 library(sf)
+## Warning: package &#39;sf&#39; was built under R version 3.6.1
+## Linking to GEOS 3.6.1, GDAL 2.2.3, PROJ 4.9.3
+library(DT)
+## Warning: package &#39;DT&#39; was built under R version 3.6.1</code></pre>
+<p><br />
+</p>
+</div>
+<div id="simple-feature-sf" class="section level1">
+<h1>Simple feature (sf)</h1>
+<p><br />
+</p>
+<p>Como se expone <a href="https://r-spatial.github.io/sf/articles/sf1.html">aquí</a>, <em>simple feature</em> o <em>simple feature access</em> hace referencia al <em>International Organization for Standarization (ISO 19125)</em> que describe y especifica cómo los objetos en el mundo real pueden ser representados en los ordenadores, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# NUTS-0
+mapdata_0 &lt;- get_eurostat_geospatial(nuts_level = 0)
+head(mapdata_0)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 34.56908 xmax: 34.56859 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   id CNTR_CODE
+## 1 BG        BG
+## 2 CH        CH
+## 3 CY        CY
+## 4 AL        AL
+## 5 CZ        CZ
+## 6 BE        BE
+##                                                          NUTS_NAME
+## 1 &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;
+## 2                                          SCHWEIZ/SUISSE/SVIZZERA
+## 3                        &lt;U+039A&gt;&lt;U+03A5&gt;&lt;U+03A0&gt;&lt;U+03A1&gt;&lt;U+039F&gt;S
+## 4                                                        SHQIPËRIA
+## 5                                                  CESKÁ REPUBLIKA
+## 6                                                 BELGIQUE-BELGIË 
+##   LEVL_CODE FID NUTS_ID                       geometry geo
+## 1         0  BG      BG MULTIPOLYGON (((22.99717 43...  BG
+## 2         0  CH      CH MULTIPOLYGON (((8.61383 47....  CH
+## 3         0  CY      CY MULTIPOLYGON (((33.75237 34...  CY
+## 4         0  AL      AL MULTIPOLYGON (((19.831 42.4...  AL
+## 5         0  CZ      CZ MULTIPOLYGON (((14.49122 51...  CZ
+## 6         0  BE      BE MULTIPOLYGON (((5.10218 51....  BE
 
+mapdata_0 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-0&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<pre class="r"><code>
+# NUTS-1
+mapdata_1 &lt;- get_eurostat_geospatial(nuts_level = 1)
+head(mapdata_1)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.84672 ymin: 39.64579 xmax: 21.05607 ymax: 50.91189
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##    id CNTR_CODE
+## 1 AL0        AL
+## 2 AT1        AT
+## 3 AT2        AT
+## 4 BE1        BE
+## 5 BE3        BE
+## 6 AT3        AT
+##                                                     NUTS_NAME LEVL_CODE
+## 1                                                   SHQIPËRIA         1
+## 2                                               OSTÖSTERREICH         1
+## 3                                               SÜDÖSTERREICH         1
+## 4 RÉGION DE BRUXELLES-CAPITALE/BRUSSELS HOOFDSTEDELIJK GEWEST         1
+## 5                                             RÉGION WALLONNE         1
+## 6                                              WESTÖSTERREICH         1
+##   FID NUTS_ID                       geometry geo
+## 1 AL0     AL0 MULTIPOLYGON (((19.831 42.4... AL0
+## 2 AT1     AT1 MULTIPOLYGON (((15.54245 48... AT1
+## 3 AT2     AT2 MULTIPOLYGON (((15.84791 47... AT2
+## 4 BE1     BE1 MULTIPOLYGON (((4.47678 50.... BE1
+## 5 BE3     BE3 MULTIPOLYGON (((5.682 50.75... BE3
+## 6 AT3     AT3 MULTIPOLYGON (((14.69101 48... AT3
+
+mapdata_1 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-1&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<pre class="r"><code>
+# NUTS-2
+mapdata_2 &lt;- get_eurostat_geospatial(nuts_level = 2)
+head(mapdata_2)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 7.09629 ymin: 46.29368 xmax: 20.10688 ymax: 61.08726
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##     id CNTR_CODE       NUTS_NAME LEVL_CODE  FID NUTS_ID
+## 1 DE24        DE     Oberfranken         2 DE24    DE24
+## 2 NO03        NO   Sør-Østlandet         2 NO03    NO03
+## 3 HU11        HU        Budapest         2 HU11    HU11
+## 4 HU12        HU            Pest         2 HU12    HU12
+## 5 HU21        HU  Közép-Dunántúl         2 HU21    HU21
+## 6 HU22        HU Nyugat-Dunántúl         2 HU22    HU22
+##                         geometry  geo
+## 1 MULTIPOLYGON (((11.48157 50... DE24
+## 2 MULTIPOLYGON (((10.60072 60... NO03
+## 3 MULTIPOLYGON (((18.93274 47... HU11
+## 4 MULTIPOLYGON (((18.96591 47... HU12
+## 5 MULTIPOLYGON (((18.68843 47... HU21
+## 6 MULTIPOLYGON (((17.24743 48... HU22
+
+mapdata_2 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-2&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<pre class="r"><code>
+# NUTS-3
+mapdata_3 &lt;- get_eurostat_geospatial(nuts_level = 3)
+head(mapdata_3)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.3948 ymin: 39.02837 xmax: 22.2582 ymax: 60.65644
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##      id CNTR_CODE
+## 1 FRK23        FR
+## 2 FRK24        FR
+## 3 AT313        AT
+## 4 FI200        FI
+## 5 FR102        FR
+## 6 EL611        EL
+##                                                                   NUTS_NAME
+## 1                                                                     Drôme
+## 2                                                                     Isère
+## 3                                                               Mühlviertel
+## 4                                                                     Åland
+## 5                                                           Seine-et-Marne 
+## 6 &lt;U+039A&gt;a&lt;U+03C1&gt;d&lt;U+03AF&gt;tsa, &lt;U+03A4&gt;&lt;U+03C1&gt;&lt;U+03AF&gt;&lt;U+03BA&gt;a&lt;U+03BB&gt;a
+##   LEVL_CODE   FID NUTS_ID                       geometry   geo
+## 1         3 FRK23   FRK23 MULTIPOLYGON (((5.67604 44.... FRK23
+## 2         3 FRK24   FRK24 MULTIPOLYGON (((5.10107 45.... FRK24
+## 3         3 AT313   AT313 MULTIPOLYGON (((13.72709 48... AT313
+## 4         3 FI200   FI200 MULTIPOLYGON (((19.94374 60... FI200
+## 5         3 FR102   FR102 MULTIPOLYGON (((2.59053 49.... FR102
+## 6         3 EL611   EL611 MULTIPOLYGON (((21.91769 39... EL611
+
+mapdata_3 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-3&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<pre class="r"><code>
+# ALL NUTS
+mapdata_all &lt;- get_eurostat_geospatial(nuts_level = &quot;all&quot;)
+head(mapdata_all)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 34.56908 xmax: 34.56859 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   id CNTR_CODE
+## 1 BG        BG
+## 2 CH        CH
+## 3 CY        CY
+## 4 AL        AL
+## 5 CZ        CZ
+## 6 BE        BE
+##                                                          NUTS_NAME
+## 1 &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;
+## 2                                          SCHWEIZ/SUISSE/SVIZZERA
+## 3                        &lt;U+039A&gt;&lt;U+03A5&gt;&lt;U+03A0&gt;&lt;U+03A1&gt;&lt;U+039F&gt;S
+## 4                                                        SHQIPËRIA
+## 5                                                  CESKÁ REPUBLIKA
+## 6                                                 BELGIQUE-BELGIË 
+##   LEVL_CODE FID NUTS_ID                       geometry geo
+## 1         0  BG      BG MULTIPOLYGON (((22.99717 43...  BG
+## 2         0  CH      CH MULTIPOLYGON (((8.61383 47....  CH
+## 3         0  CY      CY MULTIPOLYGON (((33.75237 34...  CY
+## 4         0  AL      AL MULTIPOLYGON (((19.831 42.4...  AL
+## 5         0  CZ      CZ MULTIPOLYGON (((14.49122 51...  CZ
+## 6         0  BE      BE MULTIPOLYGON (((5.10218 51....  BE
+
+mapdata_all %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  facet_wrap(~LEVL_CODE) +
+  ggtitle(&quot;Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="spatial-polygon-dataframe-spdf" class="section level1">
+<h1>Spatial Polygon Dataframe (spdf)</h1>
+<p><br />
+</p>
+<p>En segundo lugar podemos descargar un <em>Spatial Polygon Dataframe</em> (spdf), que usaremos con el paquete <code>sf</code>, donde encontramos información geográfica de todos los NUTS levels (0-3). De nuevo utilizamos la función <code>get_eurostat_geospatial()</code> y las funciones características de <code>tidyverse</code> y <code>ggplot2</code> para modificar el spdf y para seleccionar el nivel NUTS deseado.</p>
+<p><br />
+</p>
+<pre class="r"><code>
 # El Spatial Polygon Dataframe:
 
 spdf60 &lt;- get_eurostat_geospatial(output_class = &quot;spdf&quot;, resolution = 60)
@@ -128,7 +368,7 @@ spdf60[spdf60$LEVL_CODE == 0,] %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) +
   ggtitle(&quot;NUTS-0&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-1-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-7-1.png" width="60%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>
 # NUTS 1
 
@@ -139,7 +379,7 @@ spdf60[spdf60$LEVL_CODE == 1,] %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) +
   ggtitle(&quot;NUTS-1&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-1-2.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-7-2.png" width="60%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>
 # NUTS 2
 
@@ -150,7 +390,7 @@ spdf60[spdf60$LEVL_CODE == 2,] %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75))+
   ggtitle(&quot;NUTS-2&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-1-3.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-7-3.png" width="60%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>
 # NUTS 3
 
@@ -161,7 +401,12 @@ spdf60[spdf60$LEVL_CODE == 3,] %&gt;%
   xlim(c(-30, 44)) +
   ylim(c(35, 75))+
   ggtitle(&quot;NUTS-3&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-1-4.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-7-4.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="dataframe-df" class="section level1">
+<h1>Dataframe (df)</h1>
 <p><br />
 </p>
 <p>Alternativamente podemos descargar un <strong>dataframe</strong> donde viene recopilada la información de todos los niveles de NUTS.</p>
@@ -200,14 +445,14 @@ NUTS_3 &lt;- df_60 %&gt;%
 # Usando la función facet_wrap() podemos visualizar los cuatro niveles de forma conjunta
 
 df_60 %&gt;% 
-  ggplot(., aes(x=long,y=lat,group=group)) +
+  ggplot(., aes(x=long,y=lat, group=group)) +
   geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.2) +
   theme_minimal()+
   xlim(c(-30, 44)) +
   ylim(c(35, 75))+ 
   facet_wrap(~LEVL_CODE) +
   ggtitle(&quot;Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)&quot;)</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Podemos, a modo de ejemplo, sustraer los <strong>códigos de los países</strong> del dataframe utilizando la función <code>unique()</code> y, a partir de ahí seleccionar los distintos niveles NUTS para examinar sus particularidades en algunos países de la Unión Europea elegidos de forma aleatoria.</p>
@@ -229,7 +474,7 @@ ggplot(spain, aes(x=long,y=lat,group=group)) +
   facet_wrap(~LEVL_CODE) +
   geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
   theme_minimal()</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
@@ -242,7 +487,7 @@ ggplot(italy, aes(x=long,y=lat,group=group)) +
   facet_wrap(~LEVL_CODE) +
   geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
   theme_minimal()</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
@@ -257,7 +502,7 @@ ggplot(france, aes(x=long,y=lat,group=group)) +
   xlim(c(-8, 12)) +
   ylim(c(40, 53)) +
   theme_minimal()</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
@@ -270,7 +515,7 @@ ggplot(germany, aes(x=long,y=lat,group=group)) +
   facet_wrap(~LEVL_CODE) +
   geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
   theme_minimal()</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
@@ -283,7 +528,7 @@ ggplot(unitedkingdom, aes(x = long,y=lat,group = group)) +
   facet_wrap(~LEVL_CODE) +
   geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;) +
   theme_minimal()</code></pre>
-<p><img src="/nuts_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>

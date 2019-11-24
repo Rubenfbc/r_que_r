@@ -24,23 +24,137 @@ Este post es una continuación del anterior donde se explicó el paquete eurosta
 
 \
 
-Las **Nomenclaturas de las Unidades Territoriales Estadísticas** (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población. 
+Las **Nomenclaturas de las Unidades Territoriales Estadísticas** (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países que confoman la región Euro. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población. 
 
 \
 
-La [actual clasificación NUTS](https://ec.europa.eu/eurostat/web/nuts/background) es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59).
+La [actual clasificación NUTS](https://ec.europa.eu/eurostat/web/nuts/background) es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59). Se puede consultar las regiones NUTS de cada país en el siguiente [enlace](https://ec.europa.eu/eurostat/web/nuts/nuts-maps) de Eurostat.
 
 \
 
-Eurostat ofrece un *Spatial Polygon Dataframe* que podemos usar con el paquete `sf` donde encontramos todos los NUTS levels (0-3) que podemos utilizar para trabajar con el nivel NUTS deseado. Para ello utilizamos la función `get_eurostat_geospatial()` y utilizamos las funciones características de `tidyverse` y `ggplot2` para modificar el dataframe.
+Utilizaremos la función `get_eurostat_geospatial()` para descargar la información geográfica de [Gisco](https://ec.europa.eu/eurostat/web/gisco), el organismo responsable de generar y actualizar la información geográfica de la Comisión Europea. El paquete `get_eurostat_geospatial()` descarga tres tipos de información:
 
 \
 
-```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.width= 9, fig.height= 7, fig.align='center'}
+```{r}
 
 library(eurostat)
 library(tidyverse)
 library(sf)
+library(DT)
+
+```
+
+\
+
+# Simple feature (sf)
+
+\
+
+Como se expone [aquí](https://r-spatial.github.io/sf/articles/sf1.html), *simple feature* o *simple feature access* hace referencia al *International Organization for Standarization (ISO 19125)* que describe y especifica cómo los objetos en el mundo real pueden ser representados en los ordenadores, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica. 
+
+\
+
+```{r, message= FALSE, warning= FALSE, fig.align='center'}
+
+# NUTS-0
+mapdata_0 <- get_eurostat_geospatial(nuts_level = 0)
+head(mapdata_0)
+
+mapdata_0 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="purple", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle("NUTS-0")
+
+```
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.align='center'}
+
+# NUTS-1
+mapdata_1 <- get_eurostat_geospatial(nuts_level = 1)
+head(mapdata_1)
+
+mapdata_1 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="purple", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle("NUTS-1")
+
+```
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.align='center'}
+
+# NUTS-2
+mapdata_2 <- get_eurostat_geospatial(nuts_level = 2)
+head(mapdata_2)
+
+mapdata_2 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="purple", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle("NUTS-2")
+
+```
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.align='center'}
+
+# NUTS-3
+mapdata_3 <- get_eurostat_geospatial(nuts_level = 3)
+head(mapdata_3)
+
+mapdata_3 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="purple", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle("NUTS-3")
+
+```
+
+\
+
+```{r, message= FALSE, warning= FALSE}
+
+# ALL NUTS
+mapdata_all <- get_eurostat_geospatial(nuts_level = "all")
+head(mapdata_all)
+
+mapdata_all %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="purple", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  facet_wrap(~LEVL_CODE) +
+  ggtitle("Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)")
+
+```
+
+\
+
+# Spatial Polygon Dataframe (spdf)
+
+\
+
+En segundo lugar podemos descargar un *Spatial Polygon Dataframe* (spdf), que usaremos con el paquete `sf`, donde encontramos información geográfica de todos los NUTS levels (0-3). De nuevo utilizamos la función `get_eurostat_geospatial()` y las funciones características de `tidyverse` y `ggplot2` para modificar el spdf y para seleccionar el nivel NUTS deseado.
+
+\
+
+```{r, message= FALSE, warning= FALSE, out.width= "60%", fig.align='center'}
 
 # El Spatial Polygon Dataframe:
 
@@ -90,6 +204,10 @@ spdf60[spdf60$LEVL_CODE == 3,] %>%
 
 \
 
+# Dataframe (df)
+
+\
+
 Alternativamente podemos descargar un **dataframe** donde viene recopilada la información de todos los niveles de NUTS.
 
 \
@@ -118,7 +236,7 @@ NUTS_3 <- df_60 %>%
 # Usando la función facet_wrap() podemos visualizar los cuatro niveles de forma conjunta
 
 df_60 %>% 
-  ggplot(., aes(x=long,y=lat,group=group)) +
+  ggplot(., aes(x=long,y=lat, group=group)) +
   geom_polygon(fill="orange", color="white", size = 0.2) +
   theme_minimal()+
   xlim(c(-30, 44)) +
