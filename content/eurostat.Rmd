@@ -32,7 +32,7 @@ El paquete `eurostat` consiste en un conjunto de herramientas que tiene como fin
 
 \
 
-La información de la presente entrada dificílmente podrá superar e incluso complementar a la disponible en los enlaces mencionados. No obstante cabe señalar que este post no pretende tener un carácter divulgativo sino que más bien nace con un objetivo de índole personal, en tanto en cuanto espero que sirva principalmente como proceso para familiarizarme con la utilización de dicho paquete. Dicho esto, si este post sirve de apoyo o ayuda a alguna persona interesada en aprender la utilización del paquete `eurostat` pues bienvenido sea. 
+La información de la presente entrada difícilmente podrá superar e incluso complementar a la disponible en los enlaces mencionados. No obstante cabe señalar que este post no pretende tener un carácter divulgativo sino que más bien nace con un objetivo de índole personal, en tanto en cuanto espero que sirva principalmente como proceso para familiarizarme con la utilización de dicho paquete. Dicho esto, si este post sirve de apoyo o ayuda a alguna persona interesada en aprender la utilización del paquete `eurostat` pues bienvenido sea. 
 
 \
 
@@ -223,7 +223,7 @@ ggplot(homicidios_labels_mil_2008, aes(x = reorder(cities, values), y = values))
 
 \
 
-En 2008 Vilnius fue, con diferencia, la ciudad con mayor número de homicidios intencionados por cada 100 mil habitantes de entre las ciudades seleccionadas por Eurostat. Madrid, por su parte, se situaba por debajo de otras grandes ciudades europeas pero se encuentra por encima de Roma, Viena, Bucarest, Lisboa o Sarajeveo. 
+En 2008 Vilnius (Lituania) fue, con diferencia, la ciudad con mayor número de homicidios intencionados por cada 100 mil habitantes de entre las ciudades seleccionadas por Eurostat. Madrid, por su parte, se situaba por debajo de otras grandes ciudades europeas pero se encuentra por encima de Roma, Viena, Bucarest, Lisboa o Sarajevo. 
 
 \
 
@@ -281,7 +281,7 @@ datatable(search_eurostat("alcohol consumption"))
 
 \
 
-Seleccionamos el dataset que lleva como nombre *Frequency of alcohol consumption by sex, age and country of citizenship*. Al igual que sucedía con el ejemplo previo modificamos el formato para las fechas por su valor númerico dado que los datos del dataset corresponden al año 2014. Para **examinar las características** del dataframe existen diversas alternativas que podemos utilizar y que no ayudarán a familiarizarnos con la información presente en el dataset.
+Seleccionamos el dataset que lleva como nombre *Frequency of alcohol consumption by sex, age and country of citizenship*. Al igual que sucedía con el ejemplo previo modificamos el formato para las fechas por su valor numérico dado que los datos del dataset corresponden al año 2014. Para **examinar las características** del dataframe existen diversas alternativas que podemos utilizar y que no ayudarán a familiarizarnos con la información presente en el dataset.
 
 \
 
@@ -360,7 +360,7 @@ head(consumo_total)
 
 \ 
 
-**Realizamos el mapa** utilizando la función `get_eurostat_geospatial()`, estableciendo 10 rangos para los valores y utilizando como [paleta de colores](http://rstudio-pubs-static.s3.amazonaws.com/5312_98fc1aba2d5740dd849a5ab797cc2c8d.html) la llamada *Spectral*. 
+**Realizamos el mapa** utilizando la función `get_eurostat_geospatial()`, estableciendo 8 rangos para los valores y utilizando como [paleta de colores](http://rstudio-pubs-static.s3.amazonaws.com/5312_98fc1aba2d5740dd849a5ab797cc2c8d.html) la llamada *Spectral*. 
 
 \
 
@@ -369,7 +369,7 @@ head(consumo_total)
 
 consumo_total_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
   right_join(consumo_total) %>%
-  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+  mutate(categorias = cut_to_classes(values, n=8, decimals=1)) 
 
 head(select(consumo_total_mapa, geo, values, categorias), 3)
 
@@ -406,7 +406,7 @@ ggplot(consumo_total_mapa, aes(fill=categorias)) +
 ## 2. ¿Cuál es la proporción de mujeres por país que consumen alcohol de forma diaria?
 
 
-En este caso vamos a analizar únicamente la **población femenina**. Para ello realizamos una pequeña modificación en el dataframe indicando: `filter(sex == "F"). 
+En este caso vamos a analizar únicamente la **población femenina**. Para ello realizamos una pequeña modificación en el dataframe indicando: `filter(sex == "F")`. 
 
 \
 
