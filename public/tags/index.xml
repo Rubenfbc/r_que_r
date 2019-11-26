@@ -6,7 +6,7 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 21 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,45 +14,54 @@
     <item>
       <title>Europa</title>
       <link>/tags/europa/</link>
-      <pubDate>Thu, 21 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/europa/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>Europe</title>
+      <link>/tags/europe/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/europe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Eurostat</title>
       <link>/tags/eurostat/</link>
-      <pubDate>Thu, 21 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/eurostat/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>mapas</title>
+      <title>Mapas</title>
       <link>/tags/mapas/</link>
-      <pubDate>Thu, 21 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/mapas/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>NUTS</title>
-      <link>/tags/nuts/</link>
-      <pubDate>Thu, 21 Nov 2019 00:00:00 +0000</pubDate>
+      <title>Maps</title>
+      <link>/tags/maps/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/nuts/</guid>
+      <guid>/tags/maps/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Europe</title>
-      <link>/tags/europe/</link>
-      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
+      <title>NUTS</title>
+      <link>/tags/nuts/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/europe/</guid>
+      <guid>/tags/nuts/</guid>
       <description></description>
     </item>
     
@@ -116,15 +125,6 @@
       <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/echarts4r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>maps</title>
-      <link>/tags/maps/</link>
-      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/maps/</guid>
       <description></description>
     </item>
     

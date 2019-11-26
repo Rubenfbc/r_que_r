@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>maps on R que R</title>
+    <title>Maps on R que R</title>
     <link>/tags/maps/</link>
-    <description>Recent content in maps on R que R</description>
+    <description>Recent content in Maps on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/maps/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat en R?</title>
+      <link>/nuts/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/nuts/</guid>
+      <description>Re
+Este post es una continuación del anterior donde se explicó el paquete eurostat(). En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.
+
+Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)
+Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales de la Unión Europea creada por Eurostat que se utiliza con fines estadísticos y analíticos.</description>
+    </item>
     
     <item>
       <title>Mapas en 3D con echarts4r y e_geo_3d</title>

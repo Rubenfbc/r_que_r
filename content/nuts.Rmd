@@ -1,9 +1,9 @@
 ---
 title: "¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat en R?"
 author: "Rubén F. Bustillo"
-date: 2019-11-21
+date: 2019-11-25
 categories: ["R"]
-tags: ["Eurostat", "NUTS", "Europa", "Mapas"]
+tags: ["Eurostat", "NUTS", "Europa", "Europe", "Mapas", "Maps"]
 
 ---
  
@@ -24,15 +24,19 @@ Este post es una continuación del anterior donde se explicó el paquete eurosta
 
 \
 
-Las **Nomenclaturas de las Unidades Territoriales Estadísticas** (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales que la Unión Europea creada por Eurostat y que utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en las unidades admnistrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países que confoman la región Euro. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población. 
+Las **Nomenclaturas de las Unidades Territoriales Estadísticas** (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales de la Unión Europea creada por Eurostat que se utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en función de las unidades administrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países que conforman la región Euro. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población. 
 
 \
 
-La [actual clasificación NUTS](https://ec.europa.eu/eurostat/web/nuts/background) es válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59). Se puede consultar las regiones NUTS de cada país en el siguiente [enlace](https://ec.europa.eu/eurostat/web/nuts/nuts-maps) de Eurostat.
+La [actual clasificación NUTS](https://ec.europa.eu/eurostat/web/nuts/background), válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59). Se puede consultar las regiones NUTS de cada país en el siguiente [enlace](https://ec.europa.eu/eurostat/web/nuts/nuts-maps) de Eurostat.
 
 \
 
-Utilizaremos la función `get_eurostat_geospatial()` para descargar la información geográfica de [Gisco](https://ec.europa.eu/eurostat/web/gisco), el organismo responsable de generar y actualizar la información geográfica de la Comisión Europea. El paquete `get_eurostat_geospatial()` descarga tres tipos de información:
+A efectos prácticos utilizaremos la función `get_eurostat_geospatial()` para descargar la información geográfica de [Gisco](https://ec.europa.eu/eurostat/web/gisco), el organismo responsable de generar y actualizar la información geográfica de la Comisión Europea. El paquete `get_eurostat_geospatial()` descarga tres tipos de información: *sf*, *spdf* y *df*, como veremos en los siguientes subapartados. 
+
+\
+
+Antes de empezar la exposición **cargamos algunos paquetes** que utilizaremos a lo largo del post.
 
 \
 
@@ -42,6 +46,8 @@ library(eurostat)
 library(tidyverse)
 library(sf)
 library(DT)
+library(cowplot)
+library(RColorBrewer)
 
 ```
 
@@ -51,10 +57,11 @@ library(DT)
 
 \
 
-Como se expone [aquí](https://r-spatial.github.io/sf/articles/sf1.html), *simple feature* o *simple feature access* hace referencia al *International Organization for Standarization (ISO 19125)* que describe y especifica cómo los objetos en el mundo real pueden ser representados en los ordenadores, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica. 
+Como se expone [aquí](https://r-spatial.github.io/sf/articles/sf1.html), *simple feature* o *simple feature access* hace referencia al *International Organization for Standarization (ISO 19125)* que describe y especifica cómo los objetos en el mundo real pueden ser representados en las computadoras, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica. 
+
 \
 
-Para realizar mapas base a cada uno de los niveles NUTS podemos obtener el sf con la función `get_eurostat_geospatial()` y representar el mapa al nivel deseado utilizando los siguientes comandos:
+Por consiguiente, para realizar mapas base a cada uno de los niveles NUTS podemos obtener en primer lugar el *sf* con la función `get_eurostat_geospatial()` y representar el mapa al nivel deseado utilizando los siguientes comandos:
 
 \
 
@@ -138,16 +145,20 @@ mapdata_3 %>%
 
 \
 
-## ALL LEVELS
+## TODOS LOS NIVELES NUTS
 
 ```{r, message= FALSE, warning= FALSE, out.width= "90%", fig.align='center'}
 
 # ALL NUTS
-mapdata_all <- get_eurostat_geospatial(nuts_level = "all")
+mapdata_all <- get_eurostat_geospatial(nuts_level = "all", resolution = 60)
 head(mapdata_all)
 
 mapdata_all %>% 
-  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
   ggplot(., aes()) +
   geom_sf(fill="purple", color="white", size = 0.1) +
   theme_minimal() +
@@ -164,7 +175,7 @@ mapdata_all %>%
 
 \
 
-En segundo lugar podemos descargar un *Spatial Polygon Dataframe* (spdf), que usaremos con el paquete `sf`, donde encontramos la información geográfica de todos los NUTS levels (0-3). De nuevo utilizamos la función `get_eurostat_geospatial()` y las funciones características de `tidyverse` y `ggplot2` para modificar el spdf y para seleccionar el nivel NUTS deseado.
+En segundo lugar podemos descargar un *Spatial Polygon Dataframe* (spdf) utilizando el paquete `sf`, donde encontramos la información geográfica de todos los NUTS levels (0-3). De nuevo utilizamos la función `get_eurostat_geospatial()` y las funciones características de `tidyverse` y `ggplot2` para modificar el *spdf* y para seleccionar el nivel NUTS deseado.
 
 \
 
@@ -250,9 +261,9 @@ mapdata_spdf[mapdata_spdf$LEVL_CODE == 3,] %>%
 
 \
 
-## ALL NUTS
+## TODOS LOS NIVELES NUTS
 
-Para representar los cuatro niveles de forma conjunta, y con la única intención de mostrar la funcionalidad de otro paquete de R, vamos a cambiar de procedimiento y utilizamos el paquete `cowflow` y su función `plot_grid()`. Para ello descargaremos los cuatro niveles NUTS por separado, guardaremos cada uno de los gráficos de forma individualizada y utilizaremos el paquete y la función mencionada para representar conjuntamente los cuatro gráficos. 
+Para representar los cuatro niveles de forma conjunta, y con la única intención de mostrar la funcionalidad de otro paquete de R, vamos a cambiar de procedimiento y utilizamos el paquete `cowflow` y su función `plot_grid()`. Para ello descargaremos los cuatro niveles NUTS por separado, guardamos cada uno de los gráficos de forma individualizada y utilizamos el paquete y la función mencionada para representar conjuntamente los cuatro gráficos. 
 
 \
 
@@ -297,7 +308,7 @@ nuts_3 <- mapdata_psdf_3 %>%
   xlim(c(-30, 44)) +
   ylim(c(35, 75)) 
 
-library(cowplot)
+
 plot_grid(nuts_0, nuts_1, nuts_2, nuts_3, 
           labels= c("NUTS-0","NUTS-1","NUTS-2","NUTS-3"), 
           label_size = 12)
@@ -309,7 +320,7 @@ plot_grid(nuts_0, nuts_1, nuts_2, nuts_3,
 
 \
 
-En tercer lugar podemos descargar con la función `get_eurostat_geospatial()` un **dataframe** donde viene recopilada la información de todos los niveles de NUTS conjuntamente.
+Una tercera posibilidad consiste en descargar con la función `get_eurostat_geospatial()` un **dataframe** donde viene recopilada la información de todos los niveles de NUTS conjuntamente.
 
 \
 
@@ -324,7 +335,7 @@ head(mapdata_df)
 
 \
 
-Podemos guardar un dataframe específico para cada nivel de NUTS. Utilizando el paquete `ggplot2()` tal y como se ha utilizado en los ejemplos anteriores podemos realizar los diferentes mapas de Europa. En este caso, para evitar ser excesivamente repetitivos, únicamente vamos a representar el mapa conjunto utilizando la función `facet_wrap()`.
+Podemos **guardar un dataframe específico para cada nivel de NUTS**. Utilizando el paquete `ggplot2()` tal y como se ha utilizado en los ejemplos anteriores podemos realizar los diferentes mapas de Europa. En este caso, para evitar ser excesivamente repetitivos, únicamente vamos a representar el mapa conjunto utilizando la función `facet_wrap()`.
 
 \
 
@@ -369,7 +380,7 @@ mapdata_df %>%
 
 \
 
-Podemos sustraer los **códigos identificativos de cada país** presentes en el dataframe utilizando la función `unique()` y, a partir de ahí, seleccionar los distintos niveles NUTS para examinar sus particularidades en algunos países de la Unión Europea. Veamos unos ejemplos examinando algunos países elegidos al azar:
+Podemos sustraer los **códigos identificativos de cada país** presentes en el dataframe utilizando la función `unique()` y, a partir de ahí, seleccionar los distintos niveles NUTS para examinar sus particularidades en los países de la Unión Europea. Veamos unos ejemplos examinando algunos países elegidos al azar:
 
 \
 
@@ -386,7 +397,11 @@ unique(mapdata_df$CNTR_CODE)
 ```{r, out.width="80%", fig.width= 9, fig.height= 8, fig.align='center'}
 
 spain <- mapdata_df %>%
-  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
   filter(grepl("ES", NUTS_ID))
   
 
@@ -405,7 +420,11 @@ ggplot(spain, aes(x=long, y=lat, group=group)) +
 ```{r, out.width="70%", fig.width= 7, fig.height= 8, fig.align='center'}
 
 italy <- mapdata_df %>% 
-  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
   filter(grepl("IT", NUTS_ID))
    
 
@@ -425,7 +444,11 @@ ggplot(italy, aes(x=long, y=lat, group=group)) +
 ```{r, out.width="70%", fig.width= 8, fig.height= 8, fig.align='center'}
 
 france <- mapdata_df %>% 
-  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
   filter(grepl("FR", NUTS_ID))
    
 
@@ -447,7 +470,11 @@ ggplot(france, aes(x=long, y=lat, group=group)) +
 ```{r, out.width="70%", fig.width= 6, fig.height= 8, fig.align='center'}
 
 germany <- mapdata_df %>% 
-  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
   filter(grepl("DE", NUTS_ID))
   
 
@@ -467,7 +494,11 @@ ggplot(germany, aes(x=long, y=lat, group=group)) +
 ```{r, out.width="70%", fig.width= 6, fig.height= 8, fig.align='center'}
 
 unitedkingdom <- mapdata_df %>% 
-  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
   filter(grepl("UK", NUTS_ID)) 
   
 
@@ -482,31 +513,38 @@ ggplot(unitedkingdom, aes(x = long, y=lat, group = group)) +
 
 \
 
-# Ejemplos prácticos utilizando datos de Eurostat
+# Aplicación práctica utilizando datos de Eurostat
 
 \
 
 ## NUTS-0. Ratio de Mortalidad Infantil 
 
-En primer lugar vamos a representar en un mapa el **ratio de mortalidad infantil en el año 2017** por países. En Eurostat este ratio muestra el número de muertes de bebés menores de 1 año por cada mil nacimientos. Lo primero que hicimos fue buscar en la base de datos de Eurostat indicando la palabra "mortality" y, una vez seleccionado el dataframe que nos interesa lo descargamos y guardamos como `inf_mort_rate`. 
+En primer lugar vamos a representar en un mapa el **ratio de mortalidad infantil en el año 2017** por países (NUTS 0). En Eurostat este ratio (infant mortality rate) indica el número de muertes de bebés menores de 1 año por cada mil nacimientos. Para ello, lo primero que hacemos es buscar en la base de datos de Eurostat indicando la palabra "mortality" y, una vez seleccionado el dataframe que nos interesa, lo descargamos y guardamos como `inf_mort_rate`. 
 
 \
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+
+# Buscamos el dataset 
 
 mortality <- search_eurostat(pattern = "mortality", 
                                 type = "table")
 
-head(mortality)
+mortality %>%
+  select(title, code)
+
+
+# Descargamos el dataset "Infant mortality rate" utilizando el id (tps00027) 
 
 inf_mort_rate <- get_eurostat(id= "tps00027",  time_format = "num")
 
 head(inf_mort_rate)
+
 ```
 
 \
 
-Los **códigos que identifican los países** que incluye el mapa base previamente realizado son los siguientes. 
+Los **códigos que identifican los países** incluidos en el mapa base previamente realizado son los siguientes: 
 
 \
 
@@ -519,7 +557,7 @@ country_codes
 
 \
 
-Realizamos una serie de **modificaciones** al dataframe `inf_mort_rate` para seleccionar el año 2017 y las regiones que debemos incluir en nuestro mapa. 
+Realizamos una serie de **modificaciones** al dataframe `inf_mort_rate` para seleccionar el año 2017 e identificar las regiones que debemos incluir en nuestro mapa. 
 
 \
 
@@ -533,11 +571,11 @@ inf_mort_2017 <- inf_mort_rate %>%
 
 \
 
-**Unimos los dos dataframes** en uno que denominamos `inf_mort_2017_mapa` y seleccionamos el número de rangos en los que queremos clasificar los ratios de mortalidad infantil (en nuestro caso determinamos 10 categorías). 
+**Unimos los dos dataframes** en uno que denominamos `inf_mort_2017_mapa` y **seleccionamos el número de rangos** en los que queremos clasificar los ratios de mortalidad infantil (en este caso determinamos 10 categorías). 
 
 \
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 
 inf_mort_2017_mapa <- mapdata_0 %>%
   right_join(inf_mort_2017) %>%
@@ -547,7 +585,7 @@ inf_mort_2017_mapa <- mapdata_0 %>%
 
 \
 
-Y **graficamos**:
+Y finalmente **graficamos**:
 
 \
 
@@ -584,24 +622,25 @@ ggplot(inf_mort_2017_mapa, aes(fill=cat)) +
 
 ## NUTS-2. Jóvenes que ni estudian ni trabajan 
 
-En el segundo ejemplo vamos a tratar de representar en un mapa de Europa (NUTS-2) el **ratio de jóvenes que no se encuentran trabajando ni cursando algún tipo de formación** en el año 2016. Eurostat denomina a este ratio como el NEET ratio. 
+En el segundo ejemplo vamos a tratar de representar en un mapa de Europa (NUTS-2) el **ratio de jóvenes que no se encuentraban trabajando ni cursando algún tipo de formación** en el año 2016. Eurostat denomina a este ratio como el *NEET rate* (Youth not in employment, education or training). 
 
 \
 
-De nuevo **buscamos y descargamos la información** directamente de Eurostat al igual que hicimos previamente.
+De nuevo **buscamos y descargamos la información** directamente de Eurostat al igual que hicimos en el ejemplo anterior. En este caso el *id* que vamos a utilizar es `edat_lfse_22`.
 
 \
 
 ```{r, message=FALSE, warning=FALSE}
 
 neet <- get_eurostat(id= "edat_lfse_22",  time_format = "num")
+
 neet_label <- label_eurostat(neet, fix_duplicated = T)
 
 ```
 
 \
 
-Conviene **examinar las variables del dataframe y las categorias** que comprende dicho dataframe:
+Conviene **examinar las variables del dataframe y las categorías** que comprende dicho dataframe:
 
 \
 
@@ -630,7 +669,7 @@ regions_codes <- unique(mapdata_df_2$geo)
 
 \
 
-Posteriormente **realizamos algunas modificaciones sobre el dataset** para identificar el año, ambos sexos y el rango de edad 15-24 años. Además, seleccionamos los valores que se corresponden a las regiones presentes en el mapa base utilizando los códigos identificados previamente.
+Posteriormente **realizamos algunas modificaciones sobre el dataset** para identificar el año, ambos sexos y el rango de edad que vamos a tener en consideración: 15-24 años. Además, seleccionamos los valores que se corresponden a las regiones presentes en el mapa base utilizando los códigos identificados previamente.
 
 \ 
 
@@ -647,7 +686,7 @@ neet_total_2016 <- neet %>%
 
 \
 
-**Unimos los dataset y aplicamos rangos** atendiendo a los valores. En este caso identificamos 10 rangos para su posterior representación gráfica.
+**Unimos los dataset y aplicamos un conjunto de rangos** atendiendo a los valores. En este caso identificamos de nuevo 10 rangos para su posterior representación gráfica.
 
 \
 
@@ -661,13 +700,16 @@ neet_total_map <- mapdata_df_2 %>%
 
 \
 
-Utilizaremos basicamente los colores de la paleta denominada "Spectral". No obstante realizaremos alguna ligera **modificación a los colores que componen dicha paleta** con el objetivo de incluir un color gris para las regiones donde no tenemos información disponible. 
+Utilizamos básicamente los colores de la [paleta](http://www.di.fc.ul.pt/~jpn/r/GraphicalTools/colorPalette.html) denominada "Spectral". No obstante, sobre los colores de dicha paleta realizamos alguna sencilla **modificación** con el objetivo de incluir en nuestra selección un color gris para indicar las regiones europeas donde no tenemos información disponible. 
+
+\
+
+La función `brewer.pal()` del paquete `RColorBrewer` nos permite identificar los colores que componen la paleta en questión y la función `display.brewer.pal()` nos permite visualizar dichos colores. De esta forma podemos identificar los colores que queremos conservar y los colores que nos interesa añadir en nuestra selección de colores final.
 
 \
 
 ```{r, out.width = "60%", fig.align='center'}
 
-library(RColorBrewer)
 brewer.pal(11, "Spectral")
 display.brewer.pal(11, "Spectral")
 
@@ -718,7 +760,7 @@ ggplot(neet_total_map, aes(x= long, y=lat, group= group)) +
 
 ## NUTS-3. Edad promedio de las madres en el nacimiento
 
-Para terminar vamos a exponer un ejemplo de mapa a nivel NUT-3. En esta ocasión vamos a representar gráficamente la edad promedio de las madres en los nacimientos. Para ello seguimos un procedimiento similar al seguido en el apartado anterior. 
+Para terminar vamos a exponer un ejemplo de mapa a nivel NUT-3. En esta ocasión vamos a representar gráficamente la **edad promedio (media) de las madres en los nacimientos**. Para ello seguimos un procedimiento similar al seguido en el apartado anterior. 
 
 \
 
@@ -761,7 +803,7 @@ regions_3_codes <- unique(mapdata_df_3$geo)
 
 \
 
-**Manipulamos el dataframe** para seleccionar únicamente el año de interés, 2017, y la categoría que nos interesa: la edad media de las madres. 
+**Manipulamos el dataframe** para seleccionar únicamente el año de interés, en este caso el año 2017, y la categoría que nos interesa: la edad media de las madres. 
 
 \
 
@@ -816,7 +858,7 @@ ggplot(fertility_total_map, aes(x= long, y=lat, group= group)) +
                size = 0.005) +
   xlim(c(-24, 44)) +
   ylim(c(35, 72)) +
-  labs(title = "Edad media de las madres en el nacimiento, 2016",
+  labs(title = "Edad media de las madres en el nacimiento, 2017",
        subtitle = "NUTS-3 regions",
        caption = "Fuente: Eurostat",
        fill= "") +
