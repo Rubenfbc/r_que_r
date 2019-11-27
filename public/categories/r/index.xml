@@ -12,13 +12,13 @@
     
     
     <item>
-      <title>Waffle charts en R?</title>
+      <title>Waffle charts en R</title>
       <link>/waffle_charts/</link>
       <pubDate>Wed, 27 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/waffle_charts/</guid>
       <description>Re
-En este breve post se expondrán algunas posibilidades para realizar waffle charts con R. El post explica como hacer waffle charts con el paquete waffle y también cómo incluir iconos en los gráficos.
+En este breve post se expondrán algunas posibilidades para realizar waffle charts con R. El post explica cómo hacer waffle charts con el paquete waffle y también cómo incluir iconos en los gráficos.
 
 Paquetes
 library(tidyverse)library(waffle)library(babynames)library(extrafont)

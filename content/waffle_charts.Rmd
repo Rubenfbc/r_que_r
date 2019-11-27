@@ -1,5 +1,5 @@
 ---
-title: "Waffle charts en R?"
+title: "Waffle charts en R"
 author: "Rubén F. Bustillo"
 date: 2019-11-27
 categories: ["R"]
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 **Re**
 
-En este breve post se expondrán algunas posibilidades para realizar waffle charts con R. El post explica como hacer waffle charts con el paquete waffle y también cómo incluir iconos en los gráficos.   
+En este breve post se expondrán algunas posibilidades para realizar waffle charts con R. El post explica cómo hacer waffle charts con el paquete waffle y también cómo incluir iconos en los gráficos.   
 
 \
 
@@ -160,11 +160,15 @@ iron(
 
 \
 
+Resulta curioso que si bien la proporción de nacimientos de niños y niñas ha sido bastante equitativa en la mayor parte del periodo, quizá incluso con un mayor peso de los niños sobre las niñas, los datos evidencian que a finales del siglo XIX y principios del siglo XX la participación de nacimientos de niñas sobre el total de nacimientos era notablemente superior al de niños. Esta dinámica se refleja también en un [antiguo post](https://rquer.netlify.com/babynames_gganimate/) donde realizamos gráficos animados con el paquete `gganimate`. 
+
+\
+
 # Iconos en los waffle chart
 
 \
 
-En un [post anterior](https://rquer.netlify.com/infographics/) se explicó como realizar infografías y pictogramas con R. Siguiendo los pasos ahí expuestos podemos, por ejemplo, utilizar un icono del paquete `extrafont` a la hora de realizar los waffle charts. Pongamos un ejemplo adecuado a los datos sobre los que trabajamos:
+En un [post anterior](https://rquer.netlify.com/infographics/) se explicó cómo realizar infografías y pictogramas con R. Siguiendo los pasos ahí expuestos podemos, por ejemplo, utilizar un icono del paquete `extrafont` a la hora de realizar los waffle charts. Pongamos un ejemplo adecuado a los datos sobre los que trabajamos:
 
 \
 
@@ -184,7 +188,7 @@ waffle(
 
 \
 
-Otro ejemplo, con información completamente inventada y con un icono escogido al azar:
+Otro ejemplo adicional, con información completamente inventada y con un icono escogido al azar, sería el siguiente:
 
 \
 
