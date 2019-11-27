@@ -1,9 +1,9 @@
 ---
-title: "Evolución VAB per cápita en Perú (1995-2016) con gganimate"
+title: "Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con gganimate"
 author: "Rubén F. Bustillo"
 date: 2019-10-31
 categories: ["R"]
-tags: ["dplyr", "tidyverse", "ggplot2"]
+tags: ["dplyr", "tidyverse", "ggplot2", "Bar chart Race"]
 
 ---
 
@@ -23,7 +23,7 @@ En este post se mostrará cómo realizar, usando gganimate, un gráfico de barra
 
 \
 
-Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado donde se muestra la evolución del *ranking* de distintas economías, generalmente países, según su PIB o su PIB por habitante. En estos gráficos, generalmente gráficos de barras, se va observando para cada año que países ocupan los primeros puestos en el ranking y cómo han ido evolucionando a lo largo del tiempo. Suele sorprender el rápido avance que ha registrado China, país que ha sufrido grandes transformaciones económicas y sociales en las últimas décadas.
+Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado (denominados *bar chart race*) donde se muestra la evolución del *ranking* de distintas economías, generalmente países, según su PIB o su PIB por habitante. En estos gráficos, generalmente gráficos de barras, se va observando para cada año que países ocupan los primeros puestos en el ranking y cómo han ido evolucionando a lo largo del tiempo. Suele sorprender el rápido avance que ha registrado China, país que ha sufrido grandes transformaciones económicas y sociales en las últimas décadas.
 
 \
 

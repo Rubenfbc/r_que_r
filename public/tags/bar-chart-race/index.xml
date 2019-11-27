@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bar chart Race on R que R</title>
+    <link>/tags/bar-chart-race/</link>
+    <description>Recent content in Bar chart Race on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 31 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/bar-chart-race/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con gganimate</title>
+      <link>/vab_peru/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/vab_peru/</guid>
+      <description>Res
+En este post se mostrará cómo realizar, usando gganimate, un gráfico de barras dinámico que muestre la evolución del ranking de regiones peruanas atendiendo a VAB por habitante entre 1996 y 2016.
+
+Gráfico dinámico del VAB
+Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado (denominados bar chart race) donde se muestra la evolución del ranking de distintas economías, generalmente países, según su PIB o su PIB por habitante.</description>
+    </item>
+    
+  </channel>
+</rss>

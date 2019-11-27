@@ -6,10 +6,19 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 27 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>waffle charts</title>
+      <link>/tags/waffle-charts/</link>
+      <pubDate>Wed, 27 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/waffle-charts/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Europa</title>
@@ -48,7 +57,7 @@
     </item>
     
     <item>
-      <title>maps</title>
+      <title>Maps</title>
       <link>/tags/maps/</link>
       <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -233,6 +242,15 @@
       <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/spain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bar chart Race</title>
+      <link>/tags/bar-chart-race/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/bar-chart-race/</guid>
       <description></description>
     </item>
     

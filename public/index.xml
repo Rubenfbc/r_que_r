@@ -6,10 +6,25 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 27 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Waffle charts en R?</title>
+      <link>/waffle_charts/</link>
+      <pubDate>Wed, 27 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/waffle_charts/</guid>
+      <description>Re
+En este breve post se expondrán algunas posibilidades para realizar waffle charts con R. El post explica como hacer waffle charts con el paquete waffle y también cómo incluir iconos en los gráficos.
+
+Paquetes
+library(tidyverse)library(waffle)library(babynames)library(extrafont)
+El paquete waffle
+En primer lugar vamos a realizar un waffle chart utilizando el paquete waffle previamente cargado. Utilizaremos el dataframe babynames del paquete con el mismo nombre, donde se recogen los nombres de los recién nacidos en Estados Unidos desde 1880 a 2017 diferenciando por sexo del bebé.</description>
+    </item>
     
     <item>
       <title>¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat en R?</title>
@@ -96,7 +111,7 @@ En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando 
     </item>
     
     <item>
-      <title>Evolución VAB per cápita en Perú (1995-2016) con gganimate</title>
+      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con gganimate</title>
       <link>/vab_peru/</link>
       <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -105,7 +120,7 @@ En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando 
 En este post se mostrará cómo realizar, usando gganimate, un gráfico de barras dinámico que muestre la evolución del ranking de regiones peruanas atendiendo a VAB por habitante entre 1996 y 2016.
 
 Gráfico dinámico del VAB
-Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado donde se muestra la evolución del ranking de distintas economías, generalmente países, según su PIB o su PIB por habitante.</description>
+Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado (denominados bar chart race) donde se muestra la evolución del ranking de distintas economías, generalmente países, según su PIB o su PIB por habitante.</description>
     </item>
     
     <item>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>waffle charts on R que R</title>
+    <link>/tags/waffle-charts/</link>
+    <description>Recent content in waffle charts on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 27 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/waffle-charts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Waffle charts en R?</title>
+      <link>/waffle_charts/</link>
+      <pubDate>Wed, 27 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/waffle_charts/</guid>
+      <description>Re
+En este breve post se expondrán algunas posibilidades para realizar waffle charts con R. El post explica como hacer waffle charts con el paquete waffle y también cómo incluir iconos en los gráficos.
+
+Paquetes
+library(tidyverse)library(waffle)library(babynames)library(extrafont)
+El paquete waffle
+En primer lugar vamos a realizar un waffle chart utilizando el paquete waffle previamente cargado. Utilizaremos el dataframe babynames del paquete con el mismo nombre, donde se recogen los nombres de los recién nacidos en Estados Unidos desde 1880 a 2017 diferenciando por sexo del bebé.</description>
+    </item>
+    
+  </channel>
+</rss>

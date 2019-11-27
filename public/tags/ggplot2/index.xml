@@ -26,7 +26,7 @@ En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando 
     </item>
     
     <item>
-      <title>Evolución VAB per cápita en Perú (1995-2016) con gganimate</title>
+      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con gganimate</title>
       <link>/vab_peru/</link>
       <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -35,7 +35,7 @@ En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando 
 En este post se mostrará cómo realizar, usando gganimate, un gráfico de barras dinámico que muestre la evolución del ranking de regiones peruanas atendiendo a VAB por habitante entre 1996 y 2016.
 
 Gráfico dinámico del VAB
-Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado donde se muestra la evolución del ranking de distintas economías, generalmente países, según su PIB o su PIB por habitante.</description>
+Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado (denominados bar chart race) donde se muestra la evolución del ranking de distintas economías, generalmente países, según su PIB o su PIB por habitante.</description>
     </item>
     
     <item>

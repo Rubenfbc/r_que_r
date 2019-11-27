@@ -1,9 +1,9 @@
 ---
-title: "Evolución VAB per cápita en Perú (1995-2016) con gganimate"
+title: "Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con gganimate"
 author: "Rubén F. Bustillo"
 date: 2019-10-31
 categories: ["R"]
-tags: ["dplyr", "tidyverse", "ggplot2"]
+tags: ["dplyr", "tidyverse", "ggplot2", "Bar chart Race"]
 
 ---
 
@@ -17,7 +17,7 @@ tags: ["dplyr", "tidyverse", "ggplot2"]
 <h1>Gráfico dinámico del VAB</h1>
 <p><br />
 </p>
-<p>Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado donde se muestra la evolución del <em>ranking</em> de distintas economías, generalmente países, según su PIB o su PIB por habitante. En estos gráficos, generalmente gráficos de barras, se va observando para cada año que países ocupan los primeros puestos en el ranking y cómo han ido evolucionando a lo largo del tiempo. Suele sorprender el rápido avance que ha registrado China, país que ha sufrido grandes transformaciones económicas y sociales en las últimas décadas.</p>
+<p>Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado (denominados <em>bar chart race</em>) donde se muestra la evolución del <em>ranking</em> de distintas economías, generalmente países, según su PIB o su PIB por habitante. En estos gráficos, generalmente gráficos de barras, se va observando para cada año que países ocupan los primeros puestos en el ranking y cómo han ido evolucionando a lo largo del tiempo. Suele sorprender el rápido avance que ha registrado China, país que ha sufrido grandes transformaciones económicas y sociales en las últimas décadas.</p>
 <p><br />
 </p>
 <p>En este post vamos a mostrar cómo realizar un gráfico de estas carcterísticas. En esta ocasión vamos a mostrar la evolución del <em>ranking</em> de regiones peruanas según su VAB per cápita para el periodo 1996-2016. Perú está dividido en 24 regiones y una Provincia Constitucional que es El Callao (en esta ocasión Lima y El Callao se contabilizan conjuntamente). Las series históricas, que deflactamos previamente para obtener una sóla coherente para todo el periodo en miles de Soles constantes de 1994, la obtenemos del <a href="https://www.inei.gob.pe/">Instituto Nacional de Estadística e Informática del Perú (INEI)</a>.</p>
@@ -44,22 +44,21 @@ library(gganimate)</code></pre>
 Peru &lt;- read_excel(&quot;./datasets/Peru_vabpc_95_16.xlsx&quot;)
 head(Peru, n = 10)
 ## # A tibble: 10 x 24
-##    Nombre Area  `1995` `1996` `1997` `1998` `1999` `2000` `2001` `2002`
-##    &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Amazo~ Selva  1680.  1853.  1824.  1924.  1840.  1863.  1835.  1910.
-##  2 Áncash Sier~  3164.  3361.  3294.  3022.  3604.  3638.  4037.  4703.
-##  3 Apurí~ Sier~  1349.  1413.  1447.  1355.  1436.  1397.  1216.  1278.
-##  4 Arequ~ Costa  5037.  5019.  5298.  5202.  5191.  5283.  5387.  5766.
-##  5 Ayacu~ Sier~  1648.  1681.  1763.  1789.  1801.  1810.  1788.  1870.
-##  6 Cajam~ Sier~  1922.  1938.  2151.  2335.  2469.  2547.  2493.  2731.
-##  7 Cusco  Sier~  2175.  2172.  2310.  2308.  2234.  2253.  2194.  2086.
-##  8 Huanc~ Sier~  2602.  2760.  2929.  2938.  2940.  2793.  2700.  2632.
-##  9 Huánu~ Sier~  1671.  1727.  1795.  1726.  1730.  1755.  1678.  1694.
-## 10 Ica    Costa  4232.  4114.  4387.  4050.  4125.  4218.  4055.  4259.
-## # ... with 14 more variables: `2003` &lt;dbl&gt;, `2004` &lt;dbl&gt;, `2005` &lt;dbl&gt;,
-## #   `2006` &lt;dbl&gt;, `2007` &lt;dbl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;,
-## #   `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;,
-## #   `2016` &lt;dbl&gt;</code></pre>
+##    Nombre Area  `1995` `1996` `1997` `1998` `1999` `2000` `2001` `2002` `2003`
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Amazo~ Selva  1680.  1853.  1824.  1924.  1840.  1863.  1835.  1910.  1996.
+##  2 Áncash Sier~  3164.  3361.  3294.  3022.  3604.  3638.  4037.  4703.  4772.
+##  3 Apurí~ Sier~  1349.  1413.  1447.  1355.  1436.  1397.  1216.  1278.  1334.
+##  4 Arequ~ Costa  5037.  5019.  5298.  5202.  5191.  5283.  5387.  5766.  5895.
+##  5 Ayacu~ Sier~  1648.  1681.  1763.  1789.  1801.  1810.  1788.  1870.  1942.
+##  6 Cajam~ Sier~  1922.  1938.  2151.  2335.  2469.  2547.  2493.  2731.  2947.
+##  7 Cusco  Sier~  2175.  2172.  2310.  2308.  2234.  2253.  2194.  2086.  2195.
+##  8 Huanc~ Sier~  2602.  2760.  2929.  2938.  2940.  2793.  2700.  2632.  2683.
+##  9 Huánu~ Sier~  1671.  1727.  1795.  1726.  1730.  1755.  1678.  1694.  1833.
+## 10 Ica    Costa  4232.  4114.  4387.  4050.  4125.  4218.  4055.  4259.  4343.
+## # ... with 13 more variables: `2004` &lt;dbl&gt;, `2005` &lt;dbl&gt;, `2006` &lt;dbl&gt;,
+## #   `2007` &lt;dbl&gt;, `2008` &lt;dbl&gt;, `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;,
+## #   `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;, `2016` &lt;dbl&gt;</code></pre>
 <p><br />
 </p>
 <p>Para <strong>transformar el formato ancho a un formato largo</strong>, más apropiado para su manejo, podemos utilizar la función <code>gather()</code> como se indica a continuación. El resultado serán cuatro columnas, una donde se indicará el nombre de la región, una segunda columna que indicará si la región es de Sierra, Selva o Costa (clasificación que suele utilizarse en Perú para clasificar las regiones aunque existen otras que seleccionan las regiones en un mayor número de subcategorías), una tercera columna que indicará el año que representa cada observacion y una última columna que indicará el valor del Valor Agregado Bruto por habitante para cada región en cada uno de los años del periodo.</p>
