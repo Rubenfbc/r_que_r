@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Raster on R que R</title>
+    <link>/tags/raster/</link>
+    <description>Recent content in Raster on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 28 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/raster/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mapas regionales con el paquete raster</title>
+      <link>/mapas_raster/</link>
+      <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mapas_raster/</guid>
+      <description>Re
+Este post pretende exponer algunas herramientas que pueden ser de utilidad a la hora de realizar mapas base de cualquier país a distintos niveles de agregación regional utilizando el paquete raster.
+
+Introducción
+En post anteriores hemos abordado diversos aspectos que pueden ser de utilidad a la hora de realizar mapas en R. Así, por ejemplo, hemos explicado cómo trabajar con las nomenclaturas de las unidades territoriales estadísticas (NUTS) de Eurostat y expusimos cómo realizar mapas 3D con el paquete echarts4r y e_geo_3d.</description>
+    </item>
+    
+  </channel>
+</rss>

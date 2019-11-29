@@ -6,10 +6,37 @@
     <description>Recent content in R on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 27 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 29 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Ejemplos para representar la evolución temporal de alguna variable</title>
+      <link>/evolution/</link>
+      <pubDate>Fri, 29 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/evolution/</guid>
+      <description>Re
+Este post, todavía en construcción, presenta algunas posibles formas de representar la evolución temporal de alguna variable. Utilizaremos principalmente un dataset del conocido paquete gapminder.
+
+Paquetes
+library(tidyverse)library(gapminder)library(echarts4r)library(gganimate)library(viridis)library(hrbrthemes)
+datos_gapminder &amp;lt;- gapminderdatos_gapminder%&amp;gt;%arrange(year, country)## # A tibble: 1,704 x 6## country continent year lifeExp pop gdpPercap## &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;## 1 Afghanistan Asia 1952 28.</description>
+    </item>
+    
+    <item>
+      <title>Mapas regionales con el paquete raster</title>
+      <link>/mapas_raster/</link>
+      <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mapas_raster/</guid>
+      <description>Re
+Este post pretende exponer algunas herramientas que pueden ser de utilidad a la hora de realizar mapas base de cualquier país a distintos niveles de agregación regional utilizando el paquete raster.
+
+Introducción
+En post anteriores hemos abordado diversos aspectos que pueden ser de utilidad a la hora de realizar mapas en R. Así, por ejemplo, hemos explicado cómo trabajar con las nomenclaturas de las unidades territoriales estadísticas (NUTS) de Eurostat y expusimos cómo realizar mapas 3D con el paquete echarts4r y e_geo_3d.</description>
+    </item>
     
     <item>
       <title>Waffle charts en R</title>

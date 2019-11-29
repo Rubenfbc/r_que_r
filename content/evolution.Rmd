@@ -1,0 +1,122 @@
+---
+title: "Ejemplos para representar la evolución temporal de alguna variable"
+author: "Rubén F. Bustillo"
+date: 2019-11-29
+categories: ["R"]
+tags: ["waffle charts"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+Este post, todavía en construcción, presenta algunas posibles formas de representar la evolución temporal de alguna variable. Utilizaremos principalmente un dataset del conocido paquete gapminder.   
+
+\
+
+# Paquetes
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(gapminder)
+library(echarts4r)
+library(gganimate)
+library(viridis)
+library(hrbrthemes)
+
+```
+
+\
+
+```{r}
+
+datos_gapminder <- gapminder
+
+datos_gapminder%>%
+  arrange(year, country)
+
+```
+
+\
+
+```{r}
+
+datos_gapminder <- datos_gapminder %>%
+  mutate(Name = recode_factor(country,
+                              `Congo, Dem. Rep.`= "Dem. Rep. Congo",
+                              `Congo, Rep.`= "Congo",
+                              `Cote d'Ivoire`= "Côte d'Ivoire",
+                              `Central African Republic`= "Central African Rep.",
+                              `Yemen, Rep.`= "Yemen",
+                              `Korea, Rep.`= "Korea",
+                              `Korea, Dem. Rep.`= "Dem. Rep. Korea",
+                              `Czech Republic`= "Czech Rep.",
+                              `Slovak Republic`= "Slovakia",
+                              `Dominican Republic`= "Dominican Rep.",
+                              `Equatorial Guinea`= "Eq. Guinea"))
+
+```
+
+\
+
+# Evolución en mapa con el paquete echarts4r
+
+\
+
+```{r}
+
+datos_gapminder %>%
+  group_by(year) %>%
+  e_chart(Name, timeline = TRUE) %>%
+  e_map(lifeExp) %>%
+  e_visual_map(min= 20, max= 90)
+
+```
+
+\
+
+# Evolución en un bubble chart con  gganimate
+
+\
+
+```{r, out.width="80%", fig.align='center'}
+
+plot <-  ggplot(datos_gapminder, 
+                aes(x= log(gdpPercap), 
+                       y= lifeExp)) +
+  geom_point(aes(size = pop,
+                 fill= Name),
+             alpha = 0.9, 
+             colour= "black",
+             shape = 21,
+             show.legend = F) +
+  scale_size(range = c(0.5, 40)) +
+  scale_fill_viridis(discrete = T, option = "magma") +
+  theme_minimal() + 
+  theme(
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 14, hjust = 0.5),
+    plot.caption = element_text(size = 10, hjust = 1))+
+  labs(title = "GDP per Capita VS. Life Expectancy",
+       subtitle = "Year: {closest_state}",
+       caption = "Fuente: Gapminder",
+       x = "GDP per cápita (log)",
+       y = "Life Expectancy")
+
+ plot+ transition_states(year) 
+
+```
+

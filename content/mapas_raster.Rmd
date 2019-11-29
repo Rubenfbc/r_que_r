@@ -1,0 +1,388 @@
+---
+title: "Mapas regionales con el paquete raster"
+author: "Rubén F. Bustillo"
+date: 2019-11-28
+categories: ["R"]
+tags: ["Raster", "maps", "mapas"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+Este post pretende exponer algunas herramientas que pueden ser de utilidad a la hora de realizar mapas base de cualquier país a distintos niveles de agregación regional utilizando el paquete raster.
+
+\
+
+# Introducción
+
+\
+
+En **post anteriores** hemos abordado diversos aspectos que pueden ser de utilidad a la hora de realizar mapas en R. Así, por ejemplo, hemos explicado [cómo trabajar con las nomenclaturas de las unidades territoriales estadísticas (NUTS) de Eurostat](https://rquer.netlify.com/nuts/) y expusimos [cómo realizar mapas 3D con el paquete echarts4r y e_geo_3d](https://rquer.netlify.com/maps3d/). Previamente dedicamos un post para explicar [cómo realizar mapas de España a diversas unidades territoriales utilizando archivos shapefile](https://rquer.netlify.com/mapas_spain/) y otro para mostrar [cómo realizar mapas en R utilizando coordenadas geográficas así como mapas animados utilizando gganimate](https://rquer.netlify.com/mapa_coordenadas/). Por consiguiente, la presente entrada no tiene como objetivo específico representar en mapas alguna variable o indicador determinado, aspecto que ya se ha abarcado en los post mencionados, sino mostrar cómo podemos obtener mapas base de cualquier país a distintos niveles territoriales o geográficos. Para ello resulta de gran utilidad el paquete {raster}, a partir del cual podemos acceder a información geográfica de cualquier país del mundo y, gracias a ello, obtener cualquier mapa base que nos pueda interesar. 
+
+
+# Paquetes
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+library(raster)
+library(DT)
+library(ggplot2)
+library(tidyverse)
+
+```
+
+\
+
+la función `codes()` nos ofrece la **información geográfica** relevante de 256 unidades territoriales como muestra la tabla siguiente. 
+
+\
+
+```{r, out.width="100%"}
+
+datatable(ccodes())
+
+```
+
+\
+
+Aunque los encontramos en la tabla anterior, también podemos identificar los **código ISO3** de cada uno de los países con la función getData("ISO3"): 
+
+\
+
+```{r, out.width="100%"}
+
+datatable(getData("ISO3"))
+
+```
+
+\
+
+Utilizando dichos códigos, con la información que provee [gadm.org](https://gadm.org/), podemos representar mapas a diferentes niveles de agregación regional. Veámos algunos ejemplos en los siguientes apartados.
+
+\
+
+# España
+
+\
+
+## Nivel: País
+
+```{r}
+
+ESP_0 <- getData("GADM", country= "ESP", level=0)
+ESP_0
+
+```
+
+\
+
+```{r, out.width= "70%", fig.align='center', message=FALSE, warning=FALSE, fig.width=5, fig.height=4, eval=T}
+
+ggplot(ESP_0, aes(long, lat, group=group))+
+  labs(title = "País",
+       subtitle = "") +
+  geom_polygon(fill = "orange", 
+               color= "white",
+               size = 0.2,
+               alpha = 0.8) +
+  theme_bw()
+
+```
+
+\
+
+## Nivel: Comunidades Autónomas
+
+```{r}
+
+ESP_1 <- getData("GADM", country= "ESP", level=1)
+ESP_1
+
+```
+
+\
+
+```{r, out.width= "70%",fig.align='center', message=FALSE, fig.width=5, fig.height=4, eval=T}
+
+ggplot(ESP_1, aes(long, lat, group=group))+
+  labs(title = "Comunidades Autónomas",
+       subtitle = "") +
+  geom_polygon(fill = "orange", 
+               color= "white",
+               size = 0.2,
+               alpha = 0.8) +
+  theme_bw()
+
+```
+
+\
+
+## Nivel: Provincias
+
+```{r}
+
+ESP_2 <- getData("GADM", country= "ESP", level=2)
+ESP_2
+
+```
+
+\
+
+```{r,out.width= "70%", fig.align='center', message=FALSE, fig.width=5, fig.height=4, eval=T}
+
+ggplot(ESP_2, aes(long, lat, group=group))+
+  labs(title = "Provincias",
+       subtitle = "") +
+  geom_polygon(fill = "orange", 
+               color= "white",
+               size = 0.2,
+               alpha = 0.8) +
+  theme_bw()
+
+```
+
+\
+
+## Nivel: Comarcas
+
+```{r}
+
+ESP_3 <- getData("GADM", country= "ESP", level=3)
+ESP_3
+
+```
+
+\
+
+```{r,out.width= "70%", fig.align='center', message=FALSE, fig.width=5, fig.height=4, eval=T}
+
+ggplot(ESP_3, aes(long, lat, group=group))+
+  labs(title = "Comarcas",
+       subtitle = "") +
+  geom_polygon(fill = "orange", 
+               color= "white",
+               size = 0.2,
+               alpha = 0.8) +
+  theme_bw()
+
+```
+
+\
+
+## Nivel: Municipios
+
+```{r}
+
+ESP_4 <- getData("GADM", country= "ESP", level=4)
+ESP_4
+
+```
+
+\
+
+```{r, out.width= "70%",fig.align='center', message=FALSE, fig.width=5, fig.height=4, eval=T}
+
+ggplot(ESP_4, aes(long, lat, group=group))+
+  labs(title = "Municipios",
+       subtitle = "") +
+  geom_polygon(fill = "orange", 
+               color= "white",
+               size = 0.2,
+               alpha = 0.8) +
+  theme_bw()
+
+```
+
+\
+
+# Perú
+
+\
+
+## Nivel: País
+
+```{r}
+
+PER_0 <- getData("GADM", country= "PER", level=0)
+PER_0
+
+```
+
+\
+
+```{r, fig.align='center', fig.height=6, fig.width=4, message=FALSE, out.width="40%"}
+
+ggplot() +
+   geom_polygon(data= PER_0,
+                aes( x= long, y=lat, group= group),
+                color= "white",
+                fill = "palegreen3", 
+                size = 0.2,
+               alpha = 0.8) +
+  labs(title = "País",
+       subtitle = "") +
+  theme_bw()
+
+```
+
+
+## Nivel: Regiones / Departamentos
+
+\
+
+En esta ocasión vamos a realizar un mapa a nivel regional/departamental (level=1), al que **añadiremos los nombres de cada una de las regiones**.
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+PER_1 <- getData("GADM", country= "PER", level=1)
+PER_1
+
+```
+
+\
+
+Los nombres de las regiones se encuentran en una columna con nombre "NAME_1". Realizamos una serie de modificaciones tras las cuales obtenemos un dataset con las regiones y unas coordenadas geográficas que utilizaremos en el mapa posterior.
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+PERU_df <- broom::tidy(PER_1, region = "NAME_1")
+lapply(PERU_df, class)
+
+head(PERU_df)
+
+region_names <- aggregate(cbind(long, lat) ~id, data = PERU_df, FUN = mean)
+
+head(region_names)
+
+```
+
+\
+
+```{r, fig.align='center', fig.height=6, fig.width=4, message=FALSE, out.width="50%"}
+
+ggplot() +
+  geom_polygon(data = PER_1,
+               aes(x = long, y = lat, group=group),
+               colour = "white",
+               fill = "palegreen3")+
+  labs(title = "Regiones / Departamentos",
+       subtitle = "")+ 
+  geom_text(data=region_names, 
+            aes(x= long, y=lat, label =id), 
+            size = 2, color = "gray20") + 
+  theme_bw()
+
+```
+
+\
+
+## Provincias
+
+\ 
+
+```{r, warning=FALSE, message=FALSE}
+
+PER_2 <- getData("GADM", country= "PER", level=2)
+PER_2
+
+```
+
+\
+
+```{r, fig.align='center', fig.height=6, fig.width=4, message=FALSE, out.width="40%"}
+
+ggplot(PER_2, aes(long, lat, group=group))+
+  labs(title = "Provincias",
+       subtitle = "") +
+  geom_polygon(fill = "palegreen3", 
+               color= "white",
+               size = 0.1,
+               alpha = 0.8) +
+  theme_bw()
+
+```
+
+\
+
+En esta ocasión vamos a **identificar grupos de regiones**. Si observamos el tipo de provincias peruanas comprobamos que una de las unidades geográficas que incluye el dataset en lugar de ser provincia es una "Water body". Sin duda dicha unidad geográfica debe corresponder al Lago Titicaca. Consecuentemente vamos a realizar un mapa donde distingamos el Lago Titicaca del resto del país. Para ello debemos realizar una serie de modificaciones como veremos a continuación.
+
+\
+
+```{r}
+
+PER_2@data$TYPE_2
+
+```
+
+\
+
+```{r,warning=FALSE, message=FALSE}
+
+PERU_2_df <- broom::tidy(PER_2, region = "NAME_2")
+lapply(PERU_2_df, class)
+
+PER_2@data <- PER_2@data %>% mutate(isProvince = as.factor(ifelse(TYPE_2 == "Provincia", yes = "Provincia", no = "Water body")))
+
+PERU_2_df <- broom::tidy(PER_2, region = "isProvince")
+
+```
+
+\
+
+
+```{r, fig.align='center', fig.height=5, fig.width=5, message=FALSE, out.width="50%"}
+
+ggplot() + 
+  geom_polygon(data = PERU_2_df, 
+               aes(x = long, y = lat, 
+                   group = group, 
+                   fill = id), 
+               colour = "white") +
+  labs(title = "Provincias",
+       subtitle = "") +
+  theme_bw() +
+  scale_fill_manual(values = c("palegreen3",  "deepskyblue"))
+
+```
+
+\
+
+## Distritos
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+PER_3 <- getData("GADM", country= "PER", level=3)
+PER_3
+
+```
+
+\
+
+```{r, fig.align='center', fig.height=6, fig.width=4, message=FALSE, out.width="40%"}
+
+ggplot(PER_3, aes(long, lat, group=group))+
+  labs(title = "Distritos",
+       subtitle = "") +
+  geom_polygon(fill = "palegreen3", 
+               color= "white",
+               size = 0.1,
+               alpha = 0.8) +
+  theme_bw()
+
+```
+
