@@ -34,6 +34,7 @@ Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se 
 library(mapdata)
 library(ggplot2)
 library(maps)
+library(ggrepel)
 
 # Guardamos la información en un nuevo dataframe llamado mapa_mundo
 
@@ -127,6 +128,46 @@ mapa_mundo %>%
   coord_fixed (xlim= c(-100,-25),
               ylim= c(-60,20),
               ratio = 1.2)
+
+```
+
+\
+
+Podemos **identificar el nombre de algunas ciudades** de las siguiente forma:
+
+\
+
+```{r, message = FALSE, warning = FALSE, out.width = "80%", fig.align = 'center'}
+
+ciudades <- c("Lima", "Sao Paulo", "Bogotá")
+coordenadas <- data.frame( long = c(-77.0282364, -46.6388, -74.081749 ), 
+                           lat= c(-12.0431805,-23.5489, 4.6097102),
+                           stringsAsFactors = F) 
+              
+coordenadas$ciudades <- ciudades      
+
+
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey80",
+               color = "white") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "black", size= 1)) +
+  ggtitle( "Mapa de América del Sur") +
+  coord_fixed (xlim= c(-100,-25),
+              ylim= c(-60,20),
+              ratio = 1.2)+
+  geom_point(data=coordenadas, aes(long, lat),
+             color= "red", size=1) +
+  geom_text_repel(data = coordenadas, 
+                  aes(long, lat, label =ciudades))
 
 ```
 
