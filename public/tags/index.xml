@@ -12,15 +12,6 @@
     
     
     <item>
-      <title>waffle charts</title>
-      <link>/tags/waffle-charts/</link>
-      <pubDate>Fri, 29 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/waffle-charts/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Mapas</title>
       <link>/tags/mapas/</link>
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
@@ -44,6 +35,15 @@
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/raster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>waffle charts</title>
+      <link>/tags/waffle-charts/</link>
+      <pubDate>Wed, 27 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/waffle-charts/</guid>
       <description></description>
     </item>
     

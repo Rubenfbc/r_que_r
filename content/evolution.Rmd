@@ -1,9 +1,9 @@
 ---
-title: "Ejemplos para representar la evolución temporal de alguna variable"
+title: "Representación de la evolución temporal de alguna variable (parte I)"
 author: "Rubén F. Bustillo"
 date: 2019-11-29
 categories: ["R"]
-tags: ["waffle charts"]
+tags: [""]
 
 ---
 
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 **Re**
 
-Este post, todavía en construcción, presenta algunas posibles formas de representar la evolución temporal de alguna variable. Utilizaremos principalmente un dataset del conocido paquete gapminder.   
+Este post tiene como objetivo presentar algunas posibles formas de representar la evolución temporal de alguna variable. Utilizaremos el dataframe `gapminder` del conocido paquete del mismo nombre.   
 
 \
 
@@ -32,6 +32,34 @@ library(echarts4r)
 library(gganimate)
 library(viridis)
 library(hrbrthemes)
+library(DT)
+
+```
+
+\
+
+# Dataset
+
+\
+
+En esta ocasión vamos a utilizar una dataset bastante conocido llamado `gapminder` que se encuentra en el paquete del mismo nombre. Este dataframe contiene la siguiente información para 142 países:
+
+- **country**: Nombre de 142 países. No osbtante sorprende la ausencia de países de gran tamaño como Rusia, Groenlandia o  Ucrania entre otros.
+- **continent**: Indica el continente de cada país. 
+- **year**: El rango de datos abarca el periodo 1952-2007 (en incrementos de 5 años).
+- **lifeExp**: Indica la esperanza de vida de cada país en años.
+- **pop**: Población.
+- **gdpPercap**: Indica el PIB por habitante en dólares ajustados a la inflación.
+
+\
+
+**Veámos el conjunto del dataframe**:
+
+\
+
+```{r}
+
+datatable(gapminder)
 
 ```
 
@@ -39,18 +67,7 @@ library(hrbrthemes)
 
 ```{r}
 
-datos_gapminder <- gapminder
-
-datos_gapminder%>%
-  arrange(year, country)
-
-```
-
-\
-
-```{r}
-
-datos_gapminder <- datos_gapminder %>%
+datos_gapminder <- gapminder %>%
   mutate(Name = recode_factor(country,
                               `Congo, Dem. Rep.`= "Dem. Rep. Congo",
                               `Congo, Rep.`= "Congo",
@@ -68,27 +85,19 @@ datos_gapminder <- datos_gapminder %>%
 
 \
 
-# Evolución en mapa con el paquete echarts4r
+# Evolución en un bubblechart con  gganimate
 
 \
 
-```{r}
-
-datos_gapminder %>%
-  group_by(year) %>%
-  e_chart(Name, timeline = TRUE) %>%
-  e_map(lifeExp) %>%
-  e_visual_map(min= 20, max= 90)
-
-```
+Una opción muy recurrente para mostrar la evolución de los países, especialmente para evidenciar la relación entre algún indicador con respecto al PIB por habitante de cada país, es realizar un **scatterplot o un bubblechart** donde cada variable se representa en uno de los ejes del gráfico (abscisas y ordenadas) y donde el tamaño de las burbujas correponde al tamaño de cada una de las economías (bien sea por población, PIB u otro indicador). Por su parte, el paquete {gganimate} nos permite dinamizar el gráfico para observar de una forma más natural la evolución temporal de la relación entre las variables analizadas. 
 
 \
 
-# Evolución en un bubble chart con  gganimate
+En esta ocasión vamos a representar la evolución de la **relación entre la esperanza de vida y el PIB por habitante** de los países presentes en el dataset. El tamaño de las burbujas corresponderá al tamaño de cada economía según su población. Sin lugar a duda China e India destacarán con respecto al resto de países debido a su gran población.
 
 \
 
-```{r, out.width="80%", fig.align='center'}
+```{r, out.width="80%", fig.align='center', eval=T}
 
 plot <-  ggplot(datos_gapminder, 
                 aes(x= log(gdpPercap), 
@@ -119,4 +128,166 @@ plot <-  ggplot(datos_gapminder,
  plot+ transition_states(year) 
 
 ```
+
+\
+
+Debido al gran número de países resulta difícil identificarlos por colores. Sin embargo, puede resultar conveniente **asignar un color a cada continente**, como por ejemplo el de los [anillos olímpicos](https://condislife.com/2012/07/24/que-significan-los-colores-de-los-aros-olimpicos/). Para ello podemos indicar los cólores deseados de la siguiente forma:
+
+\
+
+```{r, out.width="80%", fig.align='center', eval=T}
+
+plot_2 <-  ggplot(datos_gapminder, 
+                aes(x= log(gdpPercap), 
+                       y= lifeExp)) +
+  geom_point(aes(size = pop,
+                 fill= continent),
+             alpha = 0.9, 
+             colour= "black",
+             shape = 21,
+             show.legend = F) +
+  scale_size(range = c(0.5, 40)) +
+  scale_fill_manual(values = c("grey30", "firebrick3", "gold", "forestgreen", "dodgerblue")) +
+  theme_minimal() + 
+  theme(
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 14, hjust = 0.5),
+    plot.caption = element_text(size = 10, hjust = 1))+
+  labs(title = "GDP per Capita VS. Life Expectancy",
+       subtitle = "Year: {closest_state}",
+       caption = "Fuente: Gapminder",
+       x = "GDP per cápita (log)",
+       y = "Life Expectancy")
+
+ plot_2 + transition_states(year) 
+
+```
+
+\
+
+Los gráficos sugieren que **existe una relación entre la esperanza de vida de los países y su PIB per cápita**. También parece evidente que, a granes rasgos, **existen diferencias notables por continente**, siendo los países africanos los que, por lo general, registran un menor PIB per cápita y una menor esperanza de vida. Por el lado positivo se observa una **evolución favorable a lo largo del periodo analizado**, dándose un progresivo y generalizado incremento del VAB por habitante y, con ello, una progresiva mejora en la esperanza de vida de la mayoría de países.  
+
+\
+
+# Bar chart con gganimate
+
+\
+
+Otra posibilidad para examinar la evolución de la esperanza de vida en los países incluidos en el dataframe `gapminder` es realizar un **gráfico de barras** donde se refleje el valor de cada país en algún año determinado. Al realizar el gráfico podemos diferenciar los países por continente con el objetivo de comparar no solo la situación general de los distintos continentes sino también la situación relativa de cada país en comparación con otros países del mismo continente.
+
+\
+
+Antes de graficar realizamos una serie de **modificaciones al dataframe** utilizado previamente. Nos interesa establecer las etiquetas que aparecerán en el gráfico (redondeamos el valor de la esperanza de vida) así como calcular la esperanza de vida promedio de todo el periodo en cada país, valor que nos servirá para ordenar los distintos países en el gráfico. Nótese que en este caso hemos decidido ordenar los países según el valor promedio pero podríamos escoger otro criterio para ello.
+
+\
+
+```{r}
+datos_gapminder_plot3 <- datos_gapminder %>%
+  group_by(country) %>%
+  arrange(country) %>%
+  mutate(label = paste0(" ", round(lifeExp))) %>%
+  mutate(mean = mean(lifeExp))
+
+datos_gapminder_plot3$lifeExp <- formatC(datos_gapminder_plot3$lifeExp, format = "f", digits=1)
+
+datos_gapminder_plot3$lifeExp <- as.numeric(datos_gapminder_plot3$lifeExp)
+
+```
+
+\
+
+Una vez tenemos preparado el dataset **realizamos el gráfico**. Utilizamos el `theme_lab()` de [traffordatalab](https://www.trafforddatalab.io/graphics_companion/), theme que ya hemos utilizado previamente y que personalmente encuentro bastante agradable a la vista. 
+
+\
+
+```{r, fig.width= 10, fig.height=20, out.width = "100%", eval=T}
+
+source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R")
+
+
+plot_3 <- datos_gapminder_plot3 %>%
+  ggplot(aes(reorder(country, mean), lifeExp, 
+             fill= continent)) +
+  geom_col(alpha = 0.8,
+           size= 2)+
+  coord_flip() +
+  facet_wrap(~continent, scales= "free_y", ncol=2) +
+  labs(title = "Expectativa de vida por país y continente", 
+       subtitle = "Year : {closest_state}",
+       caption = "Fuente: gapminder",
+       fill= NULL,
+       x= "", y="") +
+  theme_lab()+
+  theme(panel.grid.major.x = element_blank(),
+        plot.title = element_text(size = 14, 
+                                  face = "bold", 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=14, 
+                                     face = "plain", 
+                                     hjust = 0.5),
+        axis.text.y= element_text(size = 8, hjust = 1),
+        axis.text.x= element_text(size = 8),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())+
+  geom_hline(yintercept=c(25, 50, 75, 100), 
+             color = "lightgrey",
+             linetype = "dashed")+
+  geom_text(aes(label = label), 
+            hjust = 0,
+            color = "grey40",
+            size = 2.8)+
+  guides(color = FALSE, fill = FALSE) +
+  scale_fill_manual(values = c("grey30", "firebrick3", "gold", "forestgreen", "dodgerblue"))+
+  transition_states(year)
+
+plot_3
+
+```
+
+\
+
+En este gráfico podemos observar, a nivel país, cómo ha ido evolucionando cada una de las naciones en términos de expectativa de vida. Tal y como mencionamos previamente ha habido una mejoría generalizada en este indicador aunque existen notables diferencias entre países y entre continentes. Destaca notablemente la fuerte caída en la esperanza de vida de algunos países en los años que sufrieron episodios bélicos o de conflicto como es el caso de Ruanda, Irak o Camboya. 
+
+\
+
+# Mapa evolutivo con el paquete echarts4r
+
+\
+
+Tal y como se expuso en un [post anterior](https://rquer.netlify.com/maps3d/), podemos representar la evolución de la esperanza de vida, o de otra variable de interés, en un mapa con el paquete {echarts4r}. Un mapa de estas características nos permite visualizar la evolución de los países y detectar de forma instantánea aquellos países que no están incluidos en el dataframe del paquete {gapminder}. 
+
+\
+
+```{r, out.width="80%"}
+
+datos_gapminder %>%
+  group_by(year) %>%
+  e_chart(Name, timeline = TRUE) %>%
+  e_map(lifeExp) %>%
+  e_visual_map(min= 20, max= 90) %>%
+  e_title("Esperanza de vida por país y año", left = "center") 
+
+```
+
+\
+
+Se podría realizar un **gráfico 3D** con una simple modificación del código previo.
+
+\
+
+```{r, out.width="80%"}
+
+datos_gapminder %>%
+  group_by(year) %>%
+  e_chart(Name, timeline = TRUE) %>%
+  e_map_3d(lifeExp) %>%
+  e_visual_map(min= 20, max= 90) %>%
+  e_title("Esperanza de vida por país y año", left = "center") 
+
+```
+
 

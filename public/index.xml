@@ -12,17 +12,16 @@
     
     
     <item>
-      <title>Ejemplos para representar la evolución temporal de alguna variable</title>
+      <title>Representación de la evolución temporal de alguna variable (parte I)</title>
       <link>/evolution/</link>
       <pubDate>Fri, 29 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/evolution/</guid>
       <description>Re
-Este post, todavía en construcción, presenta algunas posibles formas de representar la evolución temporal de alguna variable. Utilizaremos principalmente un dataset del conocido paquete gapminder.
+Este post tiene como objetivo presentar algunas posibles formas de representar la evolución temporal de alguna variable. Utilizaremos el dataframe gapminder del conocido paquete del mismo nombre.
 
 Paquetes
-library(tidyverse)library(gapminder)library(echarts4r)library(gganimate)library(viridis)library(hrbrthemes)
-datos_gapminder &amp;lt;- gapminderdatos_gapminder%&amp;gt;%arrange(year, country)## # A tibble: 1,704 x 6## country continent year lifeExp pop gdpPercap## &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;## 1 Afghanistan Asia 1952 28.</description>
+library(tidyverse)library(gapminder)library(echarts4r)library(gganimate)library(viridis)library(hrbrthemes)library(DT)</description>
     </item>
     
     <item>
