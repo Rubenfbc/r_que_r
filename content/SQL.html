@@ -716,8 +716,8 @@ sqldf(&#39;SELECT name, name_full
 ## 15 Didius Julianus     CAESAR MARCVS DIDIVS SEVERVS IVLIANVS AVGVSTVS</code></pre>
 <p><br />
 </p>
-<p><strong>En R</strong> podemos también utilizar operadores para realizar este tipo de operaciones. No obstante tengo intención de realizar un post completo sobre manejo de strings en R donde espero abarcar este tema en mayor profundidad.<br />
-<br />
+<p><strong>En R</strong> podemos también utilizar operadores para realizar este tipo de operaciones. No obstante tengo intención de realizar un post completo sobre manejo de strings en R donde espero abarcar este tema en mayor profundidad.</p>
+<p><br />
 </p>
 <p><br />
 </p>
@@ -867,6 +867,57 @@ loans %&gt;%
 ## 13    18       4 2627761194.</code></pre>
 <p><br />
 </p>
+<p>Existen en SQL diversos procedimientos que podemos utilizar para extrer la información requerida del dataset original. Pongamos, por ejemplo, que nos interesa <strong>únicamente el nombre de la agencia prestamista que se corresponde al mayor valor devuelto en el año 2015</strong>. Para ello seleccionarmoes <code>agency_name</code> después de SELECT, para indicar la variable que queremos obtener, pero necesitamos otro SELECT para indicar las condiciones requeridas.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name 
+      FROM loans 
+      WHERE total = (SELECT MAX(total) 
+                     FROM loans 
+                     WHERE year = 15)&#39;)
+##   agency_name
+## 1    ConServe</code></pre>
+<p><br />
+</p>
+<p>O supongamos que nos interesa <strong>únicamente el nombre de la agencia prestamista que se corresponde al menor valor del conjunto de pagos voluntarios registrados</strong> en el dataset.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name 
+      FROM loans 
+      WHERE voluntary_payments = (SELECT MIN(voluntary_payments) 
+                                  FROM loans)&#39;)
+##                 agency_name
+## 1 Reliant Capital Solutions</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> podemos llegar a los mismos resultados utilizando una serie de funciones. Por consiguiente, podemos llegar a los resultados de los ejercicios previos utilizando sintaxis del paquete {dplyr} de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  filter(year == 15) %&gt;%
+  arrange(desc(total)) %&gt;%
+  head(n=1) %&gt;%
+  select(agency_name)
+## # A tibble: 1 x 1
+##   agency_name
+##   &lt;chr&gt;      
+## 1 ConServe</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  arrange(voluntary_payments) %&gt;%
+  head(n=1) %&gt;%
+  select(agency_name)
+## # A tibble: 1 x 1
+##   agency_name              
+##   &lt;chr&gt;                    
+## 1 Reliant Capital Solutions</code></pre>
+<p><br />
+</p>
 </div>
 <div id="between" class="section level1">
 <h1>BETWEEN</h1>
@@ -909,4 +960,6 @@ loans %&gt;%
 ## 6    16 National Credit Services                                   81954.
 ## 7    16 Professional Bureau of Collections of Maryland             27994.
 ## 8    18 ERS                                                        75047.</code></pre>
+<p><br />
+</p>
 </div>

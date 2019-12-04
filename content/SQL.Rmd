@@ -413,6 +413,7 @@ sqldf('SELECT name, name_full
 \
 
 **En R** podemos también utilizar operadores para realizar este tipo de operaciones. No obstante tengo intención de realizar un post completo sobre manejo de strings en R donde espero abarcar este tema en mayor profundidad.  
+
 \
 
 \
@@ -556,6 +557,65 @@ loans %>%
 
 \
 
+Existen en SQL diversos procedimientos que podemos utilizar para extrer la información requerida del dataset original. Pongamos, por ejemplo, que nos interesa **únicamente el nombre de la agencia prestamista que se corresponde al mayor valor devuelto en el año 2015**. Para ello seleccionarmoes `agency_name` después de SELECT, para indicar la variable que queremos obtener, pero necesitamos otro SELECT para indicar las condiciones requeridas.
+
+\
+
+```{r}
+
+sqldf('SELECT agency_name 
+      FROM loans 
+      WHERE total = (SELECT MAX(total) 
+                     FROM loans 
+                     WHERE year = 15)')
+
+```
+
+\
+
+O supongamos que nos interesa **únicamente el nombre de la agencia prestamista que se corresponde al menor valor del conjunto de pagos voluntarios registrados** en el dataset. 
+
+\
+
+```{r}
+
+sqldf('SELECT agency_name 
+      FROM loans 
+      WHERE voluntary_payments = (SELECT MIN(voluntary_payments) 
+                                  FROM loans)')
+
+
+```
+
+\
+
+**En R** podemos llegar a los mismos resultados utilizando una serie de funciones. Por consiguiente, podemos llegar a los resultados de los ejercicios previos utilizando sintaxis del paquete {dplyr} de la siguiente forma:
+
+\
+
+```{r}
+
+loans %>%
+  filter(year == 15) %>%
+  arrange(desc(total)) %>%
+  head(n=1) %>%
+  select(agency_name)
+
+```
+
+\
+
+```{r}
+
+loans %>%
+  arrange(voluntary_payments) %>%
+  head(n=1) %>%
+  select(agency_name)
+
+```
+
+\
+
 # BETWEEN
 
 \
@@ -586,4 +646,7 @@ loans %>%
   filter(voluntary_payments > 20000 & voluntary_payments < 100000)
 
 ```
+
+\
+
 
