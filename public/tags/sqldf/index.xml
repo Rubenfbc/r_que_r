@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sqldf on R que R</title>
+    <link>/tags/sqldf/</link>
+    <description>Recent content in sqldf on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 03 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/sqldf/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SQL en R con el paquete sqldf (en construcción)</title>
+      <link>/sql/</link>
+      <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/sql/</guid>
+      <description>Re
+En el presente post se abordará la función sqldf( ) única función del paquete {sqldf}, mediante la cual es posible utilizar las formulaciones y la sintaxis convencional de SQL en el entorno de R.
+
+Paquetes
+El paquete {sqldf} consiste en una función sqldf(). Dicha función se acompaña con el comando SELECT de SQL seguido de la sintaxis tradicional de SQL. Esta función nos permite trabajar con las formulaciones de SQL sobre dataframes del entorno de R.</description>
+    </item>
+    
+  </channel>
+</rss>
