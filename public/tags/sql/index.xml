@@ -21,7 +21,7 @@
 En el presente post se abordará la función sqldf( ) única función del paquete {sqldf}, mediante la cual es posible utilizar las formulaciones y la sintaxis convencional de SQL en el entorno de R.
 
 Paquetes
-El paquete {sqldf} consiste en una función sqldf(). Dicha función se acompaña con el comando SELECT de SQL seguido de la sintaxis tradicional de SQL. Esta función nos permite trabajar con las formulaciones de SQL sobre dataframes del entorno de R.</description>
+El paquete {sqldf} consiste en una función sqldf(). Dicha función se acompaña con el comando SELECT de SQL seguido de la sintaxis tradicional de SQL (Structured Query Language). Esta función nos permite trabajar con las formulaciones de SQL sobre dataframes del entorno de R.</description>
     </item>
     
   </channel>

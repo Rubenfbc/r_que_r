@@ -17,7 +17,7 @@ tags: ["SQL", "sqldf"]
 <h1>Paquetes</h1>
 <p><br />
 </p>
-<p>El paquete {sqldf} consiste en una función <code>sqldf()</code>. Dicha función se acompaña con el comando SELECT de SQL seguido de la sintaxis tradicional de SQL. Esta función nos permite trabajar con las formulaciones de SQL sobre dataframes del entorno de R. En este post realizaremos algunos ejercicios para explicar su funcionalidad aplicando la función <code>sqldf()</code> sobre un par de dataframes con el objetivo de responder a una serie de preguntas sobre los mismos.</p>
+<p>El paquete {sqldf} consiste en una función <code>sqldf()</code>. Dicha función se acompaña con el comando SELECT de SQL seguido de la sintaxis tradicional de SQL (Structured Query Language). Esta función nos permite trabajar con las formulaciones de SQL sobre dataframes del entorno de R. En este post realizaremos algunos ejercicios para explicar su funcionalidad aplicando la función <code>sqldf()</code> sobre un par de dataframes con el objetivo de responder a una serie de preguntas sobre los mismos.</p>
 <p><br />
 </p>
 <p>En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos servirá para comparar la sintaxis de SQL con la sintaxis tradicional de {dplyr}. En <a href="https://rquer.netlify.com/babynames/">este post anterior</a> se expone en mayor profundidad las principales funcionalidades del paquete {tidyverse}.</p>
@@ -199,6 +199,32 @@ sqldf(&#39;SELECT name, dynasty, birth, killer, cause
 ## 10     Titus        Flavian 0039-12-30       Disease Natural Causes</code></pre>
 <p><br />
 </p>
+<div id="as" class="section level2">
+<h2>AS</h2>
+<p>Es posible que nos interese <strong>modificar el nombre de las columnas</strong> del dataset resultante. En SQL estos cambios los podemos realizar fácilmente con AS. Veamos por ejemplo cómo podríamos cambiar el nombre de todas las variables seleccionadas en el punto anterior.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name AS Nombre, 
+              dynasty AS Dinastía, 
+              birth AS Nacimiento, 
+              killer AS Asesino, 
+              cause AS Causa_muerte 
+      FROM emperors 
+      LIMIT 10&#39;)
+##       Nombre       Dinastía Nacimiento       Asesino   Causa_muerte
+## 1   Augustus Julio-Claudian    -696617          Wife  Assassination
+## 2   Tiberius Julio-Claudian    -704233 Other Emperor  Assassination
+## 3   Caligula Julio-Claudian    -714902        Senate  Assassination
+## 4   Claudius Julio-Claudian    -716028          Wife  Assassination
+## 5       Nero Julio-Claudian    -705665        Senate        Suicide
+## 6      Galba        Flavian    -718440 Other Emperor  Assassination
+## 7       Otho        Flavian    -707722 Other Emperor        Suicide
+## 8  Vitellius        Flavian    -713783 Other Emperor  Assassination
+## 9  Vespasian        Flavian    -715920       Disease Natural Causes
+## 10     Titus        Flavian    -704920       Disease Natural Causes</code></pre>
+<p><br />
+</p>
 <p><strong>En R</strong>, para seleccionar las columnas mencionadas con la función <code>select()</code> de {dplyr} indicamos:</p>
 <p><br />
 </p>
@@ -221,6 +247,7 @@ emperors %&gt;%
 ## 10 Titus     Flavian        0039-12-30 Disease       Natural Causes</code></pre>
 <p><br />
 </p>
+</div>
 </div>
 <div id="order-by" class="section level1">
 <h1>ORDER BY</h1>
@@ -433,6 +460,19 @@ head(birth_cities_2, n=10)
 ##  [6] &quot;Falacrine&quot;  &quot;Narni&quot;      &quot;Italica&quot;    &quot;Lanuvium&quot;   &quot;Alba&quot;</code></pre>
 <p><br />
 </p>
+<p>No obstante, podemos utilizar COUNT conjuntamente con DISTINCT en una misma expresión para obtener la <strong>cuenta de los valores únicos</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT COUNT(DISTINCT name) AS num_unique
+      FROM emperors&#39;)
+##   num_unique
+## 1         68
+
+sqldf(&#39;SELECT COUNT(DISTINCT birth_cty) AS num_unique
+      FROM emperors&#39;)
+##   num_unique
+## 1         30</code></pre>
 </div>
 <div id="where" class="section level1">
 <h1>WHERE</h1>
@@ -481,7 +521,8 @@ sqldf(&#39;SELECT name, birth_cty, killer
 <pre class="r"><code>
 sqldf(&#39;SELECT name, birth_cty, killer 
       FROM emperors 
-      WHERE cause = &quot;Assassination&quot; AND killer = &quot;Praetorian Guard&quot;&#39;)
+      WHERE cause = &quot;Assassination&quot; 
+      AND killer = &quot;Praetorian Guard&quot;&#39;)
 ##          name birth_cty           killer
 ## 1    Commodus  Lanuvium Praetorian Guard
 ## 2    Pertinax      Alba Praetorian Guard
@@ -498,7 +539,8 @@ sqldf(&#39;SELECT name, birth_cty, killer
 <pre class="r"><code>
 sqldf(&#39;SELECT name, birth_cty, killer 
       FROM emperors 
-      WHERE killer = &quot;Praetorian Guard&quot; OR killer = &quot;Own Army&quot;&#39;)
+      WHERE killer = &quot;Praetorian Guard&quot; 
+      OR killer = &quot;Own Army&quot;&#39;)
 ##                 name     birth_cty           killer
 ## 1           Commodus      Lanuvium Praetorian Guard
 ## 2           Pertinax          Alba Praetorian Guard
@@ -670,6 +712,31 @@ emperors %&gt;%
 <p><br />
 </p>
 </div>
+<div id="null-is-null" class="section level2">
+<h2>NULL / IS NULL</h2>
+<p>Previamente hemos visto que había valores NA en la columna <code>birth_cty</code>. En SQL los <em>missing values</em> se representan por <code>NULL</code>. <strong>Para identificar el número de NA`s o NULL values</strong> podemos utilizar el operador COUNT conjuntamente con IS NULL.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT COUNT(*)
+     FROM emperors
+     WHERE birth_cty IS NULL&#39;)
+##   COUNT(*)
+## 1       17</code></pre>
+<p><br />
+</p>
+<p>Alternativamente podemos contar los valores que no son NULL en la variable <code>birth_cty</code> utilizariamos el opuesto: NOT NULL.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT COUNT(*)
+     FROM emperors
+     WHERE birth_cty IS NOT NULL&#39;)
+##   COUNT(*)
+## 1       51</code></pre>
+<p><br />
+</p>
+</div>
 <div id="where-like-not-like" class="section level2">
 <h2>WHERE LIKE / NOT LIKE</h2>
 <p>Pongamos que, por alguna razón que no ahora mismo no se me ocurre como justificar, nos interesa seleccionar los <strong>emperadores romanos cuyo nombre acabe por ius</strong> (Tiberius, Aurelius, etc.). Para ello utilizaríamos WHERE LIKE de la siguiente forma:</p>
@@ -690,6 +757,16 @@ sqldf(&#39;SELECT name, name_full
 ## 8       Maxentius           MARCVS AVRELIVS VALERIVS MAXENTIVS AVGVSTVS</code></pre>
 <p><br />
 </p>
+<p>O supongamos que queremos identificar los <strong>nombres de los emperadores romanos que empiecen por Constantine</strong>, para de esta forma comprobar que en el dataframe se encuentran todos los emperadores con nombre Constantino.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, name_full
+      FROM emperors 
+      WHERE name LIKE &quot;Constantine%&quot;&#39;)
+##                    name                                              name_full
+## 1 Constantine the Great CAESAR FLAVIVS VALERIVS AVRELIVS CONSTANTINVS AVGVSTVS
+## 2        Constantine II          CAESAR FLAVIVS CLAVDIVS CONSTANTINVS AVGVSTVS</code></pre>
 <p>Por el contrario, para identificar aquellos <strong>emperadores cuyo nombre no acaba por ius</strong> utilizaríamos NOT LIKE</p>
 <p><br />
 </p>
@@ -960,6 +1037,84 @@ loans %&gt;%
 ## 6    16 National Credit Services                                   81954.
 ## 7    16 Professional Bureau of Collections of Maryland             27994.
 ## 8    18 ERS                                                        75047.</code></pre>
+<p><br />
+</p>
+</div>
+<div id="filtros" class="section level1">
+<h1>FILTROS</h1>
+<p><br />
+</p>
+<p>Existen diversos <strong>operadores que podemos utilizar en el lenguage SQL para filtrar las observaciones</strong> de un dataframe. Por ejemplo:</p>
+<ul>
+<li><code>=</code> igual</li>
+<li><code>&lt;&gt;</code> no igual</li>
+<li><code>&lt;</code> menor que</li>
+<li><code>&gt;</code> mayor que</li>
+<li><code>&lt;=</code> menor que o igual a</li>
+<li><code>&gt;=</code> mayor que o igual a</li>
+</ul>
+<p>Pongamos, por ejemplo, que queremos saber el <strong>nombre de las agencias que han recibido pagos voluntarios de más de 12 millones de dólares</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name, voluntary_payments 
+      FROM loans 
+      WHERE voluntary_payments &gt; 12000000&#39;)
+##                 agency_name voluntary_payments
+## 1                  ConServe           12184949
+## 2    Coast Professional Inc           12929745
+## 3 Immediate Credit Recovery           13524773
+## 4   National Recoveries Inc           12422738
+## 5    Coast Professional Inc           14520116
+## 6 Immediate Credit Recovery           13748284
+## 7   National Recoveries Inc           14687278</code></pre>
+<p><br />
+</p>
+</div>
+<div id="operadores-aritméticos" class="section level1">
+<h1>Operadores Aritméticos</h1>
+<p><br />
+</p>
+<p>En SQL podemos realizar operaciones aritméticas utilizando símbolos como <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>. Por ejemplo:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Suma:
+
+sqldf(&#39;SELECT (5 + 4)&#39;)
+##   (5 + 4)
+## 1       9
+
+# Resta:
+
+sqldf(&#39;SELECT (5 - 4)&#39;)
+##   (5 - 4)
+## 1       1
+
+# Multiplicación:
+sqldf(&#39;SELECT (5 * 4)&#39;)
+##   (5 * 4)
+## 1      20
+
+# División:
+
+sqldf(&#39;SELECT (4 / 5)&#39;)
+##   (4 / 5)
+## 1       0
+sqldf(&#39;SELECT (4.0 / 5.0)&#39;)
+##   (4.0 / 5.0)
+## 1         0.8</code></pre>
+<p><br />
+</p>
+<p>Los operadores aritméticos pueden ayudarnos a realizar operaciones de relevancia. Pongamos por ejemplo que queremos calcular la <strong>diferencia entre el pago de mayor y el de menor magnitud en el año 2017</strong>. En este caso podríamos indicar:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT MAX(total) - MIN(total) AS diferencia
+      FROM loans
+      WHERE year = 17&#39;)
+##   diferencia
+## 1  355724699</code></pre>
 <p><br />
 </p>
 </div>
