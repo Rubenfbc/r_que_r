@@ -1,5 +1,5 @@
 ---
-title: "SQL en R con el paquete sqldf (en construcción)"
+title: "SQL en R con el paquete sqldf (parte I)"
 author: "Rubén F. Bustillo"
 date: 2019-12-03
 categories: ["R"]
@@ -46,7 +46,7 @@ library(Hmisc)
 
 \
 
-En este ejercicio vamos a utilizar algunos datasets obtenidos del [proyecto tidytuesday](https://github.com/rfordatascience/tidytuesday), un proyecto semanal creado para la compartir conocimientos con la comunidad R4DS (R for data science). Utilizaremos el dataset `Roman Emperors`, dataset compilado con data obtenida de [Wikipedia](https://en.wikipedia.org/wiki/List_of_Roman_emperors) por [Georgios Karamanis](https://twitter.com/geokaramanis), donde encontraremos diversa información sobre los [emperadores romanos](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-08-13) (nombre, fecha de nacimiento, causa de la muerte, dinastía, etc.). En segundo lugar utilizaremos el dataset [Student Loan Payments](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-11-26), con datos obtenidos por [Alex Albright](https://twitter.com/AllbriteAllday) del [Departamento de Educación de Estados Unidos](https://studentaid.ed.gov/sa/about/data-center/student/default). Este dataset provee diversa información sobre los prestamos de estudios concedidos a los estudiantes de EEUU (agencia, año, cantidad total amortizada, pagos voluntarios, etc.).  No obstante, nótese que el objetivo del post no es profundizar en los datasets seleccionados sino que los utilizaremos como excusa para ejemplificar la funcionalidad del paquete {sqldf}.   
+En este ejercicio vamos a utilizar algunos datasets obtenidos del [proyecto tidytuesday](https://github.com/rfordatascience/tidytuesday), un proyecto semanal creado para la compartir conocimientos con la comunidad R4DS (R for data science). Utilizaremos el dataset `Roman Emperors`, dataset compilado con data obtenida de [Wikipedia](https://en.wikipedia.org/wiki/List_of_Roman_emperors) por [Georgios Karamanis](https://twitter.com/geokaramanis), donde encontraremos diversa información sobre los [emperadores romanos](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-08-13) (nombre, fecha de nacimiento, causa de la muerte, dinastía, etc.). En segundo lugar utilizaremos el dataset [Student Loan Payments](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-11-26), con datos obtenidos por [Alex Albright](https://twitter.com/AllbriteAllday) del [Departamento de Educación de Estados Unidos](https://studentaid.ed.gov/sa/about/data-center/student/default). Este dataset provee diversa información sobre los préstamos de estudios concedidos a los estudiantes de EEUU (agencia, año, cantidad total amortizada, pagos voluntarios, etc.).  No obstante, nótese que el objetivo del post no es profundizar en los datasets seleccionados sino que los utilizaremos como excusa para ejemplificar la funcionalidad del paquete {sqldf}.   
 
 \
 
@@ -109,7 +109,7 @@ sqldf('SELECT *
 
 \
 
-Como hemos visto en el apartado anterior, el asterisco (\*) sirve para seleccionar el conjunto de variables y observaciones del dataframe. Sin embargo, es problable que queramos **identificar únicamente las observaciones para un conjunto de variables** del dataset original. Para ello utilizaremos SELECT, que se asemeja en gran medida a la función `select()` del paquete {dplyr}. Pongamos que nos interesa únicamente estraer el **nombre del emperador, la dinastía, la fecha de nacimiento, la causa de la muerte, el asesino** de entre todas las variables del dataframe.
+Como hemos visto en el apartado anterior, el asterisco (\*) sirve para seleccionar el conjunto de variables y observaciones del dataframe. Sin embargo, es probable que queramos **identificar únicamente las observaciones para un conjunto de variables** del dataset original. Para ello utilizaremos SELECT, que se asemeja en gran medida a la función `select()` del paquete {dplyr}. Pongamos que nos interesa únicamente extraer el **nombre del emperador, la dinastía, la fecha de nacimiento, la causa de la muerte, el asesino** de entre todas las variables del dataframe.
 
 \
 
@@ -202,7 +202,7 @@ sqldf('SELECT name, dynasty, birth, cause, killer
 
 \
 
-**En R**, como se ha señalado, indicando los mismos criterios de seleccion y utilizando la función `arrange()` del paquete {dplyr} obtenemos el mismo resultado.
+**En R**, como se ha señalado, indicando los mismos criterios de selección y utilizando la función `arrange()` del paquete {dplyr} obtenemos el mismo resultado.
 
 \
 
@@ -297,7 +297,7 @@ sqldf('SELECT COUNT(DISTINCT birth_cty) AS num_unique
 
 \
 
-WHERE nos permite establecer algún criterio de selección a la hora de extraer informacion del dataframe. WHERE en SQL funciona en gran medida como la función `filter()`de {dplyr}. Por ejemplo, pongamos que queremos extraer el nombre de los emperadores, su ciudad de nacimiento y su asesino, pero **únicamente de aquellos emperadores cuya causa de la muerte fue por motivo de asesinato**. 
+WHERE nos permite establecer algún criterio de selección a la hora de extraer información del dataframe. WHERE en SQL funciona en gran medida como la función `filter()`de {dplyr}. Por ejemplo, pongamos que queremos extraer el nombre de los emperadores, su ciudad de nacimiento y su asesino, pero **únicamente de aquellos emperadores cuya causa de la muerte fue por motivo de asesinato**. 
 
 \
 
@@ -328,7 +328,7 @@ sqldf('SELECT name, birth_cty, killer
 
 \
 
-Pongamos que nos interesa seleccionar aquellos **emperadores asesinados bien por su guardia pretoriana bien por su propio ejercito**:
+Pongamos que nos interesa seleccionar aquellos **emperadores asesinados bien por su guardia pretoriana bien por su propio ejército**:
 
 \
 
@@ -359,7 +359,7 @@ emperors %>%
 
 ## WHERE IN / NOT IN
 
-De forma similar al punto anterior, podemos utilizar WHERE IN  o WHERE NOT IN para detectar grupos de observaciones según un criterio de identificación. Pongamos por ejemplo que queremos identificar el nombre del emperador, la dinastia, su fecha de nacimiento y la causa de su muerte pero **solo en el caso en que pertenezca a la dinastía Flavia o Gordiana**. 
+De forma similar al punto anterior, podemos utilizar WHERE IN  o WHERE NOT IN para detectar grupos de observaciones según un criterio de identificación. Pongamos por ejemplo que queremos identificar el nombre del emperador, la dinastía, su fecha de nacimiento y la causa de su muerte pero **solo en el caso en que pertenezca a la dinastía Flavia o Gordiana**. 
 
 \
 
@@ -494,6 +494,63 @@ sqldf('SELECT name, name_full
 \
 
 **En R** podemos también utilizar operadores para realizar este tipo de operaciones. No obstante tengo intención de realizar un post completo sobre manejo de strings en R donde espero abarcar este tema en mayor profundidad.  
+
+\
+
+# GROUP BY
+
+\
+
+GROUP_BY permite agrupar los resultados al estilo de la función `group_by()` de {dplyr}. Pongamos, por ejemplo, que queremos contar los **emperadores romanos que pertenecían a cada dinastía**:
+
+\
+
+```{r}
+
+sqldf('SELECT dynasty, count(*) AS total
+      FROM emperors 
+      GROUP BY dynasty')
+
+```
+
+\
+
+**En R** el mismo resultado se obtendría con las funciones `group_by()` y `summarise()` de las siguiente forma: 
+
+\
+
+```{r}
+
+emperors %>%
+  group_by(dynasty) %>%
+  summarise(total = n())
+
+```
+
+
+\
+
+# HAVING 
+
+\
+
+Una vez agrupados los resultados necesitamos HAVING en caso de haber filtrado los resultados. Pongamos por ejemplo que queremos contar los emperadores romanos que pertenecieron a cada dinastía, tal y cómo hemos realizado en el punto anterior, pero **únicamente seleccionar aquellas dinastías que han sido compuestas por más de diez emperadores**.
+
+\
+
+```{r}
+
+sqldf('SELECT dynasty, count(*) AS total
+      FROM emperors 
+      GROUP BY dynasty
+      HAVING COUNT(name) > 10')
+
+
+```
+
+\
+
+\
 
 \
 
@@ -638,7 +695,7 @@ loans %>%
 
 \
 
-Existen en SQL diversos procedimientos que podemos utilizar para extrer la información requerida del dataset original. Pongamos, por ejemplo, que nos interesa **únicamente el nombre de la agencia prestamista que se corresponde al mayor valor devuelto en el año 2015**. Para ello seleccionarmoes `agency_name` después de SELECT, para indicar la variable que queremos obtener, pero necesitamos otro SELECT para indicar las condiciones requeridas.
+Existen en SQL diversos procedimientos que podemos utilizar para extraer la información requerida del dataset original. Pongamos, por ejemplo, que nos interesa **únicamente el nombre de la agencia prestamista que se corresponde al mayor valor devuelto en el año 2015**. Para ello seleccionaremos `agency_name` después de SELECT, para indicar la variable que queremos obtener, pero necesitamos otro SELECT para indicar las condiciones requeridas.
 
 \
 
@@ -716,7 +773,7 @@ sqldf('SELECT year, agency_name, voluntary_payments
 
 \
 
-Para obtener el mismo resultado **en R** podemos utilizar la funcion `filter()` junto a `select()`.
+Para obtener el mismo resultado **en R** podemos utilizar la función `filter()` junto a `select()`.
 
 \
 
@@ -734,7 +791,7 @@ loans %>%
 
 \
 
-Existen diversos **operadores que podemos utilizar en el lenguage SQL para filtrar las observaciones** de un dataframe. Por ejemplo:
+Existen diversos **operadores que podemos utilizar en el lenguaje SQL para filtrar las observaciones** de un dataframe. Por ejemplo:
 
 - `=`  igual
 - `<>` no igual
