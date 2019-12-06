@@ -311,7 +311,7 @@ sqldf('SELECT name, birth_cty, killer
 
 \
 
-## WHERE AND / OR
+## WHERE ... AND / OR
 
 Podemos añadir otros criterios de selección. Pongamos que además de interesarnos aquellos emperadores romanos que han muerto asesinados nos interesa identificar aquellos **emperadores que han muerto asesinados por su guardia pretoriana**. Para ello utilizamos podemos utilizar AND de la siguiente forma (aunque en este caso particular no sería necesario indicar la causa del asesinato en tanto en cuanto la existencia de un asesino implica por defecto la causa de muerte)
 
@@ -357,7 +357,7 @@ emperors %>%
 
 \
 
-## WHERE IN / NOT IN
+## WHERE ... IN / NOT IN
 
 De forma similar al punto anterior, podemos utilizar WHERE IN  o WHERE NOT IN para detectar grupos de observaciones según un criterio de identificación. Pongamos por ejemplo que queremos identificar el nombre del emperador, la dinastía, su fecha de nacimiento y la causa de su muerte pero **solo en el caso en que pertenezca a la dinastía Flavia o Gordiana**. 
 
@@ -419,7 +419,7 @@ emperors %>%
 
 \
 
-## NULL / IS NULL
+## WHERE ... NULL / IS NULL
 
 Previamente hemos visto que había valores NA en la columna `birth_cty`. En SQL los *missing values* se representan por `NULL`. **Para identificar el número de NA`s o NULL values** podemos utilizar el operador COUNT conjuntamente con IS NULL.
 
@@ -449,7 +449,7 @@ sqldf('SELECT COUNT(*)
 
 \
 
-## WHERE LIKE / NOT LIKE
+## WHERE ... LIKE / NOT LIKE
 
 Pongamos que, por alguna razón que no ahora mismo no se me ocurre como justificar, nos interesa seleccionar los **emperadores romanos cuyo nombre acabe por ius** (Tiberius, Aurelius, etc.). Para ello utilizaríamos WHERE LIKE de la siguiente forma:
 
@@ -526,7 +526,6 @@ emperors %>%
   summarise(total = n())
 
 ```
-
 
 \
 
@@ -754,7 +753,7 @@ loans %>%
 
 \
 
-# BETWEEN
+# BETWEEN ... AND
 
 \
 
@@ -813,6 +812,41 @@ sqldf('SELECT agency_name, voluntary_payments
 ```
 
 \
+
+# CASE WHEN ... THEN
+
+\
+
+Con los filtros mencionados en el punto previo y el comando CASE WHEN podemos establecer nuestras propias **categorías y agrupaciones** de los datos. Por ejemplo, pongamos que queremos establecer rangos según la cantidad `total` de préstamos devueltos. Para ello, por ejemplo, podemos utilizar algunos cuantiles, la media y la mediana. Esta información la obtenemos fácilmente con la función `summary()`. 
+
+\
+
+```{r}
+summary(loans$total)
+```
+
+\
+
+**Establecemos las categorías** de la siguiente forma:
+
+\
+
+```{r}
+
+sqldf('SELECT agency_name, year, total,
+      CASE WHEN total < 32888118 THEN "entre el Min y 1stQ"
+      WHEN total BETWEEN 32888118 AND 72669212 THEN "entre 1stQ y Media"
+      WHEN total BETWEEN 72669212 AND 106005716 THEN "entre Media y Mean"
+      WHEN total BETWEEN 106005716 AND 167945568 THEN "entre Mean y 3rdQ"
+      ELSE "entre 3rdQ y Max" END
+      AS ranking
+      FROM loans
+      LIMIT 10')
+
+```
+
+\
+
 
 # Operadores Aritméticos
 

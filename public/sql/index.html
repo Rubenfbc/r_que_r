@@ -594,7 +594,7 @@ sqldf(&#39;SELECT name, birth_cty, killer
 <p><br />
 </p>
 <div id="where-and-or" class="section level2">
-<h2>WHERE AND / OR</h2>
+<h2>WHERE … AND / OR</h2>
 <p>Podemos añadir otros criterios de selección. Pongamos que además de interesarnos aquellos emperadores romanos que han muerto asesinados nos interesa identificar aquellos <strong>emperadores que han muerto asesinados por su guardia pretoriana</strong>. Para ello utilizamos podemos utilizar AND de la siguiente forma (aunque en este caso particular no sería necesario indicar la causa del asesinato en tanto en cuanto la existencia de un asesino implica por defecto la causa de muerte)</p>
 <p><br />
 </p>
@@ -662,7 +662,7 @@ emperors %&gt;%
 </p>
 </div>
 <div id="where-in-not-in" class="section level2">
-<h2>WHERE IN / NOT IN</h2>
+<h2>WHERE … IN / NOT IN</h2>
 <p>De forma similar al punto anterior, podemos utilizar WHERE IN o WHERE NOT IN para detectar grupos de observaciones según un criterio de identificación. Pongamos por ejemplo que queremos identificar el nombre del emperador, la dinastía, su fecha de nacimiento y la causa de su muerte pero <strong>solo en el caso en que pertenezca a la dinastía Flavia o Gordiana</strong>.</p>
 <p><br />
 </p>
@@ -792,8 +792,8 @@ emperors %&gt;%
 <p><br />
 </p>
 </div>
-<div id="null-is-null" class="section level2">
-<h2>NULL / IS NULL</h2>
+<div id="where-null-is-null" class="section level2">
+<h2>WHERE … NULL / IS NULL</h2>
 <p>Previamente hemos visto que había valores NA en la columna <code>birth_cty</code>. En SQL los <em>missing values</em> se representan por <code>NULL</code>. <strong>Para identificar el número de NA`s o NULL values</strong> podemos utilizar el operador COUNT conjuntamente con IS NULL.</p>
 <p><br />
 </p>
@@ -818,7 +818,7 @@ sqldf(&#39;SELECT COUNT(*)
 </p>
 </div>
 <div id="where-like-not-like" class="section level2">
-<h2>WHERE LIKE / NOT LIKE</h2>
+<h2>WHERE … LIKE / NOT LIKE</h2>
 <p>Pongamos que, por alguna razón que no ahora mismo no se me ocurre como justificar, nos interesa seleccionar los <strong>emperadores romanos cuyo nombre acabe por ius</strong> (Tiberius, Aurelius, etc.). Para ello utilizaríamos WHERE LIKE de la siguiente forma:</p>
 <p><br />
 </p>
@@ -1141,8 +1141,8 @@ loans %&gt;%
 <p><br />
 </p>
 </div>
-<div id="between" class="section level1">
-<h1>BETWEEN</h1>
+<div id="between-and" class="section level1">
+<h1>BETWEEN … AND</h1>
 <p><br />
 </p>
 <p>El comando BETWEEN nos permite seleccionar información que se encuentre en un rango determinado. Por ejemplo, pongamos que interesa identificar el <strong>año y la agencia prestamista de los pagos voluntarios cuyo valor se encuentre entre 20000 y 100000 dólares</strong>.</p>
@@ -1213,6 +1213,45 @@ sqldf(&#39;SELECT agency_name, voluntary_payments
 ## 5    Coast Professional Inc           14520116
 ## 6 Immediate Credit Recovery           13748284
 ## 7   National Recoveries Inc           14687278</code></pre>
+<p><br />
+</p>
+</div>
+<div id="case-when-then" class="section level1">
+<h1>CASE WHEN … THEN</h1>
+<p><br />
+</p>
+<p>Con los filtros mencionados en el punto previo y el comando CASE WHEN podemos establecer nuestras propias <strong>categorías y agrupaciones</strong> de los datos. Por ejemplo, pongamos que queremos establecer rangos según la cantidad <code>total</code> de préstamos devueltos. Para ello, por ejemplo, podemos utilizar algunos cuantiles, la media y la mediana. Esta información la obtenemos fácilmente con la función <code>summary()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>summary(loans$total)
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+##    212828  32888118  72669212 106005716 167945568 395249672</code></pre>
+<p><br />
+</p>
+<p><strong>Establecemos las categorías</strong> de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name, year, total,
+      CASE WHEN total &lt; 32888118 THEN &quot;entre el Min y 1stQ&quot;
+      WHEN total BETWEEN 32888118 AND 72669212 THEN &quot;entre 1stQ y Media&quot;
+      WHEN total BETWEEN 72669212 AND 106005716 THEN &quot;entre Media y Mean&quot;
+      WHEN total BETWEEN 106005716 AND 167945568 THEN &quot;entre Mean y 3rdQ&quot;
+      ELSE &quot;entre 3rdQ y Max&quot; END
+      AS ranking
+      FROM loans
+      LIMIT 10&#39;)
+##                              agency_name year     total            ranking
+## 1       Account Control Technology, Inc.   15 122602642  entre Mean y 3rdQ
+## 2                Allied Interstate, Inc.   15 113326847  entre Mean y 3rdQ
+## 3                              CBE Group   15  83853003 entre Media y Mean
+## 4               Coast Professional, Inc.   15  99643903 entre Media y Mean
+## 5     Collection Technology Incorporated   15  75725486 entre Media y Mean
+## 6              Collecto, INC dba EOS-CCA   15  78776490 entre Media y Mean
+## 7                               ConServe   15 149212488  entre Mean y 3rdQ
+## 8      Delta Management Associates, Inc.   15  43771306 entre 1stQ y Media
+## 9  Diversified Collection Services, Inc.   15  60575355 entre 1stQ y Media
+## 10                                   ERS   15  91822575 entre Media y Mean</code></pre>
 <p><br />
 </p>
 </div>
