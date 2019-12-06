@@ -1,5 +1,5 @@
 ---
-title: "SQL en R con el paquete sqldf (parte I)"
+title: "SQL en R con el paquete sqldf (parte I. Principales operadores en SQL)"
 author: "Rubén F. Bustillo"
 date: 2019-12-03
 categories: ["R"]
@@ -857,5 +857,4 @@ sqldf('SELECT MAX(total) - MIN(total) AS diferencia
 ```
 
 \
-
 

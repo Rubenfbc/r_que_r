@@ -6,13 +6,26 @@
     <description>Recent content in SQL on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 03 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 05 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/sql/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>SQL en R con el paquete sqldf (parte I)</title>
+      <title>SQL en R con el paquete sqldf (parte II) (En construcción)</title>
+      <link>/joins_sql/</link>
+      <pubDate>Thu, 05 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/joins_sql/</guid>
+      <description>Re
+Este post s una continuación del post anterior en el que expusimos cómo realizar operaciones en R utilizando la sintaxis tradicional de SQL con la función sqldf(), única función del paquete {sqldf}.
+
+Paquetes
+En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos servirá para comparar la sintaxis de SQL con la sintaxis tradicional de {dplyr}. En este post anterior se expone en mayor profundidad las principales funcionalidades del paquete {tidyverse}.</description>
+    </item>
+    
+    <item>
+      <title>SQL en R con el paquete sqldf (parte I. Principales operadores en SQL)</title>
       <link>/sql/</link>
       <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
       

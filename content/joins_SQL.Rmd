@@ -1,0 +1,239 @@
+---
+title: "SQL en R con el paquete sqldf (parte II) (En construcción)"
+author: "Rubén F. Bustillo"
+date: 2019-12-05
+categories: ["R"]
+tags: ["SQL", "sqldf"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+Este post s una continuación del post anterior en el que expusimos cómo realizar operaciones en R utilizando la sintaxis tradicional de SQL con la función `sqldf()`, única función del paquete {sqldf}. 
+
+\
+
+# Paquetes
+
+\
+
+En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos servirá para comparar la sintaxis de SQL con la sintaxis tradicional de {dplyr}. En [este post anterior](https://rquer.netlify.com/babynames/) se expone en mayor profundidad las principales funcionalidades del paquete {tidyverse}.
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(sqldf)
+library(tidyverse)
+library(gapminder)
+
+``` 
+
+
+
+# Introducción
+
+\
+
+En este segundo post, que continúa la exposición de cómo trabajar con la sintaxis de SQL en R gracias al paquete {sqldf} que iniciamos en el post previo, vamos a explicar **cómo unir tablas y cómo compilar información de diferentes fuentes**. 
+
+\
+
+Compilar información en una tabla proveniente de varias tablas es un aspecto fundamental en el análisis de datos. Aunque a día de hoy todavía no hemos realizado un post específico explicando cómo hacer estas operaciones en R -aunque todo se andará- en varios post hemos realizado uniones de diferentes datasets. (por ejemplo [aquí](https://rquer.netlify.com/nuts/), [aquí](https://rquer.netlify.com/eurostat/) o [aquí](https://rquer.netlify.com/mapas_spain/)). No obstante, aunque dejo la explicación de cómo realizar uniones de dataframes en R para una futura entrada, en este post realizaremos estas operaciones utilizando la sintaxis y el lenguage de SQL utilizando, de nuevo, el paquete {sqldf}.
+
+\
+
+A la hora de unir tablas o dataframes existen diversos aspectos que debemos tener en cuenta y dependerá de nuestros dataframes originales y del resultado que buscamos conseguir al realizar las uniones. Por ello existen diversos tipos de unión que, evidentemente, recibirán diferentes nombres. Intentaremos a lo largo del post abordar las diferentes posibilidades utilizando información de algunos países procedentes del dataset `gapminder` del paquete del mismo nombre. 
+
+\
+
+El paquete gapminder ofrece varios dataframes referentes a un cojunto importante de países. El dataframe filtrado le han denominado `gapminder`:
+
+\
+
+```{r}
+
+gapminder::gapminder
+
+```
+
+\
+
+Un segundo dataset (`continent_colors`) contiene los colores que han asignado a cada continente:
+
+\
+
+```{r}
+
+gapminder::continent_colors
+
+```
+
+\
+
+Un tercer dataset (`country_codes`) contiene información sobre los códigos de los países
+
+\
+
+```{r}
+
+gapminder::country_codes
+
+```
+
+\
+
+Y un cuarto dataframe (`gapminder_unfiltered`) contiene una mayor información que el dataset `gapminder`. Este data frame sin filtrar está compuesto por 3313 observaciones mientras que el paquete `gapminder` se conforma por 1704. 
+
+\
+
+```{r}
+
+gapminder::gapminder_unfiltered
+
+```
+
+\
+
+En este post no vamos a utilizar la totalidad de los dataframes arriba expuestos. Como el objetivo de esta entrada consiste en explicar las distintas modalidades, o joins, y exponer su forma de llevarlas a cabo en SQL, construiremos distintos subsets, partiendo de la información existente en los dataframes de {gapminder}, esperando que nuestros subsets nos permitan ejemplificar los distintos ejercicios de una forma más clara.
+
+\
+
+# INNER JOIN
+
+\
+
+Supongamos que tenemos dos datasets, el primero con información sobre el PIB per cápita de una serie de países y el segundo con información sobre la esperanza de vida. No obstante los países del primer dataset (left table) y el segundo (right table) no coinciden. En el caso de que queramos generar un dataset donde tengamos información tanto del PIB per cápita como de la esperanza de vida, pero **únicamente incluyendo los países que están en ambos datasets** utilizaremos el comando INNER JOIN
+
+\
+
+El **planteamiento general del INNER JOIN** sería el que se observa en la figura. Vemos que el dataframe final solo incluye a los cuatros países presentes en ambas tablas (Australia, Canadá, Japón y España), excluyendo al resto de países, y la información de la segunda tabla (RIGTH TABLE) se une a la información presente en la primera (LEFT TABLE).
+
+
+```{r echo=FALSE, out.width="100%"}
+
+library(png)
+library(grid)
+inner_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\inner_join.png")
+grid.raster(inner_join)
+
+```
+
+Aunque el anterior es el esquema general, existen algunos aspectos que debemos tener en cuenta. Veámoslo con una serie de ejemplos. En primer lugar vamos a realizar **dos subsets que incluya los mismos países de los del dibujo previo**, uno con información del PIB per cápita y otro con información de la esperanza de vida de dichos países.
+
+\
+
+```{r}
+
+# LEFT TABLE
+vab_pc <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Peru", "India", "Australia", "Japan", "Canada")) %>%
+  select(country, continent, gdpPercap)
+
+# RIGHT TABLE 
+life_exp <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Australia", "Singapore", "Canada", "Japan", "Mongolia", "Brazil")) %>%
+  select(country, continent, lifeExp)
+
+```
+
+\
+
+Veámos **ambos datasets**:
+
+\
+
+```{r}
+vab_pc
+
+life_exp
+```
+
+\
+
+Si queremos unir integramente el RIGHT TABLE al LEFT TABLE podemos indicar lo siguiente:
+
+\
+
+```{r}
+
+sqldf('SELECT *
+      FROM vab_pc 
+      INNER JOIN life_exp 
+      ON vab_pc.country = life_exp.country')
+
+```
+
+\
+
+No obstante, en este caso un dataset se ha unido al anterior, aunque únicamente los países que coinciden en ambos, pero el resultado final incluye columnas repetidas que no nos interesan. Para conseguir un dataframe que se asemeje al del dibujo presentado arriba (con cuatro columnas únicamente) debemos realizar un serie de modificaciones. Indicaremos que queremos cuatro columnas, las dos primeras al estar repetidas serán las pertenecientes al primer dataset (p1),
+
+\
+
+```{r}
+
+sqldf('SELECT p1.country, p1.continent, gdpPercap, lifeExp
+      FROM vab_pc AS p1
+      INNER JOIN life_exp AS p2
+      ON p1.country = p2.country')
+
+```
+
+\
+
+Puede que queramos unir más de dataframe en un solo comando. Pongamos por ejemplo que queramos incluir los códigos de cada país, que como vimos están presentes en un dataframe denominado `country_codes`. **Para unir los tres dataframes**, situando los códigos en la primera columna del nuevo dataset, no es necesario realizar primero una unión y luego la segunda sino que podemos realizar la operación conjuntamente.
+
+\
+
+**Guardamos el nuevo dataframe** con el nombre `codes`.
+
+\
+
+```{r}
+
+codes <- gapminder::country_codes
+
+```
+
+\
+
+Y realizamos una operación similar a la realizada previamente pero **estableciendo dos INNER JOIN diferentes**.
+
+\
+
+```{r}
+
+sqldf('SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeExp
+      FROM vab_pc AS p1
+      INNER JOIN life_exp AS p2
+      ON p1.country= p2.country
+      INNER JOIN codes AS p3
+      ON p1.country = p3.country')
+
+```
+
+\
+
+Como en nuestro caso el nombre de las columnas que utilizamos para la unión es el mismo `country` podemos, alternativamente, establecer USING seguido por el nombre de la variable entre paréntesis (en nuestro caso `country`) para una mayor sensillez del código. El resultado, como vemos, es el mismo.
+
+\
+
+```{r}
+
+sqldf('SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeExp
+      FROM vab_pc AS p1
+      INNER JOIN life_exp AS p2
+      USING (country)
+      INNER JOIN codes AS p3
+      USING (country)')
+
+```
