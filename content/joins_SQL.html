@@ -239,4 +239,57 @@ sqldf(&#39;SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeEx
 ## 2  CAN    Canada  Americas  36319.24  80.653
 ## 3  JPN     Japan      Asia  31656.07  82.603
 ## 4  ESP     Spain    Europe  28821.06  80.941</code></pre>
+<p><br />
+</p>
+<div id="self-joins" class="section level2">
+<h2>SELF-JOINS</h2>
+<p>Se denominan SELF-JOINS cuando las uniones las realizamos utilizando el mismo dataframe de origen. Es decir, la tabla final, en lugar de ser resultado de dos tablas distintas es resultado de una sola. Aunque parezca extraño en el día a día este tipo de operaciones pueden ser, como veremos en el ejemplo, muy habituales. En nuestro ejemplo particular, utilizando datos del dataframe <code>gapminder()</code>, supongamos que <strong>nos interesa generar un dataset donde quede establecido en una columna la esperanza de vida en el año inicial del periodo (1952), en otra columna la esperanza de vida en el año final (2007) y en una tercera columna el crecimiento entre 1952 y 2007</strong>, con la finalidad de determinar el incremento o descenso de la esperanza de vida por país durante ese periodo.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT p1.country, 
+              p1.lifeExp AS lifeExp1952, 
+              p2.lifeExp AS lifeExp2007,
+              ((p2.lifeExp - p1.lifeExp)/p1.lifeExp) *100 AS crecimiento
+      FROM gapminder AS p1
+      INNER JOIN gapminder AS p2
+      ON p1.country = p2.country
+      AND p1.year = p2.year-55
+      LIMIT 10&#39;)
+##        country lifeExp1952 lifeExp2007 crecimiento
+## 1  Afghanistan      28.801      43.828    52.17527
+## 2      Albania      55.230      76.423    38.37226
+## 3      Algeria      43.077      72.301    67.84131
+## 4       Angola      30.015      42.731    42.36548
+## 5    Argentina      62.485      75.320    20.54093
+## 6    Australia      69.120      81.235    17.52749
+## 7      Austria      66.800      79.829    19.50449
+## 8      Bahrain      50.939      75.635    48.48152
+## 9   Bangladesh      37.484      64.062    70.90492
+## 10     Belgium      68.000      79.441    16.82500</code></pre>
+<p> </p>
+<p><strong>En R</strong> podemos obtener el mismo resultado utilizando la función <code>filter()</code>, para seleccionr el año inicial y final, junto a la función <code>spread()</code> para generar las dos columnas, una para 1952 y otra para 2007, y la función <code>mutate()</code>para crear una nueva columna qune indique el crecimiento de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+gapminder %&gt;%
+  filter(year == c(1952,2007)) %&gt;%
+  select(country, continent, year, lifeExp) %&gt;%
+  spread(key= year, lifeExp) %&gt;%
+  mutate(crecimiento = ((`2007`-`1952`)/`1952`)*100) %&gt;%
+  head(n=10)
+## # A tibble: 10 x 5
+##    country     continent `1952` `2007` crecimiento
+##    &lt;fct&gt;       &lt;fct&gt;      &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Afghanistan Asia        28.8   43.8        52.2
+##  2 Albania     Europe      55.2   76.4        38.4
+##  3 Algeria     Africa      43.1   72.3        67.8
+##  4 Angola      Africa      30.0   42.7        42.4
+##  5 Argentina   Americas    62.5   75.3        20.5
+##  6 Australia   Oceania     69.1   81.2        17.5
+##  7 Austria     Europe      66.8   79.8        19.5
+##  8 Bahrain     Asia        50.9   75.6        48.5
+##  9 Bangladesh  Asia        37.5   64.1        70.9
+## 10 Belgium     Europe      68     79.4        16.8</code></pre>
+</div>
 </div>

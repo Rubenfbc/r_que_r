@@ -1254,6 +1254,36 @@ sqldf(&#39;SELECT agency_name, year, total,
 ## 10                                   ERS   15  91822575 entre Media y Mean</code></pre>
 <p><br />
 </p>
+<p><strong>En R</strong> existe una operativa similar para realizar la misma operación utilizando la función <code>case_when()</code>. Podemos ver un ejemplo de su utilización en <a href="https://rquer.netlify.com/nombres/">este</a> post anterior. Para obtener el mismo resultado que en el ejemplo anterior con CASE WHEN indicaríamos lo siguiente:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  mutate(
+    ranking = case_when(
+    total &lt; 32888118 ~ &quot;entre el Min y 1stQ&quot;,
+    total &gt; 32888118 &amp; total &lt; 72669212 ~ &quot;entre 1stQ y Media&quot;,
+    total &gt; 72669212 &amp; total &lt; 106005716 ~ &quot;entre Media y Mean&quot;,
+    total &gt; 106005716 &amp; total &lt; 167945568  ~ &quot;entre Mean y 3rdQ&quot;,
+    TRUE ~&quot;entre 3rdQ y Max&quot;
+  )) %&gt;%
+    select(agency_name, year, total, ranking)
+## # A tibble: 291 x 4
+##    agency_name                            year      total ranking           
+##    &lt;chr&gt;                                 &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;             
+##  1 Account Control Technology, Inc.         15 122602642. entre Mean y 3rdQ 
+##  2 Allied Interstate, Inc.                  15 113326847. entre Mean y 3rdQ 
+##  3 CBE Group                                15  83853003. entre Media y Mean
+##  4 Coast Professional, Inc.                 15  99643903. entre Media y Mean
+##  5 Collection Technology Incorporated       15  75725486. entre Media y Mean
+##  6 Collecto, INC dba EOS-CCA                15  78776490. entre Media y Mean
+##  7 ConServe                                 15 149212488. entre Mean y 3rdQ 
+##  8 Delta Management Associates, Inc.        15  43771306. entre 1stQ y Media
+##  9 Diversified Collection Services, Inc.    15  60575355. entre 1stQ y Media
+## 10 ERS                                      15  91822575. entre Media y Mean
+## # ... with 281 more rows</code></pre>
+<p><br />
+</p>
 </div>
 <div id="operadores-aritméticos" class="section level1">
 <h1>Operadores Aritméticos</h1>

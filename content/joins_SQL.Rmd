@@ -237,3 +237,43 @@ sqldf('SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeExp
       USING (country)')
 
 ```
+
+\
+
+## SELF-JOINS 
+
+Se denominan SELF-JOINS cuando las uniones las realizamos utilizando el mismo dataframe de origen. Es decir, la tabla final, en lugar de ser resultado de dos tablas distintas es resultado de una sola. Aunque parezca extraño en el día a día este tipo de operaciones pueden ser, como veremos en el ejemplo, muy habituales. En nuestro ejemplo particular, utilizando datos del dataframe `gapminder()`, supongamos que **nos interesa generar un dataset donde quede establecido en una columna la esperanza de vida en el año inicial del periodo (1952), en otra columna la esperanza de vida en el año final (2007) y en una tercera columna el crecimiento entre 1952 y 2007**, con la finalidad de determinar el incremento o descenso de la esperanza de vida por país durante ese periodo. 
+
+\
+
+```{r}
+
+sqldf('SELECT p1.country, 
+              p1.lifeExp AS lifeExp1952, 
+              p2.lifeExp AS lifeExp2007,
+              ((p2.lifeExp - p1.lifeExp)/p1.lifeExp) *100 AS crecimiento
+      FROM gapminder AS p1
+      INNER JOIN gapminder AS p2
+      ON p1.country = p2.country
+      AND p1.year = p2.year-55
+      LIMIT 10')
+
+```
+
+\ 
+
+**En R** podemos obtener el mismo resultado utilizando la función `filter()`, para seleccionr el año inicial y final, junto a la función `spread()` para generar las dos columnas, una para 1952 y otra para 2007, y la función `mutate()`para crear una nueva columna qune indique el crecimiento de la siguiente forma:
+
+\
+
+```{r}
+
+gapminder %>%
+  filter(year == c(1952,2007)) %>%
+  select(country, continent, year, lifeExp) %>%
+  spread(key= year, lifeExp) %>%
+  mutate(crecimiento = ((`2007`-`1952`)/`1952`)*100) %>%
+  head(n=10)
+
+```
+

@@ -847,6 +847,26 @@ sqldf('SELECT agency_name, year, total,
 
 \
 
+**En R** existe una operativa similar para realizar la misma operación utilizando la función `case_when()`. Podemos ver un ejemplo de su utilización en [este](https://rquer.netlify.com/nombres/) post anterior. Para obtener el mismo resultado que en el ejemplo anterior con CASE WHEN indicaríamos lo siguiente:
+
+\
+
+```{r}
+
+loans %>%
+  mutate(
+    ranking = case_when(
+    total < 32888118 ~ "entre el Min y 1stQ",
+    total > 32888118 & total < 72669212 ~ "entre 1stQ y Media",
+    total > 72669212 & total < 106005716 ~ "entre Media y Mean",
+    total > 106005716 & total < 167945568  ~ "entre Mean y 3rdQ",
+    TRUE ~"entre 3rdQ y Max"
+  )) %>%
+    select(agency_name, year, total, ranking)
+
+```
+
+\
 
 # Operadores Aritméticos
 
