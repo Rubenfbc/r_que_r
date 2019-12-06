@@ -114,8 +114,8 @@ gapminder::gapminder_unfiltered
 <p><br />
 </p>
 </div>
-<div id="inner-join" class="section level1">
-<h1>INNER JOIN</h1>
+<div id="inner-joins" class="section level1">
+<h1>INNER JOINs</h1>
 <p><br />
 </p>
 <p>Supongamos que tenemos dos datasets, el primero con información sobre el PIB per cápita de una serie de países y el segundo con información sobre la esperanza de vida. No obstante los países del primer dataset (left table) y el segundo (right table) no coinciden. En el caso de que queramos generar un dataset donde tengamos información tanto del PIB per cápita como de la esperanza de vida, pero <strong>únicamente incluyendo los países que están en ambos datasets</strong> utilizaremos el comando INNER JOIN</p>
@@ -207,7 +207,7 @@ sqldf(&#39;SELECT p1.country, p1.continent, gdpPercap, lifeExp
 codes &lt;- gapminder::country_codes</code></pre>
 <p><br />
 </p>
-<p>Y realizamos una operación similar a la realizada previamente pero <strong>estableciendo dos INNER JOIN diferentes</strong>.</p>
+<p>Y realizamos una operación similar a la realizada previamente pero <strong>estableciendo dos INNER JOINs diferentes</strong>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -242,8 +242,8 @@ sqldf(&#39;SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeEx
 <p><br />
 </p>
 <div id="self-joins" class="section level2">
-<h2>SELF-JOINS</h2>
-<p>Se denominan SELF-JOINS cuando las uniones las realizamos utilizando el mismo dataframe de origen. Es decir, la tabla final, en lugar de ser resultado de dos tablas distintas es resultado de una sola. Aunque parezca extraño en el día a día este tipo de operaciones pueden ser, como veremos en el ejemplo, muy habituales. En nuestro ejemplo particular, utilizando datos del dataframe <code>gapminder()</code>, supongamos que <strong>nos interesa generar un dataset donde quede establecido en una columna la esperanza de vida en el año inicial del periodo (1952), en otra columna la esperanza de vida en el año final (2007) y en una tercera columna el crecimiento entre 1952 y 2007</strong>, con la finalidad de determinar el incremento o descenso de la esperanza de vida por país durante ese periodo.</p>
+<h2>SELF-JOINs</h2>
+<p>Se denominan SELF-JOINs cuando las uniones las realizamos utilizando el mismo dataframe de origen. Es decir, la tabla final, en lugar de ser resultado de dos tablas distintas es resultado de una sola. Aunque parezca extraño en el día a día este tipo de operaciones pueden ser, como veremos en el ejemplo, muy habituales. En nuestro ejemplo particular, utilizando datos del dataframe <code>gapminder()</code>, supongamos que <strong>nos interesa generar un dataset donde quede establecido en una columna la esperanza de vida en el año inicial del periodo (1952), en otra columna la esperanza de vida en el año final (2007) y en una tercera columna el crecimiento entre 1952 y 2007</strong>, con la finalidad de determinar el incremento o descenso de la esperanza de vida por país durante ese periodo.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -268,7 +268,7 @@ sqldf(&#39;SELECT p1.country,
 ## 9   Bangladesh      37.484      64.062    70.90492
 ## 10     Belgium      68.000      79.441    16.82500</code></pre>
 <p> </p>
-<p><strong>En R</strong> podemos obtener el mismo resultado utilizando la función <code>filter()</code>, para seleccionr el año inicial y final, junto a la función <code>spread()</code> para generar las dos columnas, una para 1952 y otra para 2007, y la función <code>mutate()</code>para crear una nueva columna qune indique el crecimiento de la siguiente forma:</p>
+<p><strong>En R</strong> podemos obtener el mismo resultado utilizando la función <code>filter()</code>, para seleccionar el año inicial y final, junto a la función <code>spread()</code> para generar las dos columnas, una para 1952 y otra para 2007, y la función <code>mutate()</code>para crear una nueva columna que indique el crecimiento de la siguiente forma:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -291,5 +291,64 @@ gapminder %&gt;%
 ##  8 Bahrain     Asia        50.9   75.6        48.5
 ##  9 Bangladesh  Asia        37.5   64.1        70.9
 ## 10 Belgium     Europe      68     79.4        16.8</code></pre>
+<p><br />
+</p>
 </div>
+</div>
+<div id="left-joins-y-right-joins" class="section level1">
+<h1>LEFT JOINs y RIGHT JOINs</h1>
+<p><br />
+</p>
+<p>Los LEFT JOINs y los RIGHT JOINs responden a la misma lógica, aunque los primeros suelen ser más utilizados que los segundos. Supongamos de nuevo que tenemos las dos tablas del gráfico presentado previamente. En esta ocasión <strong>nos interesa generar una nueva tabla partiendo de la información presente en las otras dos, pero en este caso necesitamos que la tabla nueva contenga todas las variables presentes en la primera tabla (LEFT TABLE)</strong>. En nuestro caso la tabla generada incluirá Australia, Canadá, India, Japón, Perú y España. No obstante, como en la segunda tabla no hay información de India y Perú, la tabla generada tendrá <em>missing values</em> para dichos países en relación a la esperanza de vida. En la figura siguiente se observa la dinámica descrita de los LEFT JOINs.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-16-1.png" width="100%" /></p>
+<p>En sqldf podemos realizar el LEFT JOIN modificando ligeramente la expresión del INNER JOIN expuesta en el apartado previo.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT p1.country, p1.continent, gdpPercap, lifeExp
+      FROM vab_pc AS p1
+      LEFT JOIN life_exp AS p2
+      ON p1.country = p2.country&#39;)
+##     country continent gdpPercap lifeExp
+## 1 Australia   Oceania 34435.367  81.235
+## 2    Canada  Americas 36319.235  80.653
+## 3     India      Asia  2452.210      NA
+## 4     Japan      Asia 31656.068  82.603
+## 5      Peru  Americas  7408.906      NA
+## 6     Spain    Europe 28821.064  80.941</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> existen distintas posibilidades para realizar esta operación. Podemos, por un lado, utilizar la sintaxis base de R, y utilizar la función <code>merge()</code> o, por otro, utilizar la función <code>left_join()</code> del paquete {dplyr}.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# BASE R:
+
+merge(vab_pc, life_exp, all.x = TRUE)
+##     country continent gdpPercap lifeExp
+## 1 Australia   Oceania 34435.367  81.235
+## 2    Canada  Americas 36319.235  80.653
+## 3     India      Asia  2452.210      NA
+## 4     Japan      Asia 31656.068  82.603
+## 5      Peru  Americas  7408.906      NA
+## 6     Spain    Europe 28821.064  80.941
+
+# DPLYR:
+
+vab_pc %&gt;%
+  left_join(life_exp, by = c(&quot;country&quot;, &quot;continent&quot;))
+## # A tibble: 6 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Australia Oceania      34435.    81.2
+## 2 Canada    Americas     36319.    80.7
+## 3 India     Asia          2452.    NA  
+## 4 Japan     Asia         31656.    82.6
+## 5 Peru      Americas      7409.    NA  
+## 6 Spain     Europe       28821.    80.9</code></pre>
+<p><br />
+</p>
+<p>Por su parte, si <strong>queremos conservar todas las observaciones del RIGHT TABLE, completando dicha tabla con los valores de la LEFT table</strong> haremos uso del RIGHT JOIN. En este caso, como se refleja en la figura siguiente, la tabla final se compondría de los siete países del RIGHT TABLE (Australia, Brasil, Canadá, Japón, Mongolia, Singapur y España), aunque en tres de ellos, en aquellos países que no se encuentran en la LEFT TABLE, faltarán los valores del PIB por habitante.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-19-1.png" width="100%" /></p>
+<p>Por desgracia <strong>el paquete {sqldf} no permite realizar RIGHT JOINs</strong>. No obstante, para no dejar la explicación un poco “coja” vamos a exponer cómo realizar estas uniones <strong>con R</strong>.</p>
 </div>
