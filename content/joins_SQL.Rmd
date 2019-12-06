@@ -223,7 +223,7 @@ sqldf('SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeExp
 
 \
 
-Como en nuestro caso el nombre de las columnas que utilizamos para la unión es el mismo `country` podemos, alternativamente, establecer USING seguido por el nombre de la variable entre paréntesis (en nuestro caso `country`) para una mayor sensillez del código. El resultado, como vemos, es el mismo.
+Como en nuestro caso el nombre de las columnas que utilizamos para la unión es el mismo `country` podemos, alternativamente, establecer USING seguido por el nombre de la variable entre paréntesis (en nuestro caso `country`) para una mayor sencillez del código. El resultado, como vemos, es el mismo.
 
 \
 
