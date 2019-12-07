@@ -114,7 +114,7 @@ Supongamos que tenemos dos datasets, el primero con información sobre el PIB pe
 
 \
 
-El **planteamiento general del INNER JOIN** sería el que se observa en la figura. Vemos que el dataframe final solo incluye a los cuatros países presentes en ambas tablas (Australia, Canadá, Japón y España), excluyendo al resto de países, y la información de la segunda tabla (RIGTH TABLE) se une a la información presente en la primera (LEFT TABLE).
+El **planteamiento general del INNER JOIN** sería el que se observa en la figura. Vemos que el dataframe final solo incluye a los cuatros países presentes en ambas tablas (Australia, Canadá, Japón y España), excluyendo al resto de países, y la información de la segunda tabla (RIGTH TABLE) se une a la información presente en la primera (LEFT TABLE). Nótese que conviene tener mucho cuidado de no perder información al utilizar los INNER JOINs. 
 
 
 ```{r echo=FALSE, out.width="100%"}
@@ -283,7 +283,11 @@ gapminder %>%
 
 \
 
-Los LEFT JOINs y los RIGHT JOINs responden a la misma lógica, aunque los primeros suelen ser más utilizados que los segundos. Supongamos de nuevo que tenemos las dos tablas del gráfico presentado previamente. En esta ocasión **nos interesa generar una nueva tabla partiendo de la información presente en las otras dos, pero en este caso necesitamos que la tabla nueva contenga todas las variables presentes en la primera tabla (LEFT TABLE)**. En nuestro caso la tabla generada incluirá Australia, Canadá, India, Japón, Perú y España. No obstante, como en la segunda tabla no hay información de India y Perú, la tabla generada tendrá *missing values* para dichos países en relación a la esperanza de vida. En la figura siguiente se observa la dinámica descrita de los LEFT JOINs.
+Los LEFT JOINs y los RIGHT JOINs responden a la misma lógica, aunque los primeros suelen ser más utilizados que los segundos. Supongamos de nuevo que tenemos las dos tablas del gráfico presentado previamente. En esta ocasión **nos interesa generar una nueva tabla partiendo de la información presente en las otras dos, pero en este caso necesitamos que la tabla nueva contenga todas las variables presentes en la primera tabla (LEFT TABLE)**. Generalmente los LEFT JOINs son los más utilizados porque añade información de otra tabla pero conservando las observaciones sobre las que se está trabajando.
+
+\
+
+En nuestro caso,al realizar un LEFT JOIN, la tabla generada incluirá Australia, Canadá, India, Japón, Perú y España. No obstante, como en la segunda tabla no hay información de India y Perú, la nueva tabla tendrá *missing values* para dichos países en relación a la esperanza de vida. En la figura siguiente se observa la dinámica descrita de los LEFT JOINs.
 
 ```{r echo=FALSE, out.width="100%"}
 
@@ -336,4 +340,61 @@ grid.raster(right_join)
 
 ```
 
-Por desgracia **el paquete {sqldf} no permite realizar RIGHT JOINs**. No obstante, para no dejar la explicación un poco "coja" vamos a exponer cómo realizar estas uniones **con R**.
+En el caso anterior hemos establecido las columnas a utilizar para realizar el JOIN con la expresión `by= c("country", "continent")`. En general la función utiliza para la unión todas las variables que aparecen en ambas tablas (`by= NULL`), por lo que en este caso en particular no habría sido necesario indicar las columnas a utilizar. En el caso de que las columnas tuvieran diferente nombre en cada una de las columnas, pongamos que en nuestro caso los países aparecen como "name" y como "country" respectivamente, podríamos indicar (`by= c("name" = "country")).
+
+\
+
+Por desgracia **el paquete {sqldf} no permite realizar RIGHT JOINs**. No obstante, para no dejar la explicación un poco "coja" vamos a mostrar cómo realizar estas uniones **con R**, que evidentemente se asemejará a los procedimientos utilizados al realizar LEFT JOINs visto arriba (Base R y con el paquete {dplyr}.
+
+\
+
+```{r}
+
+# BASE R:
+
+merge(vab_pc, life_exp, all.y = TRUE)
+
+# DPLYR:
+
+vab_pc %>%
+  right_join(life_exp, by = c("country", "continent"))
+
+```
+
+\
+
+# FULL JOINs
+
+\
+
+Por último, cabe la posibilidad que al unir dos dataframes nos interese conservar las observaciones de ambas. En nuestro ejemplo, cabe la posibilidad que en el dataset generado queramos que aparezcan **todos los países del LEFT TABLE y también todos los países del RIGHT TABLE**. evidentemente la tabla generada contendrá *missing values* tanto en la columna del VAB por habitante como en la columna de la esperanza de vida. El esquema de dicho proceso sería el siguiente: 
+
+```{r echo=FALSE, out.width="100%"}
+
+full_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\full_join.png")
+grid.raster(full_join)
+
+```
+
+Al igual que sucedía con los RIGHT JOINs, el paquete {sqldf} no permite, a día de hoy, realizar FULL JOINs. No obstante, de nuevo, con la finalidad de no dejar el post un tanto incompleto vamos a exponer cómo realizar dichas operaciones con R.
+
+\
+
+De nuevo existen diversas formas para realizar FULL JOINs en R. Podemos utilizar la sintaxis básica de R, utilizando la función `merge()` o las funciones de {dplyr}, de forma análoga a cómo hemos realizado los JOINS previos.
+
+\
+
+
+```{r}
+
+# BASE R:
+
+merge(vab_pc, life_exp, all.x = TRUE, all.y = TRUE)
+
+# DPLYR:
+
+vab_pc %>%
+  full_join(life_exp, by = c("country", "continent"))
+
+```
+

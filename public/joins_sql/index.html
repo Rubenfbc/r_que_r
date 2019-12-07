@@ -201,7 +201,7 @@ gapminder::gapminder_unfiltered
 <p>Supongamos que tenemos dos datasets, el primero con información sobre el PIB per cápita de una serie de países y el segundo con información sobre la esperanza de vida. No obstante los países del primer dataset (left table) y el segundo (right table) no coinciden. En el caso de que queramos generar un dataset donde tengamos información tanto del PIB per cápita como de la esperanza de vida, pero <strong>únicamente incluyendo los países que están en ambos datasets</strong> utilizaremos el comando INNER JOIN</p>
 <p><br />
 </p>
-<p>El <strong>planteamiento general del INNER JOIN</strong> sería el que se observa en la figura. Vemos que el dataframe final solo incluye a los cuatros países presentes en ambas tablas (Australia, Canadá, Japón y España), excluyendo al resto de países, y la información de la segunda tabla (RIGTH TABLE) se une a la información presente en la primera (LEFT TABLE).</p>
+<p>El <strong>planteamiento general del INNER JOIN</strong> sería el que se observa en la figura. Vemos que el dataframe final solo incluye a los cuatros países presentes en ambas tablas (Australia, Canadá, Japón y España), excluyendo al resto de países, y la información de la segunda tabla (RIGTH TABLE) se une a la información presente en la primera (LEFT TABLE). Nótese que conviene tener mucho cuidado de no perder información al utilizar los INNER JOINs.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
 <p>Aunque el anterior es el esquema general, existen algunos aspectos que debemos tener en cuenta. Veámoslo con una serie de ejemplos. En primer lugar vamos a realizar <strong>dos subsets que incluya los mismos países de los del dibujo previo</strong>, uno con información del PIB per cápita y otro con información de la esperanza de vida de dichos países.</p>
 <p><br />
@@ -379,7 +379,10 @@ gapminder %&gt;%
 <h1>LEFT JOINs y RIGHT JOINs</h1>
 <p><br />
 </p>
-<p>Los LEFT JOINs y los RIGHT JOINs responden a la misma lógica, aunque los primeros suelen ser más utilizados que los segundos. Supongamos de nuevo que tenemos las dos tablas del gráfico presentado previamente. En esta ocasión <strong>nos interesa generar una nueva tabla partiendo de la información presente en las otras dos, pero en este caso necesitamos que la tabla nueva contenga todas las variables presentes en la primera tabla (LEFT TABLE)</strong>. En nuestro caso la tabla generada incluirá Australia, Canadá, India, Japón, Perú y España. No obstante, como en la segunda tabla no hay información de India y Perú, la tabla generada tendrá <em>missing values</em> para dichos países en relación a la esperanza de vida. En la figura siguiente se observa la dinámica descrita de los LEFT JOINs.</p>
+<p>Los LEFT JOINs y los RIGHT JOINs responden a la misma lógica, aunque los primeros suelen ser más utilizados que los segundos. Supongamos de nuevo que tenemos las dos tablas del gráfico presentado previamente. En esta ocasión <strong>nos interesa generar una nueva tabla partiendo de la información presente en las otras dos, pero en este caso necesitamos que la tabla nueva contenga todas las variables presentes en la primera tabla (LEFT TABLE)</strong>. Generalmente los LEFT JOINs son los más utilizados porque añade información de otra tabla pero conservando las observaciones sobre las que se está trabajando.</p>
+<p><br />
+</p>
+<p>En nuestro caso,al realizar un LEFT JOIN, la tabla generada incluirá Australia, Canadá, India, Japón, Perú y España. No obstante, como en la segunda tabla no hay información de India y Perú, la nueva tabla tendrá <em>missing values</em> para dichos países en relación a la esperanza de vida. En la figura siguiente se observa la dinámica descrita de los LEFT JOINs.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-16-1.png" width="100%" /></p>
 <p>En sqldf podemos realizar el LEFT JOIN modificando ligeramente la expresión del INNER JOIN expuesta en el apartado previo.</p>
 <p><br />
@@ -430,7 +433,85 @@ vab_pc %&gt;%
 </p>
 <p>Por su parte, si <strong>queremos conservar todas las observaciones del RIGHT TABLE, completando dicha tabla con los valores de la LEFT table</strong> haremos uso del RIGHT JOIN. En este caso, como se refleja en la figura siguiente, la tabla final se compondría de los siete países del RIGHT TABLE (Australia, Brasil, Canadá, Japón, Mongolia, Singapur y España), aunque en tres de ellos, en aquellos países que no se encuentran en la LEFT TABLE, faltarán los valores del PIB por habitante.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-19-1.png" width="100%" /></p>
-<p>Por desgracia <strong>el paquete {sqldf} no permite realizar RIGHT JOINs</strong>. No obstante, para no dejar la explicación un poco “coja” vamos a exponer cómo realizar estas uniones <strong>con R</strong>.</p>
+<p>En el caso anterior hemos establecido las columnas a utilizar para realizar el JOIN con la expresión <code>by= c("country", "continent")</code>. En general la función utiliza para la unión todas las variables que aparecen en ambas tablas (<code>by= NULL</code>), por lo que en este caso en particular no habría sido necesario indicar las columnas a utilizar. En el caso de que las columnas tuvieran diferente nombre en cada una de las columnas, pongamos que en nuestro caso los países aparecen como “name” y como “country” respectivamente, podríamos indicar (`by= c(“name” = “country”)).</p>
+<p><br />
+</p>
+<p>Por desgracia <strong>el paquete {sqldf} no permite realizar RIGHT JOINs</strong>. No obstante, para no dejar la explicación un poco “coja” vamos a mostrar cómo realizar estas uniones <strong>con R</strong>, que evidentemente se asemejará a los procedimientos utilizados al realizar LEFT JOINs visto arriba (Base R y con el paquete {dplyr}.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# BASE R:
+
+merge(vab_pc, life_exp, all.y = TRUE)
+##     country continent gdpPercap lifeExp
+## 1 Australia   Oceania  34435.37  81.235
+## 2    Brazil  Americas        NA  72.390
+## 3    Canada  Americas  36319.24  80.653
+## 4     Japan      Asia  31656.07  82.603
+## 5  Mongolia      Asia        NA  66.803
+## 6 Singapore      Asia        NA  79.972
+## 7     Spain    Europe  28821.06  80.941
+
+# DPLYR:
+
+vab_pc %&gt;%
+  right_join(life_exp, by = c(&quot;country&quot;, &quot;continent&quot;))
+## # A tibble: 7 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Australia Oceania      34435.    81.2
+## 2 Brazil    Americas        NA     72.4
+## 3 Canada    Americas     36319.    80.7
+## 4 Japan     Asia         31656.    82.6
+## 5 Mongolia  Asia            NA     66.8
+## 6 Singapore Asia            NA     80.0
+## 7 Spain     Europe       28821.    80.9</code></pre>
+<p><br />
+</p>
+</div>
+<div id="full-joins" class="section level1">
+<h1>FULL JOINs</h1>
+<p><br />
+</p>
+<p>Por último, cabe la posibilidad que al unir dos dataframes nos interese conservar las observaciones de ambas. En nuestro ejemplo, cabe la posibilidad que en el dataset generado queramos que aparezcan <strong>todos los países del LEFT TABLE y también todos los países del RIGHT TABLE</strong>. evidentemente la tabla generada contendrá <em>missing values</em> tanto en la columna del VAB por habitante como en la columna de la esperanza de vida. El esquema de dicho proceso sería el siguiente:</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-21-1.png" width="100%" /></p>
+<p>Al igual que sucedía con los RIGHT JOINs, el paquete {sqldf} no permite, a día de hoy, realizar FULL JOINs. No obstante, de nuevo, con la finalidad de no dejar el post un tanto incompleto vamos a exponer cómo realizar dichas operaciones con R.</p>
+<p><br />
+</p>
+<p>De nuevo existen diversas formas para realizar FULL JOINs en R. Podemos utilizar la sintaxis básica de R, utilizando la función <code>merge()</code> o las funciones de {dplyr}, de forma análoga a cómo hemos realizado los JOINS previos.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# BASE R:
+
+merge(vab_pc, life_exp, all.x = TRUE, all.y = TRUE)
+##     country continent gdpPercap lifeExp
+## 1 Australia   Oceania 34435.367  81.235
+## 2    Brazil  Americas        NA  72.390
+## 3    Canada  Americas 36319.235  80.653
+## 4     India      Asia  2452.210      NA
+## 5     Japan      Asia 31656.068  82.603
+## 6  Mongolia      Asia        NA  66.803
+## 7      Peru  Americas  7408.906      NA
+## 8 Singapore      Asia        NA  79.972
+## 9     Spain    Europe 28821.064  80.941
+
+# DPLYR:
+
+vab_pc %&gt;%
+  full_join(life_exp, by = c(&quot;country&quot;, &quot;continent&quot;))
+## # A tibble: 9 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Australia Oceania      34435.    81.2
+## 2 Canada    Americas     36319.    80.7
+## 3 India     Asia          2452.    NA  
+## 4 Japan     Asia         31656.    82.6
+## 5 Peru      Americas      7409.    NA  
+## 6 Spain     Europe       28821.    80.9
+## 7 Brazil    Americas        NA     72.4
+## 8 Mongolia  Asia            NA     66.8
+## 9 Singapore Asia            NA     80.0</code></pre>
 </div>
 
                 </section>
