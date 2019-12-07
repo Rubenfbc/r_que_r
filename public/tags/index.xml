@@ -6,15 +6,60 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 05 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 06 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Full Join</title>
+      <link>/tags/full-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/full-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Inner Joins</title>
+      <link>/tags/inner-joins/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/inner-joins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Left Join</title>
+      <link>/tags/left-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/left-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Outer Joins</title>
+      <link>/tags/outer-joins/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/outer-joins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Right Join</title>
+      <link>/tags/right-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/right-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>SQL</title>
       <link>/tags/sql/</link>
-      <pubDate>Thu, 05 Dec 2019 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/sql/</guid>
       <description></description>
@@ -23,14 +68,14 @@
     <item>
       <title>sqldf</title>
       <link>/tags/sqldf/</link>
-      <pubDate>Thu, 05 Dec 2019 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/sqldf/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>mapas</title>
+      <title>Mapas</title>
       <link>/tags/mapas/</link>
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -39,7 +84,7 @@
     </item>
     
     <item>
-      <title>maps</title>
+      <title>Maps</title>
       <link>/tags/maps/</link>
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
       

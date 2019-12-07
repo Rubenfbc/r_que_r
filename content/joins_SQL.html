@@ -1,9 +1,9 @@
 ---
-title: "SQL en R con el paquete sqldf (parte II) (En construcción)"
+title: "INNER Y OUTER JOINs en SQL (con el paquete sqldf) y en R"
 author: "Rubén F. Bustillo"
-date: 2019-12-05
+date: 2019-12-06
 categories: ["R"]
-tags: ["SQL", "sqldf"]
+tags: ["SQL", "sqldf", "Inner Joins", "Outer Joins", "Left Join", "Right Join", "Full Join"]
 
 ---
 
@@ -17,25 +17,26 @@ tags: ["SQL", "sqldf"]
 <h1>Paquetes</h1>
 <p><br />
 </p>
-<p>En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos servirá para comparar la sintaxis de SQL con la sintaxis tradicional de {dplyr}. En <a href="https://rquer.netlify.com/babynames/">este post anterior</a> se expone en mayor profundidad las principales funcionalidades del paquete {tidyverse}.</p>
+<p>En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos servirá para comparar la sintaxis de SQL con la sintaxis tradicional de {dplyr}. Téngase en cuenta que en <a href="https://rquer.netlify.com/babynames/">este post anterior</a> se expone en mayor profundidad las principales funcionalidades del paquete {tidyverse}.</p>
 <p><br />
 </p>
 <pre class="r"><code>
 library(sqldf)
 library(tidyverse)
-library(gapminder)</code></pre>
+library(gapminder)
+library(Hmisc)</code></pre>
 </div>
 <div id="introducción" class="section level1">
 <h1>Introducción</h1>
 <p><br />
 </p>
-<p>En este segundo post, que continúa la exposición de cómo trabajar con la sintaxis de SQL en R gracias al paquete {sqldf} que iniciamos en el post previo, vamos a explicar <strong>cómo unir tablas y cómo compilar información de diferentes fuentes</strong>.</p>
+<p>En este segundo post, que continúa la exposición que iniciamos en el post previo de cómo trabajar con la sintaxis de SQL en R utilizando el paquete {sqldf}, vamos a explicar <strong>cómo unir tablas y cómo compilar información de diferentes fuentes</strong>.</p>
 <p><br />
 </p>
-<p>Compilar información en una tabla proveniente de varias tablas es un aspecto fundamental en el análisis de datos. Aunque a día de hoy todavía no hemos realizado un post específico explicando cómo hacer estas operaciones en R -aunque todo se andará- en varios post hemos realizado uniones de diferentes datasets. (por ejemplo <a href="https://rquer.netlify.com/nuts/">aquí</a>, <a href="https://rquer.netlify.com/eurostat/">aquí</a> o <a href="https://rquer.netlify.com/mapas_spain/">aquí</a>). No obstante, aunque dejo la explicación de cómo realizar uniones de dataframes en R para una futura entrada, en este post realizaremos estas operaciones utilizando la sintaxis y el lenguage de SQL utilizando, de nuevo, el paquete {sqldf}.</p>
+<p>Compilar información proveniente de varias tablas es un aspecto fundamental en el análisis de datos. Aunque a día de hoy todavía no hemos realizado un post específico explicando cómo hacer estas operaciones en R, en varios post previos hemos tenido que realizar estas operaciones (véase por ejemplo <a href="https://rquer.netlify.com/nuts/">aquí</a>, <a href="https://rquer.netlify.com/eurostat/">aquí</a> o <a href="https://rquer.netlify.com/mapas_spain/">aquí</a>). Por todo ello, aunque el objetivo principal de este post consiste en exponer cómo realizar estas operaciones utilizando la sintaxis y el lenguage de SQL, aprovecharemos también para explicar cómo llevar a cabo uniones (JOINs) de distintos dataframes utilizando herramientas propias de R.</p>
 <p><br />
 </p>
-<p>A la hora de unir tablas o dataframes existen diversos aspectos que debemos tener en cuenta y dependerá de nuestros dataframes originales y del resultado que buscamos conseguir al realizar las uniones. Por ello existen diversos tipos de unión que, evidentemente, recibirán diferentes nombres. Intentaremos a lo largo del post abordar las diferentes posibilidades utilizando información de algunos países procedentes del dataset <code>gapminder</code> del paquete del mismo nombre.</p>
+<p>A la hora de unir tablas o dataframes existen diversos aspectos que debemos tener en cuenta y dependerá de nuestros dataframes originales y del resultado que buscamos conseguir al realizar las uniones. Por ello existen diversos tipos de unión que, evidentemente, recibirán diferentes nombres. Intentaremos a lo largo del post abordar diferentes posibilidades utilizando información de algunos países procedentes del dataset <code>gapminder</code> del paquete del mismo nombre.</p>
 <p><br />
 </p>
 <p>El paquete gapminder ofrece varios dataframes referentes a un cojunto importante de países. El dataframe filtrado le han denominado <code>gapminder</code>:</p>
@@ -110,7 +111,7 @@ gapminder::gapminder_unfiltered
 ## # ... with 3,303 more rows</code></pre>
 <p><br />
 </p>
-<p>En este post no vamos a utilizar la totalidad de los dataframes arriba expuestos. Como el objetivo de esta entrada consiste en explicar las distintas modalidades, o joins, y exponer su forma de llevarlas a cabo en SQL, construiremos distintos subsets, partiendo de la información existente en los dataframes de {gapminder}, esperando que nuestros subsets nos permitan ejemplificar los distintos ejercicios de una forma más clara.</p>
+<p>En este post no vamos a utilizar la totalidad de los dataframes arriba expuestos. Como el objetivo de esta entrada consiste en explicar las distintas modalidades, o JOINs, y exponer su forma de llevarlas a cabo en SQL y en R, construiremos distintos subsets, partiendo de la información existente en los dataframes de {gapminder}, esperando que nuestros subsets nos permitan ejemplificar los distintos ejercicios de una forma más clara.</p>
 <p><br />
 </p>
 </div>
@@ -118,12 +119,12 @@ gapminder::gapminder_unfiltered
 <h1>INNER JOINs</h1>
 <p><br />
 </p>
-<p>Supongamos que tenemos dos datasets, el primero con información sobre el PIB per cápita de una serie de países y el segundo con información sobre la esperanza de vida. No obstante los países del primer dataset (left table) y el segundo (right table) no coinciden. En el caso de que queramos generar un dataset donde tengamos información tanto del PIB per cápita como de la esperanza de vida, pero <strong>únicamente incluyendo los países que están en ambos datasets</strong> utilizaremos el comando INNER JOIN</p>
+<p>Supongamos que tenemos dos datasets, el primero con información sobre el PIB per cápita de una serie de países y el segundo con información sobre la esperanza de vida. No obstante los países del primer dataset (LEFT TABLE) y el segundo (RIGHT TABLE) no coinciden, habiendo países que están en ambos datasets pero otros países que se encuentran en uno de los datasets pero no en el otro. En el caso de que queramos generar un dataset donde tengamos información tanto del PIB per cápita como de la esperanza de vida, pero <strong>únicamente incluyendo los países que están en ambos datasets</strong>, utilizaremos los INNER JOINs.</p>
 <p><br />
 </p>
-<p>El <strong>planteamiento general del INNER JOIN</strong> sería el que se observa en la figura. Vemos que el dataframe final solo incluye a los cuatros países presentes en ambas tablas (Australia, Canadá, Japón y España), excluyendo al resto de países, y la información de la segunda tabla (RIGTH TABLE) se une a la información presente en la primera (LEFT TABLE). Nótese que conviene tener mucho cuidado de no perder información al utilizar los INNER JOINs.</p>
+<p>El <strong>planteamiento general del INNER JOIN</strong> sería el que se observa en la figura siguiente. Vemos que el dataframe final solo incluye a los cuatros países presentes en ambas tablas (Australia, Canadá, Japón y España), excluyendo al resto de países, y la información de la segunda tabla (RIGHT TABLE) se une a la información presente en la primera (LEFT TABLE). Nótese que al utilizar los INNER JOINs conviene tener mucho cuidado para no perder información de forma indeseada.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
-<p>Aunque el anterior es el esquema general, existen algunos aspectos que debemos tener en cuenta. Veámoslo con una serie de ejemplos. En primer lugar vamos a realizar <strong>dos subsets que incluya los mismos países de los del dibujo previo</strong>, uno con información del PIB per cápita y otro con información de la esperanza de vida de dichos países.</p>
+<p>Aunque el anterior es el esquema general de los INNER JOINs, existen algunos aspectos que debemos tener en cuenta. Veámoslo con una serie de ejemplos. Para ello, en primer lugar vamos a realizar <strong>dos subsets que incluyan los mismos países de los expuestos en el dibujo previo</strong>, uno con información del PIB per cápita y otro con información de la esperanza de vida de dichos países.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -140,10 +141,11 @@ life_exp &lt;- gapminder %&gt;%
   select(country, continent, lifeExp)</code></pre>
 <p><br />
 </p>
-<p>Veámos <strong>ambos datasets</strong>:</p>
+<p>Examinemos <strong>ambos datasets</strong>:</p>
 <p><br />
 </p>
-<pre class="r"><code>vab_pc
+<pre class="r"><code>
+vab_pc
 ## # A tibble: 6 x 3
 ##   country   continent gdpPercap
 ##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;
@@ -167,7 +169,7 @@ life_exp
 ## 7 Spain     Europe       80.9</code></pre>
 <p><br />
 </p>
-<p>Si queremos unir integramente el RIGHT TABLE al LEFT TABLE podemos indicar lo siguiente:</p>
+<p>Si queremos <strong>unir integramente el RIGHT TABLE al LEFT TABLE</strong> podemos indicar lo siguiente:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -182,7 +184,7 @@ sqldf(&#39;SELECT *
 ## 4     Spain    Europe  28821.06      Spain       Europe  80.941</code></pre>
 <p><br />
 </p>
-<p>No obstante, en este caso un dataset se ha unido al anterior, aunque únicamente los países que coinciden en ambos, pero el resultado final incluye columnas repetidas que no nos interesan. Para conseguir un dataframe que se asemeje al del dibujo presentado arriba (con cuatro columnas únicamente) debemos realizar un serie de modificaciones. Indicaremos que queremos cuatro columnas, las dos primeras al estar repetidas serán las pertenecientes al primer dataset (p1),</p>
+<p>En el caso anterior un dataset se ha unido al anterior incluyendo únicamente los países que coinciden en ambos. No obstante, el resultado final incluye columnas repetidas que no nos interesan (las columnas <code>country</code> y <code>continent</code>). Para conseguir un dataframe que se asemeje al del dibujo presentado arriba, formado por cuatro columnas únicamente, debemos realizar un serie de modificaciones, indicando que queremos solo cuatro columnas donde las dos primeras, al estar repetidas, serán las pertenecientes al primer dataset (p1),</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -197,10 +199,10 @@ sqldf(&#39;SELECT p1.country, p1.continent, gdpPercap, lifeExp
 ## 4     Spain    Europe  28821.06  80.941</code></pre>
 <p><br />
 </p>
-<p>Puede que queramos unir más de dataframe en un solo comando. Pongamos por ejemplo que queramos incluir los códigos de cada país, que como vimos están presentes en un dataframe denominado <code>country_codes</code>. <strong>Para unir los tres dataframes</strong>, situando los códigos en la primera columna del nuevo dataset, no es necesario realizar primero una unión y luego la segunda sino que podemos realizar la operación conjuntamente.</p>
+<p>Puede que queramos unir más de dataframe en un solo comando. Pongamos por ejemplo que queramos incluir los códigos de cada país, que como vimos están presentes en un dataframe denominado <code>country_codes</code>. <strong>Para unir los tres dataframes</strong>, situando los códigos en la primera columna del nuevo dataset, no es necesario realizar primero una unión y luego la segunda sino que podemos realizar la operación conjuntamente indicando todas los pasos en una sola expresión.</p>
 <p><br />
 </p>
-<p><strong>Guardamos el nuevo dataframe</strong> con el nombre <code>codes</code>.</p>
+<p>Para ello, en primer lugar <strong>guardamos el nuevo dataframe</strong> con el nombre <code>codes</code>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -224,7 +226,7 @@ sqldf(&#39;SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeEx
 ## 4  ESP     Spain    Europe  28821.06  80.941</code></pre>
 <p><br />
 </p>
-<p>Como en nuestro caso el nombre de las columnas que utilizamos para la unión es el mismo <code>country</code> podemos, alternativamente, establecer USING seguido por el nombre de la variable entre paréntesis (en nuestro caso <code>country</code>) para una mayor sencillez del código. El resultado, como vemos, es el mismo.</p>
+<p>Como en nuestro caso el nombre de las columnas que utilizamos para la unión es el mismo, podemos, de forma alternativa, establecer USING seguido por el nombre de la variable entre paréntesis (en nuestro caso <code>country</code>) para una mayor sencillez a la hora de redactar el código. El resultado, como vemos, es el mismo.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -243,7 +245,7 @@ sqldf(&#39;SELECT iso_alpha AS code, p1.country, p1.continent, gdpPercap, lifeEx
 </p>
 <div id="self-joins" class="section level2">
 <h2>SELF-JOINs</h2>
-<p>Se denominan SELF-JOINs cuando las uniones las realizamos utilizando el mismo dataframe de origen. Es decir, la tabla final, en lugar de ser resultado de dos tablas distintas es resultado de una sola. Aunque parezca extraño en el día a día este tipo de operaciones pueden ser, como veremos en el ejemplo, muy habituales. En nuestro ejemplo particular, utilizando datos del dataframe <code>gapminder()</code>, supongamos que <strong>nos interesa generar un dataset donde quede establecido en una columna la esperanza de vida en el año inicial del periodo (1952), en otra columna la esperanza de vida en el año final (2007) y en una tercera columna el crecimiento entre 1952 y 2007</strong>, con la finalidad de determinar el incremento o descenso de la esperanza de vida por país durante ese periodo.</p>
+<p>Se denominan <strong>SELF-JOINs cuando las uniones las realizamos utilizando el mismo dataframe de origen</strong>. Es decir, la tabla final, en lugar de ser resultado de dos tablas distintas es resultado de una sola. Aunque parezca extraño en el día a día este tipo de operaciones pueden ser, como veremos en el ejemplo, muy habituales. En nuestro ejemplo particular, utilizando datos del dataframe <code>gapminder()</code>, supongamos que <strong>nos interesa generar un dataset donde quede establecido en una columna la esperanza de vida en el año inicial del periodo (1952), en otra columna la esperanza de vida en el año final (2007) y en una tercera columna el crecimiento entre 1952 y 2007</strong>. El objetivo de este tipo de análisis consiste en determinar el incremento o descenso de la esperanza de vida por país durante ese periodo.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -268,7 +270,7 @@ sqldf(&#39;SELECT p1.country,
 ## 9   Bangladesh      37.484      64.062    70.90492
 ## 10     Belgium      68.000      79.441    16.82500</code></pre>
 <p> </p>
-<p><strong>En R</strong> podemos obtener el mismo resultado utilizando la función <code>filter()</code>, para seleccionar el año inicial y final, junto a la función <code>spread()</code> para generar las dos columnas, una para 1952 y otra para 2007, y la función <code>mutate()</code>para crear una nueva columna que indique el crecimiento de la siguiente forma:</p>
+<p><strong>En R</strong> podemos obtener el mismo resultado utilizando la función <code>filter()</code>, para seleccionar el año inicial y final, junto a la función <code>spread()</code> para generar las dos columnas, una para 1952 y otra para 2007, y la función <code>mutate()</code> para crear una nueva columna que indique el crecimiento de la siguiente forma:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -299,10 +301,15 @@ gapminder %&gt;%
 <h1>LEFT JOINs y RIGHT JOINs</h1>
 <p><br />
 </p>
-<p>Los LEFT JOINs y los RIGHT JOINs responden a la misma lógica, aunque los primeros suelen ser más utilizados que los segundos. Supongamos de nuevo que tenemos las dos tablas del gráfico presentado previamente. En esta ocasión <strong>nos interesa generar una nueva tabla partiendo de la información presente en las otras dos, pero en este caso necesitamos que la tabla nueva contenga todas las variables presentes en la primera tabla (LEFT TABLE)</strong>. Generalmente los LEFT JOINs son los más utilizados porque añade información de otra tabla pero conservando las observaciones sobre las que se está trabajando.</p>
+<p>En oposición a los INNER JOINs, los LEFT JOINs, los RIGHT JOINs y los FULL JOINs (que veremos posteriormente) se conocen como OUTER JOINs. Estos últimos, aunque con diferencias, conservan las observaciones que aparecen, al menos, en una de las dos tablas originales.</p>
 <p><br />
 </p>
-<p>En nuestro caso,al realizar un LEFT JOIN, la tabla generada incluirá Australia, Canadá, India, Japón, Perú y España. No obstante, como en la segunda tabla no hay información de India y Perú, la nueva tabla tendrá <em>missing values</em> para dichos países en relación a la esperanza de vida. En la figura siguiente se observa la dinámica descrita de los LEFT JOINs.</p>
+<div id="left-joins" class="section level2">
+<h2>LEFT JOINs</h2>
+<p>Los LEFT JOINs y los RIGHT JOINs responden a la misma lógica, aunque los primeros suelen ser más utilizados que los segundos. Supongamos de nuevo que tenemos las dos tablas del gráfico presentado previamente. En esta ocasión <strong>nos interesa generar una nueva tabla partiendo de la información presente en las otras dos, pero en este caso necesitamos que la tabla nueva contenga todas las variables presentes en la primera tabla (LEFT TABLE)</strong>. En la práctica los LEFT JOINs son los más utilizados porque permiten añadir información proveniente de otra tabla pero conservando las observaciones del dataframe sobre las que se está trabajando.</p>
+<p><br />
+</p>
+<p>En nuestro caso, al realizar un LEFT JOIN, la tabla generada incluirá Australia, Canadá, India, Japón, Perú y España. No obstante, como en la segunda tabla no hay información de India y Perú, la nueva tabla tendrá <em>missing values</em> para dichos países en relación a la esperanza de vida. En la figura siguiente se observa la dinámica descrita de los LEFT JOINs.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-16-1.png" width="100%" /></p>
 <p>En sqldf podemos realizar el LEFT JOIN modificando ligeramente la expresión del INNER JOIN expuesta en el apartado previo.</p>
 <p><br />
@@ -321,7 +328,7 @@ sqldf(&#39;SELECT p1.country, p1.continent, gdpPercap, lifeExp
 ## 6     Spain    Europe 28821.064  80.941</code></pre>
 <p><br />
 </p>
-<p><strong>En R</strong> existen distintas posibilidades para realizar esta operación. Podemos, por un lado, utilizar la sintaxis base de R, y utilizar la función <code>merge()</code> o, por otro, utilizar la función <code>left_join()</code> del paquete {dplyr}.</p>
+<p><strong>En R</strong> existen distintas posibilidades para realizar esta misma operación. Podemos, por un lado, utilizar la sintaxis base de R, y utilizar la función <code>merge()</code> para hacer el JOIN o, por otro lado, utilizar la función <code>left_join()</code> del paquete {dplyr}.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -351,12 +358,15 @@ vab_pc %&gt;%
 ## 6 Spain     Europe       28821.    80.9</code></pre>
 <p><br />
 </p>
-<p>Por su parte, si <strong>queremos conservar todas las observaciones del RIGHT TABLE, completando dicha tabla con los valores de la LEFT table</strong> haremos uso del RIGHT JOIN. En este caso, como se refleja en la figura siguiente, la tabla final se compondría de los siete países del RIGHT TABLE (Australia, Brasil, Canadá, Japón, Mongolia, Singapur y España), aunque en tres de ellos, en aquellos países que no se encuentran en la LEFT TABLE, faltarán los valores del PIB por habitante.</p>
+</div>
+<div id="right-joins" class="section level2">
+<h2>RIGHT JOINs</h2>
+<p>Por su parte, si <strong>queremos conservar todas las observaciones del RIGHT TABLE, completando dicha tabla con los valores del LEFT table</strong> haremos uso del RIGHT JOIN. En este caso, como se refleja en la figura siguiente, la tabla final se compondría de los siete países del RIGHT TABLE (Australia, Brasil, Canadá, Japón, Mongolia, Singapur y España), aunque en tres de ellos, en aquellos países que no se encuentran en el LEFT TABLE, faltarán los valores del PIB por habitante.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-19-1.png" width="100%" /></p>
-<p>En el caso anterior hemos establecido las columnas a utilizar para realizar el JOIN con la expresión <code>by= c("country", "continent")</code>. En general la función utiliza para la unión todas las variables que aparecen en ambas tablas (<code>by= NULL</code>), por lo que en este caso en particular no habría sido necesario indicar las columnas a utilizar. En el caso de que las columnas tuvieran diferente nombre en cada una de las columnas, pongamos que en nuestro caso los países aparecen como “name” y como “country” respectivamente, podríamos indicar (`by= c(“name” = “country”)).</p>
+<p>En el caso anterior hemos establecido las columnas a utilizar para realizar el JOIN con la expresión <code>by= c("country", "continent")</code>. En general la función utiliza para la unión todas las variables que aparecen en ambas tablas (<code>by= NULL</code>), por lo que en este caso en particular no habría sido necesario indicar las columnas a utilizar. En el caso de que las columnas tuvieran diferente nombre en cada dataset, pongamos por ejemplo que en nuestro caso los países aparecen como “name” y como “country” respectivamente, podríamos indicar (<code>by= c("name" = "country")</code>).</p>
 <p><br />
 </p>
-<p>Por desgracia <strong>el paquete {sqldf} no permite realizar RIGHT JOINs</strong>. No obstante, para no dejar la explicación un poco “coja” vamos a mostrar cómo realizar estas uniones <strong>con R</strong>, que evidentemente se asemejará a los procedimientos utilizados al realizar LEFT JOINs visto arriba (Base R y con el paquete {dplyr}.</p>
+<p>Por desgracia <strong>el paquete {sqldf} no permite realizar RIGHT JOINs</strong>. No obstante, para no dejar la explicación un poco “coja” vamos a mostrar cómo realizar estas uniones <strong>con R</strong>, que evidentemente se asemejará a los procedimientos utilizados al realizar LEFT JOINs vistos arriba (Base R y con el paquete {dplyr}).</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -389,16 +399,17 @@ vab_pc %&gt;%
 <p><br />
 </p>
 </div>
+</div>
 <div id="full-joins" class="section level1">
 <h1>FULL JOINs</h1>
 <p><br />
 </p>
-<p>Por último, cabe la posibilidad que al unir dos dataframes nos interese conservar las observaciones de ambas. En nuestro ejemplo, cabe la posibilidad que en el dataset generado queramos que aparezcan <strong>todos los países del LEFT TABLE y también todos los países del RIGHT TABLE</strong>. evidentemente la tabla generada contendrá <em>missing values</em> tanto en la columna del VAB por habitante como en la columna de la esperanza de vida. El esquema de dicho proceso sería el siguiente:</p>
+<p>Por último, cabe la posibilidad que al unir dos dataframes nos interese <strong>conservar las observaciones presentes en ambos</strong>. Es decir, cabe la posibilidad de que en el dataset que queremos generar nos interese que aparezcan <strong>todos los países del LEFT TABLE y también todos los países del RIGHT TABLE</strong>. Evidentemente, en nuestro caso particular, la tabla generada contendrá <em>missing values</em> tanto en la columna del VAB por habitante como en la columna de la esperanza de vida. El esquema de dicho proceso sería el siguiente:</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-21-1.png" width="100%" /></p>
-<p>Al igual que sucedía con los RIGHT JOINs, el paquete {sqldf} no permite, a día de hoy, realizar FULL JOINs. No obstante, de nuevo, con la finalidad de no dejar el post un tanto incompleto vamos a exponer cómo realizar dichas operaciones con R.</p>
+<p>Al igual que sucedía con los RIGHT JOINs, el paquete {sqldf} no permite, al menos a día de hoy, realizar FULL JOINs. No obstante, de nuevo, con la finalidad de no dejar el post un tanto incompleto vamos a exponer cómo realizar dichas operaciones <strong>en R</strong>.</p>
 <p><br />
 </p>
-<p>De nuevo existen diversas formas para realizar FULL JOINs en R. Podemos utilizar la sintaxis básica de R, utilizando la función <code>merge()</code> o las funciones de {dplyr}, de forma análoga a cómo hemos realizado los JOINS previos.</p>
+<p>De nuevo existen diversas formas para realizar FULL JOINs en R. Podemos utilizar la sintaxis básica de R, utilizando la función <code>merge()</code> o las funciones de {dplyr}, de forma análoga a cómo hemos realizado los OUTER JOINS previos.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -432,4 +443,205 @@ vab_pc %&gt;%
 ## 7 Brazil    Americas        NA     72.4
 ## 8 Mongolia  Asia            NA     66.8
 ## 9 Singapore Asia            NA     80.0</code></pre>
+<p><br />
+</p>
+</div>
+<div id="semi-joins-y-anti-joins" class="section level1">
+<h1>SEMI JOINs y ANTI JOINs</h1>
+<p><br />
+</p>
+<div id="semi-joins" class="section level2">
+<h2>SEMI JOINs</h2>
+<p>Los SEMI JOINs nos <strong>permiten filtrar observaciones en lugar de variables</strong>. Pongamos que nos interesa filtrar el dataset <code>vab_pc</code> en función de si los países ahí incluidos están también en el dataset <code>life_exp</code> (o viceversa). En este caso el SEMI JOIN no añade ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-23-1.png" width="100%" /></p>
+<p>Realizamos el SEMI JOIN de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+semi_join(vab_pc, life_exp)
+## Joining, by = c(&quot;country&quot;, &quot;continent&quot;)
+## # A tibble: 4 x 3
+##   country   continent gdpPercap
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;
+## 1 Australia Oceania      34435.
+## 2 Canada    Americas     36319.
+## 3 Japan     Asia         31656.
+## 4 Spain     Europe       28821.
+
+semi_join(life_exp, vab_pc)
+## Joining, by = c(&quot;country&quot;, &quot;continent&quot;)
+## # A tibble: 4 x 3
+##   country   continent lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;       &lt;dbl&gt;
+## 1 Australia Oceania      81.2
+## 2 Canada    Americas     80.7
+## 3 Japan     Asia         82.6
+## 4 Spain     Europe       80.9</code></pre>
+<p><br />
+</p>
+<p>Nótese que es posible realizar una operación similar con <code>%in%</code> de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+vab_pc %&gt;%
+  filter(country %in% life_exp$country)
+## # A tibble: 4 x 3
+##   country   continent gdpPercap
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;
+## 1 Australia Oceania      34435.
+## 2 Canada    Americas     36319.
+## 3 Japan     Asia         31656.
+## 4 Spain     Europe       28821.</code></pre>
+<p><br />
+</p>
+</div>
+<div id="anti-joins" class="section level2">
+<h2>ANTI JOINs</h2>
+<p>El ANTI JOIN es el mecanismo inverso al SEMI JOIN. Su finalidad consiste en <strong>identificar aquellas observaciones que no se encuentran en el segundo dataset</strong>. Aunque parezca de poca relevancia, los ANTI JOINS pueden resultar de gran utilidad a la hora de identificar errores o discrepancias entre dos datasets.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-26-1.png" width="100%" /></p>
+<p><br />
+</p>
+<p>En nuestro caso los ANTI JOIN se realizarían de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+anti_join(vab_pc, life_exp)
+## Joining, by = c(&quot;country&quot;, &quot;continent&quot;)
+## # A tibble: 2 x 3
+##   country continent gdpPercap
+##   &lt;fct&gt;   &lt;fct&gt;         &lt;dbl&gt;
+## 1 India   Asia          2452.
+## 2 Peru    Americas      7409.
+
+anti_join(life_exp, vab_pc)
+## Joining, by = c(&quot;country&quot;, &quot;continent&quot;)
+## # A tibble: 3 x 3
+##   country   continent lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;       &lt;dbl&gt;
+## 1 Brazil    Americas     72.4
+## 2 Mongolia  Asia         66.8
+## 3 Singapore Asia         80.0</code></pre>
+<p><br />
+</p>
+<p>Alternativamente podemos utilizar <code>%nin%</code> del paquete {Hmisc} de forma similar al realizado previamente con <code>%in%</code>. Téngase en cuenta que <code>%nin%</code> sería un operador inverso a <code>%in%</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+vab_pc %&gt;%
+  filter(country %nin% life_exp$country)
+## # A tibble: 2 x 3
+##   country continent gdpPercap
+##   &lt;fct&gt;   &lt;fct&gt;         &lt;dbl&gt;
+## 1 India   Asia          2452.
+## 2 Peru    Americas      7409.</code></pre>
+<p><br />
+</p>
+</div>
+</div>
+<div id="otro-tipo-de-joins" class="section level1">
+<h1>OTRO TIPO DE JOINS</h1>
+<p><br />
+</p>
+<p>Existen algunos otros operadores que nos pueden resultar de utilidad a la hora de realizar nuestros análisis, sobre todo cuando estamos realizando <strong>operaciones con dos datasets que presentan las mismas variables</strong>.</p>
+<p><br />
+</p>
+<p>Para ejemplificar la operatividad de estas funciones vamos a realizar una pequeña variación en nuestros datasets (LEFT TABLE Y RIGHT TABLE). En este caso ambos datasets presentan información sobre el PIB per cápita y sobe la esperanza de vida aunque se diferenciarán en los países que componen cada uno de ellos.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+A &lt;- gapminder %&gt;%
+  filter(year == 2007) %&gt;%
+  filter(country %in% c(&quot;Spain&quot;, &quot;Peru&quot;, &quot;India&quot;, &quot;Australia&quot;, &quot;Japan&quot;, &quot;Canada&quot;)) %&gt;%
+  select(country, continent, gdpPercap, lifeExp)
+
+
+B &lt;- gapminder %&gt;%
+  filter(year == 2007) %&gt;%
+  filter(country %in% c(&quot;Spain&quot;, &quot;Australia&quot;, &quot;Singapore&quot;, &quot;Canada&quot;, &quot;Japan&quot;, &quot;Mongolia&quot;, &quot;Brazil&quot;)) %&gt;%
+  select(country, continent, gdpPercap, lifeExp)
+
+A
+## # A tibble: 6 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Australia Oceania      34435.    81.2
+## 2 Canada    Americas     36319.    80.7
+## 3 India     Asia          2452.    64.7
+## 4 Japan     Asia         31656.    82.6
+## 5 Peru      Americas      7409.    71.4
+## 6 Spain     Europe       28821.    80.9
+
+B
+## # A tibble: 7 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Australia Oceania      34435.    81.2
+## 2 Brazil    Americas      9066.    72.4
+## 3 Canada    Americas     36319.    80.7
+## 4 Japan     Asia         31656.    82.6
+## 5 Mongolia  Asia          3096.    66.8
+## 6 Singapore Asia         47143.    80.0
+## 7 Spain     Europe       28821.    80.9</code></pre>
+<p><br />
+</p>
+<div id="intersect" class="section level2">
+<h2>intersect()</h2>
+<p>La función <code>intersect()</code> <strong>devuelve aquellas observaciones que se ecuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+intersect(A,B)
+## # A tibble: 4 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Australia Oceania      34435.    81.2
+## 2 Canada    Americas     36319.    80.7
+## 3 Japan     Asia         31656.    82.6
+## 4 Spain     Europe       28821.    80.9</code></pre>
+<p><br />
+</p>
+</div>
+<div id="union" class="section level2">
+<h2>union()</h2>
+<p>La función <code>union()</code> <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+union (A,B)
+## # A tibble: 9 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Australia Oceania      34435.    81.2
+## 2 Canada    Americas     36319.    80.7
+## 3 India     Asia          2452.    64.7
+## 4 Japan     Asia         31656.    82.6
+## 5 Peru      Americas      7409.    71.4
+## 6 Spain     Europe       28821.    80.9
+## 7 Brazil    Americas      9066.    72.4
+## 8 Mongolia  Asia          3096.    66.8
+## 9 Singapore Asia         47143.    80.0</code></pre>
+<p><br />
+</p>
+</div>
+<div id="setdiff" class="section level2">
+<h2>setdiff()</h2>
+<p>La función <code>setdiff()</code> <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, la función <code>setdiff()</code> devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiamos el orden en la expresión, de (A,B) a (B,A) la función <code>setdiff()</code> nos devuelvorá Brasil, Mongolia y Singapur.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+setdiff(A,B)
+## # A tibble: 2 x 4
+##   country continent gdpPercap lifeExp
+##   &lt;fct&gt;   &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 India   Asia          2452.    64.7
+## 2 Peru    Americas      7409.    71.4
+
+setdiff(B,A)
+## # A tibble: 3 x 4
+##   country   continent gdpPercap lifeExp
+##   &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Brazil    Americas      9066.    72.4
+## 2 Mongolia  Asia          3096.    66.8
+## 3 Singapore Asia         47143.    80.0</code></pre>
+</div>
 </div>
