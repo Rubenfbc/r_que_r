@@ -1,5 +1,5 @@
 ---
-title: "INNER Y OUTER JOINs en SQL (con el paquete sqldf) y en R"
+title: "INNER Y OUTER JOINs en SQL (con {sqldf}) y en R"
 author: "Rubén F. Bustillo"
 date: 2019-12-06
 categories: ["R"]
@@ -601,9 +601,9 @@ intersect(A,B)
 <p><br />
 </p>
 </div>
-<div id="union" class="section level2">
-<h2>union()</h2>
-<p>La función <code>union()</code> <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original.</p>
+<div id="union-y-union_all" class="section level2">
+<h2>union() y union_all()</h2>
+<p>La función <code>union()</code> <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original. Por su parte, la función <code>union_all()</code> realiza la misma operación que <code>union()</code> pero, a diferencia de esta, <code>union_all()</code> devuelve todas las observaciones de ambos dataframes, incluso repitiendo las observaciones que se encuentren en los dos. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -619,7 +619,25 @@ union (A,B)
 ## 6 Spain     Europe       28821.    80.9
 ## 7 Brazil    Americas      9066.    72.4
 ## 8 Mongolia  Asia          3096.    66.8
-## 9 Singapore Asia         47143.    80.0</code></pre>
+## 9 Singapore Asia         47143.    80.0
+
+union_all(A,B)
+## # A tibble: 13 x 4
+##    country   continent gdpPercap lifeExp
+##    &lt;fct&gt;     &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Australia Oceania      34435.    81.2
+##  2 Canada    Americas     36319.    80.7
+##  3 India     Asia          2452.    64.7
+##  4 Japan     Asia         31656.    82.6
+##  5 Peru      Americas      7409.    71.4
+##  6 Spain     Europe       28821.    80.9
+##  7 Australia Oceania      34435.    81.2
+##  8 Brazil    Americas      9066.    72.4
+##  9 Canada    Americas     36319.    80.7
+## 10 Japan     Asia         31656.    82.6
+## 11 Mongolia  Asia          3096.    66.8
+## 12 Singapore Asia         47143.    80.0
+## 13 Spain     Europe       28821.    80.9</code></pre>
 <p><br />
 </p>
 </div>

@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>INNER Y OUTER JOINs en SQL (con el paquete sqldf) y en R</title>
+      <title>INNER Y OUTER JOINs en SQL (con {sqldf}) y en R</title>
       <link>/joins_sql/</link>
       <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
       
@@ -25,7 +25,7 @@ En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos 
     </item>
     
     <item>
-      <title>SQL en R con el paquete sqldf (parte I. Principales operadores en SQL)</title>
+      <title>Principales operadores de SQL en R con el paquete {sqldf}</title>
       <link>/sql/</link>
       <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
       
@@ -51,7 +51,7 @@ Paquetes
     </item>
     
     <item>
-      <title>Mapas regionales con el paquete raster</title>
+      <title>Mapas regionales con el paquete {raster}</title>
       <link>/mapas_raster/</link>
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -92,7 +92,7 @@ Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus sigl
     </item>
     
     <item>
-      <title>Importar datos de Eurostat en R con el paquete eurostat</title>
+      <title>Importar datos de Eurostat en R con el paquete {eurostat}</title>
       <link>/eurostat/</link>
       <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -120,7 +120,7 @@ Cargamos los paquetes requeridos:
     </item>
     
     <item>
-      <title>Mapas en 3D con echarts4r y e_geo_3d</title>
+      <title>Mapas en 3D con {echarts4r} y {e_geo_3d}</title>
       <link>/maps3d/</link>
       <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -163,7 +163,7 @@ En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando 
     </item>
     
     <item>
-      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con gganimate</title>
+      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con {gganimate}</title>
       <link>/vab_peru/</link>
       <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -242,7 +242,7 @@ En el post previo, con el objetivo de exponer las principales funciones del paqu
     </item>
     
     <item>
-      <title>Aprendiendo dplyr con &#39;babynames&#39;</title>
+      <title>Aprendiendo {dplyr} con &#39;babynames&#39;</title>
       <link>/babynames/</link>
       <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
       

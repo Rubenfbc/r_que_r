@@ -1,5 +1,5 @@
 ---
-title: "Mapas en 3D con echarts4r y e_geo_3d"
+title: "Mapas en 3D con {echarts4r} y {e_geo_3d}"
 author: "Rubén F. Bustillo"
 date: 2019-11-13
 categories: ["R"]
@@ -185,16 +185,16 @@ paises_ID &lt;- read_excel(&quot;./datasets/paises_ID.xls&quot;)
 
 head(paises_ID)
 ## # A tibble: 6 x 18
-##   Name  `2000` `2001` `2002` `2003` `2004` `2005` `2006` `2007` `2008`
-##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 Arge~  0.439  0.425  0.389  0.410  0.404  0.421  0.452  0.460  0.471
-## 2 Arme~  0.191  0.280  0.253  0.321  0.257  0.258  0.241  0.211  0.224
-## 3 Aust~  1.89   1.99   2.07   2.17   2.17   2.37   2.36   2.42   2.57 
-## 4 Azer~  0.336  0.340  0.302  0.325  0.298  0.220  0.172  0.170  0.166
-## 5 Belg~  1.92   2.02   1.89   1.83   1.81   1.78   1.81   1.84   1.92 
-## 6 Bulg~  0.499  0.451  0.468  0.476  0.474  0.446  0.445  0.430  0.448
-## # ... with 8 more variables: `2009` &lt;dbl&gt;, `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;,
-## #   `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;, `2016` &lt;dbl&gt;</code></pre>
+##   Name  `2000` `2001` `2002` `2003` `2004` `2005` `2006` `2007` `2008` `2009`
+##   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Arge~  0.439  0.425  0.389  0.410  0.404  0.421  0.452  0.460  0.471  0.584
+## 2 Arme~  0.191  0.280  0.253  0.321  0.257  0.258  0.241  0.211  0.224  0.291
+## 3 Aust~  1.89   1.99   2.07   2.17   2.17   2.37   2.36   2.42   2.57   2.60 
+## 4 Azer~  0.336  0.340  0.302  0.325  0.298  0.220  0.172  0.170  0.166  0.250
+## 5 Belg~  1.92   2.02   1.89   1.83   1.81   1.78   1.81   1.84   1.92   1.99 
+## 6 Bulg~  0.499  0.451  0.468  0.476  0.474  0.446  0.445  0.430  0.448  0.495
+## # ... with 7 more variables: `2010` &lt;dbl&gt;, `2011` &lt;dbl&gt;, `2012` &lt;dbl&gt;,
+## #   `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;, `2016` &lt;dbl&gt;</code></pre>
 <p><br />
 </p>
 <p>Antes de proceder a realizar el mapa conviene reconfigurar el dataset con el objetivo de hacerlo más funcional para su análisis. Utilizamos la función <code>gather()</code> del paquete <code>tidyverse</code>.</p>

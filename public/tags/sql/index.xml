@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>INNER Y OUTER JOINs en SQL (con el paquete sqldf) y en R</title>
+      <title>INNER Y OUTER JOINs en SQL (con {sqldf}) y en R</title>
       <link>/joins_sql/</link>
       <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
       
@@ -25,7 +25,7 @@ En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos 
     </item>
     
     <item>
-      <title>SQL en R con el paquete sqldf (parte I. Principales operadores en SQL)</title>
+      <title>Principales operadores de SQL en R con el paquete {sqldf}</title>
       <link>/sql/</link>
       <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
       

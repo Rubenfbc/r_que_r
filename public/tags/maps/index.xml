@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Maps on R que R</title>
+    <title>maps on R que R</title>
     <link>/tags/maps/</link>
-    <description>Recent content in Maps on R que R</description>
+    <description>Recent content in maps on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 Nov 2019 00:00:00 +0000</lastBuildDate>
@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>Mapas regionales con el paquete raster</title>
+      <title>Mapas regionales con el paquete {raster}</title>
       <link>/mapas_raster/</link>
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -38,7 +38,7 @@ Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus sigl
     </item>
     
     <item>
-      <title>Mapas en 3D con echarts4r y e_geo_3d</title>
+      <title>Mapas en 3D con {echarts4r} y {e_geo_3d}</title>
       <link>/maps3d/</link>
       <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
       

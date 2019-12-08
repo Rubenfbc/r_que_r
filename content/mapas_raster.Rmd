@@ -1,5 +1,5 @@
 ---
-title: "Mapas regionales con el paquete raster"
+title: "Mapas regionales con el paquete {raster}"
 author: "Rubén F. Bustillo"
 date: 2019-11-28
 categories: ["R"]

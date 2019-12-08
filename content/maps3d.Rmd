@@ -1,5 +1,5 @@
 ---
-title: "Mapas en 3D con echarts4r y e_geo_3d"
+title: "Mapas en 3D con {echarts4r} y {e_geo_3d}"
 author: "Rubén F. Bustillo"
 date: 2019-11-13
 categories: ["R"]

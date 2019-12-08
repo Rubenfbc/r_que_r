@@ -1,5 +1,5 @@
 ---
-title: "INNER Y OUTER JOINs en SQL (con el paquete sqldf) y en R"
+title: "INNER Y OUTER JOINs en SQL (con {sqldf}) y en R"
 author: "Rubén F. Bustillo"
 date: 2019-12-06
 categories: ["R"]
@@ -539,15 +539,17 @@ intersect(A,B)
 
 \
 
-## union()
+## union() y union_all()
 
-La función `union()` **añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE**. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original.
+La función `union()` **añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE**. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original. Por su parte, la función `union_all()` realiza la misma operación que `union()` pero, a diferencia de esta, `union_all()` devuelve todas las observaciones de ambos dataframes, incluso repitiendo las observaciones que se encuentren en los dos. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final. 
 
 \
 
 ```{r}
 
 union (A,B)
+
+union_all(A,B)
 
 ```
 

@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>Importar datos de Eurostat en R con el paquete eurostat</title>
+      <title>Importar datos de Eurostat en R con el paquete {eurostat}</title>
       <link>/eurostat/</link>
       <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -25,7 +25,7 @@ Eurostat es la Oficina de Estadística de la Comisión Europea, organismo que se
     </item>
     
     <item>
-      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con gganimate</title>
+      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con {gganimate}</title>
       <link>/vab_peru/</link>
       <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -65,7 +65,7 @@ En el post previo, con el objetivo de exponer las principales funciones del paqu
     </item>
     
     <item>
-      <title>Aprendiendo dplyr con &#39;babynames&#39;</title>
+      <title>Aprendiendo {dplyr} con &#39;babynames&#39;</title>
       <link>/babynames/</link>
       <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
       
