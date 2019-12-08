@@ -127,13 +127,13 @@ library(Hmisc)</code></pre>
 <p>En este segundo post, que continúa la exposición que iniciamos en el post previo de cómo trabajar con la sintaxis de SQL en R utilizando el paquete {sqldf}, vamos a explicar <strong>cómo unir tablas y cómo compilar información de diferentes fuentes</strong>.</p>
 <p><br />
 </p>
-<p>Compilar información proveniente de varias tablas es un aspecto fundamental en el análisis de datos. Aunque a día de hoy todavía no hemos realizado un post específico explicando cómo hacer estas operaciones en R, en varios post previos hemos tenido que realizar estas operaciones (véase por ejemplo <a href="https://rquer.netlify.com/nuts/">aquí</a>, <a href="https://rquer.netlify.com/eurostat/">aquí</a> o <a href="https://rquer.netlify.com/mapas_spain/">aquí</a>). Por todo ello, aunque el objetivo principal de este post consiste en exponer cómo realizar estas operaciones utilizando la sintaxis y el lenguage de SQL, aprovecharemos también para explicar cómo llevar a cabo uniones (JOINs) de distintos dataframes utilizando herramientas propias de R.</p>
+<p>Compilar información proveniente de varias tablas es un aspecto fundamental en el análisis de datos. Aunque a día de hoy todavía no hemos realizado un post específico explicando cómo hacer estas operaciones en R, en varios post previos hemos tenido que realizar estas operaciones (véase por ejemplo <a href="https://rquer.netlify.com/nuts/">aquí</a>, <a href="https://rquer.netlify.com/eurostat/">aquí</a> o <a href="https://rquer.netlify.com/mapas_spain/">aquí</a>). Por todo ello, aunque el objetivo principal de este post consiste en exponer cómo realizar estas operaciones utilizando la sintaxis y el lenguaje de SQL, aprovecharemos también para explicar cómo llevar a cabo uniones (JOINs) de distintos dataframes utilizando herramientas propias de R.</p>
 <p><br />
 </p>
 <p>A la hora de unir tablas o dataframes existen diversos aspectos que debemos tener en cuenta y dependerá de nuestros dataframes originales y del resultado que buscamos conseguir al realizar las uniones. Por ello existen diversos tipos de unión que, evidentemente, recibirán diferentes nombres. Intentaremos a lo largo del post abordar diferentes posibilidades utilizando información de algunos países procedentes del dataset <code>gapminder</code> del paquete del mismo nombre.</p>
 <p><br />
 </p>
-<p>El paquete gapminder ofrece varios dataframes referentes a un cojunto importante de países. El dataframe filtrado le han denominado <code>gapminder</code>:</p>
+<p>El paquete gapminder ofrece varios dataframes referentes a un conjunto importante de países. El dataframe filtrado recibe el nombre de <code>gapminder</code>:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -263,7 +263,7 @@ life_exp
 ## 7 Spain     Europe       80.9</code></pre>
 <p><br />
 </p>
-<p>Si queremos <strong>unir integramente el RIGHT TABLE al LEFT TABLE</strong> podemos indicar lo siguiente:</p>
+<p>Si queremos <strong>unir íntegramente el RIGHT TABLE al LEFT TABLE</strong> podemos indicar lo siguiente:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -546,7 +546,7 @@ vab_pc %&gt;%
 </p>
 <div id="semi-joins" class="section level2">
 <h2>SEMI JOINs</h2>
-<p>Los SEMI JOINs nos <strong>permiten filtrar observaciones en lugar de variables</strong>. Pongamos que nos interesa filtrar el dataset <code>vab_pc</code> en función de si los países ahí incluidos están también en el dataset <code>life_exp</code> (o viceversa). Para ello debemos expecificar las columnas del LEFT TABLE que nos interesan y especificar también una condición, donde se requiera que los nombres se encuentren también en una segunda tabla (RIGHT TABLE). Por consiguiente, el SEMI JOIN no añadiría ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.</p>
+<p>Los SEMI JOINs nos <strong>permiten filtrar observaciones en lugar de variables</strong>. Pongamos que nos interesa filtrar el dataset <code>vab_pc</code> en función de si los países ahí incluidos están también en el dataset <code>life_exp</code> (o viceversa). Para ello debemos especificar las columnas del LEFT TABLE que nos interesan y especificar también una condición, donde se requiera que los nombres se encuentren también en una segunda tabla (RIGHT TABLE). Por consiguiente, el SEMI JOIN no añadiría ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-23-1.png" width="100%" /></p>
 <p>Realizamos el SEMI JOIN de la siguiente forma:</p>
 <p><br />
@@ -731,7 +731,7 @@ B
 </p>
 <div id="intersect" class="section level2">
 <h2>INTERSECT</h2>
-<p>La función INTERSECT <strong>devuelve aquellas observaciones que se ecuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas tal y como se observa en la figura siguiente.</p>
+<p>La función INTERSECT <strong>devuelve aquellas observaciones que se encuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas tal y como se observa en la figura siguiente.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-32-1.png" width="100%" /></p>
 <p>Su realización en SQL sería:</p>
 <p><br />
@@ -854,7 +854,7 @@ union_all(A,B)
 </div>
 <div id="except" class="section level2">
 <h2>EXCEPT</h2>
-<p>EXCEPT <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, EXCEPT devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiasemos el orden en la expresión, de (A,B) a (B,A) EXCEPT nos devolvería Brasil, Mongolia y Singapur.</p>
+<p>EXCEPT <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, EXCEPT devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiásemos el orden en la expresión, de (A,B) a (B,A) EXCEPT nos devolvería Brasil, Mongolia y Singapur.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-39-1.png" width="100%" /></p>
 <p><br />
 </p>

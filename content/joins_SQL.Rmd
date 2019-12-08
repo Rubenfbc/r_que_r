@@ -47,7 +47,7 @@ En este segundo post, que continúa la exposición que iniciamos en el post prev
 
 \
 
-Compilar información proveniente de varias tablas es un aspecto fundamental en el análisis de datos. Aunque a día de hoy todavía no hemos realizado un post específico explicando cómo hacer estas operaciones en R, en varios post previos hemos tenido que realizar estas operaciones (véase por ejemplo [aquí](https://rquer.netlify.com/nuts/), [aquí](https://rquer.netlify.com/eurostat/) o [aquí](https://rquer.netlify.com/mapas_spain/)). Por todo ello, aunque el objetivo principal de este post consiste en exponer cómo realizar estas operaciones utilizando la sintaxis y el lenguage de SQL, aprovecharemos también para explicar cómo llevar a cabo uniones (JOINs) de distintos dataframes utilizando herramientas propias de R.  
+Compilar información proveniente de varias tablas es un aspecto fundamental en el análisis de datos. Aunque a día de hoy todavía no hemos realizado un post específico explicando cómo hacer estas operaciones en R, en varios post previos hemos tenido que realizar estas operaciones (véase por ejemplo [aquí](https://rquer.netlify.com/nuts/), [aquí](https://rquer.netlify.com/eurostat/) o [aquí](https://rquer.netlify.com/mapas_spain/)). Por todo ello, aunque el objetivo principal de este post consiste en exponer cómo realizar estas operaciones utilizando la sintaxis y el lenguaje de SQL, aprovecharemos también para explicar cómo llevar a cabo uniones (JOINs) de distintos dataframes utilizando herramientas propias de R.  
 
 \
 
@@ -55,7 +55,7 @@ A la hora de unir tablas o dataframes existen diversos aspectos que debemos tene
 
 \
 
-El paquete gapminder ofrece varios dataframes referentes a un cojunto importante de países. El dataframe filtrado le han denominado `gapminder`:
+El paquete gapminder ofrece varios dataframes referentes a un conjunto importante de países. El dataframe filtrado recibe el nombre de `gapminder`:
 
 \
 
@@ -162,7 +162,7 @@ life_exp
 
 \
 
-Si queremos **unir integramente el RIGHT TABLE al LEFT TABLE** podemos indicar lo siguiente:
+Si queremos **unir íntegramente el RIGHT TABLE al LEFT TABLE** podemos indicar lo siguiente:
 
 \
 
@@ -416,7 +416,7 @@ vab_pc %>%
 
 ## SEMI JOINs
 
-Los SEMI JOINs nos **permiten filtrar observaciones en lugar de variables**. Pongamos que nos interesa filtrar el dataset `vab_pc` en función de si los países ahí incluidos están también en el dataset `life_exp` (o viceversa). Para ello debemos expecificar las columnas del LEFT TABLE que nos interesan y especificar también una condición, donde se requiera que los nombres se encuentren también en una segunda tabla (RIGHT TABLE). Por consiguiente, el SEMI JOIN no añadiría ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.
+Los SEMI JOINs nos **permiten filtrar observaciones en lugar de variables**. Pongamos que nos interesa filtrar el dataset `vab_pc` en función de si los países ahí incluidos están también en el dataset `life_exp` (o viceversa). Para ello debemos especificar las columnas del LEFT TABLE que nos interesan y especificar también una condición, donde se requiera que los nombres se encuentren también en una segunda tabla (RIGHT TABLE). Por consiguiente, el SEMI JOIN no añadiría ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.
 
 ```{r echo=FALSE, out.width="100%"}
 
@@ -571,7 +571,7 @@ B
 
 ## INTERSECT
 
-La función INTERSECT **devuelve aquellas observaciones que se ecuentren en ambos datasets**. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas tal y como se observa en la figura siguiente.
+La función INTERSECT **devuelve aquellas observaciones que se encuentren en ambos datasets**. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas tal y como se observa en la figura siguiente.
 
 ```{r echo=FALSE, out.width="100%"}
 
@@ -667,7 +667,7 @@ union_all(A,B)
 
 ## EXCEPT
 
-EXCEPT **devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE**. Por consiguiente, en nuestro caso en particular, EXCEPT devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiasemos el orden en la expresión, de (A,B) a (B,A) EXCEPT nos devolvería Brasil, Mongolia y Singapur.
+EXCEPT **devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE**. Por consiguiente, en nuestro caso en particular, EXCEPT devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiásemos el orden en la expresión, de (A,B) a (B,A) EXCEPT nos devolvería Brasil, Mongolia y Singapur.
 
 ```{r echo=FALSE, out.width="100%"}
 
