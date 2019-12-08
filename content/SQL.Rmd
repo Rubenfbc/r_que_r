@@ -2,7 +2,7 @@
 title: "Principales operadores de SQL en R con el paquete {sqldf}"
 author: "Rubén F. Bustillo"
 date: 2019-12-03
-categories: ["R"]
+categories: ["R", "SQL"]
 tags: ["SQL", "sqldf"]
 
 ---
