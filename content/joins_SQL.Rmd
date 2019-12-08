@@ -527,7 +527,16 @@ B
 
 ## INTERSECT
 
-La función INTERSECT **devuelve aquellas observaciones que se ecuentren en ambos datasets**. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas.
+La función INTERSECT **devuelve aquellas observaciones que se ecuentren en ambos datasets**. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas tal y como se observa en la figura siguiente.
+
+```{r echo=FALSE, out.width="100%"}
+
+intersect_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\intersect_join.png")
+grid.raster(intersect_join)
+
+```
+
+Su realización en SQL sería:
 
 \
 
@@ -557,7 +566,23 @@ intersect(A,B)
 
 ## UNION Y UNION ALL
 
-La función UNION **añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE**. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original. Por su parte, UNION ALL realiza la misma operación que UNION pero, a diferencia de esta, UNION ALL devuelve todas las observaciones de ambos dataframes, pero repitiendo las observaciones que se encuentren en los dos. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final. 
+La función UNION **añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE**. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original. 
+
+```{r echo=FALSE, out.width="100%"}
+
+union_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\union_join.png")
+grid.raster(union_join)
+
+```
+
+Por su parte, UNION ALL realiza la misma operación que UNION pero, a diferencia de esta, UNION ALL **devuelve todas las observaciones de ambos dataframes, pero repitiendo las observaciones que se encuentren en los dos**. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final. 
+
+```{r echo=FALSE, out.width="100%"}
+
+unionall_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\unionall_join.png")
+grid.raster(unionall_join)
+
+```
 
 \
 
@@ -599,6 +624,13 @@ union_all(A,B)
 ## EXCEPT
 
 EXCEPT **devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE**. Por consiguiente, en nuestro caso en particular, la función `setdiff()` devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiamos el orden en la expresión, de (A,B) a (B,A) la función `setdiff()` nos devuelvorá Brasil, Mongolia y Singapur.
+
+```{r echo=FALSE, out.width="100%"}
+
+except_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\except_join.png")
+grid.raster(except_join)
+
+```
 
 \
 

@@ -586,7 +586,9 @@ B
 </p>
 <div id="intersect" class="section level2">
 <h2>INTERSECT</h2>
-<p>La función INTERSECT <strong>devuelve aquellas observaciones que se ecuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas.</p>
+<p>La función INTERSECT <strong>devuelve aquellas observaciones que se ecuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas tal y como se observa en la figura siguiente.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-30-1.png" width="100%" /></p>
+<p>Su realización en SQL sería:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -619,7 +621,10 @@ intersect(A,B)
 </div>
 <div id="union-y-union-all" class="section level2">
 <h2>UNION Y UNION ALL</h2>
-<p>La función UNION <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original. Por su parte, UNION ALL realiza la misma operación que UNION pero, a diferencia de esta, UNION ALL devuelve todas las observaciones de ambos dataframes, pero repitiendo las observaciones que se encuentren en los dos. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final.</p>
+<p>La función UNION <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-33-1.png" width="100%" /></p>
+<p>Por su parte, UNION ALL realiza la misma operación que UNION pero, a diferencia de esta, UNION ALL <strong>devuelve todas las observaciones de ambos dataframes, pero repitiendo las observaciones que se encuentren en los dos</strong>. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-34-1.png" width="100%" /></p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -705,6 +710,7 @@ union_all(A,B)
 <div id="except" class="section level2">
 <h2>EXCEPT</h2>
 <p>EXCEPT <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, la función <code>setdiff()</code> devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiamos el orden en la expresión, de (A,B) a (B,A) la función <code>setdiff()</code> nos devuelvorá Brasil, Mongolia y Singapur.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-37-1.png" width="100%" /></p>
 <p><br />
 </p>
 <pre class="r"><code>
