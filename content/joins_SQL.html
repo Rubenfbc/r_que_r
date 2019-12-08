@@ -585,8 +585,24 @@ B
 <p><br />
 </p>
 <div id="intersect" class="section level2">
-<h2>intersect()</h2>
-<p>La función <code>intersect()</code> <strong>devuelve aquellas observaciones que se ecuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas.</p>
+<h2>INTERSECT</h2>
+<p>La función INTERSECT <strong>devuelve aquellas observaciones que se ecuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT country, continent, gdpPercap
+      FROM A
+      INTERSECT
+      SELECT country, continent, gdpPercap
+      FROM B&#39;)
+##     country continent gdpPercap
+## 1 Australia   Oceania  34435.37
+## 2    Canada  Americas  36319.24
+## 3     Japan      Asia  31656.07
+## 4     Spain    Europe  28821.06</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> utilizamos la función <code>intersect()</code> para obtener el resultado anterior.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -601,9 +617,54 @@ intersect(A,B)
 <p><br />
 </p>
 </div>
-<div id="union-y-union_all" class="section level2">
-<h2>union() y union_all()</h2>
-<p>La función <code>union()</code> <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original. Por su parte, la función <code>union_all()</code> realiza la misma operación que <code>union()</code> pero, a diferencia de esta, <code>union_all()</code> devuelve todas las observaciones de ambos dataframes, incluso repitiendo las observaciones que se encuentren en los dos. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final.</p>
+<div id="union-y-union-all" class="section level2">
+<h2>UNION Y UNION ALL</h2>
+<p>La función UNION <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original. Por su parte, UNION ALL realiza la misma operación que UNION pero, a diferencia de esta, UNION ALL devuelve todas las observaciones de ambos dataframes, pero repitiendo las observaciones que se encuentren en los dos. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# UNION
+
+sqldf(&#39;SELECT country, continent, gdpPercap
+      FROM A
+      UNION 
+      SELECT country, continent, gdpPercap
+      FROM B&#39;)
+##     country continent gdpPercap
+## 1 Australia   Oceania 34435.367
+## 2    Brazil  Americas  9065.801
+## 3    Canada  Americas 36319.235
+## 4     India      Asia  2452.210
+## 5     Japan      Asia 31656.068
+## 6  Mongolia      Asia  3095.772
+## 7      Peru  Americas  7408.906
+## 8 Singapore      Asia 47143.180
+## 9     Spain    Europe 28821.064
+
+# UNION ALL
+
+sqldf(&#39;SELECT country, continent, gdpPercap
+      FROM A
+      UNION ALL
+      SELECT country, continent, gdpPercap
+      FROM B&#39;)
+##      country continent gdpPercap
+## 1  Australia   Oceania 34435.367
+## 2     Canada  Americas 36319.235
+## 3      India      Asia  2452.210
+## 4      Japan      Asia 31656.068
+## 5       Peru  Americas  7408.906
+## 6      Spain    Europe 28821.064
+## 7  Australia   Oceania 34435.367
+## 8     Brazil  Americas  9065.801
+## 9     Canada  Americas 36319.235
+## 10     Japan      Asia 31656.068
+## 11  Mongolia      Asia  3095.772
+## 12 Singapore      Asia 47143.180
+## 13     Spain    Europe 28821.064</code></pre>
+<p><br />
+</p>
+<p>El nombre de los operadores <strong>en R</strong> es igual, <code>union()</code> y <code>union_all()</code>, aunque la operatividad resulta algo más sencilla:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -641,9 +702,23 @@ union_all(A,B)
 <p><br />
 </p>
 </div>
-<div id="setdiff" class="section level2">
-<h2>setdiff()</h2>
-<p>La función <code>setdiff()</code> <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, la función <code>setdiff()</code> devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiamos el orden en la expresión, de (A,B) a (B,A) la función <code>setdiff()</code> nos devuelvorá Brasil, Mongolia y Singapur.</p>
+<div id="except" class="section level2">
+<h2>EXCEPT</h2>
+<p>EXCEPT <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, la función <code>setdiff()</code> devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiamos el orden en la expresión, de (A,B) a (B,A) la función <code>setdiff()</code> nos devuelvorá Brasil, Mongolia y Singapur.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT country, continent, gdpPercap
+      FROM A
+      EXCEPT
+      SELECT country, continent, gdpPercap
+      FROM B&#39;)
+##   country continent gdpPercap
+## 1   India      Asia  2452.210
+## 2    Peru  Americas  7408.906</code></pre>
+<p><br />
+</p>
+<p>El comando análogo <strong>en R</strong> se denomina <code>setdiff()</code> y su operatividad se asemeja a las funciones <code>union()</code> e <code>intercept()</code> expuestas en los párrafos previos.</p>
 <p><br />
 </p>
 <pre class="r"><code>
