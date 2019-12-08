@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/tags/anti-join/</loc>
+    <lastmod>2019-12-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
@@ -13,12 +18,12 @@
   </url>
   
   <url>
-    <loc>/tags/inner-joins/</loc>
+    <loc>/joins_sql/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/joins_sql/</loc>
+    <loc>/tags/inner-joins/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   
@@ -44,6 +49,11 @@
   
   <url>
     <loc>/tags/right-join/</loc>
+    <lastmod>2019-12-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/semi-join/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   

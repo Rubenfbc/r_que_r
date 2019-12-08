@@ -1,9 +1,9 @@
 ---
-title: "INNER Y OUTER JOINs en SQL (con {sqldf}) y en R"
+title: "INNER & OUTER JOINs en SQL (con {sqldf}) y en R"
 author: "Rubén F. Bustillo"
 date: 2019-12-06
 categories: ["R"]
-tags: ["SQL", "sqldf", "Inner Joins", "Outer Joins", "Left Join", "Right Join", "Full Join"]
+tags: ["SQL", "sqldf", "Inner Joins", "Outer Joins", "Left Join", "Right Join", "Full Join", "Semi Join", "Anti Join"]
 
 ---
 
@@ -452,9 +452,36 @@ vab_pc %&gt;%
 </p>
 <div id="semi-joins" class="section level2">
 <h2>SEMI JOINs</h2>
-<p>Los SEMI JOINs nos <strong>permiten filtrar observaciones en lugar de variables</strong>. Pongamos que nos interesa filtrar el dataset <code>vab_pc</code> en función de si los países ahí incluidos están también en el dataset <code>life_exp</code> (o viceversa). En este caso el SEMI JOIN no añade ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.</p>
+<p>Los SEMI JOINs nos <strong>permiten filtrar observaciones en lugar de variables</strong>. Pongamos que nos interesa filtrar el dataset <code>vab_pc</code> en función de si los países ahí incluidos están también en el dataset <code>life_exp</code> (o viceversa). Para ello debemos expecificar las columnas del LEFT TABLE que nos interesan y especificar también una condición, donde se requiera que los nombres se encuentren también en una segunda tabla (RIGHT TABLE). Por consiguiente, el SEMI JOIN no añadiría ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.</p>
 <p><img src="/joins_SQL_files/figure-html/unnamed-chunk-23-1.png" width="100%" /></p>
 <p>Realizamos el SEMI JOIN de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT country, continent, gdpPercap
+      FROM vab_pc 
+      WHERE country IN
+      (SELECT country
+      FROM life_exp)&#39;)
+##     country continent gdpPercap
+## 1 Australia   Oceania  34435.37
+## 2    Canada  Americas  36319.24
+## 3     Japan      Asia  31656.07
+## 4     Spain    Europe  28821.06
+
+sqldf(&#39;SELECT country, continent, lifeExp
+      FROM life_exp 
+      WHERE country IN
+      (SELECT country
+      FROM vab_pc)&#39;)
+##     country continent lifeExp
+## 1 Australia   Oceania  81.235
+## 2    Canada  Americas  80.653
+## 3     Japan      Asia  82.603
+## 4     Spain    Europe  80.941</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> el comando sería:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -498,10 +525,34 @@ vab_pc %&gt;%
 <div id="anti-joins" class="section level2">
 <h2>ANTI JOINs</h2>
 <p>El ANTI JOIN es el mecanismo inverso al SEMI JOIN. Su finalidad consiste en <strong>identificar aquellas observaciones que no se encuentran en el segundo dataset</strong>. Aunque parezca de poca relevancia, los ANTI JOINS pueden resultar de gran utilidad a la hora de identificar errores o discrepancias entre dos datasets.</p>
-<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-26-1.png" width="100%" /></p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-27-1.png" width="100%" /></p>
 <p><br />
 </p>
 <p>En nuestro caso los ANTI JOIN se realizarían de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT country, continent, gdpPercap
+      FROM vab_pc 
+      WHERE country NOT IN
+      (SELECT country
+      FROM life_exp)&#39;)
+##   country continent gdpPercap
+## 1   India      Asia  2452.210
+## 2    Peru  Americas  7408.906
+
+sqldf(&#39;SELECT country, continent, lifeExp
+      FROM life_exp 
+      WHERE country NOT IN
+      (SELECT country
+      FROM vab_pc)&#39;)
+##     country continent lifeExp
+## 1    Brazil  Americas  72.390
+## 2  Mongolia      Asia  66.803
+## 3 Singapore      Asia  79.972</code></pre>
+<p><br />
+</p>
+<p>Y <strong>en R</strong>:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -587,7 +638,7 @@ B
 <div id="intersect" class="section level2">
 <h2>INTERSECT</h2>
 <p>La función INTERSECT <strong>devuelve aquellas observaciones que se ecuentren en ambos datasets</strong>. Esta función se asemeja al INNER JOIN pero, recordemos, en este caso se requiere que ambos datasets estén conformados por las mismas columnas tal y como se observa en la figura siguiente.</p>
-<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-30-1.png" width="100%" /></p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-32-1.png" width="100%" /></p>
 <p>Su realización en SQL sería:</p>
 <p><br />
 </p>
@@ -622,9 +673,9 @@ intersect(A,B)
 <div id="union-y-union-all" class="section level2">
 <h2>UNION Y UNION ALL</h2>
 <p>La función UNION <strong>añade al dataset las observaciones del RIGTH TABLE no presentes en el LEFT TABLE</strong>. En nuestro caso podemos comprobar que Brasil, Mongolia y Singapur han sido añadidos al LEFT TABLE original.</p>
-<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-33-1.png" width="100%" /></p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-35-1.png" width="100%" /></p>
 <p>Por su parte, UNION ALL realiza la misma operación que UNION pero, a diferencia de esta, UNION ALL <strong>devuelve todas las observaciones de ambos dataframes, pero repitiendo las observaciones que se encuentren en los dos</strong>. Por consiguiente, en nuestro caso particular Australia, Canadá, Japón y España aparecerán dos veces en el dataset final.</p>
-<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-34-1.png" width="100%" /></p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-36-1.png" width="100%" /></p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -709,8 +760,8 @@ union_all(A,B)
 </div>
 <div id="except" class="section level2">
 <h2>EXCEPT</h2>
-<p>EXCEPT <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, la función <code>setdiff()</code> devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiamos el orden en la expresión, de (A,B) a (B,A) la función <code>setdiff()</code> nos devuelvorá Brasil, Mongolia y Singapur.</p>
-<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-37-1.png" width="100%" /></p>
+<p>EXCEPT <strong>devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE</strong>. Por consiguiente, en nuestro caso en particular, EXCEPT devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiasemos el orden en la expresión, de (A,B) a (B,A) EXCEPT nos devolvería Brasil, Mongolia y Singapur.</p>
+<p><img src="/joins_SQL_files/figure-html/unnamed-chunk-39-1.png" width="100%" /></p>
 <p><br />
 </p>
 <pre class="r"><code>

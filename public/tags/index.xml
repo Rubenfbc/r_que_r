@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Anti Join</title>
+      <link>/tags/anti-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/anti-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Full Join</title>
       <link>/tags/full-join/</link>
       <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
@@ -57,6 +66,15 @@
     </item>
     
     <item>
+      <title>Semi Join</title>
+      <link>/tags/semi-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/semi-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>SQL</title>
       <link>/tags/sql/</link>
       <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
@@ -75,7 +93,7 @@
     </item>
     
     <item>
-      <title>Mapas</title>
+      <title>mapas</title>
       <link>/tags/mapas/</link>
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
       
@@ -84,7 +102,7 @@
     </item>
     
     <item>
-      <title>Maps</title>
+      <title>maps</title>
       <link>/tags/maps/</link>
       <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
       

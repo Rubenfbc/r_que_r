@@ -1,9 +1,9 @@
 ---
-title: "INNER Y OUTER JOINs en SQL (con {sqldf}) y en R"
+title: "INNER & OUTER JOINs en SQL (con {sqldf}) y en R"
 author: "Rubén F. Bustillo"
 date: 2019-12-06
 categories: ["R"]
-tags: ["SQL", "sqldf", "Inner Joins", "Outer Joins", "Left Join", "Right Join", "Full Join"]
+tags: ["SQL", "sqldf", "Inner Joins", "Outer Joins", "Left Join", "Right Join", "Full Join", "Semi Join", "Anti Join"]
 
 ---
 
@@ -416,7 +416,7 @@ vab_pc %>%
 
 ## SEMI JOINs
 
-Los SEMI JOINs nos **permiten filtrar observaciones en lugar de variables**. Pongamos que nos interesa filtrar el dataset `vab_pc` en función de si los países ahí incluidos están también en el dataset `life_exp` (o viceversa). En este caso el SEMI JOIN no añade ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.
+Los SEMI JOINs nos **permiten filtrar observaciones en lugar de variables**. Pongamos que nos interesa filtrar el dataset `vab_pc` en función de si los países ahí incluidos están también en el dataset `life_exp` (o viceversa). Para ello debemos expecificar las columnas del LEFT TABLE que nos interesan y especificar también una condición, donde se requiera que los nombres se encuentren también en una segunda tabla (RIGHT TABLE). Por consiguiente, el SEMI JOIN no añadiría ninguna nueva columna al dataset original (LEFT TABLE), únicamente identifica aquellos países que se encuentran en el segundo dataset.
 
 ```{r echo=FALSE, out.width="100%"}
 
@@ -426,6 +426,28 @@ grid.raster(semi_join)
 ```
 
 Realizamos el SEMI JOIN de la siguiente forma:
+
+\
+
+```{r}
+
+sqldf('SELECT country, continent, gdpPercap
+      FROM vab_pc 
+      WHERE country IN
+      (SELECT country
+      FROM life_exp)')
+
+sqldf('SELECT country, continent, lifeExp
+      FROM life_exp 
+      WHERE country IN
+      (SELECT country
+      FROM vab_pc)')
+
+```
+
+\
+
+**En R** el comando sería:
 
 \
 
@@ -466,6 +488,28 @@ grid.raster(anti_join)
 \
 
 En nuestro caso los ANTI JOIN se realizarían de la siguiente forma:
+
+\
+
+```{r}
+
+sqldf('SELECT country, continent, gdpPercap
+      FROM vab_pc 
+      WHERE country NOT IN
+      (SELECT country
+      FROM life_exp)')
+
+sqldf('SELECT country, continent, lifeExp
+      FROM life_exp 
+      WHERE country NOT IN
+      (SELECT country
+      FROM vab_pc)')
+
+```
+
+\
+
+Y **en R**: 
 
 \
 
@@ -623,7 +667,7 @@ union_all(A,B)
 
 ## EXCEPT
 
-EXCEPT **devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE**. Por consiguiente, en nuestro caso en particular, la función `setdiff()` devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiamos el orden en la expresión, de (A,B) a (B,A) la función `setdiff()` nos devuelvorá Brasil, Mongolia y Singapur.
+EXCEPT **devuelve las observaciones presentes en el LEFT TABLE pero no en el RIGHT TABLE**. Por consiguiente, en nuestro caso en particular, EXCEPT devolverá los países India y Perú, que se encuentran en A pero no en B. Si cambiasemos el orden en la expresión, de (A,B) a (B,A) EXCEPT nos devolvería Brasil, Mongolia y Singapur.
 
 ```{r echo=FALSE, out.width="100%"}
 
