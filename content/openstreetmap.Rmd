@@ -1,0 +1,559 @@
+---
+title: "OpenStreetMaps en R con {osmdata}"
+author: "Rubén F. Bustillo"
+date: 2019-12-17
+categories: ["R"]
+tags: ["Openstreetmaps", "osmdata", "maps"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+El presente post tiene como objetivo introducir el paquete {osmdata}, mediante el cual podemos descargar e importar información de la base de datos del proyecto colaborativo Open Street Map (OSM) 
+
+\
+
+# Introducción
+
+\
+
+**OpenStreetMap (OSM)** es un [proyecto colaborativo](https://www.openstreetmap.org/about) formado por un gran número de personas que comparten, añaden y mantienen información que permite generar una gran base de datos mediante la cual es posible realizar mapas editables y libres. La información compilada proveniente de dichas contribuciones se distribuye bajo licencia abierta (ODbL según sus siglas en inglés).
+
+\
+
+Por su parte, el paquete {osmdata} permite descargar e importar información de OpenStreetMap como objetos sp o sf. Este paquete, y la enorme información que contiene la base de datos OMS, nos permite realizar un número ilimitado de mapas.
+
+\
+
+# El paquete {omsdata}
+
+\
+
+En primer lugar cargamos el paquete {omstada}. Cargamos también el paquete {tidyverse} cuya sintaxis resulta muy útil al trabajar en el entorno de R.
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(osmdata)
+library(tidyverse)
+
+```
+
+\
+
+Para una **descripción** en mayor detalle de la información presente en la base de datos de OpenStreetMap conviene echar un vistazo a este [enlace](https://wiki.openstreetmap.org/wiki/Map_Features). Alternativamente podemos identificar las categorías disponibles indicando el siguiente comando:
+
+\
+
+```{r}
+
+available_features()
+
+```
+
+\
+
+La lista muestra tanto las *primary features* (características primarias), así como las *propiedades adicionales* (aditional properties). (Véase de nuevo el [link](https://wiki.openstreetmap.org/wiki/Map_Features#Tags_for_individual_houses) previamente mencionado para una mayor información sobre qué elementos incluye cada categoría)
+
+En cada categoría (primarias o adicional) encontramos unos conceptos clave (key), que se corresponden a los mostrados en la lista previa, y unos valores (tags). Para identificar los *tags* de, por ejemplo, los conceptos clave (key) de "shop", "railway" o "highway" podemos especificar los siguientes comandos:
+
+\
+
+```{r}
+
+shop_tags <- available_tags("shop")
+head(shop_tags)
+
+```
+
+\
+
+```{r}
+
+available_tags("railway")
+
+```
+
+\
+
+
+```{r}
+
+available_tags("highway")
+
+```
+
+\
+
+Las operaciones y los elementos y características mostrados nos resultarán de gran utilidad a la hora de representar en los mapas distintos elementos. **Veamos algunos ejemplos**.
+
+\
+
+# Mapa de Zaragoza
+
+\
+
+Para el primer ejemplo práctico vamos a utilizar datos referentes a mi ciudad, Zaragoza. Representaremos diferentes elementos:
+
+\
+
+## Carreteras
+
+Pongamos que nos interesa representar gráficamente la **red de carreteras de Zaragoza**. En este caso identificaremos *highway* como key y seleccionaremos un conjunto de valores obtenidos previamente:
+
+\
+
+```{r}
+
+carreteras <- getbb("Zaragoza Spain")%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("road", "motorway", "primary", 
+                            "secondary", "tertiary")) %>%
+  osmdata_sf()
+
+
+carreteras
+
+```
+
+\
+
+Una vez hemos indicado los elementos que nos interesa representar en el mapa, en nuestro caso carreteras, procedemos a graficar utilizando {ggplot2}.
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "darkgrey",
+          size = .4,
+          alpha = .8)+
+  labs(title = "Zaragoza",
+       subtitle = "Red de carreteras")
+
+```
+
+\
+
+El gráfico anterior utiliza las coordenadas obtenidas mediante la función `getbb()`. De esta forma las coordenadas utilizadas al realizar el mapa anterior han sido las siguientes:
+
+\
+
+```{r}
+
+getbb("Zaragoza Spain")
+
+```
+
+\
+
+No obstante **podemos modificar fácilmente dichas coordenadas geográficas**. Supongamos, por ejemplo, que nos interesa realizar un mapa de las carreteras de la ciudad de Zaragoza y, a lo sumo, de su perímetro cercano. Una posibilidad sería indicar las coordinadas deseadas con `coord_sf` de la siguiente forma:
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "darkgrey",
+          size = .4,
+          alpha = .8)+
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza",
+       subtitle = "Red de carreteras")
+
+```
+
+\
+
+Alternativamente podemos indicar las coordenadas geográficas de nuestro mapa de la siguiente forma:
+
+\
+
+```{r}
+
+min <- c(-0.95, 41.6)
+max <- c(-0.8, 41.7)
+zgz_df <- as.matrix(data.frame(min, max))
+row.names(zgz_df) <- c("x","y")
+
+```
+
+\
+
+```{r}
+
+carreteras_B <- zgz_df%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("road", "motorway", "primary", 
+                            "secondary", "tertiary")) %>%
+  osmdata_sf()
+
+carreteras_B
+
+```
+
+\
+
+El mapa resultante será, evidentemente, similar al obtenido previamente.
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+  geom_sf(data = carreteras_B$osm_lines,
+          inherit.aes = FALSE,
+          color = "darkgrey",
+          size = .4,
+          alpha = .8) +
+  theme_void() +
+  labs(title = "Zaragoza",
+       subtitle = "Red de carreteras")
+
+```
+
+## Calles
+
+Me resulta difícil identificar mi ciudad observando únicamente su red de carreteras. Por ello vamos a representar en el mapa las calles que conforman la ciudad. Para ello utilizaremos algunas de la subcategorías de las mostradas previamente dentro de la categoría "highway". 
+
+\
+
+```{r}
+
+calles <- getbb("Zaragoza Spain")%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("residential", "living_street",
+                            "unclassified",
+                            "service", "footway")) %>%
+  osmdata_sf()
+
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+  geom_sf(data = calles$osm_lines,
+          inherit.aes = FALSE,
+          color = "darkgrey",
+          size = .3,
+          alpha = .8)+
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza")
+
+
+```
+
+\
+
+Esto ya me resulta más familiar. Representemos ahora, en el mismo mapa, las calles y la red de carreteras del mapa anterior.
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+  geom_sf(data = calles$osm_lines,
+          inherit.aes = FALSE,
+          color = "darkgrey",
+          size = .2,
+          alpha = .8)+
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "black",
+          size = .2,
+          alpha = .8)+
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza")
+
+
+```
+
+\
+
+## Ríos
+
+Zaragoza, sin Ebro, no es Zaragoza. Veámos cómo hacer para representar los ríos y, ya puestos, los canales.
+
+\
+
+```{r}
+rios <- getbb("Zaragoza Spain")%>%
+  opq()%>%
+  add_osm_feature(key = "waterway", 
+                  value = c("river", "canal")) %>%
+  osmdata_sf()
+  
+```
+
+\
+
+Graficamos los ríos (Ebro, Huerva y Gállego) y los diversos canales que fluyen en la ciudad:
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+  geom_sf(data = calles$osm_lines,
+          inherit.aes = FALSE,
+          color = "darkgrey",
+          size = .2,
+          alpha = .8)+
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "black",
+          size = .2,
+          alpha = .8)+
+  geom_sf(data = rios$osm_lines,
+          inherit.aes = FALSE,
+          color = "#7fc0ff",
+          size = .8,
+          alpha = .8) +
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza")
+
+```
+
+\
+
+Es posible realizar **modificaciones de algún elemento visual sobre el mapa previo**. Pongamos, por ejemplo, que nos atrae más un fondo oscuro para nuestro mapa y queremos representar las calles de un color más vistoso o llamativo. Una posibilidad sería realizar las siguientes operaciones:
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+  geom_sf(data = calles$osm_lines,
+          inherit.aes = FALSE,
+          color = "orange",
+          size = .1,
+          alpha = .8)+
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "grey40",
+          size = .2,
+          alpha = .8)+
+  geom_sf(data = rios$osm_lines,
+          inherit.aes = FALSE,
+          color = "white",
+          size = .5,
+          alpha = .8) +
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza",
+       subtitle = " ") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white"))
+ 
+```
+
+\
+
+## Carriles bici
+
+Zaragoza es una de las ciudades donde el uso de la bicicleta se ha extendido notablemente en los últimos años, tal y como asegura este [barómetro de la OCU](https://www.ocu.org/coches/bicicletas/noticias/bici-en-la-ciudad) realizado hace unos años. Tengo curiosidad por comprobar la **red de carriles bici** existente en la ciudad.
+
+\
+
+```{r}
+
+bici <- getbb("Zaragoza Spain")%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("cycleway")) %>%
+  osmdata_sf()
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+ geom_sf(data = calles$osm_lines,
+          inherit.aes = FALSE,
+          color = "grey30",
+          size = .4,
+          alpha = .8) +
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "grey30",
+          size = .1,
+          alpha = .8) +
+  geom_sf(data = bici$osm_lines,
+          inherit.aes = FALSE,
+          color = "springgreen",
+          size = .4,
+          alpha = .6) +
+  geom_sf(data = rios$osm_lines,
+          inherit.aes = FALSE,
+          color = "lightblue",
+          size = .2,
+          alpha = .5) +
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza",
+       subtitle = "Carriles bici") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white"),
+        plot.subtitle= element_text(colour = "white"))
+ 
+```
+
+\
+
+No está mal. Resulta patente que Zaragoza ha apostado por la movilidad sostenible en los últimos años. 
+
+\
+
+## Localización de elementos en el mapa
+
+Además de elementos fijos (calles, carriles bici, etc.), OpenStreetMaps nos permite localizar, en un mapa, un gran número de elementos de características diversas. Pongamos por ejemplo que nos interesa identificar y localizar en el mapa de Zaragoza las diferentes **sucursales del Banco Santander**. 
+
+\
+
+```{r}
+
+santander <- getbb("Zaragoza Spain")%>%
+  opq()%>%
+  add_osm_feature("name","Santander")%>%
+  add_osm_feature("amenity","bank") %>%
+  osmdata_sf()
+santander
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+ geom_sf(data = calles$osm_lines,
+          inherit.aes = FALSE,
+          color = "grey30",
+          size = .4,
+          alpha = .8) +
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "grey30",
+          size = .1,
+          alpha = .8) +
+  geom_sf(data = santander$osm_points,
+          colour="red",
+          fill="red",
+          alpha=.6,
+          size=2,
+          shape=21) +
+  geom_sf(data = rios$osm_lines,
+          inherit.aes = FALSE,
+          color = "lightblue",
+          size = .2,
+          alpha = .5) +
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza",
+       subtitle = "Sucursales del Banco Santander") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white"),
+        plot.subtitle= element_text(colour = "white"))
+ 
+```
+
+\
+
+O puede que nos interese identificar donde se encuentran los distintos **estancos** en la ciudad:
+
+\
+
+```{r}
+
+estancos <- getbb("Zaragoza Spain")%>%
+  opq()%>%
+  add_osm_feature(key = "shop", 
+                  value = "tobacco") %>%
+  osmdata_sf()
+estancos
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+ggplot() +
+ geom_sf(data = calles$osm_lines,
+          inherit.aes = FALSE,
+          color = "grey30",
+          size = .4,
+          alpha = .8) +
+  geom_sf(data = carreteras$osm_lines,
+          inherit.aes = FALSE,
+          color = "grey30",
+          size = .1,
+          alpha = .8) +
+  geom_sf(data = estancos$osm_points,
+          colour="red",
+          fill="red",
+          alpha=.6,
+          size=2,
+          shape=21) +
+  geom_sf(data = rios$osm_lines,
+          inherit.aes = FALSE,
+          color = "lightblue",
+          size = .2,
+          alpha = .5) +
+  coord_sf(xlim = c(-0.98, -0.8), 
+           ylim = c(41.6, 41.7),
+           expand = FALSE) +
+  theme_void() +
+  labs(title = "Zaragoza",
+       subtitle = "Estancos") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white"),
+        plot.subtitle= element_text(colour = "white"))
+ 
+```
+
+\
+
+Como no soy usuario habitual de este tipo de establecimientos no sabría decir si la lista de estancos de Zaragoza disponible en OpenStreetMaps se encuentra actualizada o no.
+
+\
+
+

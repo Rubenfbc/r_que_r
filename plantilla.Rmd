@@ -1,0 +1,18 @@
+---
+title: "Título"
+author: "Rubén F. Bustillo"
+date: 2019-17-17
+categories: ["R"]
+tags: ["x", "y"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
