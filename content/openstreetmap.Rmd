@@ -299,7 +299,7 @@ ggplot() +
 
 ## Ríos
 
-Zaragoza, sin Ebro, no es Zaragoza. Veámos cómo hacer para representar los ríos y, ya puestos, los canales.
+Zaragoza, sin Ebro, no es Zaragoza. Veamos cómo hacer para representar los ríos y, ya puestos, los canales.
 
 \
 
