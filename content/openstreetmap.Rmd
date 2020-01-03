@@ -497,7 +497,7 @@ ggplot() +
 
 \
 
-O puede que nos interese identificar donde se encuentran los distintos **estancos** en la ciudad:
+O puede que nos interese identificar en qué lugar se encuentran los distintos **estancos** en la ciudad:
 
 \
 
@@ -556,4 +556,215 @@ Como no soy usuario habitual de este tipo de establecimientos no sabría decir s
 
 \
 
+
+# Carriles bici en diversas ciudades
+
+\
+
+A modo de ejemplo, y por mera curiosidad, voy a representar la red de carriles para bicicletas de algunas ciudades. Para ello utilizaré las cordenadas geográficas obtenidas en [Openstreetmap.org](https://www.openstreetmap.org/export#map=15/41.6519/-0.8645) en función del mapa que considere oportuno realizar.
+
+\
+
+## Londres
+
+```{r}
+
+min <- c(-0.1672, 51.4787)
+max <- c(-0.0072, 51.5396)
+lnd_df <- as.matrix(data.frame(min, max))
+row.names(lnd_df) <- c("x","y")
+
+
+bike_london_2 <- lnd_df %>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("cycleway")) %>%
+  osmdata_sf()
+
+
+calles_london_2 <- lnd_df%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("residential", "living_street",
+                            "unclassified",
+                            "service", "footway")) %>%
+  osmdata_sf()
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+ggplot(bike_london_2$osm_lines) +
+  geom_sf(colour="orange",
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_london_2$osm_lines,
+          inherit.aes = F,
+          color = "grey40",
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = "Londres") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white", size = 16, hjust = 0.5))
+
+
+```
+
+\
+
+## París
+
+```{r}
+
+min <- c(2.2680, 48.8281)
+max <- c(2.4424, 48.8925)
+paris_df <- as.matrix(data.frame(min, max))
+row.names(paris_df) <- c("x","y")
+
+
+bike_paris <- paris_df %>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("cycleway")) %>%
+  osmdata_sf()
+
+
+calles_paris <- paris_df%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("residential", "living_street",
+                            "unclassified",
+                            "service", "footway")) %>%
+  osmdata_sf()
+
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+ggplot(bike_paris$osm_lines) +
+  geom_sf(colour="orange",
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_paris$osm_lines,
+          inherit.aes = F,
+          color = "grey40",
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = "Paris") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white", size = 16, hjust = 0.5))
+
+
+```
+
+\
+
+## Amsterdam
+
+```{r}
+
+min <- c(4.8573, 52.3571)
+max <- c(4.9445, 52.3870)
+amst_df <- as.matrix(data.frame(min, max))
+row.names(amst_df) <- c("x","y")
+
+
+bike_amst <- amst_df %>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("cycleway")) %>%
+  osmdata_sf()
+
+
+calles_amst <- amst_df%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("residential", "living_street",
+                            "unclassified",
+                            "service", "footway")) %>%
+  osmdata_sf()
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+ggplot(bike_amst$osm_lines) +
+  geom_sf(colour="orange",
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_amst$osm_lines,
+          inherit.aes = F,
+          color = "grey40",
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = "Amsterdam") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white", size = 16, hjust = 0.5))
+
+```
+
+\
+
+## México DF
+
+```{r}
+
+min <- c(-99.2282, 19.3822)
+max <- c(-99.0538, 19.4745)
+mex_df <- as.matrix(data.frame(min, max))
+row.names(mex_df) <- c("x","y")
+
+
+bike_mex <- mex_df %>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("cycleway")) %>%
+  osmdata_sf()
+
+
+calles_mex <- mex_df%>%
+  opq()%>%
+  add_osm_feature(key = "highway", 
+                  value = c("residential", "living_street",
+                            "unclassified",
+                            "service", "footway")) %>%
+  osmdata_sf()
+
+
+```
+
+\
+
+```{r, out.width="100%"}
+
+
+ggplot(bike_mex$osm_lines) +
+  geom_sf(colour="orange",
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_mex$osm_lines,
+          inherit.aes = F,
+          color = "grey40",
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = "México DF") +
+  theme(plot.background = element_rect(fill = "black"),
+        plot.title = element_text(colour = "white", size = 16, hjust = 0.5))
+
+```
 

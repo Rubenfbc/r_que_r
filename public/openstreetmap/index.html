@@ -305,8 +305,8 @@ carreteras
 ##                  $bbox : 41.4516625,-1.1737289,41.9314873,-0.6803895
 ##         $overpass_call : The call submitted to the overpass API
 ##                  $meta : metadata including timestamp and version numbers
-##            $osm_points : &#39;sf&#39; Simple Features Collection with 22051 points
-##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2938 linestrings
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 22154 points
+##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2952 linestrings
 ##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 53 polygons
 ##        $osm_multilines : NULL
 ##     $osm_multipolygons : NULL</code></pre>
@@ -379,8 +379,8 @@ carreteras_B
 ##                  $bbox : 41.6,-0.95,41.7,-0.8
 ##         $overpass_call : The call submitted to the overpass API
 ##                  $meta : metadata including timestamp and version numbers
-##            $osm_points : &#39;sf&#39; Simple Features Collection with 12684 points
-##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2130 linestrings
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 12724 points
+##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2134 linestrings
 ##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 11 polygons
 ##        $osm_multilines : NULL
 ##     $osm_multipolygons : NULL</code></pre>
@@ -458,7 +458,7 @@ ggplot() +
 </div>
 <div id="ríos" class="section level2">
 <h2>Ríos</h2>
-<p>Zaragoza, sin Ebro, no es Zaragoza. Veámos cómo hacer para representar los ríos y, ya puestos, los canales.</p>
+<p>Zaragoza, sin Ebro, no es Zaragoza. Veamos cómo hacer para representar los ríos y, ya puestos, los canales.</p>
 <p><br />
 </p>
 <pre class="r"><code>rios &lt;- getbb(&quot;Zaragoza Spain&quot;)%&gt;%
@@ -596,7 +596,7 @@ santander
 ##                  $bbox : 41.4516625,-1.1737289,41.9314873,-0.6803895
 ##         $overpass_call : The call submitted to the overpass API
 ##                  $meta : metadata including timestamp and version numbers
-##            $osm_points : &#39;sf&#39; Simple Features Collection with 24 points
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 25 points
 ##             $osm_lines : NULL
 ##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 0 polygons
 ##        $osm_multilines : NULL
@@ -638,7 +638,7 @@ ggplot() +
 <p><img src="/openstreetmap_files/figure-html/unnamed-chunk-22-1.png" width="100%" /></p>
 <p><br />
 </p>
-<p>O puede que nos interese identificar donde se encuentran los distintos <strong>estancos</strong> en la ciudad:</p>
+<p>O puede que nos interese identificar en qué lugar se encuentran los distintos <strong>estancos</strong> en la ciudad:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -697,6 +697,191 @@ ggplot() +
 <p>Como no soy usuario habitual de este tipo de establecimientos no sabría decir si la lista de estancos de Zaragoza disponible en OpenStreetMaps se encuentra actualizada o no.</p>
 <p><br />
 </p>
+</div>
+</div>
+<div id="carriles-bici-en-diversas-ciudades" class="section level1">
+<h1>Carriles bici en diversas ciudades</h1>
+<p><br />
+</p>
+<p>A modo de ejemplo, y por mera curiosidad, voy a representar la red de carriles para bicicletas de algunas ciudades. Para ello utilizaré las cordenadas geográficas obtenidas en <a href="https://www.openstreetmap.org/export#map=15/41.6519/-0.8645">Openstreetmap.org</a> en función del mapa que considere oportuno realizar.</p>
+<p><br />
+</p>
+<div id="londres" class="section level2">
+<h2>Londres</h2>
+<pre class="r"><code>
+min &lt;- c(-0.1672, 51.4787)
+max &lt;- c(-0.0072, 51.5396)
+lnd_df &lt;- as.matrix(data.frame(min, max))
+row.names(lnd_df) &lt;- c(&quot;x&quot;,&quot;y&quot;)
+
+
+bike_london_2 &lt;- lnd_df %&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;cycleway&quot;)) %&gt;%
+  osmdata_sf()
+
+
+calles_london_2 &lt;- lnd_df%&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;residential&quot;, &quot;living_street&quot;,
+                            &quot;unclassified&quot;,
+                            &quot;service&quot;, &quot;footway&quot;)) %&gt;%
+  osmdata_sf()</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+ggplot(bike_london_2$osm_lines) +
+  geom_sf(colour=&quot;orange&quot;,
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_london_2$osm_lines,
+          inherit.aes = F,
+          color = &quot;grey40&quot;,
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = &quot;Londres&quot;) +
+  theme(plot.background = element_rect(fill = &quot;black&quot;),
+        plot.title = element_text(colour = &quot;white&quot;, size = 16, hjust = 0.5))</code></pre>
+<p><img src="/openstreetmap_files/figure-html/unnamed-chunk-26-1.png" width="100%" /></p>
+<p><br />
+</p>
+</div>
+<div id="parís" class="section level2">
+<h2>París</h2>
+<pre class="r"><code>
+min &lt;- c(2.2680, 48.8281)
+max &lt;- c(2.4424, 48.8925)
+paris_df &lt;- as.matrix(data.frame(min, max))
+row.names(paris_df) &lt;- c(&quot;x&quot;,&quot;y&quot;)
+
+
+bike_paris &lt;- paris_df %&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;cycleway&quot;)) %&gt;%
+  osmdata_sf()
+
+
+calles_paris &lt;- paris_df%&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;residential&quot;, &quot;living_street&quot;,
+                            &quot;unclassified&quot;,
+                            &quot;service&quot;, &quot;footway&quot;)) %&gt;%
+  osmdata_sf()
+</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+ggplot(bike_paris$osm_lines) +
+  geom_sf(colour=&quot;orange&quot;,
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_paris$osm_lines,
+          inherit.aes = F,
+          color = &quot;grey40&quot;,
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = &quot;Paris&quot;) +
+  theme(plot.background = element_rect(fill = &quot;black&quot;),
+        plot.title = element_text(colour = &quot;white&quot;, size = 16, hjust = 0.5))</code></pre>
+<p><img src="/openstreetmap_files/figure-html/unnamed-chunk-28-1.png" width="100%" /></p>
+<p><br />
+</p>
+</div>
+<div id="amsterdam" class="section level2">
+<h2>Amsterdam</h2>
+<pre class="r"><code>
+min &lt;- c(4.8573, 52.3571)
+max &lt;- c(4.9445, 52.3870)
+amst_df &lt;- as.matrix(data.frame(min, max))
+row.names(amst_df) &lt;- c(&quot;x&quot;,&quot;y&quot;)
+
+
+bike_amst &lt;- amst_df %&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;cycleway&quot;)) %&gt;%
+  osmdata_sf()
+
+
+calles_amst &lt;- amst_df%&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;residential&quot;, &quot;living_street&quot;,
+                            &quot;unclassified&quot;,
+                            &quot;service&quot;, &quot;footway&quot;)) %&gt;%
+  osmdata_sf()</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+ggplot(bike_amst$osm_lines) +
+  geom_sf(colour=&quot;orange&quot;,
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_amst$osm_lines,
+          inherit.aes = F,
+          color = &quot;grey40&quot;,
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = &quot;Amsterdam&quot;) +
+  theme(plot.background = element_rect(fill = &quot;black&quot;),
+        plot.title = element_text(colour = &quot;white&quot;, size = 16, hjust = 0.5))</code></pre>
+<p><img src="/openstreetmap_files/figure-html/unnamed-chunk-30-1.png" width="100%" /></p>
+<p><br />
+</p>
+</div>
+<div id="méxico-df" class="section level2">
+<h2>México DF</h2>
+<pre class="r"><code>
+min &lt;- c(-99.2282, 19.3822)
+max &lt;- c(-99.0538, 19.4745)
+mex_df &lt;- as.matrix(data.frame(min, max))
+row.names(mex_df) &lt;- c(&quot;x&quot;,&quot;y&quot;)
+
+
+bike_mex &lt;- mex_df %&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;cycleway&quot;)) %&gt;%
+  osmdata_sf()
+
+
+calles_mex &lt;- mex_df%&gt;%
+  opq()%&gt;%
+  add_osm_feature(key = &quot;highway&quot;, 
+                  value = c(&quot;residential&quot;, &quot;living_street&quot;,
+                            &quot;unclassified&quot;,
+                            &quot;service&quot;, &quot;footway&quot;)) %&gt;%
+  osmdata_sf()
+</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+
+ggplot(bike_mex$osm_lines) +
+  geom_sf(colour=&quot;orange&quot;,
+          alpha=.5,
+          size=0.5,
+          shape=21)+
+  geom_sf(data = calles_mex$osm_lines,
+          inherit.aes = F,
+          color = &quot;grey40&quot;,
+          size = .2,
+          alpha = .5)+
+  theme_void() +
+  labs(title = &quot;México DF&quot;) +
+  theme(plot.background = element_rect(fill = &quot;black&quot;),
+        plot.title = element_text(colour = &quot;white&quot;, size = 16, hjust = 0.5))</code></pre>
+<p><img src="/openstreetmap_files/figure-html/unnamed-chunk-32-1.png" width="100%" /></p>
 </div>
 </div>
 
