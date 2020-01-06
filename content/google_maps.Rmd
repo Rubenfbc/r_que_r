@@ -69,7 +69,7 @@ Una posibilidad para obtener cualquier mapa con información de Google consiste 
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 qmap("Zaragoza, Spain", zoom = 13)
 qmap("Barcelona, Spain", zoom = 13)
@@ -82,7 +82,7 @@ Téngase en cuenta que la información geográfica que tiene Google es inmensa, 
 
 \
 
-```{r, message=FALSE, eval=T}
+```{r, message=FALSE, eval=T, out.width="70%", fig.align='center'}
 
 qmap("Leh, India", zoom = 14)
 
@@ -98,7 +98,7 @@ Una segunda forma de generar los mapas en base a la información facilitada por 
 
 \
 
-```{r, message=FALSE, eval=T}
+```{r, message=FALSE, eval=T, out.width="70%", fig.align='center'}
 
 zgz_map <- get_map("Zaragoza", zoom = 13)
 ggmap(zgz_map) +
@@ -121,7 +121,7 @@ Por defecto, la imagen obtenida es la que se denomina *terrain*, donde se incluy
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 lnd <- geocode("London, UK", zoom = 11)
 lnd
@@ -137,7 +137,7 @@ Estableciendo la orden `maptype = "terrain-labels"` obtenemos únicamente nombre
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 # Labels
 ggmap(get_map(lnd, maptype = "terrain-labels"))
@@ -153,7 +153,7 @@ Por su parte, `maptype= "roadmap"` devuelve un mapa similar al obtenido con la f
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 # Roadmap
 ggmap(get_map(lnd, maptype = "roadmap"))
@@ -166,7 +166,7 @@ Existen tres modalidades para realizar **mapas en blanco y negro**: `toner, tone
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 # toner
 ggmap(get_map(lnd, maptype = "toner"))
@@ -181,7 +181,7 @@ El modelo `maptype = "satellite"` nos devuelve imágenes en modo satélite, como
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 # satelite
 ggmap(get_map(lnd, maptype = "satellite"))
@@ -194,7 +194,7 @@ ggmap(get_map(lnd, maptype = "satellite"))
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 # Hybrid
 ggmap(get_map(lnd, maptype = "hybrid"))
@@ -207,7 +207,7 @@ Además, el paquete {ggmap} nos ofrece una posibilidad para generar mapas, que e
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 # watercolor
 ggmap(get_map(lnd, maptype = "watercolor"))
@@ -266,7 +266,7 @@ De esta forma resulta sencillo ubicar en un mapa de Zaragoza cualquiera de estos
 
 \
 
-```{r, message=FALSE}
+```{r, message=FALSE, out.width="70%", fig.align='center'}
 
 zgz <- geocode("Zaragoza, Spain")
 
@@ -318,7 +318,7 @@ lugares_rock
 
 \
 
-```{r, message= F}
+```{r, message= F, out.width="70%", fig.align='center'}
 
 ggmap(get_map(zgz, zoom=15, maptype = "terrain-lines")) +
   geom_point(aes(x=lon, 

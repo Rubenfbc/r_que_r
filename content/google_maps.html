@@ -48,9 +48,9 @@ library(tibble)</code></pre>
 </p>
 <pre class="r"><code>
 qmap(&quot;Zaragoza, Spain&quot;, zoom = 13)</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>qmap(&quot;Barcelona, Spain&quot;, zoom = 13)</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-3-2.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Téngase en cuenta que la información geográfica que tiene Google es inmensa, lo que permite obtener imágenes/mapas de sitios remotos. Por ejemplo, pongamos que queremos que Google nos devuelva un mapa de <a href="https://es.wikipedia.org/wiki/Leh">Leh</a>, un pequeño y pintoresco pueblo de la India situado en la cordillera del Himalaya, que tuve la suerte de poder visitar hace unos años:</p>
@@ -58,7 +58,7 @@ qmap(&quot;Zaragoza, Spain&quot;, zoom = 13)</code></pre>
 </p>
 <pre class="r"><code>
 qmap(&quot;Leh, India&quot;, zoom = 14)</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
@@ -73,13 +73,13 @@ qmap(&quot;Leh, India&quot;, zoom = 14)</code></pre>
 zgz_map &lt;- get_map(&quot;Zaragoza&quot;, zoom = 13)
 ggmap(zgz_map) +
   ggtitle(&quot;Zaragoza&quot;)</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>
 bcn_map &lt;- get_map(&quot;Barcelona&quot;, zoom = 13)
 ggmap(bcn_map) +
   ggtitle(&quot;Barcelona&quot;) +
   theme_void()</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-5-2.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
@@ -100,7 +100,7 @@ lnd
 
 # Terrain maps (default)
 ggmap(get_map(lnd, maptype = &quot;terrain&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Estableciendo la orden <code>maptype = "terrain-labels"</code> obtenemos únicamente nombres de las localidades mientras que si indicamos <code>maptype = "terrain-lines"</code> el resultado nos muestra únicamente las carreteras, autopistas etc.</p>
@@ -109,11 +109,11 @@ ggmap(get_map(lnd, maptype = &quot;terrain&quot;))</code></pre>
 <pre class="r"><code>
 # Labels
 ggmap(get_map(lnd, maptype = &quot;terrain-labels&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>
 # Lines
 ggmap(get_map(lnd, maptype = &quot;terrain-lines&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-7-2.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Por su parte, <code>maptype= "roadmap"</code> devuelve un mapa similar al obtenido con la función <code>maptype= "terrain"</code>, pero en el mapa destaca la <strong>red de carreteras</strong>.</p>
@@ -122,7 +122,7 @@ ggmap(get_map(lnd, maptype = &quot;terrain-lines&quot;))</code></pre>
 <pre class="r"><code>
 # Roadmap
 ggmap(get_map(lnd, maptype = &quot;roadmap&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Existen tres modalidades para realizar <strong>mapas en blanco y negro</strong>: <code>toner, toner-lite, toner-background</code>, cada una con sus particularidades. <code>toner-background</code> resulta similar al modelo <code>toner</code>, aunque en <code>toner-background</code> se omiten los nombres de las localidades.</p>
@@ -131,11 +131,11 @@ ggmap(get_map(lnd, maptype = &quot;roadmap&quot;))</code></pre>
 <pre class="r"><code>
 # toner
 ggmap(get_map(lnd, maptype = &quot;toner&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggmap(get_map(lnd, maptype = &quot;toner-lite&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-2.png" width="70%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggmap(get_map(lnd, maptype = &quot;toner-background&quot;)) #removes lables</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-3.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>El modelo <code>maptype = "satellite"</code> nos devuelve imágenes en modo satélite, como las que estamos acostumbrados a ver al utilizar Google maps.</p>
@@ -144,7 +144,7 @@ ggmap(get_map(lnd, maptype = &quot;toner&quot;))</code></pre>
 <pre class="r"><code>
 # satelite
 ggmap(get_map(lnd, maptype = &quot;satellite&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-10-1.png" width="672" /><br />
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /><br />
 </p>
 <p><code>maptype = "hybrid"</code> genera mapas con características observadas en otros modelos de mapas, como el satélite, el terrain o el roadmap.</p>
 <p><br />
@@ -152,7 +152,7 @@ ggmap(get_map(lnd, maptype = &quot;satellite&quot;))</code></pre>
 <pre class="r"><code>
 # Hybrid
 ggmap(get_map(lnd, maptype = &quot;hybrid&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Además, el paquete {ggmap} nos ofrece una posibilidad para generar mapas, que en cierta medida podemos denominar artísticos, utilizando la función: <code>maptype = "watercolor"</code>.</p>
@@ -161,7 +161,7 @@ ggmap(get_map(lnd, maptype = &quot;hybrid&quot;))</code></pre>
 <pre class="r"><code>
 # watercolor
 ggmap(get_map(lnd, maptype = &quot;watercolor&quot;))</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-12-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
@@ -241,7 +241,7 @@ ggmap(get_map(zgz, zoom=15, maptype = &quot;toner-background&quot;)) +
              size = 4,
              data = DPche) +
   ggtitle(&quot;Ubicación del Pub DPche-Rock en Zaragoza&quot;)</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 <p>Ahora bien, pongamos que queremos <strong>ubicar en el mapa todos los emplazamientos enunciados previamente</strong>. Para ello conviene previamente crear un dataframe o un tibble que incluya para cada uno de los establecimientos sus coordenadas geográficas. Una vez tenemos la información necesaria recogida en un dataset resulta sencillo localizarlos conjuntamente en un mismo mapa.</p>
@@ -302,7 +302,7 @@ ggmap(get_map(zgz, zoom=15, maptype = &quot;terrain-lines&quot;)) +
             data = lugares_rock,
             size = 3.5,
             nudge_y = -0.0004)</code></pre>
-<p><img src="/google_maps_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
 </div>
