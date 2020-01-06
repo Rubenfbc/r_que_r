@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>google on R que R</title>
+    <link>/tags/google/</link>
+    <description>Recent content in google on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 04 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/google/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mapas con información georreferenciada de Google en R con {ggmap}</title>
+      <link>/google_maps/</link>
+      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/google_maps/</guid>
+      <description>Re
+Otra forma de realizar mapas es mediante la utilización de información georreferenciada obtenida de recursos de la web a través de API´s. Este post muestra cómo utilizar {ggmap} con datos de Google.
+
+Introducción
+En el post anterior expusimos algunas nociones básicas que pueden sernos de utilidad a la hora de realizar mapas utilizando información de Open Street Map (OSM) con el paquete {osmdata}. Además, previamente, en diversos posts se ha ido exponiendo diferentes mecanismos mediante los cuales podemos realizar mapas con R, bien sea utilizando coordinadas geográficas, con archivos shapefile, utilizando datos de Eurostat, etc.</description>
+    </item>
+    
+  </channel>
+</rss>

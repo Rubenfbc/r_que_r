@@ -4,7 +4,42 @@
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2019-12-17T00:00:00+00:00</lastmod>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ggmap/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/google/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/mapas/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/google_maps/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-01-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -24,21 +59,6 @@
   
   <url>
     <loc>/tags/osmdata/</loc>
-    <lastmod>2019-12-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2019-12-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-12-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2019-12-17T00:00:00+00:00</lastmod>
   </url>
   
@@ -83,12 +103,12 @@
   </url>
   
   <url>
-    <loc>/categories/sql/</loc>
+    <loc>/tags/sql/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/sql/</loc>
+    <loc>/categories/sql/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   
@@ -105,11 +125,6 @@
   <url>
     <loc>/evolution/</loc>
     <lastmod>2019-11-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/mapas/</loc>
-    <lastmod>2019-11-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>

@@ -1,0 +1,308 @@
+---
+title: "Mapas con información georreferenciada de Google en R con {ggmap}"
+author: "Rubén F. Bustillo"
+date: 2020-01-04
+categories: ["R"]
+tags: ["mapas", "google", "ggmap"]
+
+---
+
+
+
+<p><strong>Re</strong></p>
+<p>Otra forma de realizar mapas es mediante la utilización de información georreferenciada obtenida de recursos de la web a través de API´s. Este post muestra cómo utilizar {ggmap} con datos de Google.</p>
+<p><br />
+</p>
+<div id="introducción" class="section level1">
+<h1>Introducción</h1>
+<p><br />
+</p>
+<p>En el <a href="https://rquer.netlify.com/openstreetmap/">post anterior</a> expusimos algunas nociones básicas que pueden sernos de utilidad a la hora de realizar mapas utilizando información de Open Street Map (OSM) con el paquete {osmdata}. Además, previamente, en diversos posts se ha ido exponiendo diferentes mecanismos mediante los cuales podemos realizar mapas con R, bien sea utilizando coordinadas geográficas, con archivos shapefile, utilizando datos de Eurostat, etc. En esta línea, para continuar la exposición de posibilidades a la hora de querer realizar mapas con R, el presente post tiene como objetivo exponer cómo podemos hacerlo utilizando <strong>información georreferenciada de Google</strong> con el paquete {ggmap}.</p>
+<p><br />
+</p>
+<p>Como bien sabemos, Google es uno de los principales proveedores de información georreferenciada. Sin embargo, para trabajar con dicha información en R debemos, en primer lugar, obtener una API (Application Programme Interface) a Google. Para ello accedemos a la <a href="https://console.cloud.google.com/apis/library?project=rmaps-263909&amp;folder&amp;organizationId">librería de API´s de Google</a> y habilitamos <strong>Map Static API</strong> y <strong>Geocoding API</strong>. Asimismo, debemos crear un nuevo proyecto y crear credenciales, es decir, <strong>crear una clave API</strong> para acceder a las API´s activadas e identificar el proyecto creado. Nótese que Google provee este servicio de forma gratuita para un número determinado de consultas diarías. Si se requiere este servicio para consultas de mayor envergadura puede que sea necesario adquirir una licencia.</p>
+<p><br />
+</p>
+<p>Al realizar el procedimiento descrito Google nos provee una clave de API (API key) que deberemos registrar posteriormente en R. Conviene proteger o restringir esta clave para evitar usos no autorizados con ella y/o el robo de cuotas. Durante el proceso Google ofrece diversas posibilidades para restringir y proteger la clave generada.</p>
+<p><br />
+</p>
+<p>Una vez hemos obtenido nuestra API key abrimos la sesión de R donde vamos a trabajar y registramos dicha clave con la función <code>register_gogle(key = "API key")</code>. Llevado a cabo este proceso podemos empezar a utilizar información proveniente de Google de una forma muy sencilla.</p>
+<p><br />
+</p>
+<p>Antes de empezar a realizar los mapas debemos cargar algunos paquetes en nuestra sesión de R que vamos a utilizar a lo largo del ejercicio.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(tidyverse)
+library(ggmap)
+library(tibble)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="mapas-con-la-función-qmap" class="section level1">
+<h1>Mapas con la función qmap()</h1>
+<p><br />
+</p>
+<p>Una posibilidad para obtener cualquier mapa con información de Google consiste en utilizar directamente la función <code>qmap()</code>. Para ello indicamos el lugar que nos interesa representar geográficamente y, en caso de ser necesario, podemos indicar un zoom determinado según nuestras necesidades específicas. Veamos, por ejemplo, como obtener un <strong>mapa de Zaragoza y otro de Barcelona</strong>:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+qmap(&quot;Zaragoza, Spain&quot;, zoom = 13)</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>qmap(&quot;Barcelona, Spain&quot;, zoom = 13)</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<p><br />
+</p>
+<p>Téngase en cuenta que la información geográfica que tiene Google es inmensa, lo que permite obtener imágenes/mapas de sitios remotos. Por ejemplo, pongamos que queremos que Google nos devuelva un mapa de <a href="https://es.wikipedia.org/wiki/Leh">Leh</a>, un pequeño y pintoresco pueblo de la India situado en la cordillera del Himalaya, que tuve la suerte de poder visitar hace unos años:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+qmap(&quot;Leh, India&quot;, zoom = 14)</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="mapas-con-la-función-get_map" class="section level1">
+<h1>Mapas con la función get_map()</h1>
+<p><br />
+</p>
+<p>Una segunda forma de generar los mapas en base a la información facilitada por Google es con la función <code>get_map()</code>. Su funcionamiento es sencillo, en primer lugar descargamos el mapa deseado con la función mencionada (resultado que viene a ser una imagen raster) y, posteriormente, graficamos dicha imagen con la función <code>ggmap()</code>. La sintaxis de <code>ggmap()</code> es similar a la utilizada en <code>ggplot2</code>, lo que nos facilita enormemente su manejo y manipulación.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+zgz_map &lt;- get_map(&quot;Zaragoza&quot;, zoom = 13)
+ggmap(zgz_map) +
+  ggtitle(&quot;Zaragoza&quot;)</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>
+bcn_map &lt;- get_map(&quot;Barcelona&quot;, zoom = 13)
+ggmap(bcn_map) +
+  ggtitle(&quot;Barcelona&quot;) +
+  theme_void()</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="tipos-de-mapas" class="section level1">
+<h1>Tipos de mapas</h1>
+<p><br />
+</p>
+<p>Por defecto, la imagen obtenida es la que se denomina <em>terrain</em>, donde se incluyen montañas, rios, etc. Este tipo de mapa es el generado en los apartados previos para los mapas de Zaragoza, Barcelona y Leh. Veamos cómo sería este tipo de mapa para la ciudad de Londres y sus alrededores (Greater London):</p>
+<p><br />
+</p>
+<pre class="r"><code>
+lnd &lt;- geocode(&quot;London, UK&quot;, zoom = 11)
+lnd
+## # A tibble: 1 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.128  51.5
+
+# Terrain maps (default)
+ggmap(get_map(lnd, maptype = &quot;terrain&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Estableciendo la orden <code>maptype = "terrain-labels"</code> obtenemos únicamente nombres de las localidades mientras que si indicamos <code>maptype = "terrain-lines"</code> el resultado nos muestra únicamente las carreteras, autopistas etc.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Labels
+ggmap(get_map(lnd, maptype = &quot;terrain-labels&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>
+# Lines
+ggmap(get_map(lnd, maptype = &quot;terrain-lines&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<p><br />
+</p>
+<p>Por su parte, <code>maptype= "roadmap"</code> devuelve un mapa similar al obtenido con la función <code>maptype= "terrain"</code>, pero en el mapa destaca la <strong>red de carreteras</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Roadmap
+ggmap(get_map(lnd, maptype = &quot;roadmap&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Existen tres modalidades para realizar <strong>mapas en blanco y negro</strong>: <code>toner, toner-lite, toner-background</code>, cada una con sus particularidades. <code>toner-background</code> resulta similar al modelo <code>toner</code>, aunque en <code>toner-background</code> se omiten los nombres de las localidades.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# toner
+ggmap(get_map(lnd, maptype = &quot;toner&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>ggmap(get_map(lnd, maptype = &quot;toner-lite&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre class="r"><code>ggmap(get_map(lnd, maptype = &quot;toner-background&quot;)) #removes lables</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<p><br />
+</p>
+<p>El modelo <code>maptype = "satellite"</code> nos devuelve imágenes en modo satélite, como las que estamos acostumbrados a ver al utilizar Google maps.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# satelite
+ggmap(get_map(lnd, maptype = &quot;satellite&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-10-1.png" width="672" /><br />
+</p>
+<p><code>maptype = "hybrid"</code> genera mapas con características observadas en otros modelos de mapas, como el satélite, el terrain o el roadmap.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Hybrid
+ggmap(get_map(lnd, maptype = &quot;hybrid&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Además, el paquete {ggmap} nos ofrece una posibilidad para generar mapas, que en cierta medida podemos denominar artísticos, utilizando la función: <code>maptype = "watercolor"</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# watercolor
+ggmap(get_map(lnd, maptype = &quot;watercolor&quot;))</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="representación-geográfica-con-la-función-geocode" class="section level1">
+<h1>Representación geográfica con la función geocode()</h1>
+<p><br />
+</p>
+<p>Pongamos que nuestro objetivo consiste en localizar en un mapa determinados emplazamientos. Podemos para ello identificar las coordenadas geográficas de dichos emplazamientos y, posteriormente, identificarlos en un mapa similar a los obtenidos previamente.</p>
+<p><br />
+</p>
+<p>A modo de ejemplo vamos a localizar en un mapa de Zaragoza, ciudad que me vio crecer, un conjunto de <strong>negocios relacionados con la música rock</strong>. Esto no pretende ser un análisis extensivo sobre la localización de este tipo de negocios en la ciudad de Zaragoza sino que simplemente voy a seleccionar un número reducido de locales, que ahora mismo me vienen a la mente, aunque, evidentemente, no son todos los que están ni están todos los que son.</p>
+<p><br />
+</p>
+<p>Para localizar y ubicar en un mapa cualquier emplazamiento necesitamos identificar sus coordenadas geográficas. Para obtener las coordenadas de los negocios a representar utilizamos la función <code>geocode()</code> de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Tienda Leyenda-Rock
+leyenda &lt;- geocode(&quot;leyenda-rock, Zaragoza&quot;)
+leyenda
+## # A tibble: 1 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.891  41.6
+
+# Sala Z
+salaZ &lt;- geocode(&quot;Sala Z, Zaragoza&quot;)
+salaZ
+## # A tibble: 1 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.892  41.6
+
+# Pub Trilogy
+trilogy &lt;- geocode(&quot;Pub Trilogy, Zaragoza&quot;)
+trilogy
+## # A tibble: 1 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.896  41.6
+
+# Rock &amp; Blues Café
+rockandblues &lt;- geocode(&quot;Rock and Blues café, Zaragoza&quot;)
+rockandblues
+## # A tibble: 1 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.881  41.7
+
+# Pub Posturas
+posturas &lt;- geocode(&quot;Pub Posturas, Zaragoza&quot;)
+posturas
+## # A tibble: 1 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.888  41.6
+
+# Pub DPche Rock
+DPche &lt;- geocode(&quot;DPch rock, Zaragoza&quot;)
+DPche
+## # A tibble: 1 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.885  41.7</code></pre>
+<p><br />
+</p>
+<p>De esta forma resulta sencillo ubicar en un mapa de Zaragoza cualquiera de estos establecimientos. Pongamos que quiero situar, con un punto rojo, el emplazamiento del <strong>Pub DPche-Rock</strong>, sitio que suelo visitar bastante, sobre un mapa de Zaragoza.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+zgz &lt;- geocode(&quot;Zaragoza, Spain&quot;)
+
+ggmap(get_map(zgz, zoom=15, maptype = &quot;toner-background&quot;)) +
+  geom_point(aes(x=lon, 
+                 y=lat), 
+             color = &quot;red&quot;, 
+             size = 4,
+             data = DPche) +
+  ggtitle(&quot;Ubicación del Pub DPche-Rock en Zaragoza&quot;)</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Ahora bien, pongamos que queremos <strong>ubicar en el mapa todos los emplazamientos enunciados previamente</strong>. Para ello conviene previamente crear un dataframe o un tibble que incluya para cada uno de los establecimientos sus coordenadas geográficas. Una vez tenemos la información necesaria recogida en un dataset resulta sencillo localizarlos conjuntamente en un mismo mapa.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+lugares &lt;- c(&quot;leyenda-rock&quot;, 
+             &quot;sala Z&quot;, 
+             &quot;pub trilogy, Zaragoza&quot;, 
+             &quot;Rock and Blues Cafe, Zaragoza&quot;, 
+             &quot;Pub Posturas&quot;, 
+             &quot;DPch rock zaragoza&quot;)
+
+geocodes &lt;- geocode(lugares)
+geocodes
+## # A tibble: 6 x 2
+##      lon   lat
+##    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.891  41.6
+## 2 -0.892  41.6
+## 3 -0.896  41.6
+## 4 -0.881  41.7
+## 5 -0.888  41.6
+## 6 -0.885  41.7
+
+lugares_rock &lt;- tibble(name=lugares, 
+                       lat= geocodes$lat,
+                       lon=geocodes$lon)
+
+
+lugares_rock$name[1] = &quot;Leyenda&quot;
+lugares_rock$name[2] = &quot;Sala Z&quot;
+lugares_rock$name[3] = &quot;Trilogy&quot;
+lugares_rock$name[4] = &quot;Rock &amp; Blues&quot;
+lugares_rock$name[5] = &quot;Posturas&quot;
+lugares_rock$name[6] = &quot;DPch&quot;
+
+lugares_rock
+## # A tibble: 6 x 3
+##   name           lat    lon
+##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Leyenda       41.6 -0.891
+## 2 Sala Z        41.6 -0.892
+## 3 Trilogy       41.6 -0.896
+## 4 Rock &amp; Blues  41.7 -0.881
+## 5 Posturas      41.6 -0.888
+## 6 DPch          41.7 -0.885</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+ggmap(get_map(zgz, zoom=15, maptype = &quot;terrain-lines&quot;)) +
+  geom_point(aes(x=lon, 
+                 y=lat), 
+             color = &quot;red&quot;, 
+             data = lugares_rock) +
+  geom_text(aes(x=lon, y=lat, label=name),
+            color= &quot;black&quot;, 
+            data = lugares_rock,
+            size = 3.5,
+            nudge_y = -0.0004)</code></pre>
+<p><img src="/google_maps_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
