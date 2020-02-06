@@ -98,22 +98,22 @@
 <p><br />
 </p>
 <p><strong>Res</strong></p>
-<p>En este post vamos a realizar gráficos animados con <code>gganimate()</code> usando el dataframe <code>babynames</code> del paquete <code>babynames()</code>. Este post es una extensión del post previo: Aprendiendo dplyr con ‘babynames’.<br />
+<p>En este post vamos a realizar gráficos animados con {gganimate} usando el dataframe <code>babynames</code> del paquete {babynames}. Este post es una extensión del post previo: Aprendiendo dplyr con {babynames}.<br />
 </p>
 <p><br />
 </p>
 <p><br />
 </p>
-<div id="que-es-gganimate" class="section level1">
-<h1>¿Qué es gganimate()?</h1>
+<div id="qué-es-gganimate" class="section level1">
+<h1>¿Qué es {gganimate}?</h1>
 <p><br />
 </p>
-<p><code>gganimate()</code> es una extensión del paquete <code>ggplot2()</code> diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años. A modo de ejemplo vamos a crear tres gráficos, utilizando de nuevo el dataframe <code>babynames</code>, que servirán como continuación del post anterior donde expusimos las principales funcionalidades del paquete <code>dplyr()</code>.</p>
+<p>{gganimate} es una extensión del paquete {ggplot2} diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años. A modo de ejemplo vamos a crear tres gráficos, utilizando de nuevo el dataframe <code>babynames</code>, que servirán como continuación del post anterior donde expusimos las principales funcionalidades del paquete {dplyr}.</p>
 <p><br />
 </p>
 </div>
 <div id="generamos-un-nuevo-data-frame-con-dplyr" class="section level1">
-<h1>Generamos un nuevo data frame con dplyr()</h1>
+<h1>Generamos un nuevo data frame con {dplyr}</h1>
 <p><br />
 </p>
 <p>Empezamos descargando los siguientes paquetes:</p>
@@ -128,7 +128,7 @@ library(gifski)
 library(babynames)</code></pre>
 <p><br />
 </p>
-<p>En primer lugar identificamos la cantidad de registros de la tarjeta de la Seguridad Social en Estados Unidos por año y por sexo utilizando la función <code>group_by()</code> y <code>summarize()</code> del paquete <code>dplyr()</code> tal y como vimos en el post previo. De esta forma, sumando el número de registros de cada nombre por sexo y año obtenemos un nuevo data frame del total de solicitudes por año desde 1880 hasta 2017. Llamaremos al nuevo data frame <code>babynames_year</code>.</p>
+<p>En primer lugar identificamos la cantidad de registros de la tarjeta de la Seguridad Social en Estados Unidos por año y por sexo utilizando la función <code>group_by()</code> y <code>summarize()</code> del paquete {dplyr} tal y como vimos en el post previo. De esta forma, sumando el número de registros de cada nombre por sexo y año obtenemos un nuevo data frame del total de solicitudes por año desde 1880 hasta 2017. Llamaremos al nuevo data frame <code>babynames_year</code>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -158,8 +158,8 @@ head(babynames_year)
 <p><br />
 </p>
 </div>
-<div id="graficos-de-barras-animados-con-gganimate" class="section level1">
-<h1>Gráficos de barras animados con gganimate()</h1>
+<div id="gráficos-de-barras-animados-con-gganimate" class="section level1">
+<h1>Gráficos de barras animados con {gganimate}</h1>
 <p> </p>
 <p>Para hacer un primer gráfico dinámico donde podamos identificar <strong>dos columnas paralelas para cada uno de los sexos</strong> podemos utilizar un código similar al siguiente:</p>
 <p><br />
@@ -200,7 +200,7 @@ plot_babynames_dodge &lt;- babynames_year %&gt;%
                                      hjust = 0.5)) </code></pre>
 <p><br />
 </p>
-<p><strong>Graficamos el primer plot</strong> con <code>gganimate()</code></p>
+<p><strong>Graficamos el primer plot</strong> con <code>animate()</code></p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -250,7 +250,7 @@ plot_babynames_stack &lt;- babynames_year %&gt;%
                                      hjust = 0.5)) </code></pre>
 <p><br />
 </p>
-<p><strong>Graficamos el segundo plot</strong> con <code>gganimate()</code></p>
+<p><strong>Graficamos el segundo plot</strong> con <code>animate()</code></p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -263,10 +263,10 @@ anim_save(&quot;plot_babynames_stack.gif&quot;)</code></pre>
 <p><br />
 </p>
 </div>
-<div id="transicion-con-gganimate" class="section level1">
-<h1>Transición con gganimate()</h1>
+<div id="transición-con-gganimate" class="section level1">
+<h1>Transición con {gganimate}</h1>
 <p><br />
-<code>gganimate()</code> permite también visualizar la transición de las observaciones a lo largo del tiempo. Para explicar esta nueva aplicación de <code>gganimate()</code> partimos del siguiente gráfico (utilizado en un post previo) donde se muestra la evolución del número total de registros de solicitud de la tarjeta de la Seguridad Social en Estados Unidos desde 1880 hasta 2017:</p>
+{gganimate} permite también visualizar la transición de las observaciones a lo largo del tiempo. Para explicar esta nueva aplicación de {gganimate} partimos del siguiente gráfico (utilizado en un post previo) donde se muestra la evolución del número total de registros de solicitud de la tarjeta de la Seguridad Social en Estados Unidos desde 1880 hasta 2017:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -292,7 +292,7 @@ babynames %&gt;%
 <p><img src="/babynames_gganimate_files/figure-html/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
-<p>Partiendo de este gráfico podemos utilizar <code>gganimate()</code> para <strong>visualizar la transición año tras año</strong> a lo largo del periodo utilizando la siguiente orden:</p>
+<p>Partiendo de este gráfico podemos utilizar {gganimate} para <strong>visualizar la transición año tras año</strong> a lo largo del periodo utilizando la siguiente orden:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -321,7 +321,7 @@ plot_babynames_transition &lt;- babynames %&gt;%
                                      hjust = 0.5))</code></pre>
 <p><br />
 </p>
-<p><strong>Graficamos el tercer plot</strong> con <code>gganimate()</code></p>
+<p><strong>Graficamos el tercer plot</strong> con <code>animate()</code></p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -333,7 +333,7 @@ animate(plot_babynames_transition, nframes= 300, width = 900, height = 500, fps 
 anim_save(&quot;plot_babynames_transition.gif&quot;)</code></pre>
 <p><br />
 </p>
-<p>Seleccionando un menor número de años se puede observar mejor como <code>gganimate()</code> visualiza la transición entre años. Seleccionamos del conjunto del dataframe, por ejemplo, los primeros años del siglo XX, periodo en el que tuvieron lugar hechos históricos importantes con un importante impacto sobre la natalidad de Estados Unidos.</p>
+<p>Seleccionando un menor número de años se puede observar mejor como {gganimate} visualiza la transición entre años. Seleccionamos del conjunto del dataframe, por ejemplo, los primeros años del siglo XX, periodo en el que tuvieron lugar hechos históricos importantes con un importante impacto sobre la natalidad de Estados Unidos.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -363,7 +363,7 @@ plot_babynames_transition_2 &lt;- babynames %&gt;%
                                      hjust = 0.5))</code></pre>
 <p><br />
 </p>
-<p><strong>Graficamos el nuevo plot</strong> con <code>gganimate()</code></p>
+<p><strong>Graficamos el nuevo plot</strong> con <code>animate()</code></p>
 <p><br />
 </p>
 <pre class="r"><code>

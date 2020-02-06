@@ -95,7 +95,7 @@
 <p>Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.</p>
 <p><br />
 </p>
-<div id="nombres-en-espana" class="section level1">
+<div id="nombres-en-españa" class="section level1">
 <h1>Nombres en España</h1>
 <p><br />
 </p>
@@ -167,7 +167,7 @@ head(mujeres_por_edad_media)
 </p>
 </div>
 </div>
-<div id="nombres-masculinos-mas-frecuentes-segun-su-edad-promedio." class="section level1">
+<div id="nombres-masculinos-más-frecuentes-según-su-edad-promedio." class="section level1">
 <h1>Nombres masculinos más frecuentes según su edad promedio.</h1>
 <p><br />
 </p>
@@ -206,9 +206,9 @@ glimpse(hombres)
 ## Observations: 180
 ## Variables: 3
 ## Groups: grupos_edad [9]
-## $ grupos_edad &lt;chr&gt; &quot;Edad promedio entre 0 y 5 años&quot;, &quot;Edad promedio e...
-## $ Nombre      &lt;chr&gt; &quot;LEO&quot;, &quot;ENZO&quot;, &quot;DYLAN&quot;, &quot;THIAGO&quot;, &quot;NEIZAN&quot;, &quot;IZEI&quot;...
-## $ Frec        &lt;dbl&gt; 16593, 9692, 6719, 5054, 1789, 788, 677, 662, 661,...
+## $ grupos_edad &lt;chr&gt; &quot;Edad promedio entre 0 y 5 años&quot;, &quot;Edad promedio entre ...
+## $ Nombre      &lt;chr&gt; &quot;LEO&quot;, &quot;ENZO&quot;, &quot;DYLAN&quot;, &quot;THIAGO&quot;, &quot;NEIZAN&quot;, &quot;IZEI&quot;, &quot;EI...
+## $ Frec        &lt;dbl&gt; 16593, 9692, 6719, 5054, 1789, 788, 677, 662, 661, 619,...
  
 
 # LEO, nombre cuya edad promedio se encuentra entre los 0 y 5 años (exactamente en 4,3) lidera este grupo de edad con 16593 registros. Esto no quiere decir que no existan LEO´s en otros rangos de edad sino que la edad promedio de personas con este nombre se encuentra en esta categoría. Para examinar el nombre de los recién nacidos, análisis que se asemejaría al realizado previamente con los nombres norteamericanos, podemos utilizar información sobre los nombres más frecuentes de los recién nacidos que también provee el INE. Por ejemplo, en 2017 LEO ocupaba el puesto 15 (2489 padres eligieron LEO como nombre para sus hijos en este año), siendo LUCAS, HUGO, MARTIN Y DANIEL los nombres más populares entre los recién nacidos varones. No obstante, en este post escogemos analizar los nombres según edad promedio con la intención de examinar los nombres de los residentes en 2018 desde una perspectiva distinta.    
@@ -253,7 +253,7 @@ hombres$grupos_edad &lt;- factor(hombres$grupos_edad,
 </p>
 <p><br />
 </p>
-<div id="visualizacion-de-los-nombres-masculinos-mas-frecuentes-segun-edad-promedio" class="section level2">
+<div id="visualización-de-los-nombres-masculinos-más-frecuentes-según-edad-promedio" class="section level2">
 <h2>Visualización de los nombres masculinos más frecuentes según edad promedio</h2>
 <p>En primer volvemos a cargar el <strong>theme diseñado por <a href="https://www.trafforddatalab.io/graphics_companion/">Tradfford Data Lab</a></strong> llamado <code>theme_lab()</code> que podemos encontrar en el siguiente enlace:</p>
 <p><br />
@@ -330,7 +330,7 @@ hombres_por_edad_media %&gt;%
 </p>
 </div>
 </div>
-<div id="nombres-femeninos-mas-frecuentes-segun-su-edad-promedio." class="section level1">
+<div id="nombres-femeninos-más-frecuentes-según-su-edad-promedio." class="section level1">
 <h1>Nombres femeninos más frecuentes según su edad promedio.</h1>
 <p><br />
 </p>
@@ -404,7 +404,7 @@ mujeres$grupos_edad &lt;- factor(mujeres$grupos_edad,
 </p>
 <p><br />
 </p>
-<div id="visualizacion-de-los-nombres-femeninos-mas-frecuentes-segun-edad-promedio" class="section level2">
+<div id="visualización-de-los-nombres-femeninos-más-frecuentes-según-edad-promedio" class="section level2">
 <h2>Visualización de los nombres femeninos más frecuentes según edad promedio</h2>
 <pre class="r"><code>
 ggplot(mujeres, aes(reorder(Nombre, Frec, sum), Frec)) +

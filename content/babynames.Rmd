@@ -2,10 +2,8 @@
 title: "Aprendiendo {dplyr} con 'babynames'"
 author: "Rubén F. Bustillo"
 date: '2019-10-06'
-tags:
-- dplyr
-- tidyverse
-categories: R
+tags: ["dplyr", "tidyverse"]
+categories: ["R"]
 ---
  
 

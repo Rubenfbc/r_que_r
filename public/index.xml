@@ -6,9 +6,65 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Thu, 17 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mapas en R usando coordenadas geográficas</title>
+      <link>/mapa_coordenadas/</link>
+      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mapa_coordenadas/</guid>
+      <description>Res
+El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.
+
+Creación de Mapas utilizando paquetes de R
+Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré cómo trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos.</description>
+    </item>
+    
+    <item>
+      <title>gganimate con &#39;babynames&#39;</title>
+      <link>/babynames_gganimate/</link>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/babynames_gganimate/</guid>
+      <description>Res
+En este post vamos a realizar gráficos animados con {gganimate} usando el dataframe babynames del paquete {babynames}. Este post es una extensión del post previo: Aprendiendo dplyr con {babynames}.
+
+
+¿Qué es {gganimate}?
+{gganimate} es una extensión del paquete {ggplot2} diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años.</description>
+    </item>
+    
+    <item>
+      <title>Aproximación a la evolución de los nombres en España según edad promedio</title>
+      <link>/nombres/</link>
+      <pubDate>Tue, 08 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/nombres/</guid>
+      <description>Res
+Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.
+
+Nombres en España
+En el post previo, con el objetivo de exponer las principales funciones del paquete dplyr(), examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017 en función de los datos que provee la Administración de Seguridad Social de este país.</description>
+    </item>
+    
+    <item>
+      <title>Aprendiendo {dplyr} con &#39;babynames&#39;</title>
+      <link>/babynames/</link>
+      <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/babynames/</guid>
+      <description>Res
+El objetivo de este post es exponer las principales funciones del paquete {dplyr} diseñadas para la manipulación de dataframes/tibbles. Utilizamos el dataframe ‘babynames’ del paquete babynames().
+
+
+
+¿Qué es dplyr?
+dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr constituye en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.</description>
+    </item>
     
   </channel>
 </rss>

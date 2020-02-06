@@ -1,0 +1,341 @@
+---
+title: "Mapas en R usando coordenadas geográficas"
+author: "Rubén F. Bustillo"
+date: 2019-10-17
+categories: ["R"]
+tags: ["maps", "mapdata", "gganimate"]
+
+---
+
+
+
+<p><strong>Res</strong></p>
+<p>El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.</p>
+<p><br />
+</p>
+<div id="creación-de-mapas-utilizando-paquetes-de-r" class="section level1">
+<h1>Creación de Mapas utilizando paquetes de R</h1>
+<p><br />
+</p>
+<p>Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré cómo trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos. No obstante, existen también diversos paquetes que podemos utilizar para realizar mapas en R y sobre ellos trabajaremos en este post. Por ejemplo, utilizando los paquetes {mapdata} y {ggplot2} podemos generar un mapa del mundo estableciendo la siguiente orden:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(mapdata)
+library(ggplot2)
+library(maps)
+library(ggrepel)
+
+# Guardamos la información en un nuevo dataframe llamado mapa_mundo
+
+mapa_mundo &lt;- map_data(&quot;world&quot;)
+
+
+# Para visualizar el mapa utilizamos geom_polygon() 
+
+library(tidyverse)
+
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;black&quot;,
+               color = &quot;white&quot;)</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-1-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Además, el mapa anterior podemos <strong>customizarlo</strong> a nuestro gusto utilizando las operaciones clásicas del paquete {ggplot2}.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa Mundi&quot;) </code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-2-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Asimismo, podemos generar <strong>mapas regionales</strong> indicando las coordenadas. Para realizar un mapa de España peninsular y Baleares, Portugal, sur de Francia y norte de África podemos indicar las siguientes coordenadas:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa de la Península Ibérica&quot;) +
+  coord_fixed (xlim= c(-12,5),
+              ylim= c(35,45),
+              ratio = 1.3)</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>De forma similar podemos representar en un mapa, por ejemplo, la región de América del Sur y zonas colindantes indicando las coordenadas adecuadas:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa de América del Sur&quot;) +
+  coord_fixed (xlim= c(-100,-25),
+              ylim= c(-60,20),
+              ratio = 1.2)</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Podemos <strong>identificar el nombre de algunas ciudades</strong> de las siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+ciudades &lt;- c(&quot;Lima&quot;, &quot;Sao Paulo&quot;, &quot;Bogotá&quot;)
+coordenadas &lt;- data.frame( long = c(-77.0282364, -46.6388, -74.081749 ), 
+                           lat= c(-12.0431805,-23.5489, 4.6097102),
+                           stringsAsFactors = F) 
+              
+coordenadas$ciudades &lt;- ciudades      
+
+
+
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;black&quot;, size= 1)) +
+  ggtitle( &quot;Mapa de América del Sur&quot;) +
+  coord_fixed (xlim= c(-100,-25),
+              ylim= c(-60,20),
+              ratio = 1.2)+
+  geom_point(data=coordenadas, aes(long, lat),
+             color= &quot;red&quot;, size=1) +
+  geom_text_repel(data = coordenadas, 
+                  aes(long, lat, label =ciudades))</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Existe también un <em>theme</em>, usando la función <code>theme_map()</code> del paquete {ggthemes}, diseñado para representar mapas visualmente bastante agradables.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(ggthemes)
+
+ggplot() +
+  borders(&quot;world&quot;, colour = &quot;white&quot;, fill = &quot;brown&quot;) +
+  theme_map()</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-6-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="visualización-de-mapas-utilizando-coordenadas-geográficas" class="section level1">
+<h1>Visualización de mapas utilizando coordenadas geográficas</h1>
+<p><br />
+</p>
+<p>Para realizar este apartado vamos a utilizar el dataframe <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11">meteorites</a> del proyecto <a href="https://github.com/rfordatascience/tidytuesday">Tidytuesday</a>. Este dataset, que se ha construido con datos de <strong>The Meteoritical Society</strong>, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización).</p>
+<p><br />
+</p>
+<p>En primer lugar descargamos el archivo .csv directamente del github de tidytuesday de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+meteoritos &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-11/meteorites.csv&quot;)
+## Parsed with column specification:
+## cols(
+##   name = col_character(),
+##   id = col_double(),
+##   name_type = col_character(),
+##   class = col_character(),
+##   mass = col_double(),
+##   fall = col_character(),
+##   year = col_double(),
+##   lat = col_double(),
+##   long = col_double(),
+##   geolocation = col_character()
+## )
+
+# Quitamos los elementos que faltan (na´s) para la representación gráfica
+
+meteoritos_mapa &lt;- meteoritos %&gt;%
+  drop_na()</code></pre>
+<p> </p>
+<p>En primer lugar vamos a representar <strong>todos los meteoritos en el mapa del mundo</strong>, tanto los que se han detectado al caer (fell) como los encontrados (found). Para ello utilizaremos el theme <code>theme_map()</code> visto en el punto anterior y añadiremos un <code>geom_point()</code> con información de los meteoritos.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+options(scipen = 999) # para evitar la anotación científica 
+
+# Graficamos indicando 
+
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  geom_point(data= meteoritos_mapa, 
+             aes(x=long, y = lat, size = mass/1000), 
+             stroke = F) +
+  scale_size_continuous(name = &quot;Kg&quot;) +
+  ggtitle( &quot;Meteoritos&quot;) +
+  theme_map()</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p> </p>
+<p>Existe como vemos una gran diferencia de tamaño entre los meteoritos incluidos en el dataframe. Veamos, por curiosidad, cuales son los meteoritos de más de 30mil kilos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+meteoritos %&gt;%
+  select(name, year, mass, fall) %&gt;%
+  filter( mass &gt; 30000000) %&gt;%
+  arrange(desc(mass))
+## # A tibble: 3 x 4
+##   name             year     mass fall 
+##   &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;
+## 1 Hoba             1920 60000000 Found
+## 2 Cape York        1818 58200000 Found
+## 3 Campo del Cielo  1575 50000000 Found</code></pre>
+<p><br />
+</p>
+<p>Hoba, Cape York y Campo del Cielo, meteoritos encontrados en Namibia, Groenlandia y Argentina respectivamente, son los meteoritos de mayor masa. Se puede ver una foto de ellos en el siguiente <a href="https://en.wikipedia.org/wiki/List_of_largest_meteorites_on_Earth">enlace</a>.</p>
+<p><br />
+</p>
+<p>Para <strong>diferenciar los meteoritos caídos (fell) y los encontrados (found)</strong> podemos asociar a cada uno de ellos un color de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey80&quot;,
+               color = &quot;white&quot;) +
+  geom_point(data= meteoritos_mapa, 
+             aes(x=long, y = lat, size = mass/1000, color = fall), 
+             stroke = F) +
+  scale_color_manual(values = c( &quot;black&quot;, &quot;orange&quot;), name = &quot; &quot;) + 
+  scale_size_continuous(name = &quot;Kg&quot;) +
+  ggtitle( &quot;Meteoritos caídos y encontrados&quot;) +
+  theme_map()</code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-10-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+<p>Para visualizar los <strong>meteoritos en una región determinada</strong> del globo debemos indicar las coordenadas tal y como se expuso previamente. Pongamos por ejemplo que nos interesa visualizar los <strong>meteoritos caídos (fell) en Europa</strong>, para ello podemos indicar los siguientes comandos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# seleccionamos los meteoritos que nos interesa graficar
+
+meteoritos_Europa &lt;- meteoritos %&gt;%
+  filter(fall == &quot;Fell&quot;) %&gt;%
+  drop_na() %&gt;%
+  filter(between(long, -12, 25),
+         between(lat, 35, 65)) %&gt;%
+  arrange(mass)
+
+
+# graficamos en un mapa de Europa (y escogemos un fondo oscuro)
+
+mapa_mundo %&gt;%
+  ggplot() + 
+  geom_polygon(aes(x=long, y=lat, group=group),
+               fill= &quot;grey30&quot;, color=&quot;white&quot;) +
+  geom_point(data=meteoritos_Europa, aes(x=long, 
+                                         y=lat, 
+                                         size= mass/1000, 
+                                         color= mass/1000), stroke=F) +
+  coord_fixed(xlim= c(-12,25),
+              ylim= c(35,65),
+              ratio= 1.3)+
+  ggtitle(&quot;Caída de meteoritos en Europa&quot;) +
+  scale_size_continuous(name = &quot;kg&quot;) +
+  scale_color_gradient(low= &quot;orange&quot;, high= &quot;brown&quot;, name= &quot;Kg&quot;) +
+  guides(color= guide_legend()) +
+  theme_classic() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= &quot;grey30&quot;, size= 1, fill= NA)
+  ) </code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="generación-de-mapas-animados-con-gganimate" class="section level1">
+<h1>Generación de mapas animados con {gganimate}</h1>
+<p><br />
+</p>
+<p>Utilizando el paquete {gganimate} es posible generar <strong>mapas animados</strong> partiendo de mapas como los creados en los apartados anteriores. Veamos por ejemplo algún ejemplo utilizando el mismo <em>dataset</em> de los meteoritos pero centrándonos en los caídos (fell) y, por lo tanto, obviando los meteoritos encontrados (found).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Cargamos el paquete gganimate
+
+library(gganimate)
+
+
+# Creamos un nuevo dataset en el que no se tenga en cuenta los meteoritos encontrados (found) ni los que cayeron antes de 1800. 
+
+meteoritos_Mundo &lt;- meteoritos %&gt;%
+  filter(fall == &quot;Fell&quot;) %&gt;%
+  filter(year &gt; 1800) %&gt;%
+  drop_na() %&gt;%
+  arrange(mass)
+
+
+# Generamos el mapa, que guardamos como mapa_animado y posteriormente generamos la animación con la función animate. 
+
+mapa_animado &lt;- mapa_mundo %&gt;%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = &quot;grey20&quot;,
+               color = &quot;white&quot;) +
+  geom_point(data= meteoritos_Mundo, 
+             x = meteoritos_Mundo$long, 
+             y = meteoritos_Mundo$lat, 
+             color = &quot;orange&quot;,
+             alpha = 0.7,
+             size = 0.2) +
+  transition_states(meteoritos_Mundo$year,
+                    transition_length = 1, 
+                    state_length = 1) +
+  shadow_mark(past = TRUE) +
+  labs( title = &quot;Caída de meteoritos desde 1800 hasta 2013 \n Year :{closest_state}&quot;,
+        caption = &quot;The Meteoritical Society | @Ruben46563154&quot;) +
+  theme_map() +
+  theme(plot.title = element_text(size = 18, hjust = 0.5))
+  
+
+animate(mapa_animado, nframes= 450, fps = 10) </code></pre>
+<p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-12-1.gif" width="90%" style="display: block; margin: auto;" /></p>
+</div>

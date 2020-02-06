@@ -21,7 +21,7 @@
 El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.
 
 Creación de Mapas utilizando paquetes de R
-Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré como trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos.</description>
+Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré cómo trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos.</description>
     </item>
     
   </channel>
