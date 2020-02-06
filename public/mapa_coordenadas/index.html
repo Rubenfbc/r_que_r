@@ -99,7 +99,7 @@
 <h1>Creación de Mapas utilizando paquetes de R</h1>
 <p><br />
 </p>
-<p>Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré como trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos. No obstante, existen también diversos paquetes que podemos utilizar para realizar mapas en R y sobre ellos trabajaremos en este post. Por ejemplo, utilizando el paquetes <code>mapdata</code> con <code>ggplot2()</code> podemos generar un mapa del mundo estableciendo la siguiente orden:</p>
+<p>Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré cómo trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos. No obstante, existen también diversos paquetes que podemos utilizar para realizar mapas en R y sobre ellos trabajaremos en este post. Por ejemplo, utilizando los paquetes {mapdata} y {ggplot2} podemos generar un mapa del mundo estableciendo la siguiente orden:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -125,7 +125,7 @@ mapa_mundo %&gt;%
 <p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-1-1.png" width="60%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
-<p>Además, el mapa anterior podemos <strong>customizarlo</strong> a nuestro gusto utilizando las operaciones clásicas del paquete <code>ggplot2()</code>.</p>
+<p>Además, el mapa anterior podemos <strong>customizarlo</strong> a nuestro gusto utilizando las operaciones clásicas del paquete {ggplot2}.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -227,7 +227,7 @@ mapa_mundo %&gt;%
 <p><img src="/mapa_coordenadas_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>
-<p>Existe también un <em>theme</em>, usando la función <code>theme_map()</code> del paquete <code>ggthemes</code>, diseñado para representar mapas visualmente bastante agradables.</p>
+<p>Existe también un <em>theme</em>, usando la función <code>theme_map()</code> del paquete {ggthemes}, diseñado para representar mapas visualmente bastante agradables.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -244,7 +244,7 @@ ggplot() +
 <h1>Visualización de mapas utilizando coordenadas geográficas</h1>
 <p><br />
 </p>
-<p>Para realizar este apartado vamos a utilizar el dataframe <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11">meteorites</a> del proyecto <a href="https://github.com/rfordatascience/tidytuesday">tidytuesday</a>. Este dataset, que se ha construido con datos de <strong>The Meteoritical Society</strong>, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización).</p>
+<p>Para realizar este apartado vamos a utilizar el dataframe <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11">meteorites</a> del proyecto <a href="https://github.com/rfordatascience/tidytuesday">Tidytuesday</a>. Este dataset, que se ha construido con datos de <strong>The Meteoritical Society</strong>, incluye los meteoritos que han caído en la tierra y los que se han encontrado así como información de los mismos (nombre, id, tipo, class, masa, año encontrado, latitud, longitud y geolocalización).</p>
 <p><br />
 </p>
 <p>En primer lugar descargamos el archivo .csv directamente del github de tidytuesday de la siguiente forma:</p>
@@ -271,7 +271,7 @@ meteoritos &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/rfordat
 meteoritos_mapa &lt;- meteoritos %&gt;%
   drop_na()</code></pre>
 <p> </p>
-<p>En primer lugar vamos a representar <strong>todos los meteoritos en el mapa del mundo</strong>, tanto los que se han detectado al caer (fell) como los encontrados (found). Para ello utilizaremos el <code>theme_map()</code> visto en el punto anterior y añadiremos un <code>geom_point()</code> con información de los meteoritos.</p>
+<p>En primer lugar vamos a representar <strong>todos los meteoritos en el mapa del mundo</strong>, tanto los que se han detectado al caer (fell) como los encontrados (found). Para ello utilizaremos el theme <code>theme_map()</code> visto en el punto anterior y añadiremos un <code>geom_point()</code> con información de los meteoritos.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -374,10 +374,10 @@ mapa_mundo %&gt;%
 </p>
 </div>
 <div id="generación-de-mapas-animados-con-gganimate" class="section level1">
-<h1>Generación de mapas animados con gganimate</h1>
+<h1>Generación de mapas animados con {gganimate}</h1>
 <p><br />
 </p>
-<p>Utilizando el paquete <code>gganimate</code> es posible generar <strong>mapas animados</strong> partiendo de mapas como los creados en los apartados anteriores. Veamos por ejemplo algún ejemplo utilizando el mismo <em>dataset</em> de los meteoritos pero centrándonos en los caídos (fell) y, por lo tanto, obviando los meteoritos encontrados (found).</p>
+<p>Utilizando el paquete {gganimate} es posible generar <strong>mapas animados</strong> partiendo de mapas como los creados en los apartados anteriores. Veamos por ejemplo algún ejemplo utilizando el mismo <em>dataset</em> de los meteoritos pero centrándonos en los caídos (fell) y, por lo tanto, obviando los meteoritos encontrados (found).</p>
 <p><br />
 </p>
 <pre class="r"><code>

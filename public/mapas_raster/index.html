@@ -101,14 +101,14 @@
 
 
 <p><strong>Re</strong></p>
-<p>Este post pretende exponer algunas herramientas que pueden ser de utilidad a la hora de realizar mapas base de cualquier país a distintos niveles de agregación regional utilizando el paquete raster.</p>
+<p>Este post pretende exponer algunas herramientas que pueden ser de utilidad a la hora de realizar mapas base de cualquier país a distintos niveles de agregación regional utilizando el paquete {raster}.</p>
 <p><br />
 </p>
 <div id="introducción" class="section level1">
 <h1>Introducción</h1>
 <p><br />
 </p>
-<p>En <strong>post anteriores</strong> hemos abordado diversos aspectos que pueden ser de utilidad a la hora de realizar mapas en R. Así, por ejemplo, hemos explicado <a href="https://rquer.netlify.com/nuts/">cómo trabajar con las nomenclaturas de las unidades territoriales estadísticas (NUTS) de Eurostat</a> y expusimos <a href="https://rquer.netlify.com/maps3d/">cómo realizar mapas 3D con el paquete echarts4r y e_geo_3d</a>. Previamente dedicamos un post para explicar <a href="https://rquer.netlify.com/mapas_spain/">cómo realizar mapas de España a diversas unidades territoriales utilizando archivos shapefile</a> y otro para mostrar <a href="https://rquer.netlify.com/mapa_coordenadas/">cómo realizar mapas en R utilizando coordenadas geográficas así como mapas animados utilizando gganimate</a>. Por consiguiente, la presente entrada no tiene como objetivo específico representar en mapas alguna variable o indicador determinado, aspecto que ya se ha abarcado en los post mencionados, sino mostrar cómo podemos obtener mapas base de cualquier país a distintos niveles territoriales o geográficos. Para ello resulta de gran utilidad el paquete {raster}, a partir del cual podemos acceder a información geográfica de cualquier país del mundo y, gracias a ello, obtener cualquier mapa base que nos pueda interesar.</p>
+<p>En <strong>post anteriores</strong> hemos abordado diversos aspectos que pueden ser de utilidad a la hora de realizar mapas en R. Así, por ejemplo, hemos explicado <a href="https://rquer.netlify.com/nuts/">cómo trabajar con las nomenclaturas de las unidades territoriales estadísticas (NUTS) de Eurostat</a> y expusimos <a href="https://rquer.netlify.com/maps3d/">cómo realizar mapas 3D con el paquete {echarts4r} y e_geo_3d()</a>. Previamente dedicamos un post para explicar <a href="https://rquer.netlify.com/mapas_spain/">cómo realizar mapas de España a diversas unidades territoriales utilizando archivos shapefile</a> y otro para mostrar <a href="https://rquer.netlify.com/mapa_coordenadas/">cómo realizar mapas en R utilizando coordenadas geográficas así como mapas animados utilizando {gganimate}</a>. Por consiguiente, la presente entrada no tiene como objetivo específico representar en mapas alguna variable o indicador determinado, aspecto que ya se ha abarcado en los post mencionados, sino mostrar cómo podemos obtener mapas base de cualquier país a distintos niveles territoriales o geográficos. Para ello resulta de gran utilidad el paquete {raster}, a partir del cual podemos acceder a información geográfica de cualquier país del mundo y, gracias a ello, obtener cualquier mapa base que nos pueda interesar.</p>
 </div>
 <div id="paquetes" class="section level1">
 <h1>Paquetes</h1>

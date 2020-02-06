@@ -340,14 +340,14 @@ lugares &lt;- c(&quot;leyenda-rock&quot;,
 geocodes &lt;- geocode(lugares)
 geocodes
 ## # A tibble: 6 x 2
-##      lon   lat
-##    &lt;dbl&gt; &lt;dbl&gt;
-## 1 -0.891  41.6
-## 2 -0.892  41.6
-## 3 -0.896  41.6
-## 4 -0.881  41.7
-## 5 -0.888  41.6
-## 6 -0.885  41.7
+##        lon   lat
+##      &lt;dbl&gt; &lt;dbl&gt;
+## 1   -0.891  41.6
+## 2 -118.     34.0
+## 3   -0.896  41.6
+## 4   -0.881  41.7
+## 5   -0.888  41.6
+## 6   -0.885  41.7
 
 lugares_rock &lt;- tibble(name=lugares, 
                        lat= geocodes$lat,
@@ -363,14 +363,14 @@ lugares_rock$name[6] = &quot;DPch&quot;
 
 lugares_rock
 ## # A tibble: 6 x 3
-##   name           lat    lon
-##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
-## 1 Leyenda       41.6 -0.891
-## 2 Sala Z        41.6 -0.892
-## 3 Trilogy       41.6 -0.896
-## 4 Rock &amp; Blues  41.7 -0.881
-## 5 Posturas      41.6 -0.888
-## 6 DPch          41.7 -0.885</code></pre>
+##   name           lat      lon
+##   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Leyenda       41.6   -0.891
+## 2 Sala Z        34.0 -118.   
+## 3 Trilogy       41.6   -0.896
+## 4 Rock &amp; Blues  41.7   -0.881
+## 5 Posturas      41.6   -0.888
+## 6 DPch          41.7   -0.885</code></pre>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -383,7 +383,9 @@ ggmap(get_map(zgz, zoom=15, maptype = &quot;terrain-lines&quot;)) +
             color= &quot;black&quot;, 
             data = lugares_rock,
             size = 3.5,
-            nudge_y = -0.0004)</code></pre>
+            nudge_y = -0.0004)
+## Warning: Removed 1 rows containing missing values (geom_point).
+## Warning: Removed 1 rows containing missing values (geom_text).</code></pre>
 <p><img src="/google_maps_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><br />
 </p>

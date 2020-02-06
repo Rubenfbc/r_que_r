@@ -58,12 +58,12 @@ En el post previo, con el objetivo de exponer las principales funciones del paqu
       
       <guid>/babynames/</guid>
       <description>Res
-El objetivo de este post es exponer las principales funciones del paquete dplyr() diseñadas para la manipulación de dataframes/tibbles. Utilizamos el dataframe ‘babynames’ del paquete babynames().
+El objetivo de este post es exponer las principales funciones del paquete {dplyr} diseñadas para la manipulación de dataframes/tibbles. Utilizamos el dataframe ‘babynames’ del paquete babynames().
 
 
 
 ¿Qué es dplyr?
-dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.</description>
+dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr constituye en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.</description>
     </item>
     
   </channel>

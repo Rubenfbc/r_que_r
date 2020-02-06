@@ -6,281 +6,9 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Mapas con información georreferenciada de Google en R con {ggmap}</title>
-      <link>/google_maps/</link>
-      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/google_maps/</guid>
-      <description>Re
-Otra forma de realizar mapas es mediante la utilización de información georreferenciada obtenida de recursos de la web a través de API´s. Este post muestra cómo utilizar {ggmap} con datos de Google.
-
-Introducción
-En el post anterior expusimos algunas nociones básicas que pueden sernos de utilidad a la hora de realizar mapas utilizando información de Open Street Map (OSM) con el paquete {osmdata}. Además, previamente, en diversos posts se ha ido exponiendo diferentes mecanismos mediante los cuales podemos realizar mapas con R, bien sea utilizando coordinadas geográficas, con archivos shapefile, utilizando datos de Eurostat, etc.</description>
-    </item>
-    
-    <item>
-      <title>OpenStreetMaps en R con {osmdata}</title>
-      <link>/openstreetmap/</link>
-      <pubDate>Tue, 17 Dec 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/openstreetmap/</guid>
-      <description>Re
-El presente post tiene como objetivo introducir el paquete {osmdata}, mediante el cual podemos descargar e importar información de la base de datos del proyecto colaborativo Open Street Map (OSM)
-
-Introducción
-OpenStreetMap (OSM) es un proyecto colaborativo formado por un gran número de personas que comparten, añaden y mantienen información que permite generar una gran base de datos mediante la cual es posible realizar mapas editables y libres.</description>
-    </item>
-    
-    <item>
-      <title>INNER &amp; OUTER JOINs en SQL (con {sqldf}) y en R</title>
-      <link>/joins_sql/</link>
-      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/joins_sql/</guid>
-      <description>Re
-Este post s una continuación del post anterior en el que expusimos cómo realizar operaciones en R utilizando la sintaxis tradicional de SQL con la función sqldf(), única función del paquete {sqldf}.
-
-Paquetes
-En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos servirá para comparar la sintaxis de SQL con la sintaxis tradicional de {dplyr}. Téngase en cuenta que en este post anterior se expone en mayor profundidad las principales funcionalidades del paquete {tidyverse}.</description>
-    </item>
-    
-    <item>
-      <title>Principales operadores de SQL en R con el paquete {sqldf}</title>
-      <link>/sql/</link>
-      <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/sql/</guid>
-      <description>Re
-En el presente post se abordará la función sqldf( ) única función del paquete {sqldf}, mediante la cual es posible utilizar las formulaciones y la sintaxis convencional de SQL en el entorno de R.
-
-Paquetes
-El paquete {sqldf} consiste en una función sqldf(). Dicha función se acompaña con el comando SELECT de SQL seguido de la sintaxis tradicional de SQL (Structured Query Language). Esta función nos permite trabajar con las formulaciones de SQL sobre dataframes del entorno de R.</description>
-    </item>
-    
-    <item>
-      <title>Representación de la evolución temporal de alguna variable (parte I)</title>
-      <link>/evolution/</link>
-      <pubDate>Fri, 29 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/evolution/</guid>
-      <description>Re
-Este post tiene como objetivo presentar algunas posibles formas de representar la evolución temporal de alguna variable. Utilizaremos el dataframe gapminder del conocido paquete del mismo nombre.
-
-Paquetes
-library(tidyverse)library(gapminder)library(echarts4r)library(gganimate)library(viridis)library(hrbrthemes)library(DT)</description>
-    </item>
-    
-    <item>
-      <title>Mapas regionales con el paquete {raster}</title>
-      <link>/mapas_raster/</link>
-      <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/mapas_raster/</guid>
-      <description>Re
-Este post pretende exponer algunas herramientas que pueden ser de utilidad a la hora de realizar mapas base de cualquier país a distintos niveles de agregación regional utilizando el paquete raster.
-
-Introducción
-En post anteriores hemos abordado diversos aspectos que pueden ser de utilidad a la hora de realizar mapas en R. Así, por ejemplo, hemos explicado cómo trabajar con las nomenclaturas de las unidades territoriales estadísticas (NUTS) de Eurostat y expusimos cómo realizar mapas 3D con el paquete echarts4r y e_geo_3d.</description>
-    </item>
-    
-    <item>
-      <title>Waffle charts en R</title>
-      <link>/waffle_charts/</link>
-      <pubDate>Wed, 27 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/waffle_charts/</guid>
-      <description>Re
-En este breve post se expondrán algunas posibilidades para realizar waffle charts con R. El post explica cómo hacer waffle charts con el paquete waffle y también cómo incluir iconos en los gráficos.
-
-Paquetes
-library(tidyverse)library(waffle)library(babynames)library(extrafont)
-El paquete waffle
-En primer lugar vamos a realizar un waffle chart utilizando el paquete waffle previamente cargado. Utilizaremos el dataframe babynames del paquete con el mismo nombre, donde se recogen los nombres de los recién nacidos en Estados Unidos desde 1880 a 2017 diferenciando por sexo del bebé.</description>
-    </item>
-    
-    <item>
-      <title>¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat en R?</title>
-      <link>/nuts/</link>
-      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/nuts/</guid>
-      <description>Re
-Este post es una continuación del anterior donde se explicó el paquete eurostat(). En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.
-
-Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)
-Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales de la Unión Europea creada por Eurostat que se utiliza con fines estadísticos y analíticos.</description>
-    </item>
-    
-    <item>
-      <title>Importar datos de Eurostat en R con el paquete {eurostat}</title>
-      <link>/eurostat/</link>
-      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/eurostat/</guid>
-      <description>Re
-En este post se explica las principales funcionalidades del paquete eurostat(), que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.
-
-Introducción
-Eurostat es la Oficina de Estadística de la Comisión Europea, organismo que se encarga de producir datos, publicar estadísticas e indicadores sobre la Unión Europea promoviendo la armonización de los métodos estadísticos entre los Estados que la conforman.</description>
-    </item>
-    
-    <item>
-      <title>Pictogramas e infografías con R</title>
-      <link>/infographics/</link>
-      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/infographics/</guid>
-      <description>Re
-En este post se presentarán diversas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función e_chart( ) del paquete echarts4r e iconos de diversos orígenes.
-
-Paquetes
-Cargamos los paquetes requeridos:
-
-library(tidyverse)library(echarts4r)</description>
-    </item>
-    
-    <item>
-      <title>Mapas en 3D con {echarts4r} y {e_geo_3d}</title>
-      <link>/maps3d/</link>
-      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/maps3d/</guid>
-      <description>Re
-Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función e_geo_3d del paquete echarts4r en R.
-
-Paquetes
-Cargamos el paquete echarts4r</description>
-    </item>
-    
-    <item>
-      <title>Treemap del VAB sectorial de las regiones peruanas en 2016</title>
-      <link>/treemap_peru/</link>
-      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/treemap_peru/</guid>
-      <description>Re
-El objetivo de este post es visualizar mediante un gráfico treemap el VAB sectorial de los distintos departamentos peruanos para el año 2016. Para ello utilizaremos los paquetes treemap y 3dtreeR.
-
-Paquetes y Dataset
-Cargamos los paquetes necesarios:
-
-library(tidyverse)library(treemap)library(readxl)library(stringr)library(knitr)
-En esta ocasión utilizaremos el Valor Agregado Bruto por actividades económicas según departamento de Perú para el año 2016.</description>
-    </item>
-    
-    <item>
-      <title>¿Cómo realizar mapas de España con archivos shapefile?</title>
-      <link>/mapas_spain/</link>
-      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/mapas_spain/</guid>
-      <description>Re
-En este post se expondrá cómo realizar mapas de España utilizando archivos shapefile y el paquete ggplot2. Los archivos shapefiles los descargaremos de la web y los datos los descargaremos del INE.
-
-Paquetes de R# para manipular dataframeslibrary(tidyverse)# para importar archivos shapefileslibrary(rgdal)# Para transformar los archivos shapefiles library(broom)
-Comunidades Autónomas Españolas
-En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando las distintas Comunidades Autónomas que la componen.</description>
-    </item>
-    
-    <item>
-      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con {gganimate}</title>
-      <link>/vab_peru/</link>
-      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/vab_peru/</guid>
-      <description>Res
-En este post se mostrará cómo realizar, usando gganimate, un gráfico de barras dinámico que muestre la evolución del ranking de regiones peruanas atendiendo a VAB por habitante entre 1996 y 2016.
-
-Gráfico dinámico del VAB
-Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado (denominados bar chart race) donde se muestra la evolución del ranking de distintas economías, generalmente países, según su PIB o su PIB por habitante.</description>
-    </item>
-    
-    <item>
-      <title>¿Cómo formatear números en R?</title>
-      <link>/formatear_numeros/</link>
-      <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/formatear_numeros/</guid>
-      <description>Re
-Este post presenta algunas herramientas que pueden resultar útiles a la hora de dar formato a los números. Utilizaremos datos del post anterior donde se analizaban dinámicas de cambio estructural.
-
-Dataset
-Los ejercicios realizados a lo largo de este post, que nos servirán para mostrar la aplicación de las funciones que queremos exponer, se harán sobre el dataset del Valor Agregado Bruto de las Comunidades Autónomas Españolas por sectores productivos utilizado en el post anterior.</description>
-    </item>
-    
-    <item>
-      <title>Cambio estructural en España (1980-2011) desde un enfoque territorial</title>
-      <link>/cambioestructural/</link>
-      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/cambioestructural/</guid>
-      <description>Res
-El presente post examina el proceso de cambio estructural del empleo en las CCAA españolas entre 1980 y 2011 evaluando la existencia de posibles dinámicas de desindustrialización y terciarización.
-
-Noción de cambio estructural
-El concepto de cambio estructural ha sido tradicionalmente un elemento frecuentemente aludido en economía, especialmente en economía del desarrollo. No obstante dicho concepto suele tratarse en la literatura de forma ambigua en tanto en cuanto suele hacer referencia a aspectos muy dispares y a transformaciones de naturaleza diversa y/o multidimensional que registran las sociedades a lo largo de sus procesos de desarrollo.</description>
-    </item>
-    
-    <item>
-      <title>Mapas en R usando coordenadas geográficas</title>
-      <link>/mapa_coordenadas/</link>
-      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/mapa_coordenadas/</guid>
-      <description>Res
-El objetivo de este post es exponer una posible forma de realizar mapas en R visualizando un conjunto de observaciones cuando tenemos información de las coordenadas de los elementos a representar.
-
-Creación de Mapas utilizando paquetes de R
-Para generar mapas en R podemos importar archivos tipo shapefile (SHP) donde se almacena la ubicación geométrica y diversa información de atributos de entidades geográficas. En otro post expondré como trabajar con dichos archivos, cómo importar archivos shapefile y cómo trabajar con ellos.</description>
-    </item>
-    
-    <item>
-      <title>gganimate con &#39;babynames&#39;</title>
-      <link>/babynames_gganimate/</link>
-      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/babynames_gganimate/</guid>
-      <description>Res
-En este post vamos a realizar gráficos animados con gganimate() usando el dataframe babynames del paquete babynames(). Este post es una extensión del post previo: Aprendiendo dplyr con ‘babynames’.
-
-
-¿Qué es gganimate()?
-gganimate() es una extensión del paquete ggplot2() diseñado para crear gráficos de ggplot animados. De esta forma podemos ver de forma dinámica en un mismo gráfico, por ejemplo, cómo la información ha ido evolucionando con el paso de los años.</description>
-    </item>
-    
-    <item>
-      <title>Aproximación a la evolución de los nombres en España según edad promedio</title>
-      <link>/nombres/</link>
-      <pubDate>Tue, 08 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/nombres/</guid>
-      <description>Res
-Este post presenta una aproximación de la evolución de los nombres masculinos y femeninos más usados en España en las últimas décadas utilizando una metodología diferente a la del post anterior.
-
-Nombres en España
-En el post previo, con el objetivo de exponer las principales funciones del paquete dplyr(), examinamos la evolución de la popularidad de los nombres de los recién nacidos en Estados Unidos desde 1880 hasta 2017 en función de los datos que provee la Administración de Seguridad Social de este país.</description>
-    </item>
-    
-    <item>
-      <title>Aprendiendo {dplyr} con &#39;babynames&#39;</title>
-      <link>/babynames/</link>
-      <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/babynames/</guid>
-      <description>Res
-El objetivo de este post es exponer las principales funciones del paquete dplyr() diseñadas para la manipulación de dataframes/tibbles. Utilizamos el dataframe ‘babynames’ del paquete babynames().
-
-
-
-¿Qué es dplyr?
-dplyr es un paquete compuesto por un conjunto de funciones diseñado por Hadley Wickham para la manipulación de data frames, y forma parte del conjunto de paquetes conocido como The tidyverse. En particular, como veremos a continuación, dplyr consiste en un conjunto de herramientas que facilita en gran medida la manipulación de data frames.</description>
-    </item>
     
   </channel>
 </rss>
