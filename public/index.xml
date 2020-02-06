@@ -6,10 +6,49 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 31 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Bar chart race de las regiones peruanas según su VAB per cápita (1995-2016) con {gganimate}</title>
+      <link>/vab_peru/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/vab_peru/</guid>
+      <description>Res
+En este post se mostrará cómo realizar, usando gganimate, un gráfico de barras dinámico que muestre la evolución del ranking de regiones peruanas atendiendo a VAB por habitante entre 1996 y 2016.
+
+Gráfico dinámico del VAB
+Últimamente se ha hecho bastante popular en las redes sociales un gráfico animado (denominados bar chart race) donde se muestra la evolución del ranking de distintas economías, generalmente países, según su PIB o su PIB por habitante.</description>
+    </item>
+    
+    <item>
+      <title>¿Cómo formatear números en R?</title>
+      <link>/formatear_numeros/</link>
+      <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/formatear_numeros/</guid>
+      <description>Re
+Este post presenta algunas herramientas que pueden resultar útiles a la hora de dar formato a los números. Utilizaremos datos del post anterior donde se analizaban dinámicas de cambio estructural.
+
+Dataset
+Los ejercicios realizados a lo largo de este post, que nos servirán para mostrar la aplicación de las funciones que queremos exponer, se harán sobre el dataset del Valor Agregado Bruto de las Comunidades Autónomas Españolas por sectores productivos utilizado en el post anterior.</description>
+    </item>
+    
+    <item>
+      <title>Cambio estructural en España (1980-2011) desde un enfoque territorial</title>
+      <link>/cambioestructural/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/cambioestructural/</guid>
+      <description>Res
+El presente post examina el proceso de cambio estructural del empleo en las CCAA españolas entre 1980 y 2011 evaluando la existencia de posibles dinámicas de desindustrialización y terciarización.
+
+Noción de cambio estructural
+El concepto de cambio estructural ha sido tradicionalmente un elemento frecuentemente aludido en economía, especialmente en economía del desarrollo. No obstante dicho concepto suele tratarse en la literatura de forma ambigua en tanto en cuanto suele hacer referencia a aspectos muy dispares y a transformaciones de naturaleza diversa y/o multidimensional que registran las sociedades a lo largo de sus procesos de desarrollo.</description>
+    </item>
     
     <item>
       <title>Mapas en R usando coordenadas geográficas</title>

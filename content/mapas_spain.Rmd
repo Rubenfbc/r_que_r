@@ -1,0 +1,879 @@
+---
+title: "¿Cómo realizar mapas de España con archivos shapefile?"
+author: "Rubén F. Bustillo"
+date: '2019-11-08'
+tags:["maps","mapas"", "Spain", "España", "Comunidades Autónomas","Provincias","Municipios","ggplot2", "shapefiles"]
+categories: ["R"]
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+**Re**
+
+En este post se expondrá cómo realizar mapas de España utilizando archivos shapefile y el paquete ggplot2. Los archivos shapefiles los descargaremos de la web y los datos los descargaremos del INE. 
+
+\
+
+## Paquetes de R
+
+```{r, warning=FALSE, message=FALSE}
+
+# para manipular dataframes
+library(tidyverse)
+
+# para importar archivos shapefiles
+library(rgdal)
+
+# Para transformar los archivos shapefiles 
+library(broom)
+
+```
+
+\
+
+# Comunidades Autónomas Españolas
+
+\
+
+En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando las distintas **Comunidades Autónomas** que la componen. Para ello descargamos el archivo shapefile con la información geográfica de las autonomías españolas de [arcgis.com](https://www.arcgis.com/home/item.html?id=5f689357238847bc823a2fb164544a77). Nótese que un archivo shapefile (SHP) es un formato de datos espaciales de representación vectorial desarrollado por la compañía ESRI que sirve para almacenar información de la ubicación de distintas entidades geográficas. Dicha información geométrica se puede representar con puntos, líneas o polígonos (áreas). 
+
+\
+
+La función `readOGR()`del paquete `rgdal` permite leer archivos shapefile (.shp) que en nuestro caso hemos descargado previamente desde la página mencionada y guardado en una carpeta de nuestro ordenador. Por su parte, con la función `tidy()` del paquete `broom` creamos un dataframe (data_ccaa) que nos servirá para su representación gráfica posterior. 
+
+\
+
+## Descarga y formato de archivos shapefile
+
+```{r message=FALSE, warning=FALSE}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/ComunidadesAutonomas_ETRS89_30N")
+
+
+# Guardamos el archivo shapefile
+
+shapefile_ccaa <- readOGR("Comunidades_Autonomas_ETRS89_30N.shp")
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_ccaa <- tidy(shapefile_ccaa)
+
+# primeras observaciones del dataset
+
+head(data_ccaa)
+
+```
+
+\
+
+Vemos que el dataframe creado no contiene los nombres de las distintas CCAA españolas pero, en cambio, dicho dataframe indica el "id" de las mismas. No obstante, el archivo shapefile original si contiene información de los nombres de las Comunidades Autónomas. Por tanto, podemos extraer los nombres en un nuevo dataframe (nombres_ccaa) y añadir el "id" de cada una de las regiones. El objetivo es, posteriormente, unir los dos dataframes por la columna común "id".  
+
+\
+
+```{r}
+
+nombres_ccaa <- data.frame(shapefile_ccaa$Texto)
+
+head(nombres_ccaa)
+
+nombres_ccaa$id <- as.character(seq(0, nrow(nombres_ccaa)-1))
+
+head(nombres_ccaa)
+
+```
+
+\
+
+```{r}
+
+data_ccaa_mapa <- left_join(data_ccaa, nombres_ccaa, by = "id")
+
+head(data_ccaa_mapa)
+
+```
+
+\
+
+## Mapa de las Comunidades Autónomas usando ggplot
+
+Para representar en un mapa utilizando la información del dataframe obtenido del archivo shapefile podemos utilizar el paquete ggplot2 y la función `geom_polygon()`. De esta forma, utilizando las funciones de este paquete, podemos customizar el gráfico y modificar sus características. 
+
+\
+
+```{r, out.width = "80%", fig.align='center'}
+
+data_ccaa_mapa %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "violetred4",
+               color = "white") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "darkgrey", size= 0.5)) +
+  ggtitle("Comunidades Autónomas Españolas")
+
+```
+
+\
+
+# Provincias Españolas
+
+\
+
+En este subapartado vamos a realizar el mismo análisis realizado previamente pero identificando en esta ocasión **las provincias españolas**. Para ello, al igual que hicimos en el ejercicio anterior descargamos el archivo shapefile de [arcgis.com](https://www.arcgis.com/home/item.html?id=83d81d9336c745fd839465beab885ab7). 
+
+\
+
+## Descarga y formato de archivos shapefile
+
+```{r message=FALSE, warning=FALSE}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Provincias_ETRS89_30N")
+
+
+# Guardamos el archivo shapefile
+
+shapefile_provincias <- readOGR("Provincias_ETRS89_30N.shp")
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_provincias <- tidy(shapefile_provincias)
+
+# primeras observaciones del dataset
+
+head(data_provincias)
+
+```
+
+\
+
+De nuevo vemos que el dataset creado contiene información del "id" pero no los nombres de las distintas provincias españolas. Obtenemos de nuevo los nombres del archivo shapefile original y realizamos el mismo ejercicio del punto anterior para obtener en nuestro dataframe una columna para el "id" y otra con el nombre de cada provincia española junto a la información de cada provincia para su representación gráfica.  
+
+\
+
+```{r}
+
+nombres_provincias <- data.frame(shapefile_provincias$Texto)
+
+head(nombres_provincias)
+
+nombres_provincias$id <- as.character(seq(0, nrow(nombres_provincias)-1))
+
+head(nombres_provincias)
+
+```
+
+\
+
+```{r}
+
+data_provincias_mapa <- left_join(data_provincias, nombres_provincias, by = "id")
+
+head(data_provincias_mapa)
+
+```
+
+\
+
+## Mapa de las Provincias usando ggplot
+
+Utilizamos el mismo código para realizar un mapa similar al anterior pero, en este caso, identificando las **provincias españolas**. 
+
+\
+
+```{r, out.width = "80%", fig.align='center'}
+
+data_provincias_mapa %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "violetred4",
+               color = "white") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "darkgrey", size= 0.5)) +
+  ggtitle("Provincias Españolas")
+
+```
+
+
+# Municipios Españoles
+ 
+\
+
+Por último realizamos un mapa donde se representen los distintos **municipios de España**. En este caso el archivo shapefile con información geográfica de los municipios españoles lo descargamos de [opendata.esri.es](https://opendata.esri.es/datasets/53229f5912e04f1ba6dddb70a5abeb72_0). La operativa es similar a la realizada en el punto anterior aunque en lugar de utilizar los nombres de los municipios **utilizaremos los códigos provistos por el INE** (CODIGOINE).  
+
+\
+
+## Descarga y formato de archivos shapefile
+
+```{r message=FALSE, warning=FALSE}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Municipios_IGN")
+
+# Guardamos el archivo shapefile
+
+shapefile_municipios <- readOGR("Municipios_IGN.shp")
+
+# Para convertir el archivo shapefile en un dataframe utilizamos la función tidy()
+
+data_municipios <- tidy(shapefile_municipios)
+
+# primeras observaciones del dataset
+
+head(data_municipios)
+
+```
+
+\
+
+El código de los municipios se encuentra en el archivo original con el nombre CODIGOINE. Guardamos los códigos en un nuevo data frame llamado `codigo_municipios`. Al igual que hemos hecho anteriormente identificamos el "id" de cada municipio, que llamamos `codigo_municipios`, y, posteriormente, utilizando la función `left_join()` unimos los dos dataframes en uno llamado `data_municipios_mapa` que nos servirá para realizar el mapa final. 
+\
+
+```{r}
+
+codigo_municipios <- data.frame(shapefile_municipios$CODIGOINE)
+
+head(codigo_municipios)
+
+codigo_municipios$id <- as.character(seq(0, nrow(codigo_municipios)-1))
+
+head(codigo_municipios)
+
+```
+
+\
+
+```{r}
+
+data_municipios_mapa <- left_join(data_municipios, codigo_municipios, by = "id") %>%
+  mutate(codigo_ine = as.character(`shapefile_municipios.CODIGOINE`)) %>%
+  select(-`shapefile_municipios.CODIGOINE`)
+
+head(data_municipios_mapa)
+
+```
+
+\
+
+## Mapa de los Municipios usando ggplot
+
+Una vez tenemos el dataframe con la información geográfica de los municipios españoles junto al código (CODIGOINE) y el "id" de cada uno de ellos **procedemos a realizar el mapa correspondiente** utilizando `ggplot2` de la misma forma que hemos hecho en los subapartados previos. 
+
+\
+
+```{r, fig.align='center', fig.height=5, fig.width=6, out.width="100%"}
+
+data_municipios_mapa %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "violetred4",
+               color = "white",
+               size = 0.05) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_rect(colour= "darkgrey", size= 0.5)) +
+  ggtitle("Municipios Españoles")
+
+```
+
+\
+
+#  Mapa del porcentaje de Riesgo de Pobreza por Comunidad Autónoma
+
+\
+
+A modo de ejemplo vamos a representar el **porcentaje de Riesgo de Pobreza por Comunidad Autónoma** en un mapa. Los [datos](https://www.ine.es/jaxiT3/Tabla.htm?t=9963&L=0), referentes al año 2017, los obtenemos del Instituto Nacional de Estadística.
+
+\
+
+```{r}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets")
+
+library(readxl)
+
+riesgo_pobreza <- read_excel("riesgo_pobreza.xls")
+
+head(riesgo_pobreza, n=20)
+
+```
+
+\
+
+Utilizamos la función `left_join()` para combinar el nuevo dataframe (`riesgo_pobreza`) con el que utilizamos previamente para realizar el mapa base (`data_ccaa_mapa`). 
+
+\
+
+```{r}
+
+riesgo_pobreza$id <- as.character(riesgo_pobreza$id)
+
+riesgo_pobreza_grafico <- data_ccaa_mapa %>%
+  left_join(riesgo_pobreza, by= "id")
+
+head(riesgo_pobreza_grafico)
+
+```
+
+\
+
+Por último **realizamos el gráfico** utilizando `ggplot2` como hemos hecho previamente. Como ya se ha expuesto, podemos customizar nuestro grafico utilizando las funciones de dicho paquete. En el siguiente mapa realizamos algunas modificaciones (color de fondo, tamaño del texto del título, subtítulo, leyenda, cambio en la posición de la leyenda, etc.) sobre el mapa previo para ejemplificar la forma en la que podemos aplicar dichas modificaciones a nuestro gusto.
+
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+riesgo_pobreza_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=Riesgo_pobreza), color= "white", size = 0.2) +
+  labs( title = "Tasa de Riesgo de Pobreza por Comunidades Autónomas",
+        subtitle = "Unidades: Porcentaje",
+        caption = "Fuente: INE",
+        fill = "Tasa (%)") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm"))
+  
+
+```
+
+\
+
+Como utilizamos valores continuos R utiliza un rango de colores azules para su representación gráfica. No obstante, nos puede interesar establecer **grupos o categorías de valores** para su representación. En este caso podemos calcular, por ejemplo, los quintiles de los nuestros valores y asignarles una categoría. 
+
+\
+
+```{r}
+
+quantile(riesgo_pobreza_grafico$Riesgo_pobreza, probs = c(0.2, 0.4, 0.6, 0.8))
+
+# En función de los resultados obtenidos establecemos nuestros cortes en los siguientes valores:
+corte <- c(12, 18, 24, 30)
+
+
+# Los valores mínimo y máximo son:
+
+val_min <- min(riesgo_pobreza_grafico$Riesgo_pobreza)
+val_max <- max(riesgo_pobreza_grafico$Riesgo_pobreza)
+
+
+# Y por tanto, los rangos serán los siguientes:
+
+breaks <- c(val_min, corte, val_max)
+
+riesgo_pobreza_grafico$breaks <- cut(riesgo_pobreza_grafico$Riesgo_pobreza,
+                                     breaks = breaks,
+                                     include.lowest = T)
+
+breaks_scale <- levels(riesgo_pobreza_grafico$breaks)
+labels_scale <- rev(breaks_scale)
+
+```
+
+\
+
+Con respecto a los colores a utilizar podemos indicar los colores de nuestra elección, como ya hemos realizado en algún post anterior, o podemos hacer uso de alguna **paleta de colores existente**. Un ejemplo de posibles paletas se encuentra en el paquete `wesanderson`, las cuales se pueden visualizar [aquí](https://github.com/karthik/wesanderson). Para ello cargamos la librería y guardamos una de las paletas (Darjeeling1). 
+
+\
+
+```{r}
+
+library(wesanderson)
+
+colores <- wes_palette("Darjeeling1", 5, type = "discrete")
+
+```
+
+\
+
+Por último **realizamos el gráfico** indicando los cortes (rangos) que nos interesan y los colores para cada una de las categorías de la siguiente manera:
+
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+riesgo_pobreza_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=breaks), color= "white", size = 0.2) +
+  labs( title = "Tasa de Riesgo de Pobreza por Comunidades Autónomas",
+        subtitle = "Unidades: Porcentaje",
+        caption = "Fuente: INE",
+        fill = "Tasa (%)") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_manual(
+    values = rev(colores),
+    breaks = rev(breaks_scale))
+
+```
+
+\ 
+
+En el último gráfico se visualiza claramente que las Comunidades Autónomas con menor tasa de riesgo de pobreza son el País Vasco y Navarra mientras que Extremadura, Andalucía y las Islas Canarias presentan los valores más elevados. 
+
+\
+
+#  Mapa de la Tasa de Mortalidad por Provincia
+
+\
+
+En esta ocasión vamos a representar en un mapa la **tasa de mortalidad (defunciones por mil habitantes) por provincia**. Los [datos](https://www.ine.es/FichasWeb/RegProvincias.do?fichas=4&busc_comu=&botonFichas=Ir+a+la+tabla+de+resultados), de nuevo, los obtenemos del Instituto Nacional de Estadística. 
+
+\
+
+```{r}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets")
+
+tasa_mortalidad <- read_excel("tasa_mortalidad.xls")
+
+head(tasa_mortalidad) 
+
+```
+
+\
+
+Utilizamos de nuevo la función `left_join()` para combinar el nuevo dataframe (`tasa_mortalidad`) con el que utilizamos previamente para realizar el mapa base (`data_provincias_mapa`). 
+
+\
+
+```{r}
+
+tasa_mortalidad$id <- as.character(tasa_mortalidad$id)
+
+tasa_mortalidad_grafico <- data_provincias_mapa %>%
+  left_join(tasa_mortalidad, by= "id")
+
+head(tasa_mortalidad_grafico)
+
+```
+
+\
+
+Por último **realizamos el gráfico** con `ggplot` usando el mismo theme que el utilizado en el mapa de las Comunidades Autónomas. Sin embargo, en esta ocasión, cambiamos la paleta de colores utilizando la función `scale_fill_gradient()` mediante la cual seleccionamos el color amarillo para los valores más bajos y el color rojo para los valores más altos. 
+ 
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+tasa_mortalidad_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= TM), color= "white", size = 0.2) +
+  labs( title = "Tasa Bruta de Mortalidad por Provincia",
+        subtitle = "Defunciones por mil habitantes",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_gradient(low = "yellow", high = "red")
+
+
+```
+
+\
+
+Para establecer **grupos o categorías de valores** como la realizada para las Comunidades Autónomas realizaremos una operativa similar a la realizada previamente. En primer lugar identificaremos los cortes el valor mínimo y máximo del rango.
+
+\
+
+```{r}
+
+quantile(tasa_mortalidad_grafico$TM, probs = c(0.2, 0.4, 0.6, 0.8))
+
+# En función de los resultados obtenidos establecemos nuestros cortes en los siguientes valores:
+corte <- c(8, 9.5, 10.5, 12)
+
+
+# Los valores mínimo y máximo son:
+
+val_min <- min(tasa_mortalidad_grafico$TM)
+val_max <- max(tasa_mortalidad_grafico$TM)
+
+
+# Y por tanto, los rangos serán los siguientes:
+
+breaks <- c(val_min, corte, val_max)
+
+tasa_mortalidad_grafico$breaks <- cut(tasa_mortalidad_grafico$TM,
+                                     breaks = breaks,
+                                     include.lowest = T)
+
+breaks_scale <- levels(tasa_mortalidad_grafico$breaks)
+labels_scale <- rev(breaks_scale)
+
+```
+
+\
+
+Por último **realizamos el gráfico** indicando los cortes (rangos) establecidos y los colores para cada una de las categorías. En esta ocasión cargamos una nueva paleta (Moonrise3) de la misma librería usada en previamente.
+
+\
+
+```{r}
+
+colores <- wes_palette("Moonrise3", 5, type = "discrete")
+
+```
+
+\
+
+```{r, out.width = "100%", fig.align='center'}
+
+tasa_mortalidad_grafico %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill=breaks), color= "white", size = 0.2) +
+  labs( title = "Tasa Bruta de Mortalidad por Provincia",
+        subtitle = "Defunciones por mil habitantes",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_manual(
+    values = rev(colores),
+    breaks = rev(breaks_scale))
+
+```
+
+\
+
+# Mapa de la Renta Media por Persona por Municipios Españoles
+
+\
+
+Por último vamos a realizar un **mapa a nivel de Municipios** donde se exponga la Renta Media por Persona en el año 2016, según los [datos](https://www.ine.es/experimental/atlas/exp_atlas_tab.htm#) obtenidos del INE. 
+
+\
+
+En primer lugar, haciendo uso de los códigos de los municipios que se pueden consultar en el [INE](https://www.ine.es/daco/daco42/codmun/codmun10/10codmunmapa.htm), vamos a comprobar, de forma aleatoria, la existencia de algunos de ellos utilizando el dataset utilizado previamente (data_municipios_mapa) y los representaremos gráficamente:
+
+\
+
+```{r, out.width = "60%", fig.align='center', fig.height=5, fig.width=6}
+
+data_municipios_mapa$codigo_ine <- as.numeric(data_municipios_mapa$codigo_ine)
+
+
+# Probando Abengibre (02001) en la Provincia de Albacete (2)
+
+prueba <- data_municipios_mapa %>%
+  filter(codigo_ine == 22001)
+
+prueba %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "blueviolet",
+               color = "white", 
+               size = 0.1) +
+  theme_minimal()
+
+
+# Probando Agost (03002) en la Provincia de Alicante (3)
+
+prueba <- data_municipios_mapa %>%
+  filter(codigo_ine == 03002)
+
+prueba %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "blueviolet",
+               color = "white", 
+               size = 0.1) +
+  theme_minimal()
+
+
+# Probando Allande (33001) en la Provincia de Asturias (33)
+
+prueba <- data_municipios_mapa %>%
+  filter(codigo_ine == 33001)
+
+prueba %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "blueviolet",
+               color = "white", 
+               size = 0.1) +
+  theme_minimal()
+
+```
+
+\
+
+En segundo lugar cargamos el archivo donde se encuentra la información de la **Renta Media** (por persona) en cada Municipio. 
+
+\
+
+```{r}
+
+setwd("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets")
+
+renta_media <- read_excel("renta_media.xls")
+
+head(renta_media)
+
+```
+
+\
+
+En el dataframe el nombre del código y del municipio aparecen en la misma columna (Municipio). Para **separar ambos conceptos en dos columnas** utilizamos la función `separate()`.
+
+\
+
+```{r}
+
+renta_media_separado <- renta_media %>%
+  separate(Municipio, c("cod", "municipio"), 
+           sep = " ", 
+           extra = "merge") 
+
+head(renta_media_separado)
+
+
+# Nombramos la columna codigo_ine 
+
+renta_media_separado$codigo_ine <- as.numeric(renta_media_separado$cod)
+
+head(renta_media_separado)
+
+```
+
+\
+
+**Unimos los dos dataframes** usando `left_join()`.  
+
+\
+
+```{r}
+
+renta_media_grafico <- data_municipios_mapa %>%
+  left_join(renta_media_separado, by = "codigo_ine")
+
+```
+
+\
+
+Antes de realizar el mapa general vamos a visualizar previamente algunas provincias, también seleccionadas de forma aleatoria, con el objetivo de representar graficamente los distintos municipios de cada una de ellas atendiendo a su Renta Media. Aprovechamos este ejercicio para utilizar diferentes **opciones para seleccionar colores** a la hora de representar los municipios. Nótese que los municipios coloreados en gris son aquellos en los que el INE no provee información sobre la Renta Media. 
+
+\
+
+```{r, out.width = "60%", fig.align='center', warning=FALSE, fig.height=5, fig.width=6}
+
+
+# Provincia de Castellón
+
+renta_media_grafico %>%
+  filter(Provincia =="Castellón") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Castellón",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) 
+
+
+# Provincia de Gipuzkoa
+
+renta_media_grafico %>%
+  filter(Provincia =="Guipozkoa") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Gipuzkoa",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.3),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_gradient(low = "red", high = "green")
+
+
+# Provincia de Zaragoza
+
+renta_media_grafico %>%
+  filter(Provincia =="Zaragoza") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Zaragoza",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.8),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_gradientn(colours= terrain.colors(10))
+
+
+# Provincia de Valencia
+
+renta_media_grafico %>%
+  filter(Provincia =="Valencia") %>%
+  ggplot(aes(x=long, y= lat, group = group)) +
+  geom_polygon(aes(fill= as.double(renta_media)), color= "white", size = 0.1) +
+  labs( title = "Valencia",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 12, hjust = 0),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.8),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm"))  +
+  scale_fill_gradientn(colours= rainbow(4))
+
+
+```
+
+\
+
+Para finalizar realizamos el **mapa general** donde representaremos el conjunto de Municipios Españoles según su Renta Media por persona. Sin entrar en detalle, siendo posible identificar diversas dinámicas, en términos generales el mapa refleja claramente la notable diferencia existente entre el norte y el sur del país en términos de Renta Media.  
+
+\
+
+```{r, out.width = "100%", fig.align = 'center', warning = FALSE, fig.height=5, fig.width=6}
+
+renta_media_grafico %>%
+  ggplot(aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = as.numeric(renta_media)), 
+               color = "snow", 
+               size = 0.001) +
+  labs( title = "Mapa de los Municipios Españoles",
+        subtitle = "Renta Media por Persona en 2016",
+        caption = "Fuente: INE",
+        fill = "Renta Media") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_blank(),
+    panel.background = element_blank(),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 6, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 7),
+    legend.text = element_text(color = "grey40", size = 5, hjust = 0),
+    legend.position = c(0.93, 0.2)) +
+  scale_fill_gradientn(colours= rainbow(5))
+
+
+```
+
+ 

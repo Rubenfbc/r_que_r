@@ -6,15 +6,87 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 31 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Bar chart Race</title>
+      <link>/tags/bar-chart-race/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/bar-chart-race/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dplyr</title>
+      <link>/tags/dplyr/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/dplyr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot2</title>
+      <link>/tags/ggplot2/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ggplot2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>numbers</title>
+      <link>/tags/numbers/</link>
+      <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/numbers/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>números</title>
+      <link>/tags/n%C3%BAmeros/</link>
+      <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/n%C3%BAmeros/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cambio estructural</title>
+      <link>/tags/cambio-estructural/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cambio-estructural/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CCAA</title>
+      <link>/tags/ccaa/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ccaa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>gganimate</title>
       <link>/tags/gganimate/</link>
-      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/gganimate/</guid>
       <description></description>
@@ -44,33 +116,6 @@
       <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/babynames/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>dplyr</title>
-      <link>/tags/dplyr/</link>
-      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/dplyr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ggplot2</title>
-      <link>/tags/ggplot2/</link>
-      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ggplot2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tidyverse</title>
-      <link>/tags/tidyverse/</link>
-      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     
