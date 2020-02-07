@@ -23,7 +23,7 @@ En este breve post se expondrán algunas posibilidades para realizar waffle char
 Paquetes
 library(tidyverse)library(waffle)library(babynames)library(extrafont)
 El paquete waffle
-En primer lugar vamos a realizar un waffle chart utilizando el paquete waffle previamente cargado. Utilizaremos el dataframe babynames del paquete con el mismo nombre, donde se recogen los nombres de los recién nacidos en Estados Unidos desde 1880 a 2017 diferenciando por sexo del bebé.</description>
+En primer lugar vamos a realizar un waffle chart utilizando el paquete {waffle} previamente cargado. Utilizaremos el dataframe babynames del paquete con el mismo nombre, donde se recogen los nombres de los recién nacidos en Estados Unidos desde 1880 a 2017 diferenciando por sexo del bebé.</description>
     </item>
     
   </channel>

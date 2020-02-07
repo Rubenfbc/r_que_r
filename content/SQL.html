@@ -1,0 +1,1257 @@
+---
+title: "Principales operadores de SQL en R con el paquete {sqldf}"
+author: "Rubén F. Bustillo"
+date: '2019-12-03'
+tags:
+- SQL
+- sqldf
+categories:
+- R
+- SQL
+---
+
+
+
+<p><strong>Re</strong></p>
+<p>En el presente post se abordará la función <code>sqldf( )</code> única función del paquete {sqldf}, mediante la cual es posible utilizar las formulaciones y la sintaxis convencional de SQL en el entorno de R.</p>
+<p><br />
+</p>
+<div id="paquetes" class="section level1">
+<h1>Paquetes</h1>
+<p><br />
+</p>
+<p>El paquete {sqldf} consiste en una función <code>sqldf()</code>. Dicha función se acompaña con el comando SELECT de SQL seguido de la sintaxis tradicional de SQL (Structured Query Language). Esta función nos permite trabajar con las formulaciones de SQL sobre dataframes del entorno de R. En este post realizaremos algunos ejercicios para explicar su funcionalidad aplicando la función <code>sqldf()</code> sobre un par de dataframes con el objetivo de responder a una serie de preguntas sobre los mismos.</p>
+<p><br />
+</p>
+<p>En primer lugar descargamos el paquete {sqldf} y el paquete {tidyverse} que nos servirá para comparar la sintaxis de SQL con la sintaxis tradicional de {dplyr}. En <a href="https://rquer.netlify.com/babynames/">este post anterior</a> se expone en mayor profundidad las principales funcionalidades del paquete {tidyverse}.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(sqldf)
+library(tidyverse)
+library(Hmisc)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="datasets" class="section level1">
+<h1>Datasets</h1>
+<p><br />
+</p>
+<p>En este ejercicio vamos a utilizar algunos datasets obtenidos del <a href="https://github.com/rfordatascience/tidytuesday">proyecto tidytuesday</a>, un proyecto semanal creado para la compartir conocimientos con la comunidad R4DS (R for data science). Utilizaremos el dataset <code>Roman Emperors</code>, dataset compilado con data obtenida de <a href="https://en.wikipedia.org/wiki/List_of_Roman_emperors">Wikipedia</a> por <a href="https://twitter.com/geokaramanis">Georgios Karamanis</a>, donde encontraremos diversa información sobre los <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-08-13">emperadores romanos</a> (nombre, fecha de nacimiento, causa de la muerte, dinastía, etc.). En segundo lugar utilizaremos el dataset <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-11-26">Student Loan Payments</a>, con datos obtenidos por <a href="https://twitter.com/AllbriteAllday">Alex Albright</a> del <a href="https://studentaid.ed.gov/sa/about/data-center/student/default">Departamento de Educación de Estados Unidos</a>. Este dataset provee diversa información sobre los préstamos de estudios concedidos a los estudiantes de EEUU (agencia, año, cantidad total amortizada, pagos voluntarios, etc.). No obstante, nótese que el objetivo del post no es profundizar en los datasets seleccionados sino que los utilizaremos como excusa para ejemplificar la funcionalidad del paquete {sqldf}.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+emperors &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-13/emperors.csv&quot;)
+
+loans &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-26/loans.csv&quot;)
+</code></pre>
+<p><br />
+</p>
+</div>
+<div id="examinando-los-datasets" class="section level1">
+<h1>Examinando los datasets</h1>
+<p><br />
+</p>
+<p><strong>En R</strong> podemos echar un vistazo a las <strong>particularidades de nuestros datasets</strong> con la función <code>glimpse()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+glimpse(emperors)
+## Observations: 68
+## Variables: 16
+## $ index       &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, ...
+## $ name        &lt;chr&gt; &quot;Augustus&quot;, &quot;Tiberius&quot;, &quot;Caligula&quot;, &quot;Claudius&quot;, &quot;Nero&quot;,...
+## $ name_full   &lt;chr&gt; &quot;IMPERATOR CAESAR DIVI FILIVS AVGVSTVS&quot;, &quot;TIBERIVS CAES...
+## $ birth       &lt;date&gt; 0062-09-23, 0041-11-16, 0012-08-31, 0009-08-01, 0037-1...
+## $ death       &lt;date&gt; 0014-08-19, 0037-03-16, 0041-01-24, 0054-10-13, 0068-0...
+## $ birth_cty   &lt;chr&gt; &quot;Rome&quot;, &quot;Rome&quot;, &quot;Antitum&quot;, &quot;Lugdunum&quot;, &quot;Antitum&quot;, &quot;Terr...
+## $ birth_prv   &lt;chr&gt; &quot;Italia&quot;, &quot;Italia&quot;, &quot;Italia&quot;, &quot;Gallia Lugdunensis&quot;, &quot;It...
+## $ rise        &lt;chr&gt; &quot;Birthright&quot;, &quot;Birthright&quot;, &quot;Birthright&quot;, &quot;Birthright&quot;,...
+## $ reign_start &lt;date&gt; 0026-01-16, 0014-09-18, 0037-03-18, 0041-01-25, 0054-1...
+## $ reign_end   &lt;date&gt; 0014-08-19, 0037-03-16, 0041-01-24, 0054-10-13, 0068-0...
+## $ cause       &lt;chr&gt; &quot;Assassination&quot;, &quot;Assassination&quot;, &quot;Assassination&quot;, &quot;Ass...
+## $ killer      &lt;chr&gt; &quot;Wife&quot;, &quot;Other Emperor&quot;, &quot;Senate&quot;, &quot;Wife&quot;, &quot;Senate&quot;, &quot;O...
+## $ dynasty     &lt;chr&gt; &quot;Julio-Claudian&quot;, &quot;Julio-Claudian&quot;, &quot;Julio-Claudian&quot;, &quot;...
+## $ era         &lt;chr&gt; &quot;Principate&quot;, &quot;Principate&quot;, &quot;Principate&quot;, &quot;Principate&quot;,...
+## $ notes       &lt;chr&gt; &quot;birth, reign.start are BCE. Assign negative for correc...
+## $ verif_who   &lt;chr&gt; &quot;Reddit user zonination&quot;, &quot;Reddit user zonination&quot;, &quot;Re...
+glimpse(loans)
+## Observations: 291
+## Variables: 10
+## $ agency_name        &lt;chr&gt; &quot;Account Control Technology, Inc.&quot;, &quot;Allied Inte...
+## $ year               &lt;dbl&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, ...
+## $ quarter            &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, ...
+## $ starting           &lt;dbl&gt; 5807704381, 3693337631, 2364391549, 704216670, 2...
+## $ added              &lt;dbl&gt; 1040570567, NA, NA, NA, NA, NA, 1040946705, NA, ...
+## $ total              &lt;dbl&gt; 122602641.8, 113326847.1, 83853003.0, 99643903.3...
+## $ consolidation      &lt;dbl&gt; 20081893.9, 11533808.6, 7377702.9, 3401361.4, 89...
+## $ rehabilitation     &lt;dbl&gt; 90952573, 86967994, 64227391, 85960328, 58395653...
+## $ voluntary_payments &lt;dbl&gt; 5485506.86, 4885225.08, 3939866.10, 2508999.62, ...
+## $ wage_garnishments  &lt;dbl&gt; 6082668.43, 9939819.25, 8308043.15, 7773214.04, ...</code></pre>
+<p><br />
+</p>
+<p>Cómo se ha señalado previamente, el paquete {sqldf} se compone de una función <code>sqldf()</code> que nos sirve para utilizar la sintaxis de SQL en el entorno de R. Consecuentemente, si queremos extraer todas las columnas y observaciones del dataset <code>emperors</code> utilizando esta función, y teniendo en cuenta que en SQL el asterisco (*) sirve para seleccionar el conjunto de observaciones y/o columnas, podríamos indicar lo siguiente:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+todo_df &lt;- sqldf(&#39;SELECT * FROM emperors&#39;)
+head(todo_df)
+##   index     name                                    name_full      birth
+## 1     1 Augustus        IMPERATOR CAESAR DIVI FILIVS AVGVSTVS 0062-09-23
+## 2     2 Tiberius TIBERIVS CAESAR DIVI AVGVSTI FILIVS AVGVSTVS 0041-11-16
+## 3     3 Caligula      GAIVS IVLIVS CAESAR AVGVSTVS GERMANICVS 0012-08-31
+## 4     4 Claudius TIBERIVS CLAVDIVS CAESAR AVGVSTVS GERMANICVS 0009-08-01
+## 5     5     Nero     NERO CLAVDIVS CAESAR AVGVSTVS GERMANICVS 0037-12-15
+## 6     6    Galba      SERVIVS SVLPICIVS GALBA CAESAR AVGVSTVS 0002-12-24
+##        death birth_cty          birth_prv         rise reign_start  reign_end
+## 1 0014-08-19      Rome             Italia   Birthright  0026-01-16 0014-08-19
+## 2 0037-03-16      Rome             Italia   Birthright  0014-09-18 0037-03-16
+## 3 0041-01-24   Antitum             Italia   Birthright  0037-03-18 0041-01-24
+## 4 0054-10-13  Lugdunum Gallia Lugdunensis   Birthright  0041-01-25 0054-10-13
+## 5 0068-06-09   Antitum             Italia   Birthright  0054-10-13 0068-06-09
+## 6 0069-01-15 Terracina             Italia Seized Power  0068-06-08 0069-01-15
+##           cause        killer        dynasty        era
+## 1 Assassination          Wife Julio-Claudian Principate
+## 2 Assassination Other Emperor Julio-Claudian Principate
+## 3 Assassination        Senate Julio-Claudian Principate
+## 4 Assassination          Wife Julio-Claudian Principate
+## 5       Suicide        Senate Julio-Claudian Principate
+## 6 Assassination Other Emperor        Flavian Principate
+##                                                                                                 notes
+## 1 birth, reign.start are BCE. Assign negative for correct ISO 8601 dates. Cause may have been Natural
+## 2 birth is BCE. Assign negative for correct ISO 8601 dates. Possibly assassinated by praetorian guard
+## 3                                           assassination may have only involved the Praetorian Guard
+## 4                                           birth is BCE. Assign negative for correct ISO 8601 dates.
+## 5                                                                                                &lt;NA&gt;
+## 6                                           birth is BCE. Assign negative for correct ISO 8601 dates.
+##                verif_who
+## 1 Reddit user zonination
+## 2 Reddit user zonination
+## 3 Reddit user zonination
+## 4 Reddit user zonination
+## 5 Reddit user zonination
+## 6 Reddit user zonination</code></pre>
+<p><br />
+</p>
+<p>En el ejemplo anterior hemos guardado el dataframe como <code>todo_df</code> y con la función <code>head()</code> del paquete {utils} de R hemos indicado que queremos observar únicamente las primeras filas del dataframe. Con la función <code>sqldf()</code> podemos también indicar que queremos que nos devuelva únicamente un número de filas estableciendo un límite. Para obtener, por ejemplo, las seis primeras filas al igual que hemos obtenido con la función <code>head()</code> estableceríamos el siguiente código:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT * 
+      FROM emperors 
+      LIMIT 6&#39;)
+##   index     name                                    name_full      birth
+## 1     1 Augustus        IMPERATOR CAESAR DIVI FILIVS AVGVSTVS 0062-09-23
+## 2     2 Tiberius TIBERIVS CAESAR DIVI AVGVSTI FILIVS AVGVSTVS 0041-11-16
+## 3     3 Caligula      GAIVS IVLIVS CAESAR AVGVSTVS GERMANICVS 0012-08-31
+## 4     4 Claudius TIBERIVS CLAVDIVS CAESAR AVGVSTVS GERMANICVS 0009-08-01
+## 5     5     Nero     NERO CLAVDIVS CAESAR AVGVSTVS GERMANICVS 0037-12-15
+## 6     6    Galba      SERVIVS SVLPICIVS GALBA CAESAR AVGVSTVS 0002-12-24
+##        death birth_cty          birth_prv         rise reign_start  reign_end
+## 1 0014-08-19      Rome             Italia   Birthright  0026-01-16 0014-08-19
+## 2 0037-03-16      Rome             Italia   Birthright  0014-09-18 0037-03-16
+## 3 0041-01-24   Antitum             Italia   Birthright  0037-03-18 0041-01-24
+## 4 0054-10-13  Lugdunum Gallia Lugdunensis   Birthright  0041-01-25 0054-10-13
+## 5 0068-06-09   Antitum             Italia   Birthright  0054-10-13 0068-06-09
+## 6 0069-01-15 Terracina             Italia Seized Power  0068-06-08 0069-01-15
+##           cause        killer        dynasty        era
+## 1 Assassination          Wife Julio-Claudian Principate
+## 2 Assassination Other Emperor Julio-Claudian Principate
+## 3 Assassination        Senate Julio-Claudian Principate
+## 4 Assassination          Wife Julio-Claudian Principate
+## 5       Suicide        Senate Julio-Claudian Principate
+## 6 Assassination Other Emperor        Flavian Principate
+##                                                                                                 notes
+## 1 birth, reign.start are BCE. Assign negative for correct ISO 8601 dates. Cause may have been Natural
+## 2 birth is BCE. Assign negative for correct ISO 8601 dates. Possibly assassinated by praetorian guard
+## 3                                           assassination may have only involved the Praetorian Guard
+## 4                                           birth is BCE. Assign negative for correct ISO 8601 dates.
+## 5                                                                                                &lt;NA&gt;
+## 6                                           birth is BCE. Assign negative for correct ISO 8601 dates.
+##                verif_who
+## 1 Reddit user zonination
+## 2 Reddit user zonination
+## 3 Reddit user zonination
+## 4 Reddit user zonination
+## 5 Reddit user zonination
+## 6 Reddit user zonination</code></pre>
+<p><br />
+</p>
+</div>
+<div id="select" class="section level1">
+<h1>SELECT</h1>
+<p><br />
+</p>
+<p>Como hemos visto en el apartado anterior, el asterisco (*) sirve para seleccionar el conjunto de variables y observaciones del dataframe. Sin embargo, es probable que queramos <strong>identificar únicamente las observaciones para un conjunto de variables</strong> del dataset original. Para ello utilizaremos SELECT, que se asemeja en gran medida a la función <code>select()</code> del paquete {dplyr}. Pongamos que nos interesa únicamente extraer el <strong>nombre del emperador, la dinastía, la fecha de nacimiento, la causa de la muerte, el asesino</strong> de entre todas las variables del dataframe.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, dynasty, birth, killer, cause 
+      FROM emperors 
+      LIMIT 10&#39;)
+##         name        dynasty      birth        killer          cause
+## 1   Augustus Julio-Claudian 0062-09-23          Wife  Assassination
+## 2   Tiberius Julio-Claudian 0041-11-16 Other Emperor  Assassination
+## 3   Caligula Julio-Claudian 0012-08-31        Senate  Assassination
+## 4   Claudius Julio-Claudian 0009-08-01          Wife  Assassination
+## 5       Nero Julio-Claudian 0037-12-15        Senate        Suicide
+## 6      Galba        Flavian 0002-12-24 Other Emperor  Assassination
+## 7       Otho        Flavian 0032-04-28 Other Emperor        Suicide
+## 8  Vitellius        Flavian 0015-09-24 Other Emperor  Assassination
+## 9  Vespasian        Flavian 0009-11-17       Disease Natural Causes
+## 10     Titus        Flavian 0039-12-30       Disease Natural Causes</code></pre>
+<p><br />
+</p>
+<div id="as" class="section level2">
+<h2>AS</h2>
+<p>Es posible que nos interese <strong>modificar el nombre de las columnas</strong> del dataset resultante. En SQL estos cambios los podemos realizar fácilmente con AS. Veamos por ejemplo cómo podríamos cambiar el nombre de todas las variables seleccionadas en el punto anterior.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name AS Nombre, 
+              dynasty AS Dinastía, 
+              birth AS Nacimiento, 
+              killer AS Asesino, 
+              cause AS Causa_muerte 
+      FROM emperors 
+      LIMIT 10&#39;)
+##       Nombre       Dinastía Nacimiento       Asesino   Causa_muerte
+## 1   Augustus Julio-Claudian    -696617          Wife  Assassination
+## 2   Tiberius Julio-Claudian    -704233 Other Emperor  Assassination
+## 3   Caligula Julio-Claudian    -714902        Senate  Assassination
+## 4   Claudius Julio-Claudian    -716028          Wife  Assassination
+## 5       Nero Julio-Claudian    -705665        Senate        Suicide
+## 6      Galba        Flavian    -718440 Other Emperor  Assassination
+## 7       Otho        Flavian    -707722 Other Emperor        Suicide
+## 8  Vitellius        Flavian    -713783 Other Emperor  Assassination
+## 9  Vespasian        Flavian    -715920       Disease Natural Causes
+## 10     Titus        Flavian    -704920       Disease Natural Causes</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong>, para seleccionar las columnas mencionadas con la función <code>select()</code> de {dplyr} indicamos:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+emperors %&gt;%
+  select(name, dynasty, birth, killer, cause) %&gt;%
+  head(10)
+## # A tibble: 10 x 5
+##    name      dynasty        birth      killer        cause         
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;date&gt;     &lt;chr&gt;         &lt;chr&gt;         
+##  1 Augustus  Julio-Claudian 0062-09-23 Wife          Assassination 
+##  2 Tiberius  Julio-Claudian 0041-11-16 Other Emperor Assassination 
+##  3 Caligula  Julio-Claudian 0012-08-31 Senate        Assassination 
+##  4 Claudius  Julio-Claudian 0009-08-01 Wife          Assassination 
+##  5 Nero      Julio-Claudian 0037-12-15 Senate        Suicide       
+##  6 Galba     Flavian        0002-12-24 Other Emperor Assassination 
+##  7 Otho      Flavian        0032-04-28 Other Emperor Suicide       
+##  8 Vitellius Flavian        0015-09-24 Other Emperor Assassination 
+##  9 Vespasian Flavian        0009-11-17 Disease       Natural Causes
+## 10 Titus     Flavian        0039-12-30 Disease       Natural Causes</code></pre>
+<p><br />
+</p>
+</div>
+</div>
+<div id="order-by" class="section level1">
+<h1>ORDER BY</h1>
+<p><br />
+</p>
+<p>En SQL podemos utilizar ORDER BY para ordenar las observaciones del dataset al estilo de la función <code>arrange()</code> del paquete {dplyr}. De esta forma pongamos, por ejemplo, que queremos <strong>ordenar el dataset con las variables previamente seleccionadas según la fecha de nacimiento</strong>, bien sea en orden ascendente o descendente. Para ello utilizamos ORDER BY junto a ASC o DESC (y seleccionamos únicamente las 10 primeras observaciones con LIMIT por motivos de espacio)</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Orden ascendente:
+
+sqldf(&#39;SELECT name, dynasty, birth, killer, cause 
+      FROM emperors 
+      ORDER BY birth ASC 
+      LIMIT 10&#39;)
+##          name        dynasty      birth        killer          cause
+## 1     Florian        Gordian       &lt;NA&gt;      Own Army  Assassination
+## 2    Numerian        Gordian       &lt;NA&gt;       Unknown        Unknown
+## 3     Carinus        Gordian       &lt;NA&gt; Opposing Army Died in Battle
+## 4  Severus II  Constantinian       &lt;NA&gt; Other Emperor  Assassination
+## 5    Vetranio  Constantinian       &lt;NA&gt;       Unknown        Unknown
+## 6       Galba        Flavian 0002-12-24 Other Emperor  Assassination
+## 7    Claudius Julio-Claudian 0009-08-01          Wife  Assassination
+## 8   Vespasian        Flavian 0009-11-17       Disease Natural Causes
+## 9    Caligula Julio-Claudian 0012-08-31        Senate  Assassination
+## 10  Vitellius        Flavian 0015-09-24 Other Emperor  Assassination
+
+# Orden descendente:
+
+sqldf(&#39;SELECT name, dynasty, birth, killer, cause 
+      FROM emperors 
+      ORDER BY birth DESC 
+      LIMIT 10&#39;)
+##              name       dynasty      birth        killer          cause
+## 1  Valentinian II   Valentinian 0371-01-01       Unknown        Suicide
+## 2         Gratian   Valentinian 0359-04-18      Own Army  Assassination
+## 3    Theodosius I    Theodosian 0347-01-11       Disease Natural Causes
+## 4          Julian Constantinian 0331-07-01 Opposing Army Died in Battle
+## 5          Jovian Constantinian 0331-01-01          Fire Natural Causes
+## 6          Valens   Valentinian 0328-01-01 Opposing Army Died in Battle
+## 7   Valentinian I   Valentinian 0321-07-03      Aneurism Natural Causes
+## 8        Constans Constantinian 0320-01-01       Usurper  Assassination
+## 9   Consantius II Constantinian 0317-08-07       Disease Natural Causes
+## 10 Constantine II Constantinian 0316-02-01 Other Emperor      Execution</code></pre>
+<p><br />
+</p>
+<p>De forma similar podemos <strong>utilizar diversos criterios para ordenar el dataset</strong>. Pongamos que nos interesa ordenar el dataset, en primer lugar, según la dinastía, después por la causa de la muerte y en tercer lugar según su asesino, todos los criterios de forma ascendente.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, dynasty, birth, cause, killer 
+      FROM emperors 
+      ORDER BY dynasty ASC, cause ASC, killer ASC 
+      LIMIT 20&#39;)
+##                     name       dynasty      birth          cause
+## 1             Severus II Constantinian       &lt;NA&gt;  Assassination
+## 2               Constans Constantinian 0320-01-01  Assassination
+## 3                 Julian Constantinian 0331-07-01 Died in Battle
+## 4              Maxentius Constantinian 0278-01-01      Execution
+## 5           Maximinus II Constantinian 0270-11-20      Execution
+## 6             Lucinius I Constantinian 0250-01-01      Execution
+## 7         Constantine II Constantinian 0316-02-01      Execution
+## 8             Diocletian Constantinian 0244-12-22 Natural Causes
+## 9               Galerius Constantinian 0260-01-01 Natural Causes
+## 10 Constantine the Great Constantinian 0272-02-27 Natural Causes
+## 11         Consantius II Constantinian 0317-08-07 Natural Causes
+## 12                Jovian Constantinian 0331-01-01 Natural Causes
+## 13         Constantius I Constantinian 0250-03-31 Natural Causes
+## 14              Maximian Constantinian 0250-01-01        Suicide
+## 15              Vetranio Constantinian       &lt;NA&gt;        Unknown
+## 16              Domitian       Flavian 0051-10-24  Assassination
+## 17                 Galba       Flavian 0002-12-24  Assassination
+## 18             Vitellius       Flavian 0015-09-24  Assassination
+## 19             Vespasian       Flavian 0009-11-17 Natural Causes
+## 20                 Titus       Flavian 0039-12-30 Natural Causes
+##             killer
+## 1    Other Emperor
+## 2          Usurper
+## 3    Opposing Army
+## 4    Other Emperor
+## 5    Other Emperor
+## 6    Other Emperor
+## 7    Other Emperor
+## 8          Disease
+## 9          Disease
+## 10         Disease
+## 11         Disease
+## 12            Fire
+## 13         Unknown
+## 14   Other Emperor
+## 15         Unknown
+## 16 Court Officials
+## 17   Other Emperor
+## 18   Other Emperor
+## 19         Disease
+## 20         Disease</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong>, como se ha señalado, indicando los mismos criterios de selección y utilizando la función <code>arrange()</code> del paquete {dplyr} obtenemos el mismo resultado.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+emperors %&gt;%
+  select(name, dynasty, birth, cause, killer) %&gt;%
+  arrange(dynasty, cause, killer) %&gt;%
+  head(20)
+## # A tibble: 20 x 5
+##    name                  dynasty       birth      cause          killer         
+##    &lt;chr&gt;                 &lt;chr&gt;         &lt;date&gt;     &lt;chr&gt;          &lt;chr&gt;          
+##  1 Severus II            Constantinian NA         Assassination  Other Emperor  
+##  2 Constans              Constantinian 0320-01-01 Assassination  Usurper        
+##  3 Julian                Constantinian 0331-07-01 Died in Battle Opposing Army  
+##  4 Maxentius             Constantinian 0278-01-01 Execution      Other Emperor  
+##  5 Maximinus II          Constantinian 0270-11-20 Execution      Other Emperor  
+##  6 Lucinius I            Constantinian 0250-01-01 Execution      Other Emperor  
+##  7 Constantine II        Constantinian 0316-02-01 Execution      Other Emperor  
+##  8 Diocletian            Constantinian 0244-12-22 Natural Causes Disease        
+##  9 Galerius              Constantinian 0260-01-01 Natural Causes Disease        
+## 10 Constantine the Great Constantinian 0272-02-27 Natural Causes Disease        
+## 11 Consantius II         Constantinian 0317-08-07 Natural Causes Disease        
+## 12 Jovian                Constantinian 0331-01-01 Natural Causes Fire           
+## 13 Constantius I         Constantinian 0250-03-31 Natural Causes Unknown        
+## 14 Maximian              Constantinian 0250-01-01 Suicide        Other Emperor  
+## 15 Vetranio              Constantinian NA         Unknown        Unknown        
+## 16 Domitian              Flavian       0051-10-24 Assassination  Court Officials
+## 17 Galba                 Flavian       0002-12-24 Assassination  Other Emperor  
+## 18 Vitellius             Flavian       0015-09-24 Assassination  Other Emperor  
+## 19 Vespasian             Flavian       0009-11-17 Natural Causes Disease        
+## 20 Titus                 Flavian       0039-12-30 Natural Causes Disease</code></pre>
+<p><br />
+</p>
+</div>
+<div id="count-distinct" class="section level1">
+<h1>COUNT / DISTINCT</h1>
+<p><br />
+</p>
+<p>La función COUNT nos permite identificar el <strong>número de filas que no contienen valores NA</strong>. En el ejemplo de los emperadores romanos, al aplicar este operador a dos columnas distintas comprobamos que el valor obtenido para la columna <code>birth_cty</code> es menor (51) que la columna <code>name</code> de los emperadores (68), indicando que existen 17 valores NA en dicha variable.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT COUNT(name) AS num_cols
+      FROM emperors&#39;)
+##   num_cols
+## 1       68
+
+sqldf(&#39;SELECT COUNT(birth_cty) AS num_cols
+      FROM emperors&#39;)
+##   num_cols
+## 1       51</code></pre>
+<p><br />
+</p>
+<p>El comando DISTINCT nos devuelve las <strong>observaciones, eliminando las posibles repeticiones</strong>. En el siguiente comando observamos, con la función <code>dim()</code>, que existen 68 observaciones en la variable <code>name</code>, una por cada emperador, mientras que existen 31 ciudades (30 ciudades y un NA) en la variable <code>birth_cities</code> debido a la existencia de ciudades que han visto nacer a más de un emperador.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+names &lt;- sqldf(&#39;SELECT DISTINCT name 
+      FROM emperors&#39;)
+
+dim(names)
+## [1] 68  1
+head(names, n=10)
+##         name
+## 1   Augustus
+## 2   Tiberius
+## 3   Caligula
+## 4   Claudius
+## 5       Nero
+## 6      Galba
+## 7       Otho
+## 8  Vitellius
+## 9  Vespasian
+## 10     Titus
+
+
+
+birth_cities &lt;- sqldf(&#39;SELECT DISTINCT birth_cty 
+      FROM emperors&#39;)
+dim(birth_cities)
+## [1] 31  1
+head(birth_cities, n=10)
+##     birth_cty
+## 1        Rome
+## 2     Antitum
+## 3    Lugdunum
+## 4   Terracina
+## 5  Terentinum
+## 6   Falacrine
+## 7       Narni
+## 8     Italica
+## 9    Lanuvium
+## 10       Alba</code></pre>
+<p><br />
+</p>
+<p>El comando DISTINCT se corresponde a la popular función <code>unique()</code> <strong>de R</strong>. Consecuentemente las siguientes expresiones devolverán el mismo resultado</p>
+<p><br />
+</p>
+<pre class="r"><code>
+names_2 &lt;- unique(emperors$name)
+dim(names_2)
+## NULL
+head(names_2, n=10)
+##  [1] &quot;Augustus&quot;  &quot;Tiberius&quot;  &quot;Caligula&quot;  &quot;Claudius&quot;  &quot;Nero&quot;      &quot;Galba&quot;    
+##  [7] &quot;Otho&quot;      &quot;Vitellius&quot; &quot;Vespasian&quot; &quot;Titus&quot;
+
+birth_cities_2 &lt;- unique(emperors$birth_cty)
+dim(birth_cities_2)
+## NULL
+head(birth_cities_2, n=10)
+##  [1] &quot;Rome&quot;       &quot;Antitum&quot;    &quot;Lugdunum&quot;   &quot;Terracina&quot;  &quot;Terentinum&quot;
+##  [6] &quot;Falacrine&quot;  &quot;Narni&quot;      &quot;Italica&quot;    &quot;Lanuvium&quot;   &quot;Alba&quot;</code></pre>
+<p><br />
+</p>
+<p>No obstante, podemos utilizar COUNT conjuntamente con DISTINCT en una misma expresión para obtener la <strong>cuenta de los valores únicos</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT COUNT(DISTINCT name) AS num_unique
+      FROM emperors&#39;)
+##   num_unique
+## 1         68
+
+sqldf(&#39;SELECT COUNT(DISTINCT birth_cty) AS num_unique
+      FROM emperors&#39;)
+##   num_unique
+## 1         30</code></pre>
+</div>
+<div id="where" class="section level1">
+<h1>WHERE</h1>
+<p><br />
+</p>
+<p>WHERE nos permite establecer algún criterio de selección a la hora de extraer información del dataframe. WHERE en SQL funciona en gran medida como la función <code>filter()</code>de {dplyr}. Por ejemplo, pongamos que queremos extraer el nombre de los emperadores, su ciudad de nacimiento y su asesino, pero <strong>únicamente de aquellos emperadores cuya causa de la muerte fue por motivo de asesinato</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, birth_cty, killer 
+      FROM emperors 
+      WHERE cause = &quot;Assassination&quot;&#39;)
+##                  name     birth_cty           killer
+## 1            Augustus          Rome             Wife
+## 2            Tiberius          Rome    Other Emperor
+## 3            Caligula       Antitum           Senate
+## 4            Claudius      Lugdunum             Wife
+## 5               Galba     Terracina    Other Emperor
+## 6           Vitellius          Rome    Other Emperor
+## 7            Domitian          Rome  Court Officials
+## 8            Commodus      Lanuvium Praetorian Guard
+## 9            Pertinax          Alba Praetorian Guard
+## 10          Caracalla      Lugdunum    Other Emperor
+## 11               Geta          Rome    Other Emperor
+## 12         Elagabalus         Emesa Praetorian Guard
+## 13  Severus Alexander Arca Caesarea         Own Army
+## 14        Maximinus I          &lt;NA&gt; Praetorian Guard
+## 15           Pupienus          &lt;NA&gt; Praetorian Guard
+## 16           Balbinus          &lt;NA&gt; Praetorian Guard
+## 17 Trebonianus Gallus          &lt;NA&gt;    Other Emperor
+## 18           Aemilian          &lt;NA&gt;    Other Emperor
+## 19          Gallienus          &lt;NA&gt;         Own Army
+## 20           Aurelian       Sirmium Praetorian Guard
+## 21            Florian          &lt;NA&gt;         Own Army
+## 22             Probus       Sirmium         Own Army
+## 23         Severus II          &lt;NA&gt;    Other Emperor
+## 24           Constans          &lt;NA&gt;          Usurper
+## 25            Gratian       Sirmium         Own Army</code></pre>
+<p><br />
+</p>
+<div id="where-and-or" class="section level2">
+<h2>WHERE … AND / OR</h2>
+<p>Podemos añadir otros criterios de selección. Pongamos que además de interesarnos aquellos emperadores romanos que han muerto asesinados nos interesa identificar aquellos <strong>emperadores que han muerto asesinados por su guardia pretoriana</strong>. Para ello utilizamos podemos utilizar AND de la siguiente forma (aunque en este caso particular no sería necesario indicar la causa del asesinato en tanto en cuanto la existencia de un asesino implica por defecto la causa de muerte)</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, birth_cty, killer 
+      FROM emperors 
+      WHERE cause = &quot;Assassination&quot; 
+      AND killer = &quot;Praetorian Guard&quot;&#39;)
+##          name birth_cty           killer
+## 1    Commodus  Lanuvium Praetorian Guard
+## 2    Pertinax      Alba Praetorian Guard
+## 3  Elagabalus     Emesa Praetorian Guard
+## 4 Maximinus I      &lt;NA&gt; Praetorian Guard
+## 5    Pupienus      &lt;NA&gt; Praetorian Guard
+## 6    Balbinus      &lt;NA&gt; Praetorian Guard
+## 7    Aurelian   Sirmium Praetorian Guard</code></pre>
+<p><br />
+</p>
+<p>Pongamos que nos interesa seleccionar aquellos <strong>emperadores asesinados bien por su guardia pretoriana bien por su propio ejército</strong>:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, birth_cty, killer 
+      FROM emperors 
+      WHERE killer = &quot;Praetorian Guard&quot; 
+      OR killer = &quot;Own Army&quot;&#39;)
+##                 name     birth_cty           killer
+## 1           Commodus      Lanuvium Praetorian Guard
+## 2           Pertinax          Alba Praetorian Guard
+## 3         Elagabalus         Emesa Praetorian Guard
+## 4  Severus Alexander Arca Caesarea         Own Army
+## 5        Maximinus I          &lt;NA&gt; Praetorian Guard
+## 6           Pupienus          &lt;NA&gt; Praetorian Guard
+## 7           Balbinus          &lt;NA&gt; Praetorian Guard
+## 8          Gallienus          &lt;NA&gt;         Own Army
+## 9           Aurelian       Sirmium Praetorian Guard
+## 10           Florian          &lt;NA&gt;         Own Army
+## 11            Probus       Sirmium         Own Army
+## 12           Gratian       Sirmium         Own Army</code></pre>
+<p><br />
+</p>
+<p>Su equivalencia <strong>en R</strong> utilizando la función <code>filter()</code> sería la siguiente:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+emperors %&gt;%
+  select(name, birth_cty, killer) %&gt;%
+  filter(killer == &quot;Praetorian Guard&quot; | killer == &quot;Own Army&quot;)
+## # A tibble: 12 x 3
+##    name              birth_cty     killer          
+##    &lt;chr&gt;             &lt;chr&gt;         &lt;chr&gt;           
+##  1 Commodus          Lanuvium      Praetorian Guard
+##  2 Pertinax          Alba          Praetorian Guard
+##  3 Elagabalus        Emesa         Praetorian Guard
+##  4 Severus Alexander Arca Caesarea Own Army        
+##  5 Maximinus I       &lt;NA&gt;          Praetorian Guard
+##  6 Pupienus          &lt;NA&gt;          Praetorian Guard
+##  7 Balbinus          &lt;NA&gt;          Praetorian Guard
+##  8 Gallienus         &lt;NA&gt;          Own Army        
+##  9 Aurelian          Sirmium       Praetorian Guard
+## 10 Florian           &lt;NA&gt;          Own Army        
+## 11 Probus            Sirmium       Own Army        
+## 12 Gratian           Sirmium       Own Army</code></pre>
+<p><br />
+</p>
+</div>
+<div id="where-in-not-in" class="section level2">
+<h2>WHERE … IN / NOT IN</h2>
+<p>De forma similar al punto anterior, podemos utilizar WHERE IN o WHERE NOT IN para detectar grupos de observaciones según un criterio de identificación. Pongamos por ejemplo que queremos identificar el nombre del emperador, la dinastía, su fecha de nacimiento y la causa de su muerte pero <strong>solo en el caso en que pertenezca a la dinastía Flavia o Gordiana</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, dynasty, birth, cause 
+      FROM emperors 
+      WHERE dynasty IN (&quot;Flavian&quot;, &quot;Gordian&quot;) 
+      LIMIT 20&#39;)
+##                  name dynasty      birth          cause
+## 1               Galba Flavian 0002-12-24  Assassination
+## 2                Otho Flavian 0032-04-28        Suicide
+## 3           Vitellius Flavian 0015-09-24  Assassination
+## 4           Vespasian Flavian 0009-11-17 Natural Causes
+## 5               Titus Flavian 0039-12-30 Natural Causes
+## 6            Domitian Flavian 0051-10-24  Assassination
+## 7         Maximinus I Gordian 0173-01-01  Assassination
+## 8           Gordian I Gordian 0159-01-01        Suicide
+## 9          Gordian II Gordian 0192-01-01      Execution
+## 10           Pupienus Gordian 0178-01-01  Assassination
+## 11           Balbinus Gordian 0178-01-01  Assassination
+## 12        Gordian III Gordian 0225-01-20 Died in Battle
+## 13           Philip I Gordian 0204-01-01      Execution
+## 14      Trajan Decius Gordian 0201-01-01 Died in Battle
+## 15          Hostilian Gordian 0230-01-01 Natural Causes
+## 16 Trebonianus Gallus Gordian 0206-01-01  Assassination
+## 17           Aemilian Gordian 0207-01-01  Assassination
+## 18           Valerian Gordian 0195-01-01      Captivity
+## 19          Gallienus Gordian 0218-01-01  Assassination
+## 20  Claudius Gothicus Gordian 0213-05-10 Natural Causes</code></pre>
+<p><br />
+</p>
+<p>El caso opuesto sería seleccionar aquellos emperadores romanos pertenecientes a <strong>dinastías distintas a las mencionadas</strong>. Para ello indicamos NOT IN.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, dynasty, birth, cause 
+      FROM emperors 
+      WHERE dynasty NOT IN (&quot;Flavian&quot;, &quot;Gordian&quot;) 
+      LIMIT 20&#39;)
+##                 name        dynasty      birth          cause
+## 1           Augustus Julio-Claudian 0062-09-23  Assassination
+## 2           Tiberius Julio-Claudian 0041-11-16  Assassination
+## 3           Caligula Julio-Claudian 0012-08-31  Assassination
+## 4           Claudius Julio-Claudian 0009-08-01  Assassination
+## 5               Nero Julio-Claudian 0037-12-15        Suicide
+## 6              Nerva Nerva-Antonine 0030-11-08 Natural Causes
+## 7             Trajan Nerva-Antonine 0053-09-18 Natural Causes
+## 8            Hadrian Nerva-Antonine 0076-01-24 Natural Causes
+## 9      Antonius Pius Nerva-Antonine 0086-09-19 Natural Causes
+## 10   Marcus Aurelius Nerva-Antonine 0121-04-26 Natural Causes
+## 11      Lucius Verus Nerva-Antonine 0130-12-15 Natural Causes
+## 12          Commodus Nerva-Antonine 0161-08-31  Assassination
+## 13          Pertinax        Severan 0126-08-01  Assassination
+## 14   Didius Julianus        Severan 0133-01-30      Execution
+## 15  Septimus Severus        Severan 0145-04-11 Natural Causes
+## 16         Caracalla        Severan 0188-04-04  Assassination
+## 17              Geta        Severan 0189-03-07  Assassination
+## 18          Macrinus        Severan 0165-01-01      Execution
+## 19        Elagabalus        Severan 0203-01-01  Assassination
+## 20 Severus Alexander        Severan 0208-10-01  Assassination</code></pre>
+<p><br />
+</p>
+<p>Tradicionalmente <strong>en R</strong> se utiliza <code>%in%</code> para obtener el resultado obtenido con LIKE en SQL.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+emperors %&gt;%
+  select(name, dynasty, birth, cause) %&gt;%
+  filter(dynasty %in% c(&quot;Flavian&quot;, &quot;Gordian&quot;)) %&gt;%
+  head(20)
+## # A tibble: 20 x 4
+##    name               dynasty birth      cause         
+##    &lt;chr&gt;              &lt;chr&gt;   &lt;date&gt;     &lt;chr&gt;         
+##  1 Galba              Flavian 0002-12-24 Assassination 
+##  2 Otho               Flavian 0032-04-28 Suicide       
+##  3 Vitellius          Flavian 0015-09-24 Assassination 
+##  4 Vespasian          Flavian 0009-11-17 Natural Causes
+##  5 Titus              Flavian 0039-12-30 Natural Causes
+##  6 Domitian           Flavian 0051-10-24 Assassination 
+##  7 Maximinus I        Gordian 0173-01-01 Assassination 
+##  8 Gordian I          Gordian 0159-01-01 Suicide       
+##  9 Gordian II         Gordian 0192-01-01 Execution     
+## 10 Pupienus           Gordian 0178-01-01 Assassination 
+## 11 Balbinus           Gordian 0178-01-01 Assassination 
+## 12 Gordian III        Gordian 0225-01-20 Died in Battle
+## 13 Philip I           Gordian 0204-01-01 Execution     
+## 14 Trajan Decius      Gordian 0201-01-01 Died in Battle
+## 15 Hostilian          Gordian 0230-01-01 Natural Causes
+## 16 Trebonianus Gallus Gordian 0206-01-01 Assassination 
+## 17 Aemilian           Gordian 0207-01-01 Assassination 
+## 18 Valerian           Gordian 0195-01-01 Captivity     
+## 19 Gallienus          Gordian 0218-01-01 Assassination 
+## 20 Claudius Gothicus  Gordian 0213-05-10 Natural Causes</code></pre>
+<p><br />
+</p>
+<p>Sin embargo, para conseguir <strong>en R</strong> un operador similar a la negación (NOT IN) de SQL debemos descargar el paquete {Hmisc} que incluye la función <code>%nin%</code> que sería la expresión equivalente a NOT IN.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+emperors %&gt;%
+  select(name, dynasty, birth, cause) %&gt;%
+  filter(dynasty %nin% c(&quot;Flavian&quot;, &quot;Gordian&quot;)) %&gt;%
+  head(20)
+## # A tibble: 20 x 4
+##    name              dynasty        birth      cause         
+##    &lt;chr&gt;             &lt;chr&gt;          &lt;date&gt;     &lt;chr&gt;         
+##  1 Augustus          Julio-Claudian 0062-09-23 Assassination 
+##  2 Tiberius          Julio-Claudian 0041-11-16 Assassination 
+##  3 Caligula          Julio-Claudian 0012-08-31 Assassination 
+##  4 Claudius          Julio-Claudian 0009-08-01 Assassination 
+##  5 Nero              Julio-Claudian 0037-12-15 Suicide       
+##  6 Nerva             Nerva-Antonine 0030-11-08 Natural Causes
+##  7 Trajan            Nerva-Antonine 0053-09-18 Natural Causes
+##  8 Hadrian           Nerva-Antonine 0076-01-24 Natural Causes
+##  9 Antonius Pius     Nerva-Antonine 0086-09-19 Natural Causes
+## 10 Marcus Aurelius   Nerva-Antonine 0121-04-26 Natural Causes
+## 11 Lucius Verus      Nerva-Antonine 0130-12-15 Natural Causes
+## 12 Commodus          Nerva-Antonine 0161-08-31 Assassination 
+## 13 Pertinax          Severan        0126-08-01 Assassination 
+## 14 Didius Julianus   Severan        0133-01-30 Execution     
+## 15 Septimus Severus  Severan        0145-04-11 Natural Causes
+## 16 Caracalla         Severan        0188-04-04 Assassination 
+## 17 Geta              Severan        0189-03-07 Assassination 
+## 18 Macrinus          Severan        0165-01-01 Execution     
+## 19 Elagabalus        Severan        0203-01-01 Assassination 
+## 20 Severus Alexander Severan        0208-10-01 Assassination</code></pre>
+<p><br />
+</p>
+</div>
+<div id="where-null-is-null" class="section level2">
+<h2>WHERE … NULL / IS NULL</h2>
+<p>Previamente hemos visto que había valores NA en la columna <code>birth_cty</code>. En SQL los <em>missing values</em> se representan por <code>NULL</code>. <strong>Para identificar el número de NA`s o NULL values</strong> podemos utilizar el operador COUNT conjuntamente con IS NULL.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT COUNT(*)
+     FROM emperors
+     WHERE birth_cty IS NULL&#39;)
+##   COUNT(*)
+## 1       17</code></pre>
+<p><br />
+</p>
+<p>Alternativamente podemos contar los valores que no son NULL en la variable <code>birth_cty</code> utilizariamos el opuesto: NOT NULL.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT COUNT(*)
+     FROM emperors
+     WHERE birth_cty IS NOT NULL&#39;)
+##   COUNT(*)
+## 1       51</code></pre>
+<p><br />
+</p>
+</div>
+<div id="where-like-not-like" class="section level2">
+<h2>WHERE … LIKE / NOT LIKE</h2>
+<p>Pongamos que, por alguna razón que no ahora mismo no se me ocurre como justificar, nos interesa seleccionar los <strong>emperadores romanos cuyo nombre acabe por ius</strong> (Tiberius, Aurelius, etc.). Para ello utilizaríamos WHERE LIKE de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, name_full
+      FROM emperors 
+      WHERE name LIKE &quot;%ius&quot;&#39;)
+##              name                                             name_full
+## 1        Tiberius          TIBERIVS CAESAR DIVI AVGVSTI FILIVS AVGVSTVS
+## 2        Claudius          TIBERIVS CLAVDIVS CAESAR AVGVSTVS GERMANICVS
+## 3       Vitellius                   AVLVS VITELLIVS GERMANICVS AVGVSTVS
+## 4   Antonius Pius CAESAR TITVS AELIVS HADRIANVS ANTONINVS AVGVSTVS PIVS
+## 5 Marcus Aurelius             CAESAR MARCVS AVRELIVS ANTONINVS AVGVSTVS
+## 6   Trajan Decius CAESAR GAIVS MESSIVS QVINTVS TRAIANVS DECIVS AVGVSTVS
+## 7        Galerius          CAESAR GALERIVS VALERIVS MAXIMIANVS AVGVSTVS
+## 8       Maxentius           MARCVS AVRELIVS VALERIVS MAXENTIVS AVGVSTVS</code></pre>
+<p><br />
+</p>
+<p>O supongamos que queremos identificar los <strong>nombres de los emperadores romanos que empiecen por Constantine</strong>, para de esta forma comprobar que en el dataframe se encuentran todos los emperadores con nombre Constantino.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, name_full
+      FROM emperors 
+      WHERE name LIKE &quot;Constantine%&quot;&#39;)
+##                    name                                              name_full
+## 1 Constantine the Great CAESAR FLAVIVS VALERIVS AVRELIVS CONSTANTINVS AVGVSTVS
+## 2        Constantine II          CAESAR FLAVIVS CLAVDIVS CONSTANTINVS AVGVSTVS</code></pre>
+<p>Por el contrario, para identificar aquellos <strong>emperadores cuyo nombre no acaba por ius</strong> utilizaríamos NOT LIKE</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT name, name_full
+      FROM emperors 
+      WHERE name NOT LIKE &quot;%ius&quot;
+      LIMIT 15&#39;)
+##               name                                          name_full
+## 1         Augustus              IMPERATOR CAESAR DIVI FILIVS AVGVSTVS
+## 2         Caligula            GAIVS IVLIVS CAESAR AVGVSTVS GERMANICVS
+## 3             Nero           NERO CLAVDIVS CAESAR AVGVSTVS GERMANICVS
+## 4            Galba            SERVIVS SVLPICIVS GALBA CAESAR AVGVSTVS
+## 5             Otho                MARCVS SALVIVS OTHO CAESAR AVGVSTVS
+## 6        Vespasian          TITVS FLAVIVS CAESAR VESPASIANVS AVGVSTVS
+## 7            Titus          TITVS FLAVIVS CAESAR VESPASIANVS AVGVSTVS
+## 8         Domitian           TITVS FLAVIVS CAESAR DOMITIANVS AVGVSTVS
+## 9            Nerva              MARCVS COCCEIVS NERVA CAESAR AVGVSTVS
+## 10          Trajan       CAESAR MARCVS VLPIVS NERVA TRAIANVS AVGVSTVS
+## 11         Hadrian  CAESAR PVBLIVS AELIVS TRAIANVS HADRIANVS AVGVSTVS
+## 12    Lucius Verus              CAESAR LVCIVS AVRELIVS VERVS AVGVSTVS
+## 13        Commodus CAESAR MARCVS AVRELIVS COMMODVS ANTONINVS AVGVSTVS
+## 14        Pertinax           CAESAR PVBLIVS HELVIVS PERTINAX AVGVSTVS
+## 15 Didius Julianus     CAESAR MARCVS DIDIVS SEVERVS IVLIANVS AVGVSTVS</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> podemos también utilizar operadores para realizar este tipo de operaciones. No obstante tengo intención de realizar un post completo sobre manejo de strings en R donde espero abarcar este tema en mayor profundidad.</p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="group-by" class="section level1">
+<h1>GROUP BY</h1>
+<p><br />
+</p>
+<p>GROUP_BY permite agrupar los resultados al estilo de la función <code>group_by()</code> de {dplyr}. Pongamos, por ejemplo, que queremos contar los <strong>emperadores romanos que pertenecían a cada dinastía</strong>:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT dynasty, count(*) AS total
+      FROM emperors 
+      GROUP BY dynasty&#39;)
+##          dynasty total
+## 1  Constantinian    15
+## 2        Flavian     6
+## 3        Gordian    22
+## 4 Julio-Claudian     5
+## 5 Nerva-Antonine     7
+## 6        Severan     8
+## 7     Theodosian     1
+## 8    Valentinian     4</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> el mismo resultado se obtendría con las funciones <code>group_by()</code> y <code>summarise()</code> de las siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+emperors %&gt;%
+  group_by(dynasty) %&gt;%
+  summarise(total = n())
+## # A tibble: 8 x 2
+##   dynasty        total
+##   &lt;chr&gt;          &lt;int&gt;
+## 1 Constantinian     15
+## 2 Flavian            6
+## 3 Gordian           22
+## 4 Julio-Claudian     5
+## 5 Nerva-Antonine     7
+## 6 Severan            8
+## 7 Theodosian         1
+## 8 Valentinian        4</code></pre>
+<p><br />
+</p>
+</div>
+<div id="having" class="section level1">
+<h1>HAVING</h1>
+<p><br />
+</p>
+<p>Una vez agrupados los resultados necesitamos HAVING en caso de haber filtrado los resultados. Pongamos por ejemplo que queremos contar los emperadores romanos que pertenecieron a cada dinastía, tal y cómo hemos realizado en el punto anterior, pero <strong>únicamente seleccionar aquellas dinastías que han sido compuestas por más de diez emperadores</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT dynasty, count(*) AS total
+      FROM emperors 
+      GROUP BY dynasty
+      HAVING COUNT(name) &gt; 10&#39;)
+##         dynasty total
+## 1 Constantinian    15
+## 2       Gordian    22</code></pre>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+</div>
+<div id="sum-avg-max-min" class="section level1">
+<h1>SUM, AVG, MAX, MIN</h1>
+<p><br />
+</p>
+<p>Con el paquete {sqldf} podemos también realizar <strong>operaciones matemáticas</strong> siguiendo la sintaxis de SQL. En este caso, para ejemplificar estas operaciones, vamos a dejar de lado a los emperadores romanos y utilizaremos el dataset <code>loans</code> presentado al inicio del post.</p>
+<p><br />
+</p>
+<p>Supongamos que nos interesa identificar la <strong>suma del total de los préstamos de estudio concedidos que han sido devueltos en el año 2015</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT SUM(total) 
+      FROM loans 
+      WHERE year = 15&#39;)
+##   SUM(total)
+## 1 1864006026</code></pre>
+<p><br />
+</p>
+<p>Ahora supongamos que queremos obtener el <strong>promedio del valor total de los préstamos al inicio de cada trimestre/quarter</strong> (<code>starting</code>) otorgados por un prestamista determinado (por ejemplo Account Control Technology, Inc.)</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT AVG(starting) 
+      FROM loans 
+      WHERE agency_name = &quot;Account Control Technology, Inc.&quot;&#39;)
+##   AVG(starting)
+## 1    9120823767</code></pre>
+<p><br />
+</p>
+<p>O pongamos que queremos obtener los <strong>valores registrados máximos y mínimos en relación a los pagos voluntarios</strong> (`voluntary_payments)</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT MAX(voluntary_payments), MIN(voluntary_payments)
+      FROM loans&#39;)
+##   MAX(voluntary_payments) MIN(voluntary_payments)
+## 1                14687278                19833.39</code></pre>
+<p><br />
+</p>
+<p>O que queremos identificar la <strong>devolución del préstamo de mayor valor en el primer trimestre de 2016</strong> y, en este caso, asignarle un nombre al resultado obtenido (por ejemplo <code>max_16_1</code>)</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT MAX(total) as max_16_1 
+      FROM loans 
+      WHERE quarter = 1 AND year = 16&#39;)
+##    max_16_1
+## 1 184186941</code></pre>
+<p><br />
+</p>
+<p>Complementando las operaciones anteriores, junto a GROUP BY podemos obtener los valores para un conjunto de categorías que agrupamos con dicha función. Por ejemplo, para establecer el <strong>valor total de los pagos devueltos en cada uno de los años considerados en el dataset</strong>, es decir, agrupando los resultados por año, podemos indicar:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT year, SUM(total) 
+      FROM loans 
+      GROUP BY year&#39;)
+##   year  SUM(total)
+## 1   15  1864006026
+## 2   16  8773042144
+## 3   17  9777002336
+## 4   18 10433612851</code></pre>
+<p><br />
+</p>
+<p>Y para establecer el mismo resultado, pero <strong>desagregado el resultado no solo por año sino también por trimestre</strong> podríamos establecer el siguiente comando:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT year, quarter, SUM(total) 
+      FROM loans 
+      GROUP BY year, quarter&#39;)
+##    year quarter SUM(total)
+## 1    15       4 1864006026
+## 2    16       1 2230612678
+## 3    16       2 2136757055
+## 4    16       3 2339610459
+## 5    16       4 2066061952
+## 6    17       1 2600382768
+## 7    17       2 2278574952
+## 8    17       3 2427641359
+## 9    17       4 2470403258
+## 10   18       1 2711684169
+## 11   18       2 2737158761
+## 12   18       3 2357008727
+## 13   18       4 2627761194</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> las operaciones observadas se pueden realizar fácilmente con la función <code>summarise()</code> del paquete {dplyr} tal y como vimos en un <a href="https://rquer.netlify.com/babynames/">post anterior</a>. Además, la función <code>summarise()</code> se complementa muy bien con la función <code>group_by()</code> permitiéndonos establecer cálculos por grupos o categorías.</p>
+<p><br />
+</p>
+<p>Para obtener, por ejemplo, el <strong>número de observaciones y el total de préstamos devueltos</strong> utilizaríamos la función <code>summarise()</code> de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  summarise(num_observaciones = n(), 
+            total_loans = sum(total))
+## # A tibble: 1 x 2
+##   num_observaciones  total_loans
+##               &lt;int&gt;        &lt;dbl&gt;
+## 1               291 30847663357.</code></pre>
+<p><br />
+</p>
+<p>Para obtener la <strong>devolución en 2015</strong>, siguiendo el ejemplo anterior, podemos incluir la función <code>filter()</code> previamente explicada:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  filter (year == 15) %&gt;%
+  summarise(total_loans = sum(total))
+## # A tibble: 1 x 1
+##   total_loans
+##         &lt;dbl&gt;
+## 1 1864006026.</code></pre>
+<p><br />
+</p>
+<p>O para obtener el <strong>valor desagregado por año y trimestre</strong>, al igual que hemos realizado previamente:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  group_by(year, quarter) %&gt;%
+  summarise(total = sum(total))
+## # A tibble: 13 x 3
+## # Groups:   year [4]
+##     year quarter       total
+##    &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;
+##  1    15       4 1864006026.
+##  2    16       1 2230612678.
+##  3    16       2 2136757055.
+##  4    16       3 2339610459.
+##  5    16       4 2066061952.
+##  6    17       1 2600382768.
+##  7    17       2 2278574952.
+##  8    17       3 2427641359.
+##  9    17       4 2470403258.
+## 10    18       1 2711684169.
+## 11    18       2 2737158761.
+## 12    18       3 2357008727.
+## 13    18       4 2627761194.</code></pre>
+<p><br />
+</p>
+<p>Existen en SQL diversos procedimientos que podemos utilizar para extraer la información requerida del dataset original. Pongamos, por ejemplo, que nos interesa <strong>únicamente el nombre de la agencia prestamista que se corresponde al mayor valor devuelto en el año 2015</strong>. Para ello seleccionaremos <code>agency_name</code> después de SELECT, para indicar la variable que queremos obtener, pero necesitamos otro SELECT para indicar las condiciones requeridas.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name 
+      FROM loans 
+      WHERE total = (SELECT MAX(total) 
+                     FROM loans 
+                     WHERE year = 15)&#39;)
+##   agency_name
+## 1    ConServe</code></pre>
+<p><br />
+</p>
+<p>O supongamos que nos interesa <strong>únicamente el nombre de la agencia prestamista que se corresponde al menor valor del conjunto de pagos voluntarios registrados</strong> en el dataset.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name 
+      FROM loans 
+      WHERE voluntary_payments = (SELECT MIN(voluntary_payments) 
+                                  FROM loans)&#39;)
+##                 agency_name
+## 1 Reliant Capital Solutions</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> podemos llegar a los mismos resultados utilizando una serie de funciones. Por consiguiente, podemos llegar a los resultados de los ejercicios previos utilizando sintaxis del paquete {dplyr} de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  filter(year == 15) %&gt;%
+  arrange(desc(total)) %&gt;%
+  head(n=1) %&gt;%
+  select(agency_name)
+## # A tibble: 1 x 1
+##   agency_name
+##   &lt;chr&gt;      
+## 1 ConServe</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  arrange(voluntary_payments) %&gt;%
+  head(n=1) %&gt;%
+  select(agency_name)
+## # A tibble: 1 x 1
+##   agency_name              
+##   &lt;chr&gt;                    
+## 1 Reliant Capital Solutions</code></pre>
+<p><br />
+</p>
+</div>
+<div id="between-and" class="section level1">
+<h1>BETWEEN … AND</h1>
+<p><br />
+</p>
+<p>El comando BETWEEN nos permite seleccionar información que se encuentre en un rango determinado. Por ejemplo, pongamos que interesa identificar el <strong>año y la agencia prestamista de los pagos voluntarios cuyo valor se encuentre entre 20000 y 100000 dólares</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT year, agency_name, voluntary_payments 
+      FROM loans 
+      WHERE voluntary_payments 
+      BETWEEN 20000 AND 100000&#39;)
+##   year                                    agency_name voluntary_payments
+## 1   16                     Action Financial Services*           71532.33
+## 2   16                              Central Research*           60700.77
+## 3   16                      Credit Adjustments, Inc.*           93084.50
+## 4   16                            Bass and Associates           30343.09
+## 5   16                         FH Cann and Associates           77379.79
+## 6   16                       National Credit Services           81953.61
+## 7   16 Professional Bureau of Collections of Maryland           27993.93
+## 8   18                                            ERS           75046.88</code></pre>
+<p><br />
+</p>
+<p>Para obtener el mismo resultado <strong>en R</strong> podemos utilizar la función <code>filter()</code> junto a <code>select()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  select(year, agency_name, voluntary_payments) %&gt;%
+  filter(voluntary_payments &gt; 20000 &amp; voluntary_payments &lt; 100000)
+## # A tibble: 8 x 3
+##    year agency_name                                    voluntary_payments
+##   &lt;dbl&gt; &lt;chr&gt;                                                       &lt;dbl&gt;
+## 1    16 Action Financial Services*                                 71532.
+## 2    16 Central Research*                                          60701.
+## 3    16 Credit Adjustments, Inc.*                                  93084.
+## 4    16 Bass and Associates                                        30343.
+## 5    16 FH Cann and Associates                                     77380.
+## 6    16 National Credit Services                                   81954.
+## 7    16 Professional Bureau of Collections of Maryland             27994.
+## 8    18 ERS                                                        75047.</code></pre>
+<p><br />
+</p>
+</div>
+<div id="filtros" class="section level1">
+<h1>FILTROS</h1>
+<p><br />
+</p>
+<p>Existen diversos <strong>operadores que podemos utilizar en el lenguaje SQL para filtrar las observaciones</strong> de un dataframe. Por ejemplo:</p>
+<ul>
+<li><code>=</code> igual</li>
+<li><code>&lt;&gt;</code> no igual</li>
+<li><code>&lt;</code> menor que</li>
+<li><code>&gt;</code> mayor que</li>
+<li><code>&lt;=</code> menor que o igual a</li>
+<li><code>&gt;=</code> mayor que o igual a</li>
+</ul>
+<p>Pongamos, por ejemplo, que queremos saber el <strong>nombre de las agencias que han recibido pagos voluntarios de más de 12 millones de dólares</strong>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name, voluntary_payments 
+      FROM loans 
+      WHERE voluntary_payments &gt; 12000000&#39;)
+##                 agency_name voluntary_payments
+## 1                  ConServe           12184949
+## 2    Coast Professional Inc           12929745
+## 3 Immediate Credit Recovery           13524773
+## 4   National Recoveries Inc           12422738
+## 5    Coast Professional Inc           14520116
+## 6 Immediate Credit Recovery           13748284
+## 7   National Recoveries Inc           14687278</code></pre>
+<p><br />
+</p>
+</div>
+<div id="case-when-then" class="section level1">
+<h1>CASE WHEN … THEN</h1>
+<p><br />
+</p>
+<p>Con los filtros mencionados en el punto previo y el comando CASE WHEN podemos establecer nuestras propias <strong>categorías y agrupaciones</strong> de los datos. Por ejemplo, pongamos que queremos establecer rangos según la cantidad <code>total</code> de préstamos devueltos. Para ello, por ejemplo, podemos utilizar algunos cuantiles, la media y la mediana. Esta información la obtenemos fácilmente con la función <code>summary()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>summary(loans$total)
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+##    212828  32888118  72669212 106005716 167945568 395249672</code></pre>
+<p><br />
+</p>
+<p><strong>Establecemos las categorías</strong> de la siguiente forma:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT agency_name, year, total,
+      CASE WHEN total &lt; 32888118 THEN &quot;entre el Min y 1stQ&quot;
+      WHEN total BETWEEN 32888118 AND 72669212 THEN &quot;entre 1stQ y Media&quot;
+      WHEN total BETWEEN 72669212 AND 106005716 THEN &quot;entre Media y Mean&quot;
+      WHEN total BETWEEN 106005716 AND 167945568 THEN &quot;entre Mean y 3rdQ&quot;
+      ELSE &quot;entre 3rdQ y Max&quot; END
+      AS ranking
+      FROM loans
+      LIMIT 10&#39;)
+##                              agency_name year     total            ranking
+## 1       Account Control Technology, Inc.   15 122602642  entre Mean y 3rdQ
+## 2                Allied Interstate, Inc.   15 113326847  entre Mean y 3rdQ
+## 3                              CBE Group   15  83853003 entre Media y Mean
+## 4               Coast Professional, Inc.   15  99643903 entre Media y Mean
+## 5     Collection Technology Incorporated   15  75725486 entre Media y Mean
+## 6              Collecto, INC dba EOS-CCA   15  78776490 entre Media y Mean
+## 7                               ConServe   15 149212488  entre Mean y 3rdQ
+## 8      Delta Management Associates, Inc.   15  43771306 entre 1stQ y Media
+## 9  Diversified Collection Services, Inc.   15  60575355 entre 1stQ y Media
+## 10                                   ERS   15  91822575 entre Media y Mean</code></pre>
+<p><br />
+</p>
+<p><strong>En R</strong> existe una operativa similar para realizar la misma operación utilizando la función <code>case_when()</code>. Podemos ver un ejemplo de su utilización en <a href="https://rquer.netlify.com/nombres/">este</a> post anterior. Para obtener el mismo resultado que en el ejemplo anterior con CASE WHEN indicaríamos lo siguiente:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+loans %&gt;%
+  mutate(
+    ranking = case_when(
+    total &lt; 32888118 ~ &quot;entre el Min y 1stQ&quot;,
+    total &gt; 32888118 &amp; total &lt; 72669212 ~ &quot;entre 1stQ y Media&quot;,
+    total &gt; 72669212 &amp; total &lt; 106005716 ~ &quot;entre Media y Mean&quot;,
+    total &gt; 106005716 &amp; total &lt; 167945568  ~ &quot;entre Mean y 3rdQ&quot;,
+    TRUE ~&quot;entre 3rdQ y Max&quot;
+  )) %&gt;%
+    select(agency_name, year, total, ranking)
+## # A tibble: 291 x 4
+##    agency_name                            year      total ranking           
+##    &lt;chr&gt;                                 &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;             
+##  1 Account Control Technology, Inc.         15 122602642. entre Mean y 3rdQ 
+##  2 Allied Interstate, Inc.                  15 113326847. entre Mean y 3rdQ 
+##  3 CBE Group                                15  83853003. entre Media y Mean
+##  4 Coast Professional, Inc.                 15  99643903. entre Media y Mean
+##  5 Collection Technology Incorporated       15  75725486. entre Media y Mean
+##  6 Collecto, INC dba EOS-CCA                15  78776490. entre Media y Mean
+##  7 ConServe                                 15 149212488. entre Mean y 3rdQ 
+##  8 Delta Management Associates, Inc.        15  43771306. entre 1stQ y Media
+##  9 Diversified Collection Services, Inc.    15  60575355. entre 1stQ y Media
+## 10 ERS                                      15  91822575. entre Media y Mean
+## # ... with 281 more rows</code></pre>
+<p><br />
+</p>
+</div>
+<div id="operadores-aritméticos" class="section level1">
+<h1>Operadores Aritméticos</h1>
+<p><br />
+</p>
+<p>En SQL podemos realizar operaciones aritméticas utilizando símbolos como <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>. Por ejemplo:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Suma:
+
+sqldf(&#39;SELECT (5 + 4)&#39;)
+##   (5 + 4)
+## 1       9
+
+# Resta:
+
+sqldf(&#39;SELECT (5 - 4)&#39;)
+##   (5 - 4)
+## 1       1
+
+# Multiplicación:
+sqldf(&#39;SELECT (5 * 4)&#39;)
+##   (5 * 4)
+## 1      20
+
+# División:
+
+sqldf(&#39;SELECT (4 / 5)&#39;)
+##   (4 / 5)
+## 1       0
+sqldf(&#39;SELECT (4.0 / 5.0)&#39;)
+##   (4.0 / 5.0)
+## 1         0.8</code></pre>
+<p><br />
+</p>
+<p>Los operadores aritméticos pueden ayudarnos a realizar operaciones de relevancia. Pongamos por ejemplo que queremos calcular la <strong>diferencia entre el pago de mayor y el de menor magnitud en el año 2017</strong>. En este caso podríamos indicar:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+sqldf(&#39;SELECT MAX(total) - MIN(total) AS diferencia
+      FROM loans
+      WHERE year = 17&#39;)
+##   diferencia
+## 1  355724699</code></pre>
+<p><br />
+</p>
+</div>

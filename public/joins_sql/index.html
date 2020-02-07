@@ -273,11 +273,11 @@ sqldf(&#39;SELECT *
       FROM vab_pc 
       INNER JOIN life_exp 
       ON vab_pc.country = life_exp.country&#39;)
-##     country continent gdpPercap country..4 continent..5 lifeExp
-## 1 Australia   Oceania  34435.37  Australia      Oceania  81.235
-## 2    Canada  Americas  36319.24     Canada     Americas  80.653
-## 3     Japan      Asia  31656.07      Japan         Asia  82.603
-## 4     Spain    Europe  28821.06      Spain       Europe  80.941</code></pre>
+##     country continent gdpPercap   country continent lifeExp
+## 1 Australia   Oceania  34435.37 Australia   Oceania  81.235
+## 2    Canada  Americas  36319.24    Canada  Americas  80.653
+## 3     Japan      Asia  31656.07     Japan      Asia  82.603
+## 4     Spain    Europe  28821.06     Spain    Europe  80.941</code></pre>
 <p><br />
 </p>
 <p>En el caso anterior un dataset se ha unido al anterior incluyendo únicamente los países que coinciden en ambos. No obstante, el resultado final incluye columnas repetidas que no nos interesan (las columnas <code>country</code> y <code>continent</code>). Para conseguir un dataframe que se asemeje al del dibujo presentado arriba, formado por cuatro columnas únicamente, debemos realizar un serie de modificaciones, indicando que queremos solo cuatro columnas donde las dos primeras, al estar repetidas, serán las pertenecientes al primer dataset (p1),</p>

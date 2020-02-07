@@ -6,10 +6,226 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 17 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>maps</title>
+      <link>/tags/maps/</link>
+      <pubDate>Tue, 17 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/maps/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Openstreetmaps</title>
+      <link>/tags/openstreetmaps/</link>
+      <pubDate>Tue, 17 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/openstreetmaps/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>osmdata</title>
+      <link>/tags/osmdata/</link>
+      <pubDate>Tue, 17 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/osmdata/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Anti Join</title>
+      <link>/tags/anti-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/anti-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Full Join</title>
+      <link>/tags/full-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/full-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Inner Joins</title>
+      <link>/tags/inner-joins/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/inner-joins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Left Join</title>
+      <link>/tags/left-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/left-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Outer Joins</title>
+      <link>/tags/outer-joins/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/outer-joins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Right Join</title>
+      <link>/tags/right-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/right-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Semi Join</title>
+      <link>/tags/semi-join/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/semi-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SQL</title>
+      <link>/tags/sql/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqldf</title>
+      <link>/tags/sqldf/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sqldf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mapas</title>
+      <link>/tags/mapas/</link>
+      <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mapas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Raster</title>
+      <link>/tags/raster/</link>
+      <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/raster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>waffle charts</title>
+      <link>/tags/waffle-charts/</link>
+      <pubDate>Wed, 27 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/waffle-charts/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Europa</title>
+      <link>/tags/europa/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/europa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Europe</title>
+      <link>/tags/europe/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/europe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Eurostat</title>
+      <link>/tags/eurostat/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/eurostat/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>NUTS</title>
+      <link>/tags/nuts/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/nuts/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Infografías</title>
+      <link>/tags/infograf%C3%ADas/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/infograf%C3%ADas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Infographics</title>
+      <link>/tags/infographics/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/infographics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pictogramas</title>
+      <link>/tags/pictogramas/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pictogramas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pictograms</title>
+      <link>/tags/pictograms/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pictograms/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>e_geo_3d</title>
@@ -26,24 +242,6 @@
       <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/echarts4r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>mapas</title>
-      <link>/tags/mapas/</link>
-      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/mapas/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>maps</title>
-      <link>/tags/maps/</link>
-      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/maps/</guid>
       <description></description>
     </item>
     
@@ -170,15 +368,6 @@
       <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/dplyr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tidyverse</title>
-      <link>/tags/tidyverse/</link>
-      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     

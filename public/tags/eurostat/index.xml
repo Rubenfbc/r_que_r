@@ -18,7 +18,7 @@
       
       <guid>/nuts/</guid>
       <description>Re
-Este post es una continuación del anterior donde se explicó el paquete eurostat(). En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.
+Este post es una continuación del anterior donde se explicó el paquete {eurostat}. En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.
 
 Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)
 Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales de la Unión Europea creada por Eurostat que se utiliza con fines estadísticos y analíticos.</description>
@@ -31,7 +31,7 @@ Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus sigl
       
       <guid>/eurostat/</guid>
       <description>Re
-En este post se explica las principales funcionalidades del paquete eurostat(), que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.
+En este post se explica las principales funcionalidades del paquete {eurostat}, que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.
 
 Introducción
 Eurostat es la Oficina de Estadística de la Comisión Europea, organismo que se encarga de producir datos, publicar estadísticas e indicadores sobre la Unión Europea promoviendo la armonización de los métodos estadísticos entre los Estados que la conforman.</description>

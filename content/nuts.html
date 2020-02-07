@@ -1,0 +1,880 @@
+---
+title: "¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas
+  (NUTS) de Eurostat en R?"
+author: "Rubén F. Bustillo"
+date: '2019-11-25'
+tags:  ["Eurostat", "NUTS", "Europa","Europe","Mapas","Maps"]
+categories: ["R"]
+---
+
+
+
+<p><strong>Re</strong></p>
+<p>Este post es una continuación del anterior donde se explicó el paquete {eurostat}. En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.</p>
+<p><br />
+</p>
+<div id="nomenclaturas-de-las-unidades-territoriales-estadísticas-nuts" class="section level1">
+<h1>Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)</h1>
+<p><br />
+</p>
+<p>Las <strong>Nomenclaturas de las Unidades Territoriales Estadísticas</strong> (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales de la Unión Europea creada por Eurostat que se utiliza con fines estadísticos y analíticos. Su establecimiento se basa, en principio, en función de las unidades administrativas que operan en cada uno de los Estados miembros. Es decir, las regiones geográficas se basan en las entidades con autoridades administrativas en cada uno de los países que conforman la región Euro. Los niveles NUTS en los que se divide cada uno de dichas unidades administrativas dependen, principalmente, de ciertos límites mínimos y máximos de población.</p>
+<p><br />
+</p>
+<p>La <a href="https://ec.europa.eu/eurostat/web/nuts/background">actual clasificación NUTS</a>, válida desde 2018, se enumera en 104 regiones en NUTS-1, 281 regiones en NUTS-2 y 1348 regiones en NUTS 3. En España, por ejemplo, el NUTS-1 corresponde a grupos de regiones (17), el NUTS-2 se configura en torno a las Comunidades Autónomas y Ciudades Autónomas (19) y el NUTS-3 se compone de las Provincias, Consejos Insulares y Cabildos (59). Se puede consultar las regiones NUTS de cada país en el siguiente <a href="https://ec.europa.eu/eurostat/web/nuts/nuts-maps">enlace</a> de Eurostat.</p>
+<p><br />
+</p>
+<p>A efectos prácticos utilizaremos la función <code>get_eurostat_geospatial()</code> para descargar la información geográfica de <a href="https://ec.europa.eu/eurostat/web/gisco">Gisco</a>, el organismo responsable de generar y actualizar la información geográfica de la Comisión Europea. El paquete <code>get_eurostat_geospatial()</code> descarga tres tipos de información: <em>sf</em>, <em>spdf</em> y <em>df</em>, como veremos en los siguientes subapartados.</p>
+<p><br />
+</p>
+<p>Antes de empezar la exposición <strong>cargamos algunos paquetes</strong> que utilizaremos a lo largo del post.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(eurostat)
+library(tidyverse)
+library(sf)
+library(DT)
+library(cowplot)
+library(RColorBrewer)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="simple-feature-sf" class="section level1">
+<h1>Simple feature (sf)</h1>
+<p><br />
+</p>
+<p>Como se expone <a href="https://r-spatial.github.io/sf/articles/sf1.html">aquí</a>, <em>simple feature</em> o <em>simple feature access</em> hace referencia al <em>International Organization for Standarization (ISO 19125)</em> que describe y especifica cómo los objetos en el mundo real pueden ser representados en las computadoras, con especial énfasis a los objetos espaciales geométricos. Por tanto, definen un modelo común de geometrías de dos dimensiones que se utilizan en los sistemas de información geográfica.</p>
+<p><br />
+</p>
+<p>Por consiguiente, para realizar mapas base a cada uno de los niveles NUTS podemos obtener en primer lugar el <em>sf</em> con la función <code>get_eurostat_geospatial()</code> y representar el mapa al nivel deseado utilizando los siguientes comandos:</p>
+<p><br />
+</p>
+<div id="nuts-0" class="section level2">
+<h2>NUTS-0</h2>
+<pre class="r"><code>
+# NUTS-0
+mapdata_0 &lt;- get_eurostat_geospatial(nuts_level = 0)
+head(mapdata_0)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 34.56908 xmax: 34.56859 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   id CNTR_CODE                                                        NUTS_NAME
+## 1 BG        BG &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;
+## 2 CH        CH                                          SCHWEIZ/SUISSE/SVIZZERA
+## 3 CY        CY                        &lt;U+039A&gt;&lt;U+03A5&gt;&lt;U+03A0&gt;&lt;U+03A1&gt;&lt;U+039F&gt;S
+## 4 AL        AL                                                        SHQIPËRIA
+## 5 CZ        CZ                                                  CESKÁ REPUBLIKA
+## 6 BE        BE                                                 BELGIQUE-BELGIË 
+##   LEVL_CODE FID NUTS_ID                       geometry geo
+## 1         0  BG      BG MULTIPOLYGON (((22.99717 43...  BG
+## 2         0  CH      CH MULTIPOLYGON (((8.61383 47....  CH
+## 3         0  CY      CY MULTIPOLYGON (((33.75237 34...  CY
+## 4         0  AL      AL MULTIPOLYGON (((19.831 42.4...  AL
+## 5         0  CZ      CZ MULTIPOLYGON (((14.49122 51...  CZ
+## 6         0  BE      BE MULTIPOLYGON (((5.10218 51....  BE
+
+mapdata_0 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-0&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-1" class="section level2">
+<h2>NUTS-1</h2>
+<pre class="r"><code>
+# NUTS-1
+mapdata_1 &lt;- get_eurostat_geospatial(nuts_level = 1)
+head(mapdata_1)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.84672 ymin: 39.64579 xmax: 21.05607 ymax: 50.91189
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##    id CNTR_CODE                                                   NUTS_NAME
+## 1 AL0        AL                                                   SHQIPËRIA
+## 2 AT1        AT                                               OSTÖSTERREICH
+## 3 AT2        AT                                               SÜDÖSTERREICH
+## 4 BE1        BE RÉGION DE BRUXELLES-CAPITALE/BRUSSELS HOOFDSTEDELIJK GEWEST
+## 5 BE3        BE                                             RÉGION WALLONNE
+## 6 AT3        AT                                              WESTÖSTERREICH
+##   LEVL_CODE FID NUTS_ID                       geometry geo
+## 1         1 AL0     AL0 MULTIPOLYGON (((19.831 42.4... AL0
+## 2         1 AT1     AT1 MULTIPOLYGON (((15.54245 48... AT1
+## 3         1 AT2     AT2 MULTIPOLYGON (((15.84791 47... AT2
+## 4         1 BE1     BE1 MULTIPOLYGON (((4.47678 50.... BE1
+## 5         1 BE3     BE3 MULTIPOLYGON (((5.682 50.75... BE3
+## 6         1 AT3     AT3 MULTIPOLYGON (((14.69101 48... AT3
+
+mapdata_1 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-1&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-2" class="section level2">
+<h2>NUTS-2</h2>
+<pre class="r"><code>
+# NUTS-2
+mapdata_2 &lt;- get_eurostat_geospatial(nuts_level = 2)
+head(mapdata_2)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 7.09629 ymin: 46.29368 xmax: 20.10688 ymax: 61.08726
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##     id CNTR_CODE       NUTS_NAME LEVL_CODE  FID NUTS_ID
+## 1 DE24        DE     Oberfranken         2 DE24    DE24
+## 2 NO03        NO   Sør-Østlandet         2 NO03    NO03
+## 3 HU11        HU        Budapest         2 HU11    HU11
+## 4 HU12        HU            Pest         2 HU12    HU12
+## 5 HU21        HU  Közép-Dunántúl         2 HU21    HU21
+## 6 HU22        HU Nyugat-Dunántúl         2 HU22    HU22
+##                         geometry  geo
+## 1 MULTIPOLYGON (((11.48157 50... DE24
+## 2 MULTIPOLYGON (((10.60072 60... NO03
+## 3 MULTIPOLYGON (((18.93274 47... HU11
+## 4 MULTIPOLYGON (((18.96591 47... HU12
+## 5 MULTIPOLYGON (((18.68843 47... HU21
+## 6 MULTIPOLYGON (((17.24743 48... HU22
+
+mapdata_2 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-2&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-3" class="section level2">
+<h2>NUTS-3</h2>
+<pre class="r"><code>
+# NUTS-3
+mapdata_3 &lt;- get_eurostat_geospatial(nuts_level = 3)
+head(mapdata_3)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.3948 ymin: 39.02837 xmax: 22.2582 ymax: 60.65644
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##      id CNTR_CODE
+## 1 FRK23        FR
+## 2 FRK24        FR
+## 3 AT313        AT
+## 4 FI200        FI
+## 5 FR102        FR
+## 6 EL611        EL
+##                                                                   NUTS_NAME
+## 1                                                                     Drôme
+## 2                                                                     Isère
+## 3                                                               Mühlviertel
+## 4                                                                     Åland
+## 5                                                           Seine-et-Marne 
+## 6 &lt;U+039A&gt;a&lt;U+03C1&gt;d&lt;U+03AF&gt;tsa, &lt;U+03A4&gt;&lt;U+03C1&gt;&lt;U+03AF&gt;&lt;U+03BA&gt;a&lt;U+03BB&gt;a
+##   LEVL_CODE   FID NUTS_ID                       geometry   geo
+## 1         3 FRK23   FRK23 MULTIPOLYGON (((5.67604 44.... FRK23
+## 2         3 FRK24   FRK24 MULTIPOLYGON (((5.10107 45.... FRK24
+## 3         3 AT313   AT313 MULTIPOLYGON (((13.72709 48... AT313
+## 4         3 FI200   FI200 MULTIPOLYGON (((19.94374 60... FI200
+## 5         3 FR102   FR102 MULTIPOLYGON (((2.59053 49.... FR102
+## 6         3 EL611   EL611 MULTIPOLYGON (((21.91769 39... EL611
+
+mapdata_3 %&gt;% 
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  ggtitle(&quot;NUTS-3&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="todos-los-niveles-nuts" class="section level2">
+<h2>TODOS LOS NIVELES NUTS</h2>
+<pre class="r"><code>
+# ALL NUTS
+mapdata_all &lt;- get_eurostat_geospatial(nuts_level = &quot;all&quot;, resolution = 60)
+head(mapdata_all)
+## Simple feature collection with 6 features and 7 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 2.54601 ymin: 34.56908 xmax: 34.56859 ymax: 51.50246
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##   id CNTR_CODE                                                        NUTS_NAME
+## 1 BG        BG &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;
+## 2 CH        CH                                          SCHWEIZ/SUISSE/SVIZZERA
+## 3 CY        CY                        &lt;U+039A&gt;&lt;U+03A5&gt;&lt;U+03A0&gt;&lt;U+03A1&gt;&lt;U+039F&gt;S
+## 4 AL        AL                                                        SHQIPËRIA
+## 5 CZ        CZ                                                  CESKÁ REPUBLIKA
+## 6 BE        BE                                                 BELGIQUE-BELGIË 
+##   LEVL_CODE FID NUTS_ID                       geometry geo
+## 1         0  BG      BG MULTIPOLYGON (((22.99717 43...  BG
+## 2         0  CH      CH MULTIPOLYGON (((8.61383 47....  CH
+## 3         0  CY      CY MULTIPOLYGON (((33.75237 34...  CY
+## 4         0  AL      AL MULTIPOLYGON (((19.831 42.4...  AL
+## 5         0  CZ      CZ MULTIPOLYGON (((14.49122 51...  CZ
+## 6         0  BE      BE MULTIPOLYGON (((5.10218 51....  BE
+
+mapdata_all %&gt;% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= &quot;NUTS-0&quot;, 
+                                     `1`= &quot;NUTS-1&quot;, 
+                                     `2`= &quot;NUTS-2&quot;, 
+                                     `3`= &quot;NUTS-3&quot; )) %&gt;%
+  ggplot(., aes()) +
+  geom_sf(fill=&quot;purple&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  facet_wrap(~LEVL_CODE_2) +
+  ggtitle(&quot;Unidades Territoriales Estadísticas (NUTS)&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-6-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="spatial-polygon-dataframe-spdf" class="section level1">
+<h1>Spatial Polygon Dataframe (spdf)</h1>
+<p><br />
+</p>
+<p>En segundo lugar podemos descargar un <em>Spatial Polygon Dataframe</em> (spdf) utilizando el paquete {sf}, donde encontramos la información geográfica de todos los NUTS levels (0-3). De nuevo utilizamos la función <code>get_eurostat_geospatial()</code> y las funciones características de {tidyverse} y {ggplot2} para modificar el <em>spdf</em> y para seleccionar el nivel NUTS deseado.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# El Spatial Polygon Dataframe:
+
+mapdata_spdf &lt;- get_eurostat_geospatial(output_class = &quot;spdf&quot;, resolution = 60)</code></pre>
+<p><br />
+</p>
+<div id="nuts-0-1" class="section level2">
+<h2>NUTS-0</h2>
+<pre class="r"><code>
+# NUTS 0
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 0,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  ggtitle(&quot;NUTS-0&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-8-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-1-1" class="section level2">
+<h2>NUTS-1</h2>
+<pre class="r"><code>
+# NUTS 1
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 1,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  ggtitle(&quot;NUTS-1&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-9-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-2-1" class="section level2">
+<h2>NUTS-2</h2>
+<pre class="r"><code>
+# NUTS 2
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 2,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  ggtitle(&quot;NUTS-2&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-10-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-3-1" class="section level2">
+<h2>NUTS-3</h2>
+<pre class="r"><code>
+# NUTS 3
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 3,] %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;violetred4&quot;, color=&quot;white&quot;) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  ggtitle(&quot;NUTS-3&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-11-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="todos-los-niveles-nuts-1" class="section level2">
+<h2>TODOS LOS NIVELES NUTS</h2>
+<p>Para representar los cuatro niveles de forma conjunta, y con la única intención de mostrar la funcionalidad de otro paquete de R, vamos a cambiar de procedimiento y utilizamos el paquete {cowflow} y su función <code>plot_grid()</code>. Para ello descargaremos los cuatro niveles NUTS por separado, guardamos cada uno de los gráficos de forma individualizada y utilizamos el paquete y la función mencionada para representar conjuntamente los cuatro gráficos.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+mapdata_psdf_0 &lt;- get_eurostat_geospatial(output_class = &quot;spdf&quot;, nuts_level= 0, resolution = 60)
+mapdata_psdf_1 &lt;- get_eurostat_geospatial(output_class = &quot;spdf&quot;, nuts_level= 1, resolution = 60)
+mapdata_psdf_2 &lt;- get_eurostat_geospatial(output_class = &quot;spdf&quot;, nuts_level= 2, resolution = 60)
+mapdata_psdf_3 &lt;- get_eurostat_geospatial(output_class = &quot;spdf&quot;, nuts_level= 3, resolution = 60)</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+nuts_0 &lt;- mapdata_psdf_0 %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;tomato1&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) 
+
+nuts_1 &lt;- mapdata_psdf_1 %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;tomato2&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) 
+
+nuts_2 &lt;- mapdata_psdf_2 %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;tomato3&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) 
+
+nuts_3 &lt;- mapdata_psdf_3 %&gt;% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill=&quot;tomato4&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) 
+
+
+plot_grid(nuts_0, nuts_1, nuts_2, nuts_3, 
+          labels= c(&quot;NUTS-0&quot;,&quot;NUTS-1&quot;,&quot;NUTS-2&quot;,&quot;NUTS-3&quot;), 
+          label_size = 12)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-13-1.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="dataframe-df" class="section level1">
+<h1>Dataframe (df)</h1>
+<p><br />
+</p>
+<p>Una tercera posibilidad consiste en descargar con la función <code>get_eurostat_geospatial()</code> un <strong>dataframe</strong> donde viene recopilada la información de todos los niveles de NUTS conjuntamente.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Guardamos el dataframe con resolución 60
+
+mapdata_df &lt;- get_eurostat_geospatial(output_class = &quot;df&quot;, resolution = 60)
+head(mapdata_df)
+## # A tibble: 6 x 13
+##    long   lat order hole  piece group id    CNTR_CODE NUTS_NAME LEVL_CODE FID  
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt; &lt;chr&gt;
+## 1  23.0  43.8     1 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0 BG   
+## 2  23.1  43.8     2 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0 BG   
+## 3  23.1  43.8     3 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0 BG   
+## 4  23.2  43.8     4 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0 BG   
+## 5  23.3  43.8     5 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0 BG   
+## 6  23.3  43.8     6 FALSE 1     1.1   1     BG        &lt;U+0411&gt;&lt;U+042A&gt;&lt;U+041B&gt;&lt;U+0413&gt;&lt;U+0410&gt;&lt;U+0420&gt;&lt;U+0418&gt;&lt;U+042F&gt;          0 BG   
+## # ... with 2 more variables: NUTS_ID &lt;chr&gt;, geo &lt;chr&gt;</code></pre>
+<p><br />
+</p>
+<p>Podemos <strong>guardar un dataframe específico para cada nivel de NUTS</strong>. Utilizando el paquete {ggplot2} tal y como se ha utilizado en los ejemplos anteriores podemos realizar los diferentes mapas de Europa. En este caso, para evitar ser excesivamente repetitivos, únicamente vamos a representar el mapa conjunto utilizando la función <code>facet_wrap()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# NUTS-0
+
+mapdata_df_0 &lt;- mapdata_df %&gt;%
+  filter(LEVL_CODE == 0)
+
+# NUTS-1
+
+mapdata_df_1 &lt;- mapdata_df %&gt;%
+  filter(LEVL_CODE == 1)
+
+# NUTS-2
+
+mapdata_df_2 &lt;- mapdata_df %&gt;%
+  filter(LEVL_CODE == 2)
+
+# NUTS-3
+mapdata_df_3 &lt;- mapdata_df %&gt;%
+  filter(LEVL_CODE == 3)
+
+# Usando la función facet_wrap() podemos visualizar los cuatro niveles de forma conjunta
+
+mapdata_df %&gt;% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= &quot;NUTS-0&quot;, `1`= &quot;NUTS-1&quot;, `2`= &quot;NUTS-2&quot;, `3`= &quot;NUTS-3&quot; )) %&gt;%
+  ggplot(., aes(x=long,y=lat, group=group)) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) + 
+  facet_wrap(~LEVL_CODE_2) +
+  ggtitle(&quot;Unidades Territoriales Estadísticas (NUTS)&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="mapas-nacionales-de-las-unidades-territoriales-estadísticas-nuts" class="section level1">
+<h1>Mapas nacionales de las Unidades Territoriales Estadísticas (NUTS)</h1>
+<p><br />
+</p>
+<p>Podemos sustraer los <strong>códigos identificativos de cada país</strong> presentes en el dataframe utilizando la función <code>unique()</code> y, a partir de ahí, seleccionar los distintos niveles NUTS para examinar sus particularidades en los países de la Unión Europea. Veamos unos ejemplos examinando algunos países elegidos al azar:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+unique(mapdata_df$CNTR_CODE)
+##  [1] &quot;BG&quot; &quot;CH&quot; &quot;CY&quot; &quot;AL&quot; &quot;CZ&quot; &quot;BE&quot; &quot;AT&quot; &quot;DE&quot; &quot;DK&quot; &quot;EE&quot; &quot;EL&quot; &quot;ES&quot; &quot;FI&quot; &quot;HR&quot; &quot;FR&quot;
+## [16] &quot;HU&quot; &quot;IE&quot; &quot;IS&quot; &quot;IT&quot; &quot;LI&quot; &quot;LT&quot; &quot;LU&quot; &quot;LV&quot; &quot;ME&quot; &quot;MK&quot; &quot;MT&quot; &quot;NL&quot; &quot;NO&quot; &quot;PL&quot; &quot;PT&quot;
+## [31] &quot;RO&quot; &quot;RS&quot; &quot;SE&quot; &quot;SI&quot; &quot;SK&quot; &quot;TR&quot; &quot;UK&quot;</code></pre>
+<p><br />
+</p>
+<div id="españa" class="section level2">
+<h2>España</h2>
+<pre class="r"><code>
+spain &lt;- mapdata_df %&gt;%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= &quot;NUTS-0&quot;, 
+                                     `1`= &quot;NUTS-1&quot;, 
+                                     `2`= &quot;NUTS-2&quot;, 
+                                     `3`= &quot;NUTS-3&quot; )) %&gt;%
+  filter(grepl(&quot;ES&quot;, NUTS_ID))
+  
+
+ggplot(spain, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.2) +
+  theme_minimal() +
+  ggtitle(&quot;España&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="italia" class="section level2">
+<h2>Italia</h2>
+<pre class="r"><code>
+italy &lt;- mapdata_df %&gt;% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= &quot;NUTS-0&quot;, 
+                                     `1`= &quot;NUTS-1&quot;, 
+                                     `2`= &quot;NUTS-2&quot;, 
+                                     `3`= &quot;NUTS-3&quot; )) %&gt;%
+  filter(grepl(&quot;IT&quot;, NUTS_ID))
+   
+
+ggplot(italy, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.2) +
+  theme_minimal()+
+  ggtitle(&quot;Italia&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="francia" class="section level2">
+<h2>Francia</h2>
+<pre class="r"><code>
+france &lt;- mapdata_df %&gt;% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= &quot;NUTS-0&quot;, 
+                                     `1`= &quot;NUTS-1&quot;, 
+                                     `2`= &quot;NUTS-2&quot;, 
+                                     `3`= &quot;NUTS-3&quot; )) %&gt;%
+  filter(grepl(&quot;FR&quot;, NUTS_ID))
+   
+
+ggplot(france, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.2) +
+  xlim(c(-8, 12)) +
+  ylim(c(40, 53)) +
+  theme_minimal()+
+  ggtitle(&quot;Francia&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="alemania" class="section level2">
+<h2>Alemania</h2>
+<pre class="r"><code>
+germany &lt;- mapdata_df %&gt;% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= &quot;NUTS-0&quot;, 
+                                     `1`= &quot;NUTS-1&quot;, 
+                                     `2`= &quot;NUTS-2&quot;, 
+                                     `3`= &quot;NUTS-3&quot; )) %&gt;%
+  filter(grepl(&quot;DE&quot;, NUTS_ID))
+  
+
+ggplot(germany, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.2) +
+  theme_minimal()+
+  ggtitle(&quot;Alemania&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-20-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="reino-unido" class="section level2">
+<h2>Reino Unido</h2>
+<pre class="r"><code>
+unitedkingdom &lt;- mapdata_df %&gt;% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= &quot;NUTS-0&quot;, 
+                                     `1`= &quot;NUTS-1&quot;, 
+                                     `2`= &quot;NUTS-2&quot;, 
+                                     `3`= &quot;NUTS-3&quot; )) %&gt;%
+  filter(grepl(&quot;UK&quot;, NUTS_ID)) 
+  
+
+ggplot(unitedkingdom, aes(x = long, y=lat, group = group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill=&quot;orange&quot;, color=&quot;white&quot;, size = 0.2) +
+  theme_minimal()+
+  ggtitle(&quot;Reino Unido&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="aplicación-práctica-utilizando-datos-de-eurostat" class="section level1">
+<h1>Aplicación práctica utilizando datos de Eurostat</h1>
+<p><br />
+</p>
+<div id="nuts-0.-ratio-de-mortalidad-infantil" class="section level2">
+<h2>NUTS-0. Ratio de Mortalidad Infantil</h2>
+<p>En primer lugar vamos a representar en un mapa el <strong>ratio de mortalidad infantil en el año 2017</strong> por países (NUTS 0). En Eurostat este ratio (infant mortality rate) indica el número de muertes de bebés menores de 1 año por cada mil nacimientos. Para ello, lo primero que hacemos es buscar en la base de datos de Eurostat indicando la palabra “mortality” y, una vez seleccionado el dataframe que nos interesa, lo descargamos y guardamos como <code>inf_mort_rate</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+# Buscamos el dataset 
+
+mortality &lt;- search_eurostat(pattern = &quot;mortality&quot;, 
+                                type = &quot;table&quot;)
+
+mortality %&gt;%
+  select(title, code)
+## # A tibble: 2 x 2
+##   title                                                                 code    
+##   &lt;chr&gt;                                                                 &lt;chr&gt;   
+## 1 Infant mortality rate                                                 tps00027
+## 2 Assessed fish stocks exceeding fishing mortality at maximum sustaina~ sdg_14_~
+
+
+# Descargamos el dataset &quot;Infant mortality rate&quot; utilizando el id (tps00027) 
+
+inf_mort_rate &lt;- get_eurostat(id= &quot;tps00027&quot;,  time_format = &quot;num&quot;)
+
+head(inf_mort_rate)
+## # A tibble: 6 x 5
+##   unit  indic_de geo    time values
+##   &lt;fct&gt; &lt;fct&gt;    &lt;fct&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 RT    INFMORRT AD     2006    3.6
+## 2 RT    INFMORRT AL     2006    7.4
+## 3 RT    INFMORRT AM     2006   13.9
+## 4 RT    INFMORRT AT     2006    3.6
+## 5 RT    INFMORRT AZ     2006   10.1
+## 6 RT    INFMORRT BA     2006    7.5</code></pre>
+<p><br />
+</p>
+<p>Los <strong>códigos que identifican los países</strong> incluidos en el mapa base previamente realizado son los siguientes:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+country_codes &lt;- unique(mapdata_0$NUTS_ID)
+country_codes
+##  [1] &quot;BG&quot; &quot;CH&quot; &quot;CY&quot; &quot;AL&quot; &quot;CZ&quot; &quot;BE&quot; &quot;AT&quot; &quot;DE&quot; &quot;DK&quot; &quot;EE&quot; &quot;EL&quot; &quot;ES&quot; &quot;FI&quot; &quot;HR&quot; &quot;FR&quot;
+## [16] &quot;HU&quot; &quot;IE&quot; &quot;IS&quot; &quot;IT&quot; &quot;LI&quot; &quot;LT&quot; &quot;LU&quot; &quot;LV&quot; &quot;ME&quot; &quot;MK&quot; &quot;MT&quot; &quot;NL&quot; &quot;NO&quot; &quot;PL&quot; &quot;PT&quot;
+## [31] &quot;RO&quot; &quot;RS&quot; &quot;SE&quot; &quot;SI&quot; &quot;SK&quot; &quot;TR&quot; &quot;UK&quot;</code></pre>
+<p><br />
+</p>
+<p>Realizamos una serie de <strong>modificaciones</strong> al dataframe <code>inf_mort_rate</code> para seleccionar el año 2017 e identificar las regiones que debemos incluir en nuestro mapa.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+inf_mort_2017 &lt;- inf_mort_rate %&gt;%
+  filter( time == &quot;2017&quot;) %&gt;%
+  filter(geo %in% country_codes )</code></pre>
+<p><br />
+</p>
+<p><strong>Unimos los dos dataframes</strong> en uno que denominamos <code>inf_mort_2017_mapa</code> y <strong>seleccionamos el número de rangos</strong> en los que queremos clasificar los ratios de mortalidad infantil (en este caso determinamos 10 categorías).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+inf_mort_2017_mapa &lt;- mapdata_0 %&gt;%
+  right_join(inf_mort_2017) %&gt;%
+  mutate(cat = cut_to_classes(values, n=10, decimals = 1)) </code></pre>
+<p><br />
+</p>
+<p>Y finalmente <strong>graficamos</strong>:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+ggplot(inf_mort_2017_mapa, aes(fill=cat)) +
+  geom_sf(color = alpha(&quot;white&quot;, 1/2), alpha= .9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = &quot;Ratio de Mortalidad Infantil (%), 2017&quot;,
+       subtitle = &quot;Núm de muertes infantiles (menores de 1 año) por cada mil nacidos vivos&quot;,
+       caption = &quot;Fuente: Eurostat&quot;,
+       fill= &quot;&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_brewer(palette= &quot;Spectral&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-26-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-2.-jóvenes-que-ni-estudian-ni-trabajan" class="section level2">
+<h2>NUTS-2. Jóvenes que ni estudian ni trabajan</h2>
+<p>En el segundo ejemplo vamos a tratar de representar en un mapa de Europa (NUTS-2) el <strong>ratio de jóvenes que no se encuentraban trabajando ni cursando algún tipo de formación</strong> en el año 2016. Eurostat denomina a este ratio como el <em>NEET rate</em> (Youth not in employment, education or training).</p>
+<p><br />
+</p>
+<p>De nuevo <strong>buscamos y descargamos la información</strong> directamente de Eurostat al igual que hicimos en el ejemplo anterior. En este caso el <em>id</em> que vamos a utilizar es <code>edat_lfse_22</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+neet &lt;- get_eurostat(id= &quot;edat_lfse_22&quot;,  time_format = &quot;num&quot;)
+
+neet_label &lt;- label_eurostat(neet, fix_duplicated = T)</code></pre>
+<p><br />
+</p>
+<p>Conviene <strong>examinar las variables del dataframe y las categorías</strong> que comprende dicho dataframe:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+label_eurostat_vars(names(neet))
+## [1] &quot;Sex&quot;                                                                                 
+## [2] &quot;Age class&quot;                                                                           
+## [3] &quot;Training&quot;                                                                            
+## [4] &quot;Activity and employment status&quot;                                                      
+## [5] &quot;Unit of measure&quot;                                                                     
+## [6] &quot;Geopolitical entity (reporting)&quot;                                                     
+## [7] &quot;Period of time (a=annual, q=quarterly, m=monthly, d=daily, c=cumulated from January)&quot;
+levels(neet$sex)
+## [1] &quot;F&quot; &quot;M&quot; &quot;T&quot;
+levels(neet$age)
+## [1] &quot;Y15-24&quot; &quot;Y18-24&quot;
+levels(neet$training)
+## [1] &quot;NO_FE_NO_NFE&quot;
+levels(neet$wstatus)
+## [1] &quot;NEMP&quot;
+levels(neet$unit)
+## [1] &quot;PC&quot;</code></pre>
+<p><br />
+</p>
+<p>Seleccionamos los <strong>códigos regionales del mapa base</strong> que mostramos en apartados previos con el objetivo de, posteriormente, seleccionar dichos valores del dataset <code>neet</code> obtenido de Eurostat.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+regions_codes &lt;- unique(mapdata_df_2$geo)</code></pre>
+<p><br />
+</p>
+<p>Posteriormente <strong>realizamos algunas modificaciones sobre el dataset</strong> para identificar el año, ambos sexos y el rango de edad que vamos a tener en consideración: 15-24 años. Además, seleccionamos los valores que se corresponden a las regiones presentes en el mapa base utilizando los códigos identificados previamente.</p>
+<p> </p>
+<pre class="r"><code>
+neet_total_2016 &lt;- neet %&gt;%
+  filter(sex == &quot;T&quot;, 
+         age == &quot;Y15-24&quot;,
+         time == 2016, 
+         geo %in% regions_codes) %&gt;%
+  select(geo, values) 
+ </code></pre>
+<p><br />
+</p>
+<p><strong>Unimos los dataset y aplicamos un conjunto de rangos</strong> atendiendo a los valores. En este caso identificamos de nuevo 10 rangos para su posterior representación gráfica.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+neet_total_map &lt;- mapdata_df_2 %&gt;%
+  right_join(neet_total_2016) %&gt;%
+  mutate(cat = cut_to_classes(values, n=10, decimals=1))</code></pre>
+<p><br />
+</p>
+<p>Utilizamos básicamente los colores de la <a href="http://www.di.fc.ul.pt/~jpn/r/GraphicalTools/colorPalette.html">paleta</a> denominada “Spectral”. No obstante, sobre los colores de dicha paleta realizamos alguna sencilla <strong>modificación</strong> con el objetivo de incluir en nuestra selección un color gris para indicar las regiones europeas donde no tenemos información disponible.</p>
+<p><br />
+</p>
+<p>La función <code>brewer.pal()</code> del paquete <code>RColorBrewer</code> nos permite identificar los colores que componen la paleta en questión y la función <code>display.brewer.pal()</code> nos permite visualizar dichos colores. De esta forma podemos identificar los colores que queremos conservar y los colores que nos interesa añadir en nuestra selección de colores final.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+brewer.pal(11, &quot;Spectral&quot;)
+##  [1] &quot;#9E0142&quot; &quot;#D53E4F&quot; &quot;#F46D43&quot; &quot;#FDAE61&quot; &quot;#FEE08B&quot; &quot;#FFFFBF&quot; &quot;#E6F598&quot;
+##  [8] &quot;#ABDDA4&quot; &quot;#66C2A5&quot; &quot;#3288BD&quot; &quot;#5E4FA2&quot;
+display.brewer.pal(11, &quot;Spectral&quot;)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-32-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>
+colores &lt;- c(&quot;grey60&quot;, &quot;#5E4FA2&quot;, &quot;#3288BD&quot;, &quot;#66C2A5&quot;, &quot;#ABDDA4&quot;, &quot;#FFFFBF&quot;, &quot;#FEE08B&quot;,&quot;#FDAE61&quot;, &quot;#F46D43&quot;,&quot;#D53E4F&quot;, &quot;#9E0142&quot;)</code></pre>
+<p><br />
+</p>
+<p>Y <strong>graficamos</strong> indicando los colores seleccionados con la función <code>scale_fill_manual()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+
+ggplot(neet_total_map, aes(x= long, y=lat, group= group)) +
+  geom_polygon(aes(fill = cat), 
+               color = &quot;white&quot;, 
+               alpha= .9,
+               size = 0.05) +
+  xlim(c(-24, 44)) +
+  ylim(c(35, 72)) +
+  labs(title = &quot;Young people (15-24 Yrs) neither in employment nor in education/training \n(NEET rate in 2016)&quot;,
+       subtitle = &quot;NUTS-2 regions&quot;,
+       caption = &quot;Fuente: Eurostat&quot;,
+       fill= &quot;&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 13, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_manual(values= colores)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-33-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><br />
+</p>
+</div>
+<div id="nuts-3.-edad-promedio-de-las-madres-en-el-nacimiento" class="section level2">
+<h2>NUTS-3. Edad promedio de las madres en el nacimiento</h2>
+<p>Para terminar vamos a exponer un ejemplo de mapa a nivel NUT-3. En esta ocasión vamos a representar gráficamente la <strong>edad promedio (media) de las madres en los nacimientos</strong>. Para ello seguimos un procedimiento similar al seguido en el apartado anterior.</p>
+<p><br />
+</p>
+<p>En primer lugar <strong>buscamos y descargamos la información</strong> que se ajusta a nuestro interés.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+fertility &lt;- get_eurostat(id= &quot;demo_r_find3&quot;,  time_format = &quot;num&quot;)
+fertility_label &lt;- label_eurostat(fertility, fix_duplicated = T)</code></pre>
+<p><br />
+</p>
+<p><strong>Examinamos las variables del dataset y las categorías</strong> en las que se estructura el mismo.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+label_eurostat_vars(names(fertility))
+## [1] &quot;Demographic indicator&quot;                                                               
+## [2] &quot;Unit of measure&quot;                                                                     
+## [3] &quot;Geopolitical entity (reporting)&quot;                                                     
+## [4] &quot;Period of time (a=annual, q=quarterly, m=monthly, d=daily, c=cumulated from January)&quot;
+levels(fertility$indic_de)
+## [1] &quot;AGEMOTH&quot;    &quot;MEDAGEMOTH&quot; &quot;TOTFERRT&quot;
+levels(fertility_label$indic_de)
+## [1] &quot;Mean age of women at childbirth&quot;   &quot;Median age of women at childbirth&quot;
+## [3] &quot;Total fertility rate&quot;</code></pre>
+<p><br />
+</p>
+<p>Seleccionamos el <strong>código de las regiones</strong> en función al mapa base realizado previamente.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+regions_3_codes &lt;- unique(mapdata_df_3$geo)</code></pre>
+<p><br />
+</p>
+<p><strong>Manipulamos el dataframe</strong> para seleccionar únicamente el año de interés, en este caso el año 2017, y la categoría que nos interesa: la edad media de las madres.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+fertility_total_2017 &lt;- fertility %&gt;%
+  filter(time == 2017, 
+         indic_de == &quot;AGEMOTH&quot;,
+         geo %in% regions_3_codes) %&gt;%
+  select(geo, values) </code></pre>
+<p><br />
+</p>
+<p><strong>Unimos los datasets</strong> en uno que nos servirá para realizar nuestro mapa final.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+fertility_total_map &lt;- mapdata_df_3 %&gt;%
+  right_join(fertility_total_2017) %&gt;%
+  mutate(cat = cut_to_classes(values, n=8, decimals=1))</code></pre>
+<p><br />
+</p>
+<p><strong>Seleccionamos los colores</strong> que vamos a utilizar para los rangos de valores. En este caso hemos establecido 8 rangos y, consecuentemente, seleccionamos 8 colores.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+colores_2 &lt;- c(&quot;#5E4FA2&quot;, &quot;#3288BD&quot;, &quot;#66C2A5&quot;, &quot;#ABDDA4&quot;,&quot;#FDAE61&quot;, &quot;#F46D43&quot;,&quot;#D53E4F&quot;, &quot;#9E0142&quot;)
+</code></pre>
+<p><br />
+</p>
+<p>Realizamos el <strong>gráfico final</strong></p>
+<p><br />
+</p>
+<pre class="r"><code>
+ggplot(fertility_total_map, aes(x= long, y=lat, group= group)) +
+  geom_polygon(aes(fill = cat), 
+               color = &quot;white&quot;,
+               size = 0.005) +
+  xlim(c(-24, 44)) +
+  ylim(c(35, 72)) +
+  labs(title = &quot;Edad media de las madres en el nacimiento, 2017&quot;,
+       subtitle = &quot;NUTS-3 regions&quot;,
+       caption = &quot;Fuente: Eurostat&quot;,
+       fill= &quot;&quot;) +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = &quot;snow&quot;, color = NA),
+    panel.background = element_rect(fill= &quot;snow&quot;, color = NA),
+    plot.title = element_text(size = 13, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = &quot;grey40&quot;, size = 8),
+    legend.text = element_text(color = &quot;grey40&quot;, size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), &quot;cm&quot;)) +
+  scale_fill_manual(values= colores_2)</code></pre>
+<p><img src="/nuts_files/figure-html/unnamed-chunk-40-1.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+</div>

@@ -17,8 +17,8 @@
       <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/infographics/</guid>
-      <description>Re
-En este post se presentarán diversas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función e_chart( ) del paquete echarts4r e iconos de diversos orígenes.
+      <description>Res
+En este post se presentarán diversas posibilidades para realizar pictogramas e infografías con R. Utilizaremos para ello la función e_chart( ) del paquete {echarts4r} e iconos de diversos orígenes.
 
 Paquetes
 Cargamos los paquetes requeridos:

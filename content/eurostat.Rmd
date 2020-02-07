@@ -1,0 +1,597 @@
+---
+title: "Importar datos de Eurostat en R con el paquete {eurostat}"
+author: "Rubén F. Bustillo"
+date: 2019-11-18
+categories: ["R"]
+tags: ["Eurostat", "tidyverse", "mapas", "Europa", "Europe"]
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+En este post se explica las principales funcionalidades del paquete {eurostat}, que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.   
+
+\
+
+# Introducción
+
+\
+
+**Eurostat es la Oficina de Estadística de la Comisión Europea**, organismo que se encarga de producir datos, publicar estadísticas e indicadores sobre la Unión Europea promoviendo la armonización de los métodos estadísticos entre los Estados que la conforman. La función de este organismo es fundamental para realizar análisis y comparaciones entre países y entre regiones de la zona euro.
+
+\
+
+El paquete {eurostat} consiste en un conjunto de herramientas que tiene como finalidad facilitar la descarga de información desde la base de datos de Eurostat. Los autores de este paquete son Leo Lahti, Janne Huovari, Markus Kainu y Przemyslaw Biecek, quienes han puesto a disposición del público información que facilita su utilización y el aprendizaje de sus funcionalidades (véase el [artículo](https://journal.r-project.org/archive/2017/RJ-2017-019/RJ-2017-019.pdf) en R Journal, el [tutorial/ vignette](http://ropengov.github.io/eurostat/articles/eurostat_tutorial.html), el [cheatsheet del paquete](http://ropengov.github.io/eurostat/articles/cheatsheet.html), la documentación sobre sus [funcionalidades](http://ropengov.github.io/eurostat/reference/index.html) o el [documento](https://cran.r-project.org/web/packages/eurostat/eurostat.pdf) de CRAN.r-project ). 
+
+\
+
+La información de la presente entrada difícilmente podrá superar e incluso complementar a la disponible en los enlaces mencionados. No obstante cabe señalar que este post no pretende tener un carácter divulgativo sino que más bien nace con un objetivo de índole personal, en tanto en cuanto espero que sirva principalmente como proceso para familiarizarme con la utilización de dicho paquete. Dicho esto, si este post sirve de apoyo o ayuda a alguna persona interesada en aprender la utilización del paquete {eurostat} pues bienvenido sea. 
+
+\
+
+# El paquete eurostat
+
+\
+
+Como siempre, en primer lugar **cargamos los paquetes** necesarios. Evidentemente cargamos el paquete {eurostat} y, adicionalmente, cargamos el paquete {tidyverse} cuyas funcionalidades se ajustan muy bien con el paquete {eurostat}. 
+
+\
+
+```{r,warning=FALSE, message=FALSE}
+
+library(eurostat)
+library(tidyverse)
+
+```
+
+\
+
+Las **funciones** disponibles del paquete {eurostat} se pueden encontrar en el [link](http://ropengov.github.io/eurostat/reference/index.html) previamente mencionado o indicando la siguiente orden:
+
+\
+
+```{r}
+
+library(help= "eurostat")
+
+```
+
+\
+
+Para **ver el contenido** (table of contents - TOC) del paquete podemos utilizar la función `get_eurostat_toc()`. Esta función nos da como resultado un tibble de 9863 observaciones y 8 variables (esta información se puede consultar en el siguiente [archivo de texto](http://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?sort=1&file=table_of_contents_en.txt)). A modo de ejemplo seleccionamos las primeras diez observaciones del dataset. 
+ 
+\
+
+```{r, warning=FALSE, message=FALSE, , out.width="100%"}
+
+contenido_eurostat <- get_eurostat_toc()
+
+library(DT)
+
+datatable(contenido_eurostat)
+
+```
+
+\
+
+Vemos que el dataset muestra el **título o nombre** de cada dataset, su **código**, indica si es folder o table (**type**), presenta información sobre la fecha de la **última actualización** u otros **cambios** o sobre las **fechas o periodos** que incluye cada dataset.
+
+\
+
+# Ejemplo 1. Homicidios en las principales ciudades europeas
+
+\
+
+Para **buscar información en función de algun patrón o de alguna palabra clave** que sirva como pauta podemos utilizar la función `search_eurostat()`. A modo de ejemplo, y siendo un poco macabros, buscamos las TOC (tablas de contenidos) que estén relacionadas con la palabra homicidio
+
+\
+
+```{r, out.width="100%"}
+
+datatable(search_eurostat("homicide"))
+
+```
+
+\
+
+Examinaremos los **homicidios intencionados en las grandes ciudades** cuyo *id* es `crim_hom_ocit`. Para **seleccionar y cargar dicho dataset** utilizamos la función `get_eurostat()`.
+
+\
+
+```{r, message=FALSE}
+
+homicidios <- get_eurostat(id="crim_hom_ocit")
+
+head(homicidios)
+```
+
+\
+
+Utilizaremos la orden `time_format = "num"` dado que la información es anual y, por tanto, resulta más conveniente convertir la fecha a una variable numérica que continuar utilizando una variable `date`. 
+
+\
+
+```{r, message=FALSE}
+
+homicidios <- get_eurostat(id="crim_hom_ocit", time_format = "num")
+
+head(homicidios)
+
+```
+
+\
+
+Por otro lado, **para remplazar los códigos del dataset por etiquetas (labels)** usamos la función `label_eurostat()`. Nótese que, de forma alternativa, al obtener el dataframe con la función `get_eurostat()` podemos utilizar `type= "label"` para obtener directamente las variables con etiquetas. 
+
+\
+
+```{r, message=FALSE}
+
+homicidios_labels <- label_eurostat(homicidios)
+
+head(homicidios_labels)
+
+str(homicidios_labels)
+
+summary(homicidios_labels)
+
+```
+
+\
+
+Vemos que el dataframe, que abarca el periodo 2008-2017, incluye información sobre el número total de homicidios y, por otro lado, sobre número de homicidios por cien mil habitantes. 
+
+\
+
+Para comprobar las etiquetas de las variables y las categorías que se incluyen en el dataset utilizaremos la función `label_eurostat_vars()` y la función `levels()`. 
+
+\
+
+```{r}
+
+label_eurostat_vars(names(homicidios_labels))
+
+levels(homicidios_labels$unit)
+
+levels(homicidios_labels$cities)
+
+```
+
+\
+
+## 1. ¿Cuántos Homicidios intencionados por cada 100.000 habitantes se registraron en el año 2008 en las principales ciudades?
+
+A modo de ejemplo supongamos que queremos graficar el **número de homicidios por cada cien mil habitantes** en el año 2008 en las ciudades seleccionadas por Eurostat. En primer lugar debemos hacer unas pequeñas operaciones sobre el dataframe `homicidios_labels` que denominaremos `homicidios_labels_mil_2008`. 
+
+\
+
+```{r}
+
+homicidios_labels_mil_2008 <- homicidios_labels %>%
+  filter(unit == "Per hundred thousand inhabitants" & time == "2008" & values > 0.1) %>%
+  mutate(cities = gsub(cities, pattern = " \\(.*", replacement="")) %>%
+  mutate(cities = gsub(cities, pattern =" \\/.*", replacement ="")) %>%
+  arrange(desc(values)) 
+
+head(homicidios_labels_mil_2008) 
+
+```
+
+\
+
+Una vez preparado el dataset realizamos un gráfico de barras con {ggplot2}. 
+
+\
+
+```{r, out.width= "70%", fig.width=7, fig.height=7, fig.align='center'}
+
+ggplot(homicidios_labels_mil_2008, aes(x = reorder(cities, values), y = values)) +
+  geom_col(color= "white", 
+           fill= "#fc6721",
+           alpha = 0.8,
+           size = 2) +
+  labs(title = "Homicidios intencionados por 100mil habitantes, 2008",
+       subtitle = "Selección de países",
+       caption = "Fuente: Eurostat",
+       y = "", x="") +
+  coord_flip() +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.y= element_text(size = 12, hjust = 1),
+        axis.text.x= element_text(size = 10),
+        plot.title = element_text(size = 15, 
+                                  face = "bold", 
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size=12, 
+                                     face = "plain", 
+                                     hjust = 0.5))+
+  geom_text(aes(label = values, y = values + 0.05), 
+            hjust = 0,
+            color = "grey40",
+            size = 2.8)
+  
+
+
+```
+
+\
+
+En 2008 Vilnius (Lituania) fue, con diferencia, la ciudad con mayor número de homicidios intencionados por cada 100 mil habitantes de entre las ciudades seleccionadas por Eurostat. Madrid, por su parte, se situaba por debajo de otras grandes ciudades europeas pero se encuentra por encima de Roma, Viena, Bucarest, Lisboa o Sarajevo. 
+
+\
+
+## 2. ¿Cómo ha evolucionado el número de homicidios intencionados en Madrid, Paris, Londres y Berlín?
+
+Veamos ahora la **evolución de los homicidios (por cada 100.000 habitantes)** en cuatro de las ciudades presentes en el dataframe: Madrid, Londres, Paris y Berlín. Para ello de nuevo **realizamos una serie de operaciones** en el dataframe original y generamos el dataset `homicidios_MLPB`.
+
+\
+
+```{r}
+
+homicidios_MLPB <- homicidios_labels %>%
+  filter(unit == "Per hundred thousand inhabitants") %>%
+  mutate(cities = gsub(cities, pattern = " \\(.*", replacement="")) %>%
+  filter(cities == "Madrid" | cities == "London" | cities == "Paris" | cities == "Berlin") 
+
+head(homicidios_MLPB) 
+
+```
+
+\  
+
+Y **graficamos**:
+
+\
+
+```{r, out.width = "80%", fig.align = 'center', fig.width = 8, fig.height = 5}
+
+ggplot(homicidios_MLPB, aes(x= time, y= values, shape = cities, color = cities))+
+  geom_point(size =2) +
+  geom_line() +
+  theme_minimal() +
+  labs(title ="Homicidios intencionados por 100mil habitantes",
+       subtitle = "Selección de países",
+       caption = "Fuente: Eurostat",
+       x= "Year", y = "") 
+  
+```
+
+\
+
+# Ejemplo 2. Consumo de alcohol por país 
+
+\
+
+En primer lugar **buscamos un dataframe** en Eurostat que pueda servirnos para el objetivo marcado que, en este caso, consiste en examinar las **diferencias en el consumo de alcohol por país**.
+
+\
+
+```{r, out.width="100%"}
+
+datatable(search_eurostat("alcohol consumption"))
+
+```
+
+\
+
+Seleccionamos el dataset que lleva como nombre *Frequency of alcohol consumption by sex, age and country of citizenship*. Al igual que sucedía con el ejemplo previo modificamos el formato para las fechas por su valor numérico dado que los datos del dataset corresponden al año 2014. Para **examinar las características** del dataframe existen diversas alternativas que podemos utilizar y que no ayudarán a familiarizarnos con la información presente en el dataset.
+
+\
+
+```{r, message=FALSE}
+
+consumo <- get_eurostat(id="hlth_ehis_al1c", time_format = "num")
+
+head(consumo)
+
+consumo_labels <- label_eurostat(consumo)
+
+head(consumo_labels)
+
+str(consumo_labels)
+
+summary(consumo_labels)
+
+```
+
+\
+
+El dataframe contiene información del consumo según frecuencia (cada día, menos de una vez al mes, etc.), de sexo (femenino, masculino o total), por rangos de edad, por ciudadanía y por país. Para consultar el nombre completo de las variables del data set podemos utilizar la función `label_eurostat_vars(names())` y para comprobar las distintas categorías de las observaciones podemos examinar los levels como se expone a continuación. De esta forma podemos tener una imagen más adecuada del dataset sobre el que estamos trabajando:
+
+\
+
+```{r, message=FALSE}
+
+label_eurostat_vars(names(consumo_labels))
+
+levels(consumo_labels$unit)
+
+levels(consumo_labels$frequenc)
+
+levels(consumo_labels$sex)
+
+levels(consumo_labels$age)
+
+levels(consumo_labels$citizen)
+
+levels(consumo_labels$geo)
+
+levels(consumo$geo)
+
+```
+
+\
+
+Resulta curioso comprobar que el dataset seleccionado, obtenido de Eurostat, **no contiene información sobre Francia**. 
+
+\
+
+Partiendo del dataset obtenido de Eurostat vamos a intentar responder algunas preguntas:
+
+\
+
+## 1. ¿Cuál es la proporción de personas por país que consumen alcohol de forma diaria?
+
+Tal y como hemos hecho previamente, en primer lugar **realizamos una serie de operaciones** donde seleccionamos la frecuencia (every day), elegimos ambos sexos y cualquier edad. Queremos de esta forma mostrar el consumo de alcohol en términos generales y agregados. 
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+consumo <- get_eurostat(id="hlth_ehis_al1c", time_format = "num")
+
+consumo_total <- consumo %>%
+  filter(frequenc == "DAY") %>%
+  filter(sex == "T") %>%
+  filter(age == "TOTAL") %>%
+  filter(citizen == "NAT") %>%
+  filter(geo != "EU28" & geo !="EU27_2019")
+
+head(consumo_total)
+
+```
+
+\ 
+
+**Realizamos el mapa** utilizando la función `get_eurostat_geospatial()`, estableciendo 8 rangos para los valores y utilizando como [paleta de colores](http://rstudio-pubs-static.s3.amazonaws.com/5312_98fc1aba2d5740dd849a5ab797cc2c8d.html) la llamada *Spectral*. 
+
+\
+
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
+
+
+consumo_total_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
+  right_join(consumo_total) %>%
+  mutate(categorias = cut_to_classes(values, n=8, decimals=1)) 
+
+head(select(consumo_total_mapa, geo, values, categorias), 3)
+
+
+ggplot(consumo_total_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha("white", 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = "Frequency of alcohol consumption, 2014",
+       subtitle = "Citizenship: National (has the citizenship of the reporting country)",
+       caption = "Source: Eurostat",
+       fill= "%")+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_brewer(palette= "Spectral")
+
+```
+
+\
+
+## 2. ¿Cuál es la proporción de mujeres por país que consumen alcohol de forma diaria?
+
+
+En este caso vamos a analizar únicamente la **población femenina**. Para ello realizamos una pequeña modificación en el dataframe indicando: `filter(sex == "F")`. 
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+consumo <- get_eurostat(id="hlth_ehis_al1c", time_format = "num")
+
+consumo_F <- consumo %>%
+  filter(frequenc == "DAY") %>%
+  filter(sex == "F") %>%
+  filter(age == "TOTAL") %>%
+  filter(citizen == "NAT") %>%
+  filter(geo != "EU28"& geo !="EU27_2019")
+
+```
+
+\
+
+**Graficamos:**
+
+\
+
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
+
+
+consumo_F_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
+  right_join(consumo_F) %>%
+  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+
+head(select(consumo_F_mapa, geo, values, categorias), 3)
+
+
+ggplot(consumo_F_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha("white", 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = "Frequency of female alcohol consumption, 2014",
+       subtitle = "Citizenship: National (has the citizenship of the reporting country)",
+       caption = "Source: Eurostat",
+       fill= "%")+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_brewer(palette= "Spectral")
+
+```
+
+\
+
+## 3. ¿Cuál es la proporción de hombres por país que consumen alcohol de forma diaria?
+
+Para ser equitativos, y por curiosidad personal, comprobamos el consumo de alcohol de la **población masculina**. Para ello indicamos: `filter(sex == "M"). 
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+consumo <- get_eurostat(id="hlth_ehis_al1c", time_format = "num")
+
+consumo_M <- consumo %>%
+  filter(frequenc == "DAY") %>%
+  filter(sex == "M") %>%
+  filter(age == "TOTAL") %>%
+  filter(citizen == "NAT") %>%
+  filter(geo != "EU28" & geo !="EU27_2019")
+
+```
+
+\
+
+Y **graficamos**:
+
+\
+
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
+
+
+consumo_M_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
+  right_join(consumo_M) %>%
+  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+
+head(select(consumo_M_mapa, geo, values, categorias), 3)
+
+
+ggplot(consumo_M_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha("white", 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = "Frequency of male alcohol consumption, 2014",
+       subtitle = "Citizenship: National (has the citizenship of the reporting country)",
+       caption = "Source: Eurostat",
+       fill= "%")+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_brewer(palette= "Spectral")
+
+```
+
+\
+
+## 4. ¿Cuál es la proporción de población de entre 15 y 24 años por país que consumen alcohol cada semana?
+
+Por último examinamos la población, pero en esta ocasión seleccionamos la **población con una edad comprendida entre los 15 y los 24 años**, que consumen alcohol **cada semana**. Para ello realizamos los cambios necesarios como se indica a continuación
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+consumo <- get_eurostat(id="hlth_ehis_al1c", time_format = "num")
+
+consumo_1524 <- consumo %>%
+  filter(frequenc == "WEEK") %>%
+  filter(sex == "T") %>%
+  filter(age == "Y15-24") %>%
+  filter(citizen == "NAT") %>%
+  filter(geo != "EU28"& geo != "EU27_2019")
+
+```
+
+\
+
+**Y realizamos el gráfico:**
+
+\
+
+```{r, out.width = "90%", fig.align='center', message=FALSE, warning=FALSE, eval=TRUE}
+
+
+consumo_1524_mapa <- get_eurostat_geospatial(nuts_level = 0) %>%
+  right_join(consumo_1524) %>%
+  mutate(categorias = cut_to_classes(values, n=10, decimals=1)) 
+
+head(select(consumo_1524_mapa, geo, values, categorias), 3)
+
+
+ggplot(consumo_1524_mapa, aes(fill=categorias)) +
+  geom_sf(color = alpha("white", 1/2), alpha= 0.9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = "Frequency of alcohol consumption per week, Age: 15-24 yrs, 2014",
+       subtitle = "Citizenship: National (has the citizenship of the reporting country)",
+       caption = "Source: Eurostat",
+       fill= "%")+
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_brewer(palette= "Spectral")
+
+```
+
+\
+

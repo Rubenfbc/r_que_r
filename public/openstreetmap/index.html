@@ -258,21 +258,22 @@ available_tags(&quot;railway&quot;)
 <pre class="r"><code>
 available_tags(&quot;highway&quot;)
 ##  [1] &quot;bridleway&quot;              &quot;bus_guideway&quot;           &quot;bus_stop&quot;              
-##  [4] &quot;construction&quot;           &quot;crossing&quot;               &quot;cycleway&quot;              
-##  [7] &quot;elevator&quot;               &quot;emergency_access_point&quot; &quot;escape&quot;                
-## [10] &quot;footway&quot;                &quot;give_way&quot;               &quot;living_street&quot;         
-## [13] &quot;milestone&quot;              &quot;mini_roundabout&quot;        &quot;motorway&quot;              
-## [16] &quot;motorway_junction&quot;      &quot;motorway_link&quot;          &quot;passing_place&quot;         
-## [19] &quot;path&quot;                   &quot;pedestrian&quot;             &quot;platform&quot;              
-## [22] &quot;primary&quot;                &quot;primary_link&quot;           &quot;proposed&quot;              
-## [25] &quot;raceway&quot;                &quot;residential&quot;            &quot;rest_area&quot;             
-## [28] &quot;road&quot;                   &quot;secondary&quot;              &quot;secondary_link&quot;        
-## [31] &quot;service&quot;                &quot;services&quot;               &quot;speed_camera&quot;          
-## [34] &quot;steps&quot;                  &quot;stop&quot;                   &quot;street_lamp&quot;           
-## [37] &quot;tertiary&quot;               &quot;tertiary_link&quot;          &quot;toll_gantry&quot;           
-## [40] &quot;track&quot;                  &quot;traffic_mirror&quot;         &quot;traffic_signals&quot;       
-## [43] &quot;trailhead&quot;              &quot;trunk&quot;                  &quot;trunk_link&quot;            
-## [46] &quot;turning_circle&quot;         &quot;turning_loop&quot;           &quot;unclassified&quot;</code></pre>
+##  [4] &quot;construction&quot;           &quot;corridor&quot;               &quot;crossing&quot;              
+##  [7] &quot;cycleway&quot;               &quot;elevator&quot;               &quot;emergency_access_point&quot;
+## [10] &quot;escape&quot;                 &quot;footway&quot;                &quot;give_way&quot;              
+## [13] &quot;living_street&quot;          &quot;milestone&quot;              &quot;mini_roundabout&quot;       
+## [16] &quot;motorway&quot;               &quot;motorway_junction&quot;      &quot;motorway_link&quot;         
+## [19] &quot;passing_place&quot;          &quot;path&quot;                   &quot;pedestrian&quot;            
+## [22] &quot;platform&quot;               &quot;primary&quot;                &quot;primary_link&quot;          
+## [25] &quot;proposed&quot;               &quot;raceway&quot;                &quot;residential&quot;           
+## [28] &quot;rest_area&quot;              &quot;road&quot;                   &quot;secondary&quot;             
+## [31] &quot;secondary_link&quot;         &quot;service&quot;                &quot;services&quot;              
+## [34] &quot;speed_camera&quot;           &quot;steps&quot;                  &quot;stop&quot;                  
+## [37] &quot;street_lamp&quot;            &quot;tertiary&quot;               &quot;tertiary_link&quot;         
+## [40] &quot;toll_gantry&quot;            &quot;track&quot;                  &quot;traffic_mirror&quot;        
+## [43] &quot;traffic_signals&quot;        &quot;trailhead&quot;              &quot;trunk&quot;                 
+## [46] &quot;trunk_link&quot;             &quot;turning_circle&quot;         &quot;turning_loop&quot;          
+## [49] &quot;unclassified&quot;</code></pre>
 <p><br />
 </p>
 <p>Las operaciones y los elementos y características mostrados nos resultarán de gran utilidad a la hora de representar en los mapas distintos elementos. <strong>Veamos algunos ejemplos</strong>.</p>
@@ -305,8 +306,8 @@ carreteras
 ##                  $bbox : 41.4516625,-1.1737289,41.9314873,-0.6803895
 ##         $overpass_call : The call submitted to the overpass API
 ##                  $meta : metadata including timestamp and version numbers
-##            $osm_points : &#39;sf&#39; Simple Features Collection with 22154 points
-##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2952 linestrings
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 22203 points
+##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2978 linestrings
 ##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 53 polygons
 ##        $osm_multilines : NULL
 ##     $osm_multipolygons : NULL</code></pre>
@@ -379,8 +380,8 @@ carreteras_B
 ##                  $bbox : 41.6,-0.95,41.7,-0.8
 ##         $overpass_call : The call submitted to the overpass API
 ##                  $meta : metadata including timestamp and version numbers
-##            $osm_points : &#39;sf&#39; Simple Features Collection with 12724 points
-##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2134 linestrings
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 12788 points
+##             $osm_lines : &#39;sf&#39; Simple Features Collection with 2154 linestrings
 ##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 11 polygons
 ##        $osm_multilines : NULL
 ##     $osm_multipolygons : NULL</code></pre>
@@ -652,7 +653,7 @@ estancos
 ##                  $bbox : 41.4516625,-1.1737289,41.9314873,-0.6803895
 ##         $overpass_call : The call submitted to the overpass API
 ##                  $meta : metadata including timestamp and version numbers
-##            $osm_points : &#39;sf&#39; Simple Features Collection with 44 points
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 42 points
 ##             $osm_lines : NULL
 ##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 0 polygons
 ##        $osm_multilines : NULL
@@ -817,7 +818,9 @@ calles_amst &lt;- amst_df%&gt;%
                   value = c(&quot;residential&quot;, &quot;living_street&quot;,
                             &quot;unclassified&quot;,
                             &quot;service&quot;, &quot;footway&quot;)) %&gt;%
-  osmdata_sf()</code></pre>
+  osmdata_sf()
+## Request failed [429]. Retrying in 1 seconds...
+## Request failed [429]. Retrying in 1 seconds...</code></pre>
 <p><br />
 </p>
 <pre class="r"><code>
