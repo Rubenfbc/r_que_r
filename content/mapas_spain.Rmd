@@ -2,7 +2,7 @@
 title: "¿Cómo realizar mapas de España con archivos shapefile?"
 author: "Rubén F. Bustillo"
 date: '2019-11-08'
-tags:["maps","mapas"", "Spain", "España", "Comunidades Autónomas","Provincias","Municipios","ggplot2", "shapefiles"]
+tags: ["maps" ,"mapas", "Spain", "España", "Comunidades Autónomas","Provincias","Municipios","ggplot2", "shapefiles"]
 categories: ["R"]
 ---
 

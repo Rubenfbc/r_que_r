@@ -6,10 +6,37 @@
     <description>Recent content in maps on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/maps/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mapas en 3D con {echarts4r} y e_geo_3d()</title>
+      <link>/maps3d/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/maps3d/</guid>
+      <description>Res
+Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función e_geo_3d del paquete {echarts4r} en R.
+
+Paquetes
+Cargamos el paquete {echarts4r}</description>
+    </item>
+    
+    <item>
+      <title>¿Cómo realizar mapas de España con archivos shapefile?</title>
+      <link>/mapas_spain/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/mapas_spain/</guid>
+      <description>Re
+En este post se expondrá cómo realizar mapas de España utilizando archivos shapefile y el paquete ggplot2. Los archivos shapefiles los descargaremos de la web y los datos los descargaremos del INE.
+
+Paquetes de R# para manipular dataframeslibrary(tidyverse)# para importar archivos shapefileslibrary(rgdal)# Para transformar los archivos shapefiles library(broom)
+Comunidades Autónomas Españolas
+En primer lugar vamos a exponer cómo realizar un mapa de España diferenciando las distintas Comunidades Autónomas que la componen.</description>
+    </item>
     
     <item>
       <title>Mapas en R usando coordenadas geográficas</title>

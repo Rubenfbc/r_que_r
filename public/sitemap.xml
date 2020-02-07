@@ -3,6 +3,121 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/categories/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/e_geo_3d/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/echarts4r/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/mapas/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/maps3d/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/maps/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/3dtree/</loc>
+    <lastmod>2019-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/per%C3%BA/</loc>
+    <lastmod>2019-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/pib/</loc>
+    <lastmod>2019-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/treemap/</loc>
+    <lastmod>2019-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/treemap_peru/</loc>
+    <lastmod>2019-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/vab/</loc>
+    <lastmod>2019-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/comunidades-aut%C3%B3nomas/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/espa%C3%B1a/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ggplot2/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/municipios/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/provincias/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/shapefiles/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/spain/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/mapas_spain/</loc>
+    <lastmod>2019-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/bar-chart-race/</loc>
     <lastmod>2019-10-31T00:00:00+00:00</lastmod>
   </url>
@@ -13,32 +128,7 @@
   </url>
   
   <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/dplyr/</loc>
-    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/ggplot2/</loc>
-    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2019-10-31T00:00:00+00:00</lastmod>
   </url>
   
@@ -89,11 +179,6 @@
   
   <url>
     <loc>/tags/mapdata/</loc>
-    <lastmod>2019-10-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/maps/</loc>
     <lastmod>2019-10-17T00:00:00+00:00</lastmod>
   </url>
   

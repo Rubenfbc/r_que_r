@@ -12,16 +12,16 @@
     
     
     <item>
-      <title>Mapas en 3D con {echarts4r} y {e_geo_3d}</title>
+      <title>Mapas en 3D con {echarts4r} y e_geo_3d()</title>
       <link>/maps3d/</link>
       <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/maps3d/</guid>
-      <description>Re
-Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función e_geo_3d del paquete echarts4r en R.
+      <description>Res
+Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función e_geo_3d del paquete {echarts4r} en R.
 
 Paquetes
-Cargamos el paquete echarts4r</description>
+Cargamos el paquete {echarts4r}</description>
     </item>
     
   </channel>

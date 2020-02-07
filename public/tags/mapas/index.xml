@@ -6,74 +6,22 @@
     <description>Recent content in mapas on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/mapas/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Mapas con información georreferenciada de Google en R con {ggmap}</title>
-      <link>/google_maps/</link>
-      <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/google_maps/</guid>
-      <description>Re
-Otra forma de realizar mapas es mediante la utilización de información georreferenciada obtenida de recursos de la web a través de API´s. Este post muestra cómo utilizar {ggmap} con datos de Google.
-
-Introducción
-En el post anterior expusimos algunas nociones básicas que pueden sernos de utilidad a la hora de realizar mapas utilizando información de Open Street Map (OSM) con el paquete {osmdata}. Además, previamente, en diversos posts se ha ido exponiendo diferentes mecanismos mediante los cuales podemos realizar mapas con R, bien sea utilizando coordinadas geográficas, con archivos shapefile, utilizando datos de Eurostat, etc.</description>
-    </item>
-    
-    <item>
-      <title>Mapas regionales con el paquete {raster}</title>
-      <link>/mapas_raster/</link>
-      <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/mapas_raster/</guid>
-      <description>Re
-Este post pretende exponer algunas herramientas que pueden ser de utilidad a la hora de realizar mapas base de cualquier país a distintos niveles de agregación regional utilizando el paquete raster.
-
-Introducción
-En post anteriores hemos abordado diversos aspectos que pueden ser de utilidad a la hora de realizar mapas en R. Así, por ejemplo, hemos explicado cómo trabajar con las nomenclaturas de las unidades territoriales estadísticas (NUTS) de Eurostat y expusimos cómo realizar mapas 3D con el paquete echarts4r y e_geo_3d.</description>
-    </item>
-    
-    <item>
-      <title>¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat en R?</title>
-      <link>/nuts/</link>
-      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/nuts/</guid>
-      <description>Re
-Este post es una continuación del anterior donde se explicó el paquete eurostat(). En él se expone cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat.
-
-Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS)
-Las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS por sus siglas en Francés) son el conjunto de demarcaciones territoriales de la Unión Europea creada por Eurostat que se utiliza con fines estadísticos y analíticos.</description>
-    </item>
-    
-    <item>
-      <title>Importar datos de Eurostat en R con el paquete {eurostat}</title>
-      <link>/eurostat/</link>
-      <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/eurostat/</guid>
-      <description>Re
-En este post se explica las principales funcionalidades del paquete eurostat(), que sirve para importar información de dicho organismo. Eurostat es la Oficina de Estadística de la Comisión Europea.
-
-Introducción
-Eurostat es la Oficina de Estadística de la Comisión Europea, organismo que se encarga de producir datos, publicar estadísticas e indicadores sobre la Unión Europea promoviendo la armonización de los métodos estadísticos entre los Estados que la conforman.</description>
-    </item>
-    
-    <item>
-      <title>Mapas en 3D con {echarts4r} y {e_geo_3d}</title>
+      <title>Mapas en 3D con {echarts4r} y e_geo_3d()</title>
       <link>/maps3d/</link>
       <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/maps3d/</guid>
-      <description>Re
-Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función e_geo_3d del paquete echarts4r en R.
+      <description>Res
+Esta es una entrada muy breve que tiene como objetivo específico exponer cómo realizar de forma muy sencilla mapamundis 3D y con relieve utilizando la función e_geo_3d del paquete {echarts4r} en R.
 
 Paquetes
-Cargamos el paquete echarts4r</description>
+Cargamos el paquete {echarts4r}</description>
     </item>
     
     <item>

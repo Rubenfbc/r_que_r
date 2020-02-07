@@ -6,10 +6,154 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 31 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>e_geo_3d</title>
+      <link>/tags/e_geo_3d/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/e_geo_3d/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>echarts4r</title>
+      <link>/tags/echarts4r/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/echarts4r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mapas</title>
+      <link>/tags/mapas/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mapas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>maps</title>
+      <link>/tags/maps/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/maps/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>3dtree</title>
+      <link>/tags/3dtree/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/3dtree/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Perú</title>
+      <link>/tags/per%C3%BA/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/per%C3%BA/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PIB</title>
+      <link>/tags/pib/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/pib/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>treemap</title>
+      <link>/tags/treemap/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/treemap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>VAB</title>
+      <link>/tags/vab/</link>
+      <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/vab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Comunidades Autónomas</title>
+      <link>/tags/comunidades-aut%C3%B3nomas/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/comunidades-aut%C3%B3nomas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>España</title>
+      <link>/tags/espa%C3%B1a/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/espa%C3%B1a/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot2</title>
+      <link>/tags/ggplot2/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ggplot2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Municipios</title>
+      <link>/tags/municipios/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/municipios/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Provincias</title>
+      <link>/tags/provincias/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/provincias/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shapefiles</title>
+      <link>/tags/shapefiles/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/shapefiles/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spain</title>
+      <link>/tags/spain/</link>
+      <pubDate>Fri, 08 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/spain/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Bar chart Race</title>
@@ -26,15 +170,6 @@
       <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/dplyr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ggplot2</title>
-      <link>/tags/ggplot2/</link>
-      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ggplot2/</guid>
       <description></description>
     </item>
     
@@ -98,15 +233,6 @@
       <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/mapdata/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>maps</title>
-      <link>/tags/maps/</link>
-      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/maps/</guid>
       <description></description>
     </item>
     

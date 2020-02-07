@@ -642,15 +642,14 @@ tasa_mortalidad_grafico &lt;- data_provincias_mapa %&gt;%
 
 head(tasa_mortalidad_grafico)
 ## # A tibble: 6 x 10
-##     long    lat order hole  piece group id    shapefile_provi~ Provincia
-##    &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;            &lt;chr&gt;    
-## 1 4.98e5 4.78e6     1 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;    Álava    
-## 2 4.98e5 4.78e6     2 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;    Álava    
-## 3 4.99e5 4.78e6     3 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;    Álava    
-## 4 4.98e5 4.78e6     4 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;    Álava    
-## 5 4.99e5 4.78e6     5 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;    Álava    
-## 6 4.99e5 4.78e6     6 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;    Álava    
-## # ... with 1 more variable: TM &lt;dbl&gt;</code></pre>
+##      long    lat order hole  piece group id    shapefile_provin~ Provincia    TM
+##     &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt;             &lt;chr&gt;     &lt;dbl&gt;
+## 1 497824. 4.78e6     1 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;     Álava      8.46
+## 2 498457. 4.78e6     2 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;     Álava      8.46
+## 3 498532. 4.78e6     3 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;     Álava      8.46
+## 4 498382. 4.78e6     4 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;     Álava      8.46
+## 5 498946. 4.78e6     5 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;     Álava      8.46
+## 6 499046. 4.78e6     6 FALSE 1     0.1   0     &quot;Ã\u0081lava&quot;     Álava      8.46</code></pre>
 <p><br />
 </p>
 <p>Por último <strong>realizamos el gráfico</strong> con <code>ggplot</code> usando el mismo theme que el utilizado en el mapa de las Comunidades Autónomas. Sin embargo, en esta ocasión, cambiamos la paleta de colores utilizando la función <code>scale_fill_gradient()</code> mediante la cual seleccionamos el color amarillo para los valores más bajos y el color rojo para los valores más altos.</p>

@@ -17,8 +17,8 @@
       <pubDate>Sat, 09 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/treemap_peru/</guid>
-      <description>Re
-El objetivo de este post es visualizar mediante un gráfico treemap el VAB sectorial de los distintos departamentos peruanos para el año 2016. Para ello utilizaremos los paquetes treemap y 3dtreeR.
+      <description>Res
+El objetivo de este post es visualizar mediante un gráfico treemap el VAB sectorial de los distintos departamentos peruanos para el año 2016. Para ello utilizaremos los paquetes {treemap} y {3dtreeR}.
 
 Paquetes y Dataset
 Cargamos los paquetes necesarios:
