@@ -2,11 +2,8 @@
 title: "Mapas con información georreferenciada de Google en R con {ggmap}"
 author: "Rubén F. Bustillo"
 date: '2020-01-04'
-tags:
-- mapas
-- google
-- ggmap
-categories: R
+tags: ["mapas", "google", "ggmap"]
+categories: ["R"]
 ---
 
 
@@ -58,7 +55,7 @@ library(tibble)
 
 ```{r, include=FALSE}
 
-register_google(key="AIzaSyC9KD8dspE4k2PFX2b5cBeA3GJaUQ5LHjs")
+register_google(key="AIzaSyCdtFKsYC00iYO6jPO912PeGOs-AOJK0Ao")
 
 ```
 
