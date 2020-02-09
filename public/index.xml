@@ -12,12 +12,20 @@
     
     
     <item>
-      <title>Clustering &amp; Dendrogramas</title>
+      <title>Análisis de conglomerados (Hierarchical clustering) &amp; dendrogramas en R (En construcción)</title>
       <link>/clustering/</link>
       <pubDate>Sat, 08 Feb 2020 00:00:00 +0000</pubDate>
       
       <guid>/clustering/</guid>
-      <description>Re</description>
+      <description>Re
+Esta entrada presenta algunas de las herramientas disponibles en R que permiten realizar análisis de conglomerados (o clusters) y representar los grupos y los resultados obtenidos en dendrogramas.
+
+Paquetes
+Descargamos los paquetes requeridos para nuestro análisis:
+
+library(dendextend)library(factoextra)library(NbClust)library(pvclust)library(flexclust)library(readxl)
+Dataset: Coeficientes de participación sectorial de las regiones peruanas
+En esta ocasión vamos a trabajar con los coeficientes de participación sectorial del Valor Agregado Bruto por regiones de Perú de 2001 y 2012.</description>
     </item>
     
     <item>

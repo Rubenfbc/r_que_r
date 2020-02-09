@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dendrogramas on R que R</title>
+    <link>/tags/dendrogramas/</link>
+    <description>Recent content in dendrogramas on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 08 Feb 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/dendrogramas/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Análisis de conglomerados (Hierarchical clustering) &amp; dendrogramas en R</title>
+      <link>/clustering/</link>
+      <pubDate>Sat, 08 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/clustering/</guid>
+      <description>Re
+Esta entrada presenta algunas de las herramientas disponibles en R que permiten realizar análisis de conglomerados (o clusters) y representar los grupos y los resultados obtenidos en dendrogramas.
+
+Paquetes
+Descargamos los paquetes requeridos para nuestro análisis:
+
+library(dendextend)library(factoextra)library(NbClust)library(pvclust)library(flexclust)library(readxl)
+Dataset: Coeficientes de participación sectorial de las regiones peruanas
+En esta ocasión vamos a trabajar con los coeficientes de participación sectorial del Valor Agregado Bruto por regiones de Perú de 2001 y 2012.</description>
+    </item>
+    
+  </channel>
+</rss>

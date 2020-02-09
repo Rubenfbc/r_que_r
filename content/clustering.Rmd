@@ -1,14 +1,13 @@
 ---
-title: "Clustering & Dendrogramas"
+title: "Análisis de conglomerados (Hierarchical clustering) & dendrogramas en R (En construcción)"
 author: "Rubén F. Bustillo"
-date: 2020-02-08
+date: '2020-02-08'
+tags: ["clustering"]
 categories: ["R"]
-tags: ["x", "y"]
-
 ---
 
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning=FALSE}
 
 knitr::opts_chunk$set(collapse = TRUE)
 
@@ -16,3 +15,454 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 **Re**
 
+Esta entrada presenta algunas de las herramientas disponibles en R que permiten realizar análisis de conglomerados (o clusters) y representar los grupos y los resultados obtenidos en dendrogramas. 
+
+\
+
+# Paquetes
+
+\
+
+Descargamos los paquetes requeridos para nuestro análisis:
+
+\
+
+```{r, message=FALSE, warning=FALSE}
+
+library(dendextend)
+library(factoextra)
+library(NbClust)
+library(pvclust)
+library(flexclust)
+library(readxl)
+
+```
+
+\
+
+# Dataset: Coeficientes de participación sectorial de las regiones peruanas
+
+\
+
+En esta ocasión vamos a trabajar con los **coeficientes de participación sectorial del Valor Agregado Bruto por regiones de Perú de 2001 y 2012**. Es decir, en los siguientes apartados se pretenderá examinar las similitudes entre regiones peruanas en función de su participación sectorial relativa en los años mencionados realizando grupos de regiones según dicho indicador. En cierta medida este análisis complementará el realizado en [este](https://rquer.netlify.com/treemap_peru/) post anterior, donde se examinaba el peso sectorial de cada región peruana sobre la economía departamental y nacional en 2016. 
+
+\
+
+La información sobre la participación relativa sectorial de las regiones peruanas las hemos obtenidos del Instituto Nacional de Estadística e Informática del Perú (INEI), y las tenemos guardadas en un archivo en nuestro ordenador. Por ello, empezamos cargando dichos archivos, uno para el año 2001 y otro para el año 2012 con el paquete {readxl} y la función `read_exel()`. 
+
+\
+
+```{r}
+
+ddendvab01 <- read_excel("datasets/ddendvab01.xlsx")
+ddendvab12 <- read_excel("datasets/ddendvab12.xlsx")
+
+```
+
+\
+
+En esta ocasión hemos clasificado la actividad productiva de las regiones en nueve grandes categorías, donde la pesca se encuentra en la categoría `agrvab` (agrícultura, caza y silvicultura). 
+
+\
+
+```{r}
+
+ddendvab01
+ddendvab12
+
+
+```
+
+\
+
+Antes de empezar a operar indicamos que los nombres de las filas (rownames) son los que se encuentran en la column con el nombre `name` y, posteriormente, quitamos dicha columna de nuestro dataset dejando únicamente los valores sobre los que vamos a trabajar.
+
+\
+
+```{r, warning= FALSE}
+
+rownames(ddendvab01)<- ddendvab01$Name
+rownames(ddendvab01) 
+ddendvab01$Name <- NULL
+ddendvab01
+
+
+rownames(ddendvab12)<-ddendvab12$Name
+rownames(ddendvab12)
+ddendvab12$Name <- NULL
+ddendvab12
+
+```
+
+\
+
+En nuestro caso no necesitamos estandarizar los datos, aunque dependiendo de las características de las observaciones a analizar cabe la posibilidad que hubiese que normalizarlos antes de realizar el análisis de conglomerados. 
+
+\
+
+# Distancia Euclídea
+
+\
+
+Una de las medidas más utilizadas para determinar el grado de similitud o disimilitud entre observaciones es **la distancia euclídea (o distancia euclidiana)** que deriva del Teorema de Pitágoras. Para estimar la distancia entre las variables partimos de la premisa de que en el plano cartesiano a distancia euclídea entre dos puntos  
+
+$$
+\begin{array}{c}
+x^2+y^2=z^2
+xy=z
+\end{array}
+$$
+
+\
+
+```{r}
+
+vab01.dist<-dist(ddendvab01, method="euclidean") 
+vab01.dist
+
+vab12.dist<-dist(ddendvab12, method="euclidean") 
+vab12.dist
+
+```
+
+\
+
+## Método de agrupamiento: promedios (average)
+
+\
+
+Año 2001
+
+\
+
+```{r}
+
+HCvab01<- hclust(vab01.dist, method="average")
+
+```
+
+\
+
+```{r}
+
+DNDvab01<- as.dendrogram(HCvab01) #DENDOGRAM
+DNDvab01
+plot(DNDvab01,
+     main= "Dendrograma VAB de las regiones peruanas, 2001",
+     sub= "Método Average") 
+
+```
+
+\
+
+Año 2012
+
+\
+
+```{r}
+
+HCvab12<- hclust(vab12.dist, method="average") 
+
+```
+
+\
+
+```{r}
+
+DNDvab12<- as.dendrogram(HCvab12) 
+DNDvab12
+plot(DNDvab12,
+     main= "Dendrograma VAB de las regiones peruanas, 2012",
+     sub= "Método Average") 
+
+```
+
+\
+
+## Método de agrupamiento: Ward
+
+\
+
+Año 2001
+
+\
+
+```{r}
+
+HCvab01b<-hclust(vab01.dist, method="ward.D2") 
+
+```
+
+\
+
+```{r}
+
+DNDvab01b<- as.dendrogram(HCvab01b) 
+DNDvab01b
+plot(DNDvab01b,
+     main= "Dendrograma VAB de las regiones peruanas, 2001",
+     sub= "Método Ward") 
+
+```
+
+\
+
+Año 2012
+
+\
+
+```{r}
+
+HCvab12b<-hclust(vab12.dist, method="ward.D2") 
+
+```
+
+\
+
+```{r}
+
+DNDvab12b<- as.dendrogram(HCvab12b) 
+DNDvab12b
+plot(DNDvab12b,
+     main= "Dendrograma VAB de las regiones peruanas, 2012",
+     sub= "Método Ward") 
+
+```
+
+\
+
+## Comparación entre dendrogramas
+
+\
+
+Method: Average
+
+\
+
+```{r}
+#creamos una lista con los dos dendrograms VAB 01 Y 12 (Average)
+
+dend_listvab<- dendlist(DNDvab01,DNDvab12) 
+dend_listvab
+
+```
+
+\
+
+```{r}
+
+#Graficamos los dos dendrogramas
+tanglegram(DNDvab01,DNDvab12) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12
+tanglegram(DNDvab01,DNDvab12,
+           sort=T,
+           highlight_distinct_edges = T, # Turn-off dashed lines
+           common_subtrees_color_lines = FALSE, # Turn-off line colors
+           common_subtrees_color_branches = TRUE, # Color common branches 
+           main = paste("entanglement =", round(entanglement(dend_listvab), 2)),
+           fast=TRUE)
+
+```
+
+\
+
+Method: Ward
+
+\
+
+```{r}
+#creamos una lista con los dos dendrograms VAB 01 Y 12 (Average)
+
+dend_listvabb<- dendlist(DNDvab01b,DNDvab12b) 
+dend_listvabb
+
+```
+
+\
+
+```{r}
+
+#Graficamos los dos dendrogramas
+tanglegram(DNDvab01b,DNDvab12b) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12
+tanglegram(DNDvab01b,DNDvab12b,
+           sort=T,
+           highlight_distinct_edges = T, # Turn-off dashed lines
+           common_subtrees_color_lines = FALSE, # Turn-off line colors
+           common_subtrees_color_branches = TRUE, # Color common branches 
+           main = paste("entanglement =", round(entanglement(dend_listvab), 2)),
+           fast=TRUE)
+
+```
+
+\
+
+# Correlación matrix entre dendogramas
+
+\
+
+Cophenetic
+
+\
+
+```{r}
+
+cor.dendlist(dend_listvab, method = "cophenetic") #average
+cor.dendlist(dend_listvabb, method= "cophenetic") #ward
+
+```
+
+\
+
+Coeficiente de correlación:
+
+\
+
+```{r}
+
+cor_cophenetic(DNDvab01, DNDvab12)
+cor_cophenetic(DNDvab01b, DNDvab12b)
+
+```
+
+
+\
+
+Baker
+
+\
+
+```{r}
+
+cor.dendlist(dend_listvab, method = "baker")
+cor.dendlist(dend_listvabb, method = "baker")
+
+```
+
+\
+
+Coeficiente de correlación:
+
+\
+
+```{r}
+
+cor_bakers_gamma(DNDvab01, DNDvab12)
+cor_bakers_gamma(DNDvab01b, DNDvab12b)
+
+```
+
+\
+
+## 
+
+\
+
+Año 2001
+
+\
+
+```{r}
+
+DNDvab01_2<-fviz_dend(DNDvab01, cex=0.5)
+DNDvab01_2 #average en segundo método
+
+```
+
+\
+
+Año 2012
+
+\
+
+```{r}
+
+DNDvab12_2<-fviz_dend(DNDvab12, cex=0.5)
+DNDvab12_2 #average en segundo método
+
+```
+
+
+\
+
+## Horizontal
+
+\
+
+```{r}
+
+fviz_dend(DNDvab01, cex=0.5, horiz=TRUE) #vab01 average
+
+```
+
+\
+
+```{r}
+
+fviz_dend(DNDvab12, cex=0.5, horiz=TRUE) #vab12 average
+
+```
+
+\
+
+## Grupos en colores
+
+\ 
+
+```{r}
+
+source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R")
+
+```
+
+\
+
+Año 2001
+
+\
+
+```{r}
+
+fviz_dend(DNDvab01, k = 6, # Cut in four groups
+          cex = 0.7, # label size
+          k_colors = c("grey40", "grey40", "grey40", "grey40","grey40", "grey40"),
+          color_labels_by_k = TRUE, # color labels by groups
+          rect = TRUE, # Add rectangle around groups
+          rect_border = c("grey30", "grey70","darkgoldenrod1"," darkorange1","firebrick2", "darkmagenta"), 
+          rect_fill = TRUE)+
+  labs(title = NULL, subtitle = "2001",
+       caption = NULL, 
+       x = NULL, 
+       #y = NULL, 
+       fill = NULL) + 
+  xlab(NULL)+
+  #ylab(NULL)+
+  theme_lab()+
+  theme(panel.grid.major.x = element_blank(), legend.position = "right")
+
+```
+
+\
+
+Año 2012
+
+\
+
+```{r}
+
+fviz_dend(DNDvab12, k = 6, # Cut in four groups
+          cex = 0.7, # label size
+          k_colors = c("grey40", "grey40", "grey40", "grey40","grey40", "grey40"),
+          color_labels_by_k = TRUE, # color labels by groups
+          rect = TRUE, # Add rectangle around groups
+          rect_border = c( "grey70", " darkorange1","darkgoldenrod1","grey30","firebrick2", "darkmagenta"), 
+          rect_fill = TRUE)+
+  labs(title = NULL, subtitle = "2012", 
+       caption = NULL, 
+       x = NULL, 
+       #y = NULL, 
+       fill = NULL) + 
+  xlab(NULL)+
+  #ylab(NULL)+
+  theme_lab()+
+  theme(panel.grid.major.x = element_blank(), legend.position = "right")
+
+```

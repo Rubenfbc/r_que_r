@@ -1,12 +1,642 @@
 ---
-title: "Clustering & Dendrogramas"
+title: "Análisis de conglomerados (Hierarchical clustering) & dendrogramas en R (En construcción)"
 author: "Rubén F. Bustillo"
-date: 2020-02-08
+date: '2020-02-08'
+tags: ["clustering"]
 categories: ["R"]
-tags: ["x", "y"]
-
 ---
 
 
 
 <p><strong>Re</strong></p>
+<p>Esta entrada presenta algunas de las herramientas disponibles en R que permiten realizar análisis de conglomerados (o clusters) y representar los grupos y los resultados obtenidos en dendrogramas.</p>
+<p><br />
+</p>
+<div id="paquetes" class="section level1">
+<h1>Paquetes</h1>
+<p><br />
+</p>
+<p>Descargamos los paquetes requeridos para nuestro análisis:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+library(dendextend)
+library(factoextra)
+library(NbClust)
+library(pvclust)
+library(flexclust)
+library(readxl)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="dataset-coeficientes-de-participación-sectorial-de-las-regiones-peruanas" class="section level1">
+<h1>Dataset: Coeficientes de participación sectorial de las regiones peruanas</h1>
+<p><br />
+</p>
+<p>En esta ocasión vamos a trabajar con los <strong>coeficientes de participación sectorial del Valor Agregado Bruto por regiones de Perú de 2001 y 2012</strong>. Es decir, en los siguientes apartados se pretenderá examinar las similitudes entre regiones peruanas en función de su participación sectorial relativa en los años mencionados realizando grupos de regiones según dicho indicador. En cierta medida este análisis complementará el realizado en <a href="https://rquer.netlify.com/treemap_peru/">este</a> post anterior, donde se examinaba el peso sectorial de cada región peruana sobre la economía departamental y nacional en 2016.</p>
+<p><br />
+</p>
+<p>La información sobre la participación relativa sectorial de las regiones peruanas las hemos obtenidos del Instituto Nacional de Estadística e Informática del Perú (INEI), y las tenemos guardadas en un archivo en nuestro ordenador. Por ello, empezamos cargando dichos archivos, uno para el año 2001 y otro para el año 2012 con el paquete {readxl} y la función <code>read_exel()</code>.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+ddendvab01 &lt;- read_excel(&quot;datasets/ddendvab01.xlsx&quot;)
+ddendvab12 &lt;- read_excel(&quot;datasets/ddendvab12.xlsx&quot;)</code></pre>
+<p><br />
+</p>
+<p>En esta ocasión hemos clasificado la actividad productiva de las regiones en nueve grandes categorías, donde la pesca se encuentra en la categoría <code>agrvab</code> (agrícultura, caza y silvicultura).</p>
+<p><br />
+</p>
+<pre class="r"><code>
+ddendvab01
+## # A tibble: 24 x 10
+##    Name  agrvab01 minvab01 manvab01 convab01 comvab01 tycvab01 ryhvab01 sguvab01
+##    &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1 AMA       40.7    0.290    11.0      1.91    10.0      8.48     2.88    10.8 
+##  2 ANC       10.9   27.6      15.7      4.39     6.78     7.26     2.11     5.62
+##  3 APU       27.4    0.905    10.2      9.10    13.8      3.36     4.24    18.2 
+##  4 ARE       15.3    5.96     18.8      5.80    16.9      8.67     2.97     4.14
+##  5 AYA       27.4    2.51     12.2      5.05    16.2      4.46     2.38    16.1 
+##  6 CAJ       19.9   31.3      10.8      4.80     9.25     3.51     2.34     6.61
+##  7 CUS       13.4   10.3      13.0      7.65    15.7      7.17     6.79     8.39
+##  8 HUAV      17.0    7.98      3.04     1.04     5.97     1.46     1.10     7.72
+##  9 HUAC      29.2    7.04     10.0      1.62    15.0     10.8      3.96    10.4 
+## 10 ICA       19.4    4.77     19.5      3.74    14.7      9.23     4.32     5.93
+## # ... with 14 more rows, and 1 more variable: otrvab01 &lt;dbl&gt;
+ddendvab12
+## # A tibble: 24 x 10
+##    Name  agrvab12 minvab12 manvab12 convab12 comvab12 tycvab12 ryhvab12 sguvab12
+##    &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1 AMA      33.2     0.316     8.41    13.3      8.72     8.43     2.72    12.8 
+##  2 ANC       7.30   26.2      12.2      7.49     7.60     8.74     2.55     6.85
+##  3 APU      24.0     0.542     8.12    17.1     11.9      3.12     4.20    20.7 
+##  4 ARE      12.4     8.64     17.3     13.9     14.5      8.51     2.87     3.99
+##  5 AYA      18.8    10.2       7.69    17.5     12.9      4.07     2.20    14.7 
+##  6 CAJ      18.9    20.0      11.3      8.47    10.5      4.54     3.01     9.61
+##  7 CUS      10.3    20.1       7.98    17.1     11.5      5.88     6.23     6.96
+##  8 HUAV     14.0     8.07      3.02     2.14     7.36     2.00     1.47    12.6 
+##  9 HUAC     23.7     3.10      9.70     4.08    15.9     13.0      4.79    13.4 
+## 10 ICA      16.4     8.02     20.2     13.5     10.8      8.05     3.56     4.84
+## # ... with 14 more rows, and 1 more variable: otrvab12 &lt;dbl&gt;</code></pre>
+<p><br />
+</p>
+<p>Antes de empezar a operar indicamos que los nombres de las filas (rownames) son los que se encuentran en la column con el nombre <code>name</code> y, posteriormente, quitamos dicha columna de nuestro dataset dejando únicamente los valores sobre los que vamos a trabajar.</p>
+<p><br />
+</p>
+<pre class="r"><code>
+rownames(ddendvab01)&lt;- ddendvab01$Name
+rownames(ddendvab01) 
+##  [1] &quot;AMA&quot;  &quot;ANC&quot;  &quot;APU&quot;  &quot;ARE&quot;  &quot;AYA&quot;  &quot;CAJ&quot;  &quot;CUS&quot;  &quot;HUAV&quot; &quot;HUAC&quot; &quot;ICA&quot; 
+## [11] &quot;JUN&quot;  &quot;LLIB&quot; &quot;LAM&quot;  &quot;LIM&quot;  &quot;LORE&quot; &quot;MDD&quot;  &quot;MOQ&quot;  &quot;PAS&quot;  &quot;PIU&quot;  &quot;PUN&quot; 
+## [21] &quot;SMA&quot;  &quot;TAC&quot;  &quot;TUM&quot;  &quot;UCA&quot;
+ddendvab01$Name &lt;- NULL
+ddendvab01
+## # A tibble: 24 x 9
+##    agrvab01 minvab01 manvab01 convab01 comvab01 tycvab01 ryhvab01 sguvab01
+##  *    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1     40.7    0.290    11.0      1.91    10.0      8.48     2.88    10.8 
+##  2     10.9   27.6      15.7      4.39     6.78     7.26     2.11     5.62
+##  3     27.4    0.905    10.2      9.10    13.8      3.36     4.24    18.2 
+##  4     15.3    5.96     18.8      5.80    16.9      8.67     2.97     4.14
+##  5     27.4    2.51     12.2      5.05    16.2      4.46     2.38    16.1 
+##  6     19.9   31.3      10.8      4.80     9.25     3.51     2.34     6.61
+##  7     13.4   10.3      13.0      7.65    15.7      7.17     6.79     8.39
+##  8     17.0    7.98      3.04     1.04     5.97     1.46     1.10     7.72
+##  9     29.2    7.04     10.0      1.62    15.0     10.8      3.96    10.4 
+## 10     19.4    4.77     19.5      3.74    14.7      9.23     4.32     5.93
+## # ... with 14 more rows, and 1 more variable: otrvab01 &lt;dbl&gt;
+
+
+rownames(ddendvab12)&lt;-ddendvab12$Name
+rownames(ddendvab12)
+##  [1] &quot;AMA&quot;  &quot;ANC&quot;  &quot;APU&quot;  &quot;ARE&quot;  &quot;AYA&quot;  &quot;CAJ&quot;  &quot;CUS&quot;  &quot;HUAV&quot; &quot;HUAC&quot; &quot;ICA&quot; 
+## [11] &quot;JUN&quot;  &quot;LLIB&quot; &quot;LAM&quot;  &quot;LIM&quot;  &quot;LORE&quot; &quot;MDD&quot;  &quot;MOQ&quot;  &quot;PAS&quot;  &quot;PIU&quot;  &quot;PUN&quot; 
+## [21] &quot;SMA&quot;  &quot;TAC&quot;  &quot;TUM&quot;  &quot;UCA&quot;
+ddendvab12$Name &lt;- NULL
+ddendvab12
+## # A tibble: 24 x 9
+##    agrvab12 minvab12 manvab12 convab12 comvab12 tycvab12 ryhvab12 sguvab12
+##  *    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1    33.2     0.316     8.41    13.3      8.72     8.43     2.72    12.8 
+##  2     7.30   26.2      12.2      7.49     7.60     8.74     2.55     6.85
+##  3    24.0     0.542     8.12    17.1     11.9      3.12     4.20    20.7 
+##  4    12.4     8.64     17.3     13.9     14.5      8.51     2.87     3.99
+##  5    18.8    10.2       7.69    17.5     12.9      4.07     2.20    14.7 
+##  6    18.9    20.0      11.3      8.47    10.5      4.54     3.01     9.61
+##  7    10.3    20.1       7.98    17.1     11.5      5.88     6.23     6.96
+##  8    14.0     8.07      3.02     2.14     7.36     2.00     1.47    12.6 
+##  9    23.7     3.10      9.70     4.08    15.9     13.0      4.79    13.4 
+## 10    16.4     8.02     20.2     13.5     10.8      8.05     3.56     4.84
+## # ... with 14 more rows, and 1 more variable: otrvab12 &lt;dbl&gt;</code></pre>
+<p><br />
+</p>
+<p>En nuestro caso no necesitamos estandarizar los datos, aunque dependiendo de las características de las observaciones a analizar cabe la posibilidad que hubiese que normalizarlos antes de realizar el análisis de conglomerados.</p>
+<p><br />
+</p>
+</div>
+<div id="distancia-euclídea" class="section level1">
+<h1>Distancia Euclídea</h1>
+<p><br />
+</p>
+<p>Una de las medidas más utilizadas para determinar el grado de similitud o disimilitud entre observaciones es <strong>la distancia euclídea (o distancia euclidiana)</strong> que deriva del Teorema de Pitágoras. Para estimar la distancia entre las variables partimos de la premisa de que en el plano cartesiano a distancia euclídea entre dos puntos</p>
+<p><span class="math display">\[
+\begin{array}{c}
+x^2+y^2=z^2
+xy=z
+\end{array}
+\]</span></p>
+<p><br />
+</p>
+<pre class="r"><code>
+vab01.dist&lt;-dist(ddendvab01, method=&quot;euclidean&quot;) 
+vab01.dist
+##            AMA       ANC       APU       ARE       AYA       CAJ       CUS
+## ANC  41.621436                                                            
+## APU  18.047724 36.185017                                                  
+## ARE  30.021817 24.691644 23.839064                                        
+## AYA  16.554823 34.020496  6.208849 20.644736                              
+## CAJ  38.047913 14.332659 34.005720 30.288998 32.085124                    
+## CUS  30.851679 20.917730 20.952008 10.474156 19.184760 24.754864          
+## HUAV 49.379983 43.214779 47.100719 39.618122 45.992290 50.113661 41.207654
+## HUAC 14.563109 31.020545 14.663112 20.693440 10.938199 28.056333 19.119588
+## ICA  24.848530 26.108158 20.273682  6.549371 16.734286 29.903857 11.924584
+## JUN  29.334238 18.465444 23.634085  8.500016 20.830363 24.508864  9.068033
+## LLIB 22.893482 24.703846 20.186675  9.910558 17.275019 27.946010 14.159531
+## LAM  32.690369 33.539146 25.417764 12.757188 22.224754 37.256568 16.005144
+## LIM  42.448918 32.213563 34.084953 16.365218 32.109701 41.657454 20.255644
+## LORE 27.189348 20.493740 19.207146 12.011300 16.362440 21.851088  6.107261
+## MDD  46.450165 15.954397 41.084850 35.150484 39.212873 12.379022 28.442434
+## MOQ  47.218150 19.156303 42.258384 28.258812 39.696971 27.257923 28.964831
+## PAS  66.013294 34.819854 61.760574 57.013411 60.325105 29.321506 50.853216
+## PIU  32.195628 24.790691 24.294134  5.051201 21.270858 30.443947 10.386381
+## PUN  25.675252 20.727531 18.858357 11.005873 16.059123 24.051961  8.339680
+## SMA  15.439033 33.778222  9.924107 17.194065  8.041998 33.528965 17.732080
+## TAC  39.722017 14.264120 32.032396 19.593611 30.039355 21.113580 13.973553
+## TUM  28.742797 33.251174 21.188740 17.402234 19.877540 37.069366 16.717167
+## UCA  22.030579 30.353435 15.950262 11.094928 12.141822 31.568806 12.726203
+##           HUAV      HUAC       ICA       JUN      LLIB       LAM       LIM
+## ANC                                                                       
+## APU                                                                       
+## ARE                                                                       
+## AYA                                                                       
+## CAJ                                                                       
+## CUS                                                                       
+## HUAV                                                                      
+## HUAC 47.048697                                                            
+## ICA  42.048680 16.144614                                                  
+## JUN  36.095063 19.217288 10.342334                                        
+## LLIB 40.163578 16.505921  6.449034 10.387561                              
+## LAM  42.156697 22.843906 15.634843 17.558267 20.305233                    
+## LIM  34.813952 33.994612 21.006789 19.330544 24.120915 17.941590          
+## LORE 40.619487 14.991482 11.834205  8.961090 13.176571 16.932385 23.839085
+## MDD  50.431473 34.817442 35.966427 28.789788 35.350279 40.157842 42.807043
+## MOQ  52.457086 38.836908 28.994715 26.874964 27.862574 39.459878 35.569798
+## PAS  67.954982 56.019331 57.964166 50.900427 56.444247 62.463870 64.637755
+## PIU  43.075359 22.311453  8.033659 11.312785 12.203479 14.361582 17.071826
+## PUN  38.277337 14.581673 10.302703  5.896250 11.005102 17.345279 22.282908
+## SMA  43.218611 11.504922 12.981533 18.367636 12.901536 20.004977 28.837183
+## TAC  40.847136 27.069512 22.530284 14.083049 23.551998 23.739723 24.908054
+## TUM  38.018821 20.104451 17.831510 17.013759 20.702621 13.985636 20.510373
+## UCA  43.346306 12.674225  7.833849 14.373009 11.660680 12.989976 23.630000
+##           LORE       MDD       MOQ       PAS       PIU       PUN       SMA
+## ANC                                                                       
+## APU                                                                       
+## ARE                                                                       
+## AYA                                                                       
+## CAJ                                                                       
+## CUS                                                                       
+## HUAV                                                                      
+## HUAC                                                                      
+## ICA                                                                       
+## JUN                                                                       
+## LLIB                                                                      
+## LAM                                                                       
+## LIM                                                                       
+## LORE                                                                      
+## MDD  26.501404                                                            
+## MOQ  29.805982 32.249749                                                  
+## PAS  49.036852 23.603647 46.123421                                        
+## PIU  12.948940 35.288888 26.240050 56.892871                              
+## PUN   6.363470 28.741118 29.904652 51.258910 13.007432                    
+## SMA  15.929019 40.678226 38.987677 62.303962 18.872831 14.899666          
+## TAC  14.997788 19.701881 29.010656 41.589042 20.374433 15.514851 29.461432
+## TUM  17.482562 39.391362 42.544815 62.279761 19.881574 14.575890 17.606908
+## UCA  11.334939 37.332937 35.250792 59.674767 12.356784 11.842025  9.025217
+##            TAC       TUM
+## ANC                     
+## APU                     
+## ARE                     
+## AYA                     
+## CAJ                     
+## CUS                     
+## HUAV                    
+## HUAC                    
+## ICA                     
+## JUN                     
+## LLIB                    
+## LAM                     
+## LIM                     
+## LORE                    
+## MDD                     
+## MOQ                     
+## PAS                     
+## PIU                     
+## PUN                     
+## SMA                     
+## TAC                     
+## TUM  23.104300          
+## UCA  24.607014 15.527966
+
+vab12.dist&lt;-dist(ddendvab12, method=&quot;euclidean&quot;) 
+vab12.dist
+##            AMA       ANC       APU       ARE       AYA       CAJ       CUS
+## ANC  38.725104                                                            
+## APU  14.334401 37.535336                                                  
+## ARE  26.857734 21.551730 25.920878                                        
+## AYA  19.066865 26.573035 12.884694 17.992101                              
+## CAJ  25.536046 16.281142 25.105195 17.852965 15.054203                    
+## CUS  31.486403 15.626975 28.023304 16.821915 15.999396 13.440683          
+## HUAV 44.774473 36.918034 45.097799 38.697638 41.680021 39.746629 41.763707
+## HUAC 16.124127 32.073449 18.734152 21.374924 18.877377 21.189728 27.491624
+## ICA  23.492220 23.938052 23.864184  7.219435 17.622811 17.113385 19.047795
+## JUN  25.700331 18.587843 25.881540  9.926721 18.072184 16.213197 17.152572
+## LLIB 22.428204 23.388767 25.269587 11.276278 19.951904 15.868357 21.943771
+## LAM  32.747540 31.540200 30.595265 17.426478 26.003181 28.862556 27.510768
+## LIM  39.632725 31.037112 38.021719 20.564793 33.628855 33.438212 32.175848
+## LORE 23.533469 26.423031 20.532698 12.996390 16.931608 19.884982 21.608641
+## MDD  38.911172 12.204969 36.948438 27.274949 26.757485 16.631138 17.876028
+## MOQ  36.977947 17.503881 33.822161 16.720449 23.970663 20.473819 16.273393
+## PAS  51.361382 21.660365 49.858966 39.905884 38.363543 27.545255 27.400714
+## PIU  26.541951 24.839544 25.416345  6.653681 19.893671 19.983088 21.420017
+## PUN  20.586878 24.131724 20.582768 12.462531 16.056465 17.868064 20.887060
+## SMA  10.847204 34.411009 15.123829 20.482051 17.935366 22.212056 28.633616
+## TAC  32.545156 17.768325 30.910533 14.278362 22.373274 20.296460 17.551315
+## TUM  27.752252 30.896048 26.267661 21.018436 23.724162 28.395836 27.371578
+## UCA  21.448732 29.517013 21.235467 15.016512 19.092320 21.516910 24.745267
+##           HUAV      HUAC       ICA       JUN      LLIB       LAM       LIM
+## ANC                                                                       
+## APU                                                                       
+## ARE                                                                       
+## AYA                                                                       
+## CAJ                                                                       
+## CUS                                                                       
+## HUAV                                                                      
+## HUAC 41.703660                                                            
+## ICA  41.947093 20.173292                                                  
+## JUN  31.776615 18.163288 13.946674                                        
+## LLIB 38.582729 18.824252  7.223533 13.673173                              
+## LAM  39.091376 22.098589 22.699841 16.719344 24.603350                    
+## LIM  32.856604 29.922962 25.633717 19.312619 26.019944 14.864424          
+## LORE 35.973120 13.412901 15.285133 11.100172 16.088870 13.384605 19.191752
+## MDD  38.823920 30.557894 29.532973 22.207632 28.549808 32.929429 35.356501
+## MOQ  43.118309 34.324728 17.443193 21.440476 20.576887 31.961624 31.349928
+## PAS  50.268823 46.376409 41.524276 37.225689 40.887085 48.320982 50.706028
+## PIU  38.319160 18.608840  9.559636 11.173756 11.434262 14.382754 17.610644
+## PUN  33.632862 12.255512 14.056621  7.283433 13.565022 16.542188 21.018405
+## SMA  40.090399 11.276158 17.657693 19.870088 15.802203 25.415284 31.016718
+## TAC  34.226916 22.529212 19.612236  8.588378 20.751362 15.581064 18.202000
+## TUM  34.667514 18.668526 24.495597 15.313445 25.497121 15.233205 20.320676
+## UCA  36.630817 11.256488 16.455548 13.055795 16.067915 13.884774 20.611739
+##           LORE       MDD       MOQ       PAS       PIU       PUN       SMA
+## ANC                                                                       
+## APU                                                                       
+## ARE                                                                       
+## AYA                                                                       
+## CAJ                                                                       
+## CUS                                                                       
+## HUAV                                                                      
+## HUAC                                                                      
+## ICA                                                                       
+## JUN                                                                       
+## LLIB                                                                      
+## LAM                                                                       
+## LIM                                                                       
+## LORE                                                                      
+## MDD  27.210728                                                            
+## MOQ  26.504216 27.020757                                                  
+## PAS  43.614447 18.783651 33.440442                                        
+## PIU   9.389435 29.060926 21.613348 43.298766                              
+## PUN   7.333431 26.020549 25.377114 41.913059 11.128392                    
+## SMA  15.333563 35.131506 32.671148 49.364225 18.142915 14.298540          
+## TAC  14.395399 20.262738 23.283441 36.001702 15.358820 13.257151 26.876449
+## TUM  14.078221 31.373448 33.477315 48.258162 19.711153 12.670341 23.374268
+## UCA   5.617363 29.912718 30.034845 46.094571 10.836893  8.764581 12.644114
+##            TAC       TUM
+## ANC                     
+## APU                     
+## ARE                     
+## AYA                     
+## CAJ                     
+## CUS                     
+## HUAV                    
+## HUAC                    
+## ICA                     
+## JUN                     
+## LLIB                    
+## LAM                     
+## LIM                     
+## LORE                    
+## MDD                     
+## MOQ                     
+## PAS                     
+## PIU                     
+## PUN                     
+## SMA                     
+## TAC                     
+## TUM  14.912244          
+## UCA  17.489030 15.500177</code></pre>
+<p><br />
+</p>
+<div id="método-de-agrupamiento-promedios-average" class="section level2">
+<h2>Método de agrupamiento: promedios (average)</h2>
+<p><br />
+</p>
+<p>Año 2001</p>
+<p><br />
+</p>
+<pre class="r"><code>
+HCvab01&lt;- hclust(vab01.dist, method=&quot;average&quot;)</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+DNDvab01&lt;- as.dendrogram(HCvab01) #DENDOGRAM
+DNDvab01
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 53.44587
+plot(DNDvab01,
+     main= &quot;Dendrograma VAB de las regiones peruanas, 2001&quot;,
+     sub= &quot;Método Average&quot;) </code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Año 2012</p>
+<p><br />
+</p>
+<pre class="r"><code>
+HCvab12&lt;- hclust(vab12.dist, method=&quot;average&quot;) </code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+DNDvab12&lt;- as.dendrogram(HCvab12) 
+DNDvab12
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 39.14731
+plot(DNDvab12,
+     main= &quot;Dendrograma VAB de las regiones peruanas, 2012&quot;,
+     sub= &quot;Método Average&quot;) </code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="método-de-agrupamiento-ward" class="section level2">
+<h2>Método de agrupamiento: Ward</h2>
+<p><br />
+</p>
+<p>Año 2001</p>
+<p><br />
+</p>
+<pre class="r"><code>
+HCvab01b&lt;-hclust(vab01.dist, method=&quot;ward.D2&quot;) </code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+DNDvab01b&lt;- as.dendrogram(HCvab01b) 
+DNDvab01b
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 91.3892
+plot(DNDvab01b,
+     main= &quot;Dendrograma VAB de las regiones peruanas, 2001&quot;,
+     sub= &quot;Método Ward&quot;) </code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Año 2012</p>
+<p><br />
+</p>
+<pre class="r"><code>
+HCvab12b&lt;-hclust(vab12.dist, method=&quot;ward.D2&quot;) </code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+DNDvab12b&lt;- as.dendrogram(HCvab12b) 
+DNDvab12b
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 67.22437
+plot(DNDvab12b,
+     main= &quot;Dendrograma VAB de las regiones peruanas, 2012&quot;,
+     sub= &quot;Método Ward&quot;) </code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="comparación-entre-dendrogramas" class="section level2">
+<h2>Comparación entre dendrogramas</h2>
+<p><br />
+</p>
+<p>Method: Average</p>
+<p><br />
+</p>
+<pre class="r"><code>#creamos una lista con los dos dendrograms VAB 01 Y 12 (Average)
+
+dend_listvab&lt;- dendlist(DNDvab01,DNDvab12) 
+dend_listvab
+## [[1]]
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 53.44587 
+## 
+## [[2]]
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 39.14731 
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;dendlist&quot;</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+#Graficamos los dos dendrogramas
+tanglegram(DNDvab01,DNDvab12) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<pre class="r"><code>tanglegram(DNDvab01,DNDvab12,
+           sort=T,
+           highlight_distinct_edges = T, # Turn-off dashed lines
+           common_subtrees_color_lines = FALSE, # Turn-off line colors
+           common_subtrees_color_branches = TRUE, # Color common branches 
+           main = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvab), 2)),
+           fast=TRUE)</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-15-2.png" width="672" /></p>
+<p><br />
+</p>
+<p>Method: Ward</p>
+<p><br />
+</p>
+<pre class="r"><code>#creamos una lista con los dos dendrograms VAB 01 Y 12 (Average)
+
+dend_listvabb&lt;- dendlist(DNDvab01b,DNDvab12b) 
+dend_listvabb
+## [[1]]
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 91.3892 
+## 
+## [[2]]
+## &#39;dendrogram&#39; with 2 branches and 24 members total, at height 67.22437 
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;dendlist&quot;</code></pre>
+<p><br />
+</p>
+<pre class="r"><code>
+#Graficamos los dos dendrogramas
+tanglegram(DNDvab01b,DNDvab12b) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<pre class="r"><code>tanglegram(DNDvab01b,DNDvab12b,
+           sort=T,
+           highlight_distinct_edges = T, # Turn-off dashed lines
+           common_subtrees_color_lines = FALSE, # Turn-off line colors
+           common_subtrees_color_branches = TRUE, # Color common branches 
+           main = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvab), 2)),
+           fast=TRUE)</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-17-2.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+</div>
+<div id="correlación-matrix-entre-dendogramas" class="section level1">
+<h1>Correlación matrix entre dendogramas</h1>
+<p><br />
+</p>
+<p>Cophenetic</p>
+<p><br />
+</p>
+<pre class="r"><code>
+cor.dendlist(dend_listvab, method = &quot;cophenetic&quot;) #average
+##           [,1]      [,2]
+## [1,] 1.0000000 0.6854301
+## [2,] 0.6854301 1.0000000
+cor.dendlist(dend_listvabb, method= &quot;cophenetic&quot;) #ward
+##           [,1]      [,2]
+## [1,] 1.0000000 0.4323974
+## [2,] 0.4323974 1.0000000</code></pre>
+<p><br />
+</p>
+<p>Coeficiente de correlación:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+cor_cophenetic(DNDvab01, DNDvab12)
+## [1] 0.6854301
+cor_cophenetic(DNDvab01b, DNDvab12b)
+## [1] 0.4323974</code></pre>
+<p><br />
+</p>
+<p>Baker</p>
+<p><br />
+</p>
+<pre class="r"><code>
+cor.dendlist(dend_listvab, method = &quot;baker&quot;)
+##           [,1]      [,2]
+## [1,] 1.0000000 0.7024245
+## [2,] 0.7024245 1.0000000
+cor.dendlist(dend_listvabb, method = &quot;baker&quot;)
+##           [,1]      [,2]
+## [1,] 1.0000000 0.4473367
+## [2,] 0.4473367 1.0000000</code></pre>
+<p><br />
+</p>
+<p>Coeficiente de correlación:</p>
+<p><br />
+</p>
+<pre class="r"><code>
+cor_bakers_gamma(DNDvab01, DNDvab12)
+## [1] 0.7024245
+cor_bakers_gamma(DNDvab01b, DNDvab12b)
+## [1] 0.4473367</code></pre>
+<p><br />
+</p>
+<div id="section" class="section level2">
+<h2></h2>
+<p><br />
+</p>
+<p>Año 2001</p>
+<p><br />
+</p>
+<pre class="r"><code>
+DNDvab01_2&lt;-fviz_dend(DNDvab01, cex=0.5)
+DNDvab01_2 #average en segundo método</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Año 2012</p>
+<p><br />
+</p>
+<pre class="r"><code>
+DNDvab12_2&lt;-fviz_dend(DNDvab12, cex=0.5)
+DNDvab12_2 #average en segundo método</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="horizontal" class="section level2">
+<h2>Horizontal</h2>
+<p><br />
+</p>
+<pre class="r"><code>
+fviz_dend(DNDvab01, cex=0.5, horiz=TRUE) #vab01 average</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><br />
+</p>
+<pre class="r"><code>
+fviz_dend(DNDvab12, cex=0.5, horiz=TRUE) #vab12 average</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="grupos-en-colores" class="section level2">
+<h2>Grupos en colores</h2>
+<p> </p>
+<pre class="r"><code>
+source(&quot;https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R&quot;)</code></pre>
+<p><br />
+</p>
+<p>Año 2001</p>
+<p><br />
+</p>
+<pre class="r"><code>
+fviz_dend(DNDvab01, k = 6, # Cut in four groups
+          cex = 0.7, # label size
+          k_colors = c(&quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;,&quot;grey40&quot;, &quot;grey40&quot;),
+          color_labels_by_k = TRUE, # color labels by groups
+          rect = TRUE, # Add rectangle around groups
+          rect_border = c(&quot;grey30&quot;, &quot;grey70&quot;,&quot;darkgoldenrod1&quot;,&quot; darkorange1&quot;,&quot;firebrick2&quot;, &quot;darkmagenta&quot;), 
+          rect_fill = TRUE)+
+  labs(title = NULL, subtitle = &quot;2001&quot;,
+       caption = NULL, 
+       x = NULL, 
+       #y = NULL, 
+       fill = NULL) + 
+  xlab(NULL)+
+  #ylab(NULL)+
+  theme_lab()+
+  theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
+## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
+## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><br />
+</p>
+<p>Año 2012</p>
+<p><br />
+</p>
+<pre class="r"><code>
+fviz_dend(DNDvab12, k = 6, # Cut in four groups
+          cex = 0.7, # label size
+          k_colors = c(&quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;,&quot;grey40&quot;, &quot;grey40&quot;),
+          color_labels_by_k = TRUE, # color labels by groups
+          rect = TRUE, # Add rectangle around groups
+          rect_border = c( &quot;grey70&quot;, &quot; darkorange1&quot;,&quot;darkgoldenrod1&quot;,&quot;grey30&quot;,&quot;firebrick2&quot;, &quot;darkmagenta&quot;), 
+          rect_fill = TRUE)+
+  labs(title = NULL, subtitle = &quot;2012&quot;, 
+       caption = NULL, 
+       x = NULL, 
+       #y = NULL, 
+       fill = NULL) + 
+  xlab(NULL)+
+  #ylab(NULL)+
+  theme_lab()+
+  theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
+## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
+## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+</div>
