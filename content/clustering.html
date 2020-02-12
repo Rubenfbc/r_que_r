@@ -12,11 +12,18 @@ categories: ["R"]
 <p>Esta entrada presenta algunas de las herramientas disponibles en R que permiten realizar análisis de conglomerados (o clusters) y representar los grupos y los resultados obtenidos en dendrogramas.</p>
 <p><br />
 </p>
-<div id="paquetes" class="section level1">
-<h1>Paquetes</h1>
+<div id="introducción" class="section level1">
+<h1>Introducción</h1>
 <p><br />
 </p>
-<p>Descargamos los paquetes requeridos para nuestro análisis:</p>
+<p>El análisis de conglomerados jerárquico que abordamos en este post, en inglés Hierarchical Cluster Analysis, es una alternativa al conocido <a href="https://www.ibm.com/support/knowledgecenter/es/SSLVMB_sub/statistics_mainhelp_ddita/spss/base/idh_quic.html">Análisis Cluster de k-Medias</a>, que trataremos en una futura entrada. El Análisis de Conglomerados Jerárquico pretende identificar grupos homogéneos de variables en función de alguna característica. Consecuentemente, al realizar este proceso, se busca ir combinando las agrupaciones hasta que finalmente quede solamente un grupo con características más diferenciadas. Esta metodología para realizar conglomerados no requiere que se preestablezca un número de clusters determinado, como si necesita el Análisis de k-Medias, y suele completarse con la realización de un tipo de gráfico particular, llamado <a href="https://es.wikipedia.org/wiki/Dendrograma">dendrograma</a>, que permite visualizar las agrupaciones en forma de árbol donde se van representando los datos por subcategorías.</p>
+<p><br />
+</p>
+<div id="paquetes" class="section level2">
+<h2>Paquetes</h2>
+<p><br />
+</p>
+<p>En primer lugar descargamos los paquetes requeridos para nuestro análisis:</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -29,14 +36,15 @@ library(readxl)</code></pre>
 <p><br />
 </p>
 </div>
-<div id="dataset-coeficientes-de-participación-sectorial-de-las-regiones-peruanas" class="section level1">
-<h1>Dataset: Coeficientes de participación sectorial de las regiones peruanas</h1>
+</div>
+<div id="dataset-coeficientes-de-participación-sectorial-del-vab-de-las-regiones-peruanas" class="section level1">
+<h1>Dataset: Coeficientes de participación sectorial del VAB de las regiones peruanas</h1>
 <p><br />
 </p>
-<p>En esta ocasión vamos a trabajar con los <strong>coeficientes de participación sectorial del Valor Agregado Bruto por regiones de Perú de 2001 y 2012</strong>. Es decir, en los siguientes apartados se pretenderá examinar las similitudes entre regiones peruanas en función de su participación sectorial relativa en los años mencionados realizando grupos de regiones según dicho indicador. En cierta medida este análisis complementará el realizado en <a href="https://rquer.netlify.com/treemap_peru/">este</a> post anterior, donde se examinaba el peso sectorial de cada región peruana sobre la economía departamental y nacional en 2016.</p>
+<p>En esta ocasión vamos a trabajar con los <strong>coeficientes de participación sectorial del Valor Agregado Bruto por regiones de Perú para los años 2001 y 2012</strong>. Es decir, en los siguientes apartados se realizará un análisis de conglomerados jerárquico poniendo como pretexto examinar las similitudes entre regiones peruanas en función de su participación sectorial relativa en los años mencionados. Se buscará, por tanto, examinar similitudes regionales en términos de composición sectorial del VAB. En cierta medida este análisis podría servir como complemento del análisis realizado en <a href="https://rquer.netlify.com/treemap_peru/">este</a> post anterior, donde se examinaba el peso sectorial de cada región peruana sobre la economía departamental y nacional en 2016.</p>
 <p><br />
 </p>
-<p>La información sobre la participación relativa sectorial de las regiones peruanas las hemos obtenidos del Instituto Nacional de Estadística e Informática del Perú (INEI), y las tenemos guardadas en un archivo en nuestro ordenador. Por ello, empezamos cargando dichos archivos, uno para el año 2001 y otro para el año 2012 con el paquete {readxl} y la función <code>read_exel()</code>.</p>
+<p>La información sobre la participación relativa sectorial de las regiones peruanas las hemos obtenido del <a href="https://www.inei.gob.pe/">Instituto Nacional de Estadística e Informática del Perú (INEI)</a>. Como en este caso tenemos las participaciones sectoriales-regionales guardadas en un archivo excel en nuestro ordenador, empezamos cargando dichos archivos, uno para el año 2001 y otro para el año 2012, utilizando el paquete {readxl} y la función <code>read_excel()</code>.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -44,7 +52,7 @@ ddendvab01 &lt;- read_excel(&quot;datasets/ddendvab01.xlsx&quot;)
 ddendvab12 &lt;- read_excel(&quot;datasets/ddendvab12.xlsx&quot;)</code></pre>
 <p><br />
 </p>
-<p>En esta ocasión hemos clasificado la actividad productiva de las regiones en nueve grandes categorías, donde la pesca se encuentra en la categoría <code>agrvab</code> (agrícultura, caza y silvicultura).</p>
+<p>Como podemos ver, hemos clasificado la actividad productiva de las regiones en nueve grandes categorías o sectores productivos, donde en este caso la pesca se encuentra dentro de la categoría <code>agrvab</code> (agrícultura, caza y silvicultura). El resto de sectores son: <code>minvab</code>: minería y actividades extractivas; <code>manvab</code>: manufactura; <code>convab</code>: construcción; <code>comvab</code>: comercio; <code>tycvab</code>: transporte y comunicaciones; <code>ryhvab</code>: restaurantes y hoteles; <code>sguvab</code>: servicios gubernamentales y <code>otrvab</code>: otros servicios. Es conocido, tal y cómo quedó reflejado en <a href="https://rquer.netlify.com/treemap_peru/">este post</a> arriba mencionado, la gran concentración productiva existente en algunas regiones del país. La actividad extractiva, por ejemplo, representa una gran proporción del VAB total en regiones como Cusco, Arequipa, Ancash entre otras, la agricultura resulta especialmente relevante en la región de Amazonas o las actividades de servicios lideran notablemente la economía de la región capitalina, Lima.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -80,7 +88,7 @@ ddendvab12
 ## # ... with 14 more rows, and 1 more variable: otrvab12 &lt;dbl&gt;</code></pre>
 <p><br />
 </p>
-<p>Antes de empezar a operar indicamos que los nombres de las filas (rownames) son los que se encuentran en la column con el nombre <code>name</code> y, posteriormente, quitamos dicha columna de nuestro dataset dejando únicamente los valores sobre los que vamos a trabajar.</p>
+<p>Antes de empezar a operar indicamos que los nombres de las filas (rownames) son los que se encuentran en la columna con el nombre <code>name</code> y, posteriormente, quitamos dicha columna de nuestro dataset dejando únicamente los valores sobre los que vamos a trabajar.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -130,7 +138,7 @@ ddendvab12
 ## # ... with 14 more rows, and 1 more variable: otrvab12 &lt;dbl&gt;</code></pre>
 <p><br />
 </p>
-<p>En nuestro caso no necesitamos estandarizar los datos, aunque dependiendo de las características de las observaciones a analizar cabe la posibilidad que hubiese que normalizarlos antes de realizar el análisis de conglomerados.</p>
+<p>Nótese que en nuestro casoparticular no necesitamos estandarizar los datos, aunque dependiendo de las características de las observaciones a analizar cabría la posibilidad de que fuera necesario normalizarlos antes de realizar el análisis de conglomerados.</p>
 <p><br />
 </p>
 </div>
@@ -139,14 +147,8 @@ ddendvab12
 <p><br />
 </p>
 <p>Una de las medidas más utilizadas para determinar el grado de similitud o disimilitud entre observaciones es <strong>la distancia euclídea (o distancia euclidiana)</strong> que deriva del Teorema de Pitágoras. Para estimar la distancia entre las variables partimos de la premisa de que en el plano cartesiano a distancia euclídea entre dos puntos</p>
-<p><span class="math display">\[
-\begin{array}{c}
-x^2+y^2=z^2
-xy=z
-\end{array}
-\]</span></p>
-<p><br />
-</p>
+<p>$ (a= 2*x + 4) $</p>
+<p> </p>
 <pre class="r"><code>
 vab01.dist&lt;-dist(ddendvab01, method=&quot;euclidean&quot;) 
 vab01.dist

@@ -20,12 +20,8 @@
       <description>Re
 Esta entrada presenta algunas de las herramientas disponibles en R que permiten realizar análisis de conglomerados (o clusters) y representar los grupos y los resultados obtenidos en dendrogramas.
 
-Paquetes
-Descargamos los paquetes requeridos para nuestro análisis:
-
-library(dendextend)library(factoextra)library(NbClust)library(pvclust)library(flexclust)library(readxl)
-Dataset: Coeficientes de participación sectorial de las regiones peruanas
-En esta ocasión vamos a trabajar con los coeficientes de participación sectorial del Valor Agregado Bruto por regiones de Perú de 2001 y 2012.</description>
+Introducción
+El análisis de conglomerados jerárquico que abordamos en este post, en inglés Hierarchical Cluster Analysis, es una alternativa al conocido Análisis Cluster de k-Medias, que trataremos en una futura entrada. El Análisis de Conglomerados Jerárquico pretende identificar grupos homogéneos de variables en función de alguna característica.</description>
     </item>
     
     <item>
