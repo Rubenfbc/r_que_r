@@ -142,15 +142,19 @@ ddendvab12
 <p><br />
 </p>
 </div>
-<div id="distancia-euclídea" class="section level1">
-<h1>Distancia Euclídea</h1>
+<div id="medidas-de-distancia-de-los-conglomerados-distancia-euclídea" class="section level1">
+<h1>Medidas de distancia de los conglomerados: Distancia Euclídea</h1>
 <p><br />
 </p>
-<p>Una de las medidas más utilizadas para determinar el grado de similitud o disimilitud entre observaciones es <strong>la distancia euclídea (o distancia euclidiana)</strong> que deriva del Teorema de Pitágoras. Para estimar la distancia entre las variables partimos de la premisa de que en el plano cartesiano a distancia euclídea entre dos puntos</p>
-<p>$ (a= 2*x + 4) $</p>
+<p>Una de las medidas más utilizadas para determinar el grado de similitud o disimilitud entre observaciones es <strong>la distancia euclídea (o distancia euclidiana)</strong>, distnacia que suele ser la que R nos muestra por defecto. No obstante téngase en cuenta que existen otro tipo de medidas alternativas para medir la distancia de las similitudes (o diferencias) entre observaciones como puede ser la distancia Manhattan, Canberra, binaria o la distancia en función del coeficiente de correlación de Pearson o de Kendall. <a href="https://www.ecured.cu/Distancia_eucl%C3%ADdea">La distancia euclídea</a> en un espacio bidimensional, cuya formulación deriva del Teorema de Pitágoras, sería la distancia “ordinaria” entre dos puntos en un plano cartesiano o la longitud del segmento de recta que une dichos puntos. La formulación básica para un espacio de dos dimensiones puede ser fácilmente ajustada, como se observa en el link, para estimar la distancia euclídea entre diversos puntos en un espacio n-dimensional.</p>
 <p> </p>
+<p>Del paquete {stats} podemos utilizar la función <code>dist()</code> para obtener la <strong>matriz de distancias</strong>. Como hemos indicado, la metodología que viene por defecto es la distancia euclídea, aunque podemos indicar otros métodos con el comando <code>method= " "</code>. De forma alternativa podemos utilizar la función <code>get_dist()</code> del paquete {factoextra}, que básicamente nos devuelve el mismo resultado. No obstante, este paquete incluye la función <code>fviz_dist()</code> que nos permite visualizar en un heat map dicha matriz de distancias, donde, por ejemplo, podemos indicar que nos muestre en color rojo las distancias mayores y el azul los valores más pequeños (más similitud). Veamos cómo sería su aplicación para el año 2001 y 2012:</p>
+<p><br />
+</p>
+<div id="section" class="section level2">
+<h2>2001:</h2>
 <pre class="r"><code>
-vab01.dist&lt;-dist(ddendvab01, method=&quot;euclidean&quot;) 
+vab01.dist &lt;- dist(ddendvab01, method=&quot;euclidean&quot;) # del paquete {stats}
 vab01.dist
 ##            AMA       ANC       APU       ARE       AYA       CAJ       CUS
 ## ANC  41.621436                                                            
@@ -249,7 +253,15 @@ vab01.dist
 ## TUM  23.104300          
 ## UCA  24.607014 15.527966
 
-vab12.dist&lt;-dist(ddendvab12, method=&quot;euclidean&quot;) 
+fviz_dist(vab01.dist, gradient = list(low = &quot;blue&quot;, mid = &quot;white&quot;, high = &quot;red&quot;))</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><br />
+</p>
+</div>
+<div id="section-1" class="section level2">
+<h2>2012:</h2>
+<pre class="r"><code>
+vab12.dist &lt;- dist(ddendvab12, method=&quot;euclidean&quot;) 
 vab12.dist
 ##            AMA       ANC       APU       ARE       AYA       CAJ       CUS
 ## ANC  38.725104                                                            
@@ -346,11 +358,14 @@ vab12.dist
 ## SMA                     
 ## TAC                     
 ## TUM  14.912244          
-## UCA  17.489030 15.500177</code></pre>
-<p><br />
-</p>
-<div id="método-de-agrupamiento-promedios-average" class="section level2">
-<h2>Método de agrupamiento: promedios (average)</h2>
+## UCA  17.489030 15.500177
+
+fviz_dist(vab12.dist, gradient = list(low = &quot;blue&quot;, mid = &quot;white&quot;, high = &quot;red&quot;))</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+<div id="método-de-agrupamiento-promedios-average" class="section level1">
+<h1>Método de agrupamiento: promedios (average)</h1>
 <p><br />
 </p>
 <p>Año 2001</p>
@@ -367,7 +382,7 @@ DNDvab01
 plot(DNDvab01,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2001&quot;,
      sub= &quot;Método Average&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p><br />
 </p>
 <p>Año 2012</p>
@@ -384,10 +399,9 @@ DNDvab12
 plot(DNDvab12,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2012&quot;,
      sub= &quot;Método Average&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p><br />
 </p>
-</div>
 <div id="método-de-agrupamiento-ward" class="section level2">
 <h2>Método de agrupamiento: Ward</h2>
 <p><br />
@@ -406,7 +420,7 @@ DNDvab01b
 plot(DNDvab01b,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2001&quot;,
      sub= &quot;Método Ward&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p><br />
 </p>
 <p>Año 2012</p>
@@ -423,7 +437,7 @@ DNDvab12b
 plot(DNDvab12b,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2012&quot;,
      sub= &quot;Método Ward&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p><br />
 </p>
 </div>
@@ -451,7 +465,7 @@ dend_listvab
 <pre class="r"><code>
 #Graficamos los dos dendrogramas
 tanglegram(DNDvab01,DNDvab12) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <pre class="r"><code>tanglegram(DNDvab01,DNDvab12,
            sort=T,
            highlight_distinct_edges = T, # Turn-off dashed lines
@@ -459,7 +473,7 @@ tanglegram(DNDvab01,DNDvab12) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12</cod
            common_subtrees_color_branches = TRUE, # Color common branches 
            main = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvab), 2)),
            fast=TRUE)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-15-2.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-16-2.png" width="672" /></p>
 <p><br />
 </p>
 <p>Method: Ward</p>
@@ -482,7 +496,7 @@ dend_listvabb
 <pre class="r"><code>
 #Graficamos los dos dendrogramas
 tanglegram(DNDvab01b,DNDvab12b) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <pre class="r"><code>tanglegram(DNDvab01b,DNDvab12b,
            sort=T,
            highlight_distinct_edges = T, # Turn-off dashed lines
@@ -490,7 +504,7 @@ tanglegram(DNDvab01b,DNDvab12b) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12</c
            common_subtrees_color_branches = TRUE, # Color common branches 
            main = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvab), 2)),
            fast=TRUE)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-17-2.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
 <p><br />
 </p>
 </div>
@@ -547,7 +561,7 @@ cor_bakers_gamma(DNDvab01b, DNDvab12b)
 ## [1] 0.4473367</code></pre>
 <p><br />
 </p>
-<div id="section" class="section level2">
+<div id="section-2" class="section level2">
 <h2></h2>
 <p><br />
 </p>
@@ -557,7 +571,7 @@ cor_bakers_gamma(DNDvab01b, DNDvab12b)
 <pre class="r"><code>
 DNDvab01_2&lt;-fviz_dend(DNDvab01, cex=0.5)
 DNDvab01_2 #average en segundo método</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <p><br />
 </p>
 <p>Año 2012</p>
@@ -566,7 +580,7 @@ DNDvab01_2 #average en segundo método</code></pre>
 <pre class="r"><code>
 DNDvab12_2&lt;-fviz_dend(DNDvab12, cex=0.5)
 DNDvab12_2 #average en segundo método</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p><br />
 </p>
 </div>
@@ -576,12 +590,12 @@ DNDvab12_2 #average en segundo método</code></pre>
 </p>
 <pre class="r"><code>
 fviz_dend(DNDvab01, cex=0.5, horiz=TRUE) #vab01 average</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p><br />
 </p>
 <pre class="r"><code>
 fviz_dend(DNDvab12, cex=0.5, horiz=TRUE) #vab12 average</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <p><br />
 </p>
 </div>
@@ -614,7 +628,7 @@ fviz_dend(DNDvab01, k = 6, # Cut in four groups
   theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
 ## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
 ## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p><br />
 </p>
 <p>Año 2012</p>
@@ -639,6 +653,6 @@ fviz_dend(DNDvab12, k = 6, # Cut in four groups
   theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
 ## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
 ## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 </div>
 </div>

@@ -109,29 +109,44 @@ Nótese que en nuestro casoparticular no necesitamos estandarizar los datos, aun
 
 \
 
-# Distancia Euclídea
+# Medidas de distancia de los conglomerados: Distancia Euclídea
 
 \
 
-Una de las medidas más utilizadas para determinar el grado de similitud o disimilitud entre observaciones es **la distancia euclídea (o distancia euclidiana)** que deriva del Teorema de Pitágoras. Para estimar la distancia entre las variables partimos de la premisa de que en el plano cartesiano a distancia euclídea entre dos puntos  
-
-$ (a= 2*x + 4) $
+Una de las medidas más utilizadas para determinar el grado de similitud o disimilitud entre observaciones es **la distancia euclídea (o distancia euclidiana)**, distnacia que suele ser la que R nos muestra por defecto. No obstante téngase en cuenta que existen otro tipo de medidas alternativas para medir la distancia de las similitudes (o diferencias) entre observaciones como puede ser la distancia Manhattan, Canberra, binaria o la distancia en función del coeficiente de correlación de Pearson o de Kendall. [La distancia euclídea](https://www.ecured.cu/Distancia_eucl%C3%ADdea) en un espacio bidimensional, cuya formulación deriva del Teorema de Pitágoras, sería la distancia "ordinaria" entre dos puntos en un plano cartesiano o la longitud del segmento de recta que une dichos puntos. La formulación básica para un espacio de dos dimensiones puede ser fácilmente ajustada, como se observa en el link, para estimar la distancia euclídea entre diversos puntos en un espacio n-dimensional. 
  
 \ 
 
+Del paquete {stats} podemos utilizar la función `dist()` para obtener la **matriz de distancias**. Como hemos indicado, la metodología que viene por defecto es la distancia euclídea, aunque podemos indicar otros métodos con el comando `method= " "`. De forma alternativa podemos utilizar la función `get_dist()` del paquete {factoextra}, que básicamente nos devuelve el mismo resultado. No obstante, este paquete incluye la función `fviz_dist()` que nos permite visualizar en un heat map dicha matriz de distancias, donde, por ejemplo, podemos indicar que nos muestre en color rojo las distancias mayores y el azul los valores más pequeños (más similitud). Veamos cómo sería su aplicación para el año 2001 y 2012:
+
+\
+
+## 2001:
+
 ```{r}
 
-vab01.dist<-dist(ddendvab01, method="euclidean") 
+vab01.dist <- dist(ddendvab01, method="euclidean") # del paquete {stats}
 vab01.dist
 
-vab12.dist<-dist(ddendvab12, method="euclidean") 
-vab12.dist
+fviz_dist(vab01.dist, gradient = list(low = "blue", mid = "white", high = "red"))
 
 ```
 
 \
 
-## Método de agrupamiento: promedios (average)
+## 2012:
+
+```{r}
+
+vab12.dist <- dist(ddendvab12, method="euclidean") 
+vab12.dist
+
+fviz_dist(vab12.dist, gradient = list(low = "blue", mid = "white", high = "red"))
+
+```
+
+
+# Método de agrupamiento: promedios (average)
 
 \
 
