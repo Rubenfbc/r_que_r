@@ -145,26 +145,81 @@ fviz_dist(vab12.dist, gradient = list(low = "blue", mid = "white", high = "red")
 
 ```
 
+\
 
-# Método de agrupamiento: promedios (average)
+# Método de agrupamiento: 
 
 \
 
-Año 2001
+Una vez tenemos estimadas las distancias, según el método escogido, un segundo elemento a considerar es cómo medir las diferencias entre los grupos de observaciones o conglomerados. De nuevo, existen diversas propuestas para llevar a cabo este proceso y, dependiendo del criterio escogido las agrupaciones obtenidas, y el dendrograma resultante, mostrará diferencias significativas. Por tanto, no podemos hablar de una solución óptima, sino que la metodología escogida dependerá del caracter de los datos, del investigador y de su criterio. Los métodos más utilizados son los siguiente:
+
+- **Distancia mínima (máxima similitud) o** ***single linkage***: La distancia según este criterio vendría dada por la mínima distancia entre los distintos componentes. 
+- **Distancia máxima (mínima similitud) o** ***complete linkage***: La distancia según este criterio vendría dada por la máxima distancia entre los distintos componentes. 
+- **Distancia promedio o** ***average linkage***: La distancia según este criterio vendría dada por el promedio de las distancias de los componentes de un conglomerado con respecto al promedio de las distancias del otro grupo.
+- **En base los centroides o** ***centroid linkage***: La distancia según este criterio vendría dada por la mayor semejanza entre los centroides de los clusters.
+- **Método Ward (mínima varianza)**: La distancia según este criterio vendría dada por el menor incremento en el valor total de la suma de los cuadrados de las diferencias existentes, dentro de cada conglomerado, de cada observación con respecto al centroide del cluster. 
+
+\
+
+Para evitar ser excesivamente repetitivos en los siguientes apartados vamos a mostrar cómo realizar el proceso siguiendo el procedimiento de agrupación según la distancia promedio (average linkage) y según el método Ward. Podremos de esta forma comprobar las diferencias en los resultado obtenido dependiendo del criterio escogido. 
+
+
+\
+
+## Average linkage:
+
+## 2001
+
+\
+
+Para llevar a cabo la agrupación de conglomerados jerárquicos utilizamos la función `hclust()` del paquete {stats}. 
 
 \
 
 ```{r}
 
 HCvab01<- hclust(vab01.dist, method="average")
+HCvab01
 
 ```
 
 \
 
+Una vez hemos relizado la agrupación podemos **representar dichos conglomerados en un dendrograma**. Para ello tenemos diversas posibilidades utilizando la función `plot()` del paquete {graphics} con ligeras diferencias:
+
+\
+
+### Opción 1.
+
+\
+
 ```{r}
 
-DNDvab01<- as.dendrogram(HCvab01) #DENDOGRAM
+plot(HCvab01)
+
+```
+
+\
+
+### Opción 2.
+
+\
+
+```{r}
+
+plot(HCvab01, hang= -1, cex=0.6)
+
+```
+
+\
+
+### Opción 3.
+
+\
+
+```{r}
+
+DNDvab01<- as.dendrogram(HCvab01) 
 DNDvab01
 plot(DNDvab01,
      main= "Dendrograma VAB de las regiones peruanas, 2001",
@@ -174,7 +229,11 @@ plot(DNDvab01,
 
 \
 
-Año 2012
+## 2012
+
+\
+
+Para el año 2012 el Análisis de Conglomerados Jerárquico utilizando el método de distancia promedio (*average linkage*) y su correspondiente dendrograma sería el siguiente: 
 
 \
 
@@ -183,6 +242,9 @@ Año 2012
 HCvab12<- hclust(vab12.dist, method="average") 
 
 ```
+
+\
+
 
 \
 
@@ -198,11 +260,13 @@ plot(DNDvab12,
 
 \
 
-## Método de agrupamiento: Ward
+## Método de Ward:
+
+Para realizar un dendrograma utilizando otro método de agrupamiento únicamente debemos seleccionar el criterio escogido. la función `hclust()` permite escoger entre: "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median" o "centroid". Para realizar el análisis aplicando, por ejemplo, el método Ward indicaremos `method= "ward.D2" en la función `hclust()` (véase: Murtagh, F., & Legendre, P. 2014. Ward’s hierarchical agglomerative clustering method: which algorithms implement Ward’s criterion?. Journal of Classification, 31/3, 274-295)
 
 \
 
-Año 2001
+### 2001
 
 \
 
@@ -226,7 +290,7 @@ plot(DNDvab01b,
 
 \
 
-Año 2012
+### 2012
 
 \
 
@@ -250,11 +314,17 @@ plot(DNDvab12b,
 
 \
 
-## Comparación entre dendrogramas
+# Comparación entre dendrogramas
 
 \
 
-Method: Average
+Con el paquete {dendextend} podemos visualizar y comparar dendrogramas de conglomerados jerárquicos. La comparación visual se realiza utilizando la función `tanglegram()`, que sitúa los dendrogramas que queremos comparar uno enfrente del otro y conecta sus observaciones mediante líneas. En nuestro ejercicio, de nuevo por motivos de simplicidad, vamos a utilizar únicamente los dendrogramas de 2001 y 2012 estimados con el criterio de agrupamiento de promedios. 
+
+\
+
+## VAB 2001 vs VAB 2012
+
+En primer lugar creamos una lista con los dendrogramas `DNDvab01` y `DNDvab12` que denominaremos `dend_listvab`. 
 
 \
 
@@ -268,30 +338,91 @@ dend_listvab
 
 \
 
+A la hora de comparar los dendrogramas podemos escoger entre distintas posibles clasificaciones utilizando la función `untangle()`. las opciones a escoger son las siguientes: "labels", "ladderize", "random", "step1side", "step2side", "DendSer". Veamos gráficamente la diferencia entre algunas de ellas:
+
+\
+
+### method = "labels"
+
+\
+
 ```{r}
 
-#Graficamos los dos dendrogramas
-tanglegram(DNDvab01,DNDvab12) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12
+dendlist(dend_listvab) %>%
+  untangle(method = "labels") %>%
+  tanglegram(sub= "Method = labels",
+             main_left= "VAB 2001",
+             main_right = "VAB 2012",
+             cex_sub=1)
+
+```
+
+\
+
+### method = "step1side"
+
+\
+
+```{r}
+
+dendlist(dend_listvab) %>%
+  untangle(method ="step1side") %>%
+  tanglegram(sub= "Method = step1side",
+             main_left= "VAB 2001",
+             main_right = "VAB 2012")
+
+```
+
+\
+
+### method = "ladderize"
+
+\
+
+```{r}
+
+dendlist(dend_listvab) %>%
+  untangle(method ="ladderize") %>%
+  tanglegram(sub= "Method = ladderize",
+             main_left= "VAB 2001",
+             main_right = "VAB 2012")
+
+```
+
+\
+
+### customizado
+
+\
+
+```{r}
+
 tanglegram(DNDvab01,DNDvab12,
            sort=T,
+           main_left= "VAB 2001",
+           main_right = "VAB 2012",
            highlight_distinct_edges = T, # Turn-off dashed lines
            common_subtrees_color_lines = FALSE, # Turn-off line colors
            common_subtrees_color_branches = TRUE, # Color common branches 
-           main = paste("entanglement =", round(entanglement(dend_listvab), 2)),
+           sub = paste("entanglement =", round(entanglement(dend_listvab), 0.8)),
            fast=TRUE)
 
 ```
 
 \
 
-Method: Ward
+## Average vs. Ward
+
+\
+
+De forma similar podemos comparar los dendrogramas realizados siguiendo el criterio de clasificación de conglomerados según la distancia promedio y según el criterio Ward de mínima varianza. El procedimiento sería similar al realizado en el punto previo. 
 
 \
 
 ```{r}
-#creamos una lista con los dos dendrograms VAB 01 Y 12 (Average)
+#creamos una lista con los dos dendrograms (Average y Ward) para el año 2001
 
-dend_listvabb<- dendlist(DNDvab01b,DNDvab12b) 
+dend_listvabb<- dendlist(DNDvab01,DNDvab01b) 
 dend_listvabb
 
 ```
@@ -300,13 +431,26 @@ dend_listvabb
 
 ```{r}
 
-#Graficamos los dos dendrogramas
-tanglegram(DNDvab01b,DNDvab12b) #COMPARACION DENDROGRAMAS AVERAGE VAB 01 Y 12
-tanglegram(DNDvab01b,DNDvab12b,
+dendlist(dend_listvabb) %>%
+  untangle(method = "labels") %>%
+  tanglegram(sub= "Method = labels",
+             main_left= "Average",
+             main_right = "Ward",
+             cex_main=1)
+
+```
+
+\
+
+```{r}
+
+tanglegram(DNDvab01,DNDvab01b,
            sort=T,
-           highlight_distinct_edges = T, # Turn-off dashed lines
-           common_subtrees_color_lines = FALSE, # Turn-off line colors
-           common_subtrees_color_branches = TRUE, # Color common branches 
+           main_left= "Average",
+           main_right = "Ward",
+           highlight_distinct_edges = T, 
+           common_subtrees_color_lines = FALSE, 
+           common_subtrees_color_branches = TRUE,
            main = paste("entanglement =", round(entanglement(dend_listvab), 2)),
            fast=TRUE)
 
@@ -371,7 +515,7 @@ cor_bakers_gamma(DNDvab01b, DNDvab12b)
 
 \
 
-## 
+## Average vs. Ward
 
 \
 
