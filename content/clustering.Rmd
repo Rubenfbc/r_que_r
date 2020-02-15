@@ -485,10 +485,14 @@ Para obtener las **matrices de correlación de los dendrogramas** podemos hacer 
 
 ## Correlación cofenética (Cophenetic)
 
+Como hemos enunciado, para obtener la matriz de correlación cofenética podemos utilizar la función `cor.dendlist()`. Las matrices de correlación para los conglomerados de 2001 y 2012 (average) y para los modelos Average vs. Ward en 2001 serían, por consiguiente, las siguientes:
+
+\
+
 ```{r}
 
-cor.dendlist(dend_listvab, method = "cophenetic") #average
-cor.dendlist(dend_listvabb, method= "cophenetic") #ward
+cor.dendlist(dend_listvab, method = "cophenetic") #average 2001 vs average 2012
+cor.dendlist(dend_listvabb, method= "cophenetic") #average vs ward en 2001
 
 ```
 
@@ -501,7 +505,7 @@ Coeficiente de correlación:
 ```{r}
 
 cor_cophenetic(DNDvab01, DNDvab12)
-cor_cophenetic(DNDvab01b, DNDvab12b)
+cor_cophenetic(DNDvab01, DNDvab01b)
 
 ```
 
