@@ -559,7 +559,7 @@ source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme
 
 ## Año 2001
 
-Supongamos que para el año 2001 queremos clasificar el grupo de regiones peruanas en seis clusters con características similares (en este caso utilizamos el criterio de los promedios que viene por defecto). Para ello indicaremos `k=6`, corrspondiente al número de conglomerados, e indicamos el color que queremos utilizar para diferenciarlos gráficamente en nuestro dendrograma. 
+Supongamos que para el año 2001 queremos clasificar el grupo de regiones peruanas en **seis clusters** con características similares (en este caso utilizamos el criterio de los promedios que viene por defecto). Para ello indicaremos `k=6`, corrspondiente al número de conglomerados, e indicamos el color que queremos utilizar para diferenciarlos gráficamente en nuestro dendrograma. 
 
 \
 
@@ -572,7 +572,8 @@ fviz_dend(DNDvab01, k = 6,
           rect = TRUE, 
           rect_border = c("grey30", "grey70","darkgoldenrod1"," darkorange1","firebrick2", "darkmagenta"), 
           rect_fill = TRUE)+
-  labs(title = NULL, subtitle = "Dendrograma VAB de las regiones peruanas, 2001",
+  labs(title = "Dendrograma VAB regional Perú, 2001",
+       subtitle = "(K = 6)",
        caption = NULL, 
        x = NULL, 
        y = NULL, 
@@ -589,25 +590,210 @@ fviz_dend(DNDvab01, k = 6,
 
 ## Año 2012
 
+Pongamos que para el año 2012 queremos identificar cuatro grandes grupos de conglomerados. Para ello modificamos ligeramente el código anterior y obtenemos el siguiente dendrogama:
+
 \
 
 ```{r, out.width="100%"}
 
-fviz_dend(DNDvab12, k = 6, 
+fviz_dend(DNDvab12, k = 4, 
           cex = 0.7, 
-          k_colors = c("grey40", "grey40", "grey40", "grey40","grey40", "grey40"),
+          k_colors = c("grey40", "grey40","grey40", "grey40"),
           color_labels_by_k = TRUE, 
           rect = TRUE, # Add rectangle around groups
-          rect_border = c( "grey70", " darkorange1","darkgoldenrod1","grey30","firebrick2", "darkmagenta"), 
+          rect_border = c(" darkorange1","darkgoldenrod1","firebrick2", "darkmagenta"), 
           rect_fill = TRUE)+
-  labs(title = NULL, subtitle = "Dendrograma VAB de las regiones peruanas, 2012", 
+  labs(title = "Dendrograma VAB regional Perú, 2012", 
+       subtitle = "(K = 4)",
        caption = NULL, 
        x = NULL, 
-       #y = NULL, 
+       y = NULL, 
        fill = NULL) + 
   xlab(NULL)+
-  #ylab(NULL)+
+  ylab(NULL)+
   theme_lab()+
   theme(panel.grid.major.x = element_blank(), legend.position = "right")
+
+```
+
+\
+
+Además de las arriba expuestas, con el paquete `fviz_dend()` existen otras opciones que pueden resultarnos de interés a la hora de realizar dendrogramas. Véamos algunos ejemplos:
+
+\
+
+### Opción 1. 
+
+\
+
+```{r, out.width= "100%"}
+
+fviz_dend(DNDvab01, 
+          k = 6,                 
+          cex = 0.5,                
+          k_colors = "Set2",
+          color_labels_by_k = TRUE,  
+          ggtheme = theme_lab())
+
+```
+
+\
+
+### Opción 2. 
+
+\
+
+```{r, out.width="100%"}
+fviz_dend(DNDvab01, 
+          cex = 0.7, 
+          k = 6, 
+          k_colors = "jco")
+
+```
+
+\
+
+### Opción 3.
+
+\
+
+```{r, out.width="100%"}
+
+fviz_dend(DNDvab01, 
+          k = 6, 
+          cex = 0.7, 
+          horiz = TRUE,  
+          k_colors = "jco", 
+          rect = TRUE, 
+          rect_border = "jco", 
+          rect_fill = TRUE)
+
+```
+
+\
+
+### Opción 4.
+
+\
+
+```{r}
+
+fviz_dend(DNDvab01, 
+          cex = 0.8, 
+          k = 6, 
+          k_colors = "jco", 
+          type = "circular")
+
+```
+
+\
+
+### Opción 5.
+
+\
+
+```{r}
+
+fviz_dend(DNDvab01, 
+          k = 6, 
+          k_colors = "jco",
+          type = "phylogenic", 
+          repel = TRUE)
+
+```
+
+\
+
+# Tablas con información de los conglomerados
+
+\
+
+Además de representar las agrupaciones de los conglomerados en dendrogramas, resulta de notable interés obtener las características particulares de cada uno de los conglomerados identificados. Presentar esa información en una tabla resulta sencillo siguiendo los pasos realizados a lo largo de este post.
+
+\
+
+## 2001
+
+En primer lugar, como vimos, obtenemos la distancia euclídea, tal y como expusimos al inicio del post. Recordemos que la distancia euclídea es la que viene determinada por defecto al usar la función `dist()`. En prmer lugar estimamos las distancias para el año 2001.
+
+\
+
+```{r}
+
+dvab01<-dist(ddendvab01)
+
+```
+
+\
+
+En segundo lugar realizamos las agrupaciones de los conglomerados siguiendo el criterio de la distancia promedio (average), aunque podríamos haber escogido otro criterio de agrupación, tal y como vimos previamente.
+
+\
+
+```{r}
+
+fit.averagevab01<- hclust(dvab01, method="average")
+
+```
+
+\
+
+Supongamos que queremos agrupar las regiones peruanas en 6 conglomerados o clusters. En este sentido vemos que el resultado obtenido agrupa en un primer grupo 16 regiones del país (que se corresponde al dendragrama realizado anteriormente), un segundo conglomerado se conforma de 4 regiones y cuatro conglomerados muestran características diferenciadas que se configuran como únicos elementos de sus respectivos conglomerados. 
+
+\
+
+```{r}
+
+clusters_vab01_ave<- cutree(fit.averagevab01, k=6)
+table(clusters_vab01_ave)
+
+```
+
+\
+
+Por último, para ver en una tabla qué características promedio (average) presentan cada uno de los conglomerados, atendiendo a los respectivos sectores productivos, podemos indicar la siguiente orden. En la tabla resultante se observa nitidamente que el gran peso de alguna actividad productiva (Minería en Pasco u Otros Servicios en Huancavélica por ejemplo) explica que algunas regiones configuren un propio conglomerado. 
+
+\
+
+```{r, out.width= "100%"}
+
+tabla_vab01 <- aggregate(as.data.frame(ddendvab01), by=list(cluster=clusters_vab01_ave), median)
+tabla_vab01
+
+```
+
+\
+ 
+## 2012
+
+```{r}
+
+dvab12<-dist(ddendvab12)
+
+```
+
+\
+
+```{r}
+
+fit.averagevab12<- hclust(dvab12, method="average")
+
+```
+
+\
+
+```{r}
+
+clusters_vab12_ave<- cutree(fit.averagevab12, k=6)
+table(clusters_vab12_ave)
+
+```
+
+\
+
+```{r, out.width= "100%"}
+
+tabla_vab12 <- aggregate(as.data.frame(ddendvab12), by=list(cluster=clusters_vab12_ave), median)
+tabla_vab12
 
 ```
