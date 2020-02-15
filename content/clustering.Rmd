@@ -485,7 +485,7 @@ Para obtener las **matrices de correlación de los dendrogramas** podemos hacer 
 
 ## Correlación cofenética (Cophenetic)
 
-Como hemos enunciado, para obtener la matriz de correlación cofenética podemos utilizar la función `cor.dendlist()`. Las matrices de correlación para los conglomerados de 2001 y 2012 (average) y para los modelos Average vs. Ward en 2001 serían, por consiguiente, las siguientes:
+Como hemos enunciado, para obtener la matriz de correlación cofenética podemos utilizar la función `cor.dendlist()`. Las matrices de correlación para los conglomerados de 2001 vs. 2012 (average) y para los modelos Average vs. Ward en 2001 serían, por consiguiente, las siguientes:
 
 \
 
@@ -498,7 +498,7 @@ cor.dendlist(dend_listvabb, method= "cophenetic") #average vs ward en 2001
 
 \
 
-Coeficiente de correlación:
+Los coeficiente de correlación se podrían obtener con la función `cor_cophenetic()`:
 
 \
 
@@ -509,10 +509,13 @@ cor_cophenetic(DNDvab01, DNDvab01b)
 
 ```
 
-
 \
 
 ## Correlación Baker
+
+\
+
+Para estimar las matrices de correlación de Baker y sus correspondientes coeficientes de correlación seguiriamos un procedimiento similar. 
 
 \
 
@@ -525,27 +528,26 @@ cor.dendlist(dend_listvabb, method = "baker")
 
 \
 
-Coeficiente de correlación:
+En este caso los coeficientes de correlación se obtendrían con la función `cor_bakers_gamma()`:
 
 \
 
 ```{r}
 
 cor_bakers_gamma(DNDvab01, DNDvab12)
-cor_bakers_gamma(DNDvab01b, DNDvab12b)
+cor_bakers_gamma(DNDvab01, DNDvab01b)
 
 ```
 
 \
 
-
-######################################################
-
-
-
-## Grupos en colores
+# Grupos de clusters o conglomerados
 
 \ 
+
+El objetivo fundamental del análisis de conglomerados jerárquico consiste en establecer grupos de conglomerados con características similares de acuerdo a algún patrón determinado. Para representar gráficamente dichos conglomerados podemos utilizar la función `fviz_dend()` del paquete {factoextra}, el cual nos permite utilizar el lenguaje tradicional del paquete {ggplot2}. En nuestro caso particular utilizaremos un theme realizado por traffordDataLab, `theme_lab()`, que ya hemos utilizado en post previos y que encontramos muy agradablea la vista. Este theme lo cargamos con el siguiente comando:
+
+\
 
 ```{r}
 
@@ -555,47 +557,50 @@ source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme
 
 \
 
-Año 2001
+## Año 2001
+
+Supongamos que para el año 2001 queremos clasificar el grupo de regiones peruanas en seis clusters con características similares (en este caso utilizamos el criterio de los promedios que viene por defecto). Para ello indicaremos `k=6`, corrspondiente al número de conglomerados, e indicamos el color que queremos utilizar para diferenciarlos gráficamente en nuestro dendrograma. 
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
-fviz_dend(DNDvab01, k = 6, # Cut in four groups
-          cex = 0.7, # label size
+fviz_dend(DNDvab01, k = 6, 
+          cex = 0.7, 
           k_colors = c("grey40", "grey40", "grey40", "grey40","grey40", "grey40"),
-          color_labels_by_k = TRUE, # color labels by groups
-          rect = TRUE, # Add rectangle around groups
+          color_labels_by_k = TRUE, 
+          rect = TRUE, 
           rect_border = c("grey30", "grey70","darkgoldenrod1"," darkorange1","firebrick2", "darkmagenta"), 
           rect_fill = TRUE)+
-  labs(title = NULL, subtitle = "2001",
+  labs(title = NULL, subtitle = "Dendrograma VAB de las regiones peruanas, 2001",
        caption = NULL, 
        x = NULL, 
-       #y = NULL, 
+       y = NULL, 
        fill = NULL) + 
   xlab(NULL)+
-  #ylab(NULL)+
+  ylab(NULL)+
   theme_lab()+
-  theme(panel.grid.major.x = element_blank(), legend.position = "right")
+  theme(panel.grid.major.x = element_blank(), 
+        legend.position = "right")
 
 ```
 
 \
 
-Año 2012
+## Año 2012
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
-fviz_dend(DNDvab12, k = 6, # Cut in four groups
-          cex = 0.7, # label size
+fviz_dend(DNDvab12, k = 6, 
+          cex = 0.7, 
           k_colors = c("grey40", "grey40", "grey40", "grey40","grey40", "grey40"),
-          color_labels_by_k = TRUE, # color labels by groups
+          color_labels_by_k = TRUE, 
           rect = TRUE, # Add rectangle around groups
           rect_border = c( "grey70", " darkorange1","darkgoldenrod1","grey30","firebrick2", "darkmagenta"), 
           rect_fill = TRUE)+
-  labs(title = NULL, subtitle = "2012", 
+  labs(title = NULL, subtitle = "Dendrograma VAB de las regiones peruanas, 2012", 
        caption = NULL, 
        x = NULL, 
        #y = NULL, 

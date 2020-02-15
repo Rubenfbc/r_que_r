@@ -753,30 +753,36 @@ tanglegram(DNDvab01,DNDvab01b,
 </p>
 <div id="correlación-cofenética-cophenetic" class="section level2">
 <h2>Correlación cofenética (Cophenetic)</h2>
+<p>Como hemos enunciado, para obtener la matriz de correlación cofenética podemos utilizar la función <code>cor.dendlist()</code>. Las matrices de correlación para los conglomerados de 2001 vs. 2012 (average) y para los modelos Average vs. Ward en 2001 serían, por consiguiente, las siguientes:</p>
+<p><br />
+</p>
 <pre class="r"><code>
-cor.dendlist(dend_listvab, method = &quot;cophenetic&quot;) #average
+cor.dendlist(dend_listvab, method = &quot;cophenetic&quot;) #average 2001 vs average 2012
 ##           [,1]      [,2]
 ## [1,] 1.0000000 0.6854301
 ## [2,] 0.6854301 1.0000000
-cor.dendlist(dend_listvabb, method= &quot;cophenetic&quot;) #ward
+cor.dendlist(dend_listvabb, method= &quot;cophenetic&quot;) #average vs ward en 2001
 ##           [,1]      [,2]
 ## [1,] 1.0000000 0.6865269
 ## [2,] 0.6865269 1.0000000</code></pre>
 <p><br />
 </p>
-<p>Coeficiente de correlación:</p>
+<p>Los coeficiente de correlación se podrían obtener con la función <code>cor_cophenetic()</code>:</p>
 <p><br />
 </p>
 <pre class="r"><code>
 cor_cophenetic(DNDvab01, DNDvab12)
 ## [1] 0.6854301
-cor_cophenetic(DNDvab01b, DNDvab12b)
-## [1] 0.4323974</code></pre>
+cor_cophenetic(DNDvab01, DNDvab01b)
+## [1] 0.6865269</code></pre>
 <p><br />
 </p>
 </div>
 <div id="correlación-baker" class="section level2">
 <h2>Correlación Baker</h2>
+<p><br />
+</p>
+<p>Para estimar las matrices de correlación de Baker y sus correspondientes coeficientes de correlación seguiriamos un procedimiento similar.</p>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -790,64 +796,70 @@ cor.dendlist(dend_listvabb, method = &quot;baker&quot;)
 ## [2,] 0.8126997 1.0000000</code></pre>
 <p><br />
 </p>
-<p>Coeficiente de correlación:</p>
+<p>En este caso los coeficientes de correlación se obtendrían con la función <code>cor_bakers_gamma()</code>:</p>
 <p><br />
 </p>
 <pre class="r"><code>
 cor_bakers_gamma(DNDvab01, DNDvab12)
 ## [1] 0.7024245
-cor_bakers_gamma(DNDvab01b, DNDvab12b)
-## [1] 0.4473367</code></pre>
+cor_bakers_gamma(DNDvab01, DNDvab01b)
+## [1] 0.8126997</code></pre>
 <p><br />
 </p>
-<div id="section-6" class="section level54">
-<p></p>
 </div>
 </div>
-<div id="grupos-en-colores" class="section level2">
-<h2>Grupos en colores</h2>
+<div id="grupos-de-clusters-o-conglomerados" class="section level1">
+<h1>Grupos de clusters o conglomerados</h1>
 <p> </p>
+<p>El objetivo fundamental del análisis de conglomerados jerárquico consiste en establecer grupos de conglomerados con características similares de acuerdo a algún patrón determinado. Para representar gráficamente dichos conglomerados podemos utilizar la función <code>fviz_dend()</code> del paquete {factoextra}, el cual nos permite utilizar el lenguaje tradicional del paquete {ggplot2}. En nuestro caso particular utilizaremos un theme realizado por traffordDataLab, <code>theme_lab()</code>, que ya hemos utilizado en post previos y que encontramos muy agradablea la vista. Este theme lo cargamos con el siguiente comando:</p>
+<p><br />
+</p>
 <pre class="r"><code>
 source(&quot;https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R&quot;)</code></pre>
 <p><br />
 </p>
-<p>Año 2001</p>
+<div id="año-2001" class="section level2">
+<h2>Año 2001</h2>
+<p>Supongamos que para el año 2001 queremos clasificar el grupo de regiones peruanas en seis clusters con características similares (en este caso utilizamos el criterio de los promedios que viene por defecto). Para ello indicaremos <code>k=6</code>, corrspondiente al número de conglomerados, e indicamos el color que queremos utilizar para diferenciarlos gráficamente en nuestro dendrograma.</p>
 <p><br />
 </p>
 <pre class="r"><code>
-fviz_dend(DNDvab01, k = 6, # Cut in four groups
-          cex = 0.7, # label size
+fviz_dend(DNDvab01, k = 6, 
+          cex = 0.7, 
           k_colors = c(&quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;,&quot;grey40&quot;, &quot;grey40&quot;),
-          color_labels_by_k = TRUE, # color labels by groups
-          rect = TRUE, # Add rectangle around groups
+          color_labels_by_k = TRUE, 
+          rect = TRUE, 
           rect_border = c(&quot;grey30&quot;, &quot;grey70&quot;,&quot;darkgoldenrod1&quot;,&quot; darkorange1&quot;,&quot;firebrick2&quot;, &quot;darkmagenta&quot;), 
           rect_fill = TRUE)+
-  labs(title = NULL, subtitle = &quot;2001&quot;,
+  labs(title = NULL, subtitle = &quot;Dendrograma VAB de las regiones peruanas, 2001&quot;,
        caption = NULL, 
        x = NULL, 
-       #y = NULL, 
+       y = NULL, 
        fill = NULL) + 
   xlab(NULL)+
-  #ylab(NULL)+
+  ylab(NULL)+
   theme_lab()+
-  theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
+  theme(panel.grid.major.x = element_blank(), 
+        legend.position = &quot;right&quot;)
 ## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
 ## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-31-1.png" width="100%" /></p>
 <p><br />
 </p>
-<p>Año 2012</p>
+</div>
+<div id="año-2012" class="section level2">
+<h2>Año 2012</h2>
 <p><br />
 </p>
 <pre class="r"><code>
-fviz_dend(DNDvab12, k = 6, # Cut in four groups
-          cex = 0.7, # label size
+fviz_dend(DNDvab12, k = 6, 
+          cex = 0.7, 
           k_colors = c(&quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;, &quot;grey40&quot;,&quot;grey40&quot;, &quot;grey40&quot;),
-          color_labels_by_k = TRUE, # color labels by groups
+          color_labels_by_k = TRUE, 
           rect = TRUE, # Add rectangle around groups
           rect_border = c( &quot;grey70&quot;, &quot; darkorange1&quot;,&quot;darkgoldenrod1&quot;,&quot;grey30&quot;,&quot;firebrick2&quot;, &quot;darkmagenta&quot;), 
           rect_fill = TRUE)+
-  labs(title = NULL, subtitle = &quot;2012&quot;, 
+  labs(title = NULL, subtitle = &quot;Dendrograma VAB de las regiones peruanas, 2012&quot;, 
        caption = NULL, 
        x = NULL, 
        #y = NULL, 
@@ -858,7 +870,7 @@ fviz_dend(DNDvab12, k = 6, # Cut in four groups
   theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
 ## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
 ## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-32-1.png" width="100%" /></p>
 </div>
 </div>
 
