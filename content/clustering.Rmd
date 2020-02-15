@@ -766,6 +766,10 @@ tabla_vab01
  
 ## 2012
 
+Para el año 2012 el procedimiento sería similar, y únicamente debemos modificar la información referente al año en cuestión.
+
+\
+
 ```{r}
 
 dvab12<-dist(ddendvab12)
@@ -791,9 +795,16 @@ table(clusters_vab12_ave)
 
 \
 
+Durante el periodo 2001-2012 parece haberse producido cierto proceso de homogeneización de las estructuras productivas sectoriales de las regiones peruanas. No obstante, tres regiones (Huancavelica, Pasco y Moquegua) registran todavía ciertas características singulares que hace que cada una de dichas regiones configuren, por si solas, un conglomerado. En 2012, por consiguiente, sigue habiendo una notable concentración productiva en algunas de las regiones que componen el país. 
+
+\
+
 ```{r, out.width= "100%"}
 
 tabla_vab12 <- aggregate(as.data.frame(ddendvab12), by=list(cluster=clusters_vab12_ave), median)
 tabla_vab12
 
 ```
+
+\
+
