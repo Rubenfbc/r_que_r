@@ -123,7 +123,7 @@ Del paquete {stats} podemos utilizar la función `dist()` para obtener la **matr
 
 ## 2001:
 
-```{r}
+```{r, out.width= "100%"}
 
 vab01.dist <- dist(ddendvab01, method="euclidean") # del paquete {stats}
 vab01.dist
@@ -136,7 +136,7 @@ fviz_dist(vab01.dist, gradient = list(low = "blue", mid = "white", high = "red")
 
 ## 2012:
 
-```{r}
+```{r, out.width= "100%"}
 
 vab12.dist <- dist(ddendvab12, method="euclidean") 
 vab12.dist
@@ -185,7 +185,7 @@ HCvab01
 
 \
 
-Una vez hemos relizado la agrupación podemos **representar dichos conglomerados en un dendrograma**. Para ello tenemos diversas posibilidades utilizando la función `plot()` del paquete {graphics} con ligeras diferencias:
+Una vez hemos relizado la agrupación podemos **representar dichos conglomerados en un dendrograma**. Para ello tenemos diversas posibilidades utilizando la función `plot()` del paquete {graphics}, obteniendo dendrogramas que muestran ligeras diferencias, o con otros paquetes de R como {factoextra}:
 
 \
 
@@ -193,7 +193,7 @@ Una vez hemos relizado la agrupación podemos **representar dichos conglomerados
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 plot(HCvab01)
 
@@ -205,7 +205,7 @@ plot(HCvab01)
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 plot(HCvab01, hang= -1, cex=0.6)
 
@@ -217,13 +217,38 @@ plot(HCvab01, hang= -1, cex=0.6)
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 DNDvab01<- as.dendrogram(HCvab01) 
 DNDvab01
 plot(DNDvab01,
      main= "Dendrograma VAB de las regiones peruanas, 2001",
      sub= "Método Average") 
+
+```
+
+\
+
+### Opción 4.
+
+\
+
+```{r, out.width="100%"}
+
+DNDvab01_2<-fviz_dend(DNDvab01, cex=0.5)
+DNDvab01_2 
+
+```
+
+\
+
+### Opción 5.
+
+\
+
+```{r, out.width="100%"}
+
+fviz_dend(DNDvab01, cex=0.5, horiz=TRUE) 
 
 ```
 
@@ -248,7 +273,7 @@ HCvab12<- hclust(vab12.dist, method="average")
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 DNDvab12<- as.dendrogram(HCvab12) 
 DNDvab12
@@ -278,7 +303,7 @@ HCvab01b<-hclust(vab01.dist, method="ward.D2")
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 DNDvab01b<- as.dendrogram(HCvab01b) 
 DNDvab01b
@@ -302,7 +327,7 @@ HCvab12b<-hclust(vab12.dist, method="ward.D2")
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 DNDvab12b<- as.dendrogram(HCvab12b) 
 DNDvab12b
@@ -346,7 +371,7 @@ A la hora de comparar los dendrogramas podemos escoger entre distintas posibles 
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 dendlist(dend_listvab) %>%
   untangle(method = "labels") %>%
@@ -363,13 +388,14 @@ dendlist(dend_listvab) %>%
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 dendlist(dend_listvab) %>%
   untangle(method ="step1side") %>%
   tanglegram(sub= "Method = step1side",
              main_left= "VAB 2001",
-             main_right = "VAB 2012")
+             main_right = "VAB 2012",
+             cex_sub=1)
 
 ```
 
@@ -379,13 +405,14 @@ dendlist(dend_listvab) %>%
 
 \
 
-```{r}
+```{r, out.width="100%"}
 
 dendlist(dend_listvab) %>%
   untangle(method ="ladderize") %>%
   tanglegram(sub= "Method = ladderize",
              main_left= "VAB 2001",
-             main_right = "VAB 2012")
+             main_right = "VAB 2012",
+             cex_sub=1)
 
 ```
 
@@ -395,16 +422,20 @@ dendlist(dend_listvab) %>%
 
 \
 
-```{r}
+Existen diversas opciones para customizar el tanglegram que se pueden consultar en la [documentación del paquete {tanglegram}](https://www.rdocumentation.org/packages/dendextend/versions/1.13.3/topics/tanglegramV). Adicionalmente, con la función `entanglement()` podemos indicar la fortaleza del entrelazamiento o enredo (*entanglement*) de los dos dendragramas. El *entanglement* corresponde a una medida entre 1 (entrelazamiento/enredo fuerte o completo)  y 0 (no entrelazamiento/enredo). Por consiguiente, un valor más cercano a 0 será indicativo de que entre los dos dendrogramas existe una mayor correspondencia que si el resultado fuera mayor.
+
+\
+
+```{r, out.width="100%"}
 
 tanglegram(DNDvab01,DNDvab12,
            sort=T,
            main_left= "VAB 2001",
            main_right = "VAB 2012",
-           highlight_distinct_edges = T, # Turn-off dashed lines
-           common_subtrees_color_lines = FALSE, # Turn-off line colors
-           common_subtrees_color_branches = TRUE, # Color common branches 
-           sub = paste("entanglement =", round(entanglement(dend_listvab), 0.8)),
+           common_subtrees_color_lines = FALSE, 
+           common_subtrees_color_branches = TRUE,
+           sub = paste("entanglement =", round(entanglement(dend_listvab), 2)),
+           cex_sub=1,
            fast=TRUE)
 
 ```
@@ -413,9 +444,7 @@ tanglegram(DNDvab01,DNDvab12,
 
 ## Average vs. Ward
 
-\
-
-De forma similar podemos comparar los dendrogramas realizados siguiendo el criterio de clasificación de conglomerados según la distancia promedio y según el criterio Ward de mínima varianza. El procedimiento sería similar al realizado en el punto previo. 
+De forma similar podemos comparar el dendrograma realizado siguiendo el criterio de clasificación según la distancia promedio y dendrograma realizado según el criterio Ward de mínima varianza. El procedimiento sería similar al realizado en el punto previo. 
 
 \
 
@@ -429,20 +458,7 @@ dend_listvabb
 
 \
 
-```{r}
-
-dendlist(dend_listvabb) %>%
-  untangle(method = "labels") %>%
-  tanglegram(sub= "Method = labels",
-             main_left= "Average",
-             main_right = "Ward",
-             cex_main=1)
-
-```
-
-\
-
-```{r}
+```{r, out.width="100%"}
 
 tanglegram(DNDvab01,DNDvab01b,
            sort=T,
@@ -451,7 +467,8 @@ tanglegram(DNDvab01,DNDvab01b,
            highlight_distinct_edges = T, 
            common_subtrees_color_lines = FALSE, 
            common_subtrees_color_branches = TRUE,
-           main = paste("entanglement =", round(entanglement(dend_listvab), 2)),
+           sub = paste("entanglement =", round(entanglement(dend_listvabb), 2)),
+           cex_sub=1,
            fast=TRUE)
 
 ```
@@ -462,9 +479,11 @@ tanglegram(DNDvab01,DNDvab01b,
 
 \
 
-Cophenetic
+Para obtener las **matrices de correlación de los dendrogramas** podemos hacer uso de la función `cor.dendlist()` del paquete {dendextend}. Esta función ofrece la posibilidad de escoger diversos coeficientes de correlación: "cophenetic" (viene establecido por defecto), "baker", "common_nodes" o "FM_index". 
 
 \
+
+## Correlación cofenética (Cophenetic)
 
 ```{r}
 
@@ -489,7 +508,7 @@ cor_cophenetic(DNDvab01b, DNDvab12b)
 
 \
 
-Baker
+## Correlación Baker
 
 \
 
@@ -515,56 +534,10 @@ cor_bakers_gamma(DNDvab01b, DNDvab12b)
 
 \
 
-## Average vs. Ward
 
-\
-
-Año 2001
-
-\
-
-```{r}
-
-DNDvab01_2<-fviz_dend(DNDvab01, cex=0.5)
-DNDvab01_2 #average en segundo método
-
-```
-
-\
-
-Año 2012
-
-\
-
-```{r}
-
-DNDvab12_2<-fviz_dend(DNDvab12, cex=0.5)
-DNDvab12_2 #average en segundo método
-
-```
+######################################################
 
 
-\
-
-## Horizontal
-
-\
-
-```{r}
-
-fviz_dend(DNDvab01, cex=0.5, horiz=TRUE) #vab01 average
-
-```
-
-\
-
-```{r}
-
-fviz_dend(DNDvab12, cex=0.5, horiz=TRUE) #vab12 average
-
-```
-
-\
 
 ## Grupos en colores
 

@@ -254,7 +254,7 @@ vab01.dist
 ## UCA  24.607014 15.527966
 
 fviz_dist(vab01.dist, gradient = list(low = &quot;blue&quot;, mid = &quot;white&quot;, high = &quot;red&quot;))</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -361,7 +361,7 @@ vab12.dist
 ## UCA  17.489030 15.500177
 
 fviz_dist(vab12.dist, gradient = list(low = &quot;blue&quot;, mid = &quot;white&quot;, high = &quot;red&quot;))</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -405,7 +405,7 @@ HCvab01
 ## Number of objects: 24</code></pre>
 <p><br />
 </p>
-<p>Una vez hemos relizado la agrupación podemos <strong>representar dichos conglomerados en un dendrograma</strong>. Para ello tenemos diversas posibilidades utilizando la función <code>plot()</code> del paquete {graphics} con ligeras diferencias:</p>
+<p>Una vez hemos relizado la agrupación podemos <strong>representar dichos conglomerados en un dendrograma</strong>. Para ello tenemos diversas posibilidades utilizando la función <code>plot()</code> del paquete {graphics}, obteniendo dendrogramas que muestran ligeras diferencias, o con otros paquetes de R como {factoextra}:</p>
 <p><br />
 </p>
 <div id="opción-1." class="section level3">
@@ -414,7 +414,7 @@ HCvab01
 </p>
 <pre class="r"><code>
 plot(HCvab01)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-8-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -424,7 +424,7 @@ plot(HCvab01)</code></pre>
 </p>
 <pre class="r"><code>
 plot(HCvab01, hang= -1, cex=0.6)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-9-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -439,7 +439,28 @@ DNDvab01
 plot(DNDvab01,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2001&quot;,
      sub= &quot;Método Average&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-10-1.png" width="100%" /></p>
+<p><br />
+</p>
+</div>
+<div id="opción-4." class="section level3">
+<h3>Opción 4.</h3>
+<p><br />
+</p>
+<pre class="r"><code>
+DNDvab01_2&lt;-fviz_dend(DNDvab01, cex=0.5)
+DNDvab01_2 </code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-11-1.png" width="100%" /></p>
+<p><br />
+</p>
+</div>
+<div id="opción-5." class="section level3">
+<h3>Opción 5.</h3>
+<p><br />
+</p>
+<pre class="r"><code>
+fviz_dend(DNDvab01, cex=0.5, horiz=TRUE) </code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-12-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -464,7 +485,7 @@ DNDvab12
 plot(DNDvab12,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2012&quot;,
      sub= &quot;Método Average&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -488,7 +509,7 @@ DNDvab01b
 plot(DNDvab01b,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2001&quot;,
      sub= &quot;Método Ward&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-16-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -507,7 +528,7 @@ DNDvab12b
 plot(DNDvab12b,
      main= &quot;Dendrograma VAB de las regiones peruanas, 2012&quot;,
      sub= &quot;Método Ward&quot;) </code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-18-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -553,7 +574,7 @@ dendlist(dend_listvab) %&gt;%
              main_left= &quot;VAB 2001&quot;,
              main_right = &quot;VAB 2012&quot;,
              cex_sub=1)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-20-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -566,8 +587,9 @@ dendlist(dend_listvab) %&gt;%
   untangle(method =&quot;step1side&quot;) %&gt;%
   tanglegram(sub= &quot;Method = step1side&quot;,
              main_left= &quot;VAB 2001&quot;,
-             main_right = &quot;VAB 2012&quot;)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+             main_right = &quot;VAB 2012&quot;,
+             cex_sub=1)</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-21-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -580,8 +602,9 @@ dendlist(dend_listvab) %&gt;%
   untangle(method =&quot;ladderize&quot;) %&gt;%
   tanglegram(sub= &quot;Method = ladderize&quot;,
              main_left= &quot;VAB 2001&quot;,
-             main_right = &quot;VAB 2012&quot;)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+             main_right = &quot;VAB 2012&quot;,
+             cex_sub=1)</code></pre>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-22-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -589,26 +612,27 @@ dendlist(dend_listvab) %&gt;%
 <h3>customizado</h3>
 <p><br />
 </p>
+<p>Existen diversas opciones para customizar el tanglegram que se pueden consultar en la <a href="https://www.rdocumentation.org/packages/dendextend/versions/1.13.3/topics/tanglegramV">documentación del paquete {tanglegram}</a>. Adicionalmente, con la función <code>entanglement()</code> podemos indicar la fortaleza del entrelazamiento o enredo (<em>entanglement</em>) de los dos dendragramas. El <em>entanglement</em> corresponde a una medida entre 1 (entrelazamiento/enredo fuerte o completo) y 0 (no entrelazamiento/enredo). Por consiguiente, un valor más cercano a 0 será indicativo de que entre los dos dendrogramas existe una mayor correspondencia que si el resultado fuera mayor.</p>
+<p><br />
+</p>
 <pre class="r"><code>
 tanglegram(DNDvab01,DNDvab12,
            sort=T,
            main_left= &quot;VAB 2001&quot;,
            main_right = &quot;VAB 2012&quot;,
-           highlight_distinct_edges = T, # Turn-off dashed lines
-           common_subtrees_color_lines = FALSE, # Turn-off line colors
-           common_subtrees_color_branches = TRUE, # Color common branches 
-           sub = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvab), 0.8)),
+           common_subtrees_color_lines = FALSE, 
+           common_subtrees_color_branches = TRUE,
+           sub = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvab), 2)),
+           cex_sub=1,
            fast=TRUE)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-23-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
 </div>
 <div id="average-vs.-ward" class="section level2">
 <h2>Average vs. Ward</h2>
-<p><br />
-</p>
-<p>De forma similar podemos comparar los dendrogramas realizados siguiendo el criterio de clasificación de conglomerados según la distancia promedio y según el criterio Ward de mínima varianza. El procedimiento sería similar al realizado en el punto previo.</p>
+<p>De forma similar podemos comparar el dendrograma realizado siguiendo el criterio de clasificación según la distancia promedio y dendrograma realizado según el criterio Ward de mínima varianza. El procedimiento sería similar al realizado en el punto previo.</p>
 <p><br />
 </p>
 <pre class="r"><code>#creamos una lista con los dos dendrograms (Average y Ward) para el año 2001
@@ -626,16 +650,6 @@ dend_listvabb
 <p><br />
 </p>
 <pre class="r"><code>
-dendlist(dend_listvabb) %&gt;%
-  untangle(method = &quot;labels&quot;) %&gt;%
-  tanglegram(sub= &quot;Method = labels&quot;,
-             main_left= &quot;Average&quot;,
-             main_right = &quot;Ward&quot;,
-             cex_main=1)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
-<p><br />
-</p>
-<pre class="r"><code>
 tanglegram(DNDvab01,DNDvab01b,
            sort=T,
            main_left= &quot;Average&quot;,
@@ -643,9 +657,10 @@ tanglegram(DNDvab01,DNDvab01b,
            highlight_distinct_edges = T, 
            common_subtrees_color_lines = FALSE, 
            common_subtrees_color_branches = TRUE,
-           main = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvab), 2)),
+           sub = paste(&quot;entanglement =&quot;, round(entanglement(dend_listvabb), 2)),
+           cex_sub=1,
            fast=TRUE)</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-25-1.png" width="100%" /></p>
 <p><br />
 </p>
 </div>
@@ -654,9 +669,11 @@ tanglegram(DNDvab01,DNDvab01b,
 <h1>Correlación matrix entre dendogramas</h1>
 <p><br />
 </p>
-<p>Cophenetic</p>
+<p>Para obtener las <strong>matrices de correlación de los dendrogramas</strong> podemos hacer uso de la función <code>cor.dendlist()</code> del paquete {dendextend}. Esta función ofrece la posibilidad de escoger diversos coeficientes de correlación: “cophenetic” (viene establecido por defecto), “baker”, “common_nodes” o “FM_index”.</p>
 <p><br />
 </p>
+<div id="correlación-cofenética-cophenetic" class="section level2">
+<h2>Correlación cofenética (Cophenetic)</h2>
 <pre class="r"><code>
 cor.dendlist(dend_listvab, method = &quot;cophenetic&quot;) #average
 ##           [,1]      [,2]
@@ -678,7 +695,9 @@ cor_cophenetic(DNDvab01b, DNDvab12b)
 ## [1] 0.4323974</code></pre>
 <p><br />
 </p>
-<p>Baker</p>
+</div>
+<div id="correlación-baker" class="section level2">
+<h2>Correlación Baker</h2>
 <p><br />
 </p>
 <pre class="r"><code>
@@ -702,43 +721,9 @@ cor_bakers_gamma(DNDvab01b, DNDvab12b)
 ## [1] 0.4473367</code></pre>
 <p><br />
 </p>
-<div id="average-vs.-ward-1" class="section level2">
-<h2>Average vs. Ward</h2>
-<p><br />
-</p>
-<p>Año 2001</p>
-<p><br />
-</p>
-<pre class="r"><code>
-DNDvab01_2&lt;-fviz_dend(DNDvab01, cex=0.5)
-DNDvab01_2 #average en segundo método</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
-<p><br />
-</p>
-<p>Año 2012</p>
-<p><br />
-</p>
-<pre class="r"><code>
-DNDvab12_2&lt;-fviz_dend(DNDvab12, cex=0.5)
-DNDvab12_2 #average en segundo método</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
-<p><br />
-</p>
+<div id="section-6" class="section level54">
+<p></p>
 </div>
-<div id="horizontal" class="section level2">
-<h2>Horizontal</h2>
-<p><br />
-</p>
-<pre class="r"><code>
-fviz_dend(DNDvab01, cex=0.5, horiz=TRUE) #vab01 average</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
-<p><br />
-</p>
-<pre class="r"><code>
-fviz_dend(DNDvab12, cex=0.5, horiz=TRUE) #vab12 average</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
-<p><br />
-</p>
 </div>
 <div id="grupos-en-colores" class="section level2">
 <h2>Grupos en colores</h2>
@@ -769,7 +754,7 @@ fviz_dend(DNDvab01, k = 6, # Cut in four groups
   theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
 ## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
 ## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 <p><br />
 </p>
 <p>Año 2012</p>
@@ -794,6 +779,6 @@ fviz_dend(DNDvab12, k = 6, # Cut in four groups
   theme(panel.grid.major.x = element_blank(), legend.position = &quot;right&quot;)
 ## Warning in if (color == &quot;cluster&quot;) color &lt;- &quot;default&quot;: la condición tiene
 ## longitud &gt; 1 y sólo el primer elemento será usado</code></pre>
-<p><img src="/clustering_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p><img src="/clustering_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 </div>
 </div>
