@@ -49,7 +49,7 @@ food_consumption <- readr::read_csv('https://raw.githubusercontent.com/rfordatas
 
 \
 
-a few modifications
+A few modifications:
 
 \
 
