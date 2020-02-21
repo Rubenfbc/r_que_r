@@ -1,5 +1,5 @@
 ---
-title: "Food consumption and CO2 emissions due to food products. tidytuesday contribution"
+title: "Food consumption and CO2 emissions due to food products (tidytuesday contribution)"
 author: "Rubén F. Bustillo"
 date: 2020-02-21
 categories: ["R"]
@@ -70,7 +70,7 @@ map <- food_consumption %>%
 
 ## Choropleth Map: Total CO2 emissions due to food products
 
-```{r}
+```{r, out.width= "100%"}
 
 map %>%
   e_charts(country) %>%
@@ -85,7 +85,7 @@ map %>%
 
 ## 3D map: Total CO2 emissions due to food products
 
-```{r}
+```{r, out.width= "100%"}
 map %>%
   e_charts(country) %>%
   e_map_3d(co2_total) %>%
@@ -99,7 +99,7 @@ map %>%
 
 ## Choropleth Map: Total food consumption
 
-```{r}
+```{r, out.width= "100%"}
 
 map %>%
   e_charts(country) %>%
@@ -114,7 +114,7 @@ map %>%
 
 ## 3D map: Total food consumption
 
-```{r}
+```{r, out.width= "100%"}
 
 map %>%
   e_charts(country) %>%
