@@ -6,22 +6,20 @@
     <description>Recent content in y on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 20 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/y/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Clustering &amp; Dendrogramas en R</title>
-      <link>/clustering/</link>
-      <pubDate>Sat, 08 Feb 2020 00:00:00 +0000</pubDate>
+      <title>Título</title>
+      <link>/prueba_powerbi/</link>
+      <pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>/clustering/</guid>
+      <guid>/prueba_powerbi/</guid>
       <description>Re
-PAQUETESlibrary(dendextend)library(factoextra)library(NbClust)library(pvclust)library(flexclust)library(readxl)
-DATOSLos coeficientes de participación del VAB regional por regiones en 2001 y 2012 son:
-ddendvab01 &amp;lt;- read_excel(&amp;quot;datasets/ddendvab01.xlsx&amp;quot;)ddendvab12 &amp;lt;- read_excel(&amp;quot;datasets/ddendvab12.xlsx&amp;quot;)
-ddendvab01## # A tibble: 24 x 10## Name agrvab01 minvab01 manvab01 convab01 comvab01 tycvab01 ryhvab01 sguvab01## &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;## 1 AMA 40.7 0.290 11.0 1.</description>
+Anyone know of an R package for interfacing with Alexa Skills? @thosjleeper @xieyihui @drob @JennyBryan @HoloMarkeD ?
+&amp;mdash; Jeff Leek (@jtleek) April 12, 2017  https://app.powerbi.com/reportEmbed?reportId=b6ed4b90-bc6f-46cf-9b54-14a525bb4c37&amp;amp;autoAuth=true&amp;amp;ctid=2b079dc7-e2ea-45bc-9182-0fde14b549b1&amp;amp;config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D</description>
     </item>
     
   </channel>

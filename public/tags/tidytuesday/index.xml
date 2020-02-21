@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tidytuesday on R que R</title>
+    <link>/tags/tidytuesday/</link>
+    <description>Recent content in tidytuesday on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 21 Feb 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/tidytuesday/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Food consumption and CO2 emissions due to food products. tidytuesday contribution</title>
+      <link>/food_consumption_tidyverse/</link>
+      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/food_consumption_tidyverse/</guid>
+      <description>Re
+In this post, intented to be a small contribution to the tidytuesday project, we will use the package {echarts4r} to visualizate in a map the food consumption and CO2 emissions from 130 countries.
+
+Intro
+This short post is going to be my first and small contribution to Tidytuesday project.</description>
+    </item>
+    
+  </channel>
+</rss>

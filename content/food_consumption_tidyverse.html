@@ -1,0 +1,136 @@
+---
+title: "Food consumption and CO2 emissions due to food products. tidytuesday contribution"
+author: "Rubén F. Bustillo"
+date: 2020-02-21
+categories: ["R"]
+tags: ["tidytuesday", "food consumption"]
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="/rmarkdown-libs/echarts4r/plugins/leaflet/leaflet.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/echarts4r/echarts.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/echarts-gl.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/ecStat.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/dataTool.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/world.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-wordcloud.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-liquidfill.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/echarts-graph-modularity.min.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/leaflet/leaflet.js"></script>
+<script src="/rmarkdown-libs/echarts4r/plugins/leaflet/echarts-leaflet.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/dark.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/vintage.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/westeros.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/essos.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/wonderland.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/walden.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/chalk.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/infographic.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/macarons.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/roma.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/shine.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/purple-passion.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/halloween.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/wef.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/weforum.js"></script>
+<script src="/rmarkdown-libs/echarts4r/themes/auritus.js"></script>
+<script src="/rmarkdown-libs/echarts4r/custom/renderers.js"></script>
+<link href="/rmarkdown-libs/mapbox/mapbox-gl.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/mapbox/mapbox-gl.js"></script>
+<script src="/rmarkdown-libs/echarts4r-binding/echarts4r.js"></script>
+
+
+<p><strong>Re</strong></p>
+<p>In this post, intented to be a small contribution to the tidytuesday project, we will use the package {echarts4r} to visualizate in a map the food consumption and CO2 emissions from 130 countries.</p>
+<p><br />
+</p>
+<div id="intro" class="section level1">
+<h1>Intro</h1>
+<p><br />
+</p>
+<p>This short post is going to be my first and small contribution to <a href="https://github.com/rfordatascience/tidytuesday">Tidytuesday project</a>. I will use the package {echarts4r} to plot in a map the food consumption and CO2 emissions due to food products. To some extent the procedure is practically identical to the one used in this <a href="https://rquer.netlify.com/maps3d/">previous post</a> where it is exposed in a slightly more extensive way how to make the maps using {echarts4r}.</p>
+<p><br />
+</p>
+<div id="libraries" class="section level2">
+<h2>libraries</h2>
+<pre class="r"><code>
+library(tidyverse)
+library(echarts4r)</code></pre>
+<p><br />
+</p>
+</div>
+<div id="dataset" class="section level2">
+<h2>dataset</h2>
+<pre class="r"><code>
+food_consumption &lt;- readr::read_csv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-18/food_consumption.csv&#39;)</code></pre>
+<p><br />
+</p>
+<p>a few modifications</p>
+<p><br />
+</p>
+<pre class="r"><code>
+map &lt;- food_consumption %&gt;% 
+  group_by(country) %&gt;%
+  summarise(co2_total = sum(co2_emmission),
+            consumption_total = sum(consumption)) %&gt;%
+  mutate(country = recode_factor (country,
+                                  `USA` = &quot;United States&quot;,
+                                  `Czech Republic`= &quot;Czech Rep.&quot;,
+                                  `South Korea`= &quot;Korea&quot;))</code></pre>
+<p><br />
+</p>
+</div>
+<div id="choropleth-map-total-co2-emissions-due-to-food-products" class="section level2">
+<h2>Choropleth Map: Total CO2 emissions due to food products</h2>
+<pre class="r"><code>
+map %&gt;%
+  e_charts(country) %&gt;%
+  e_map(co2_total) %&gt;%
+  e_visual_map(min=0, max=2000) %&gt;%
+  e_title(&quot;Total CO2 emissions due to food products \n (kg CO2/person/year)&quot;, left = &quot;center&quot;) %&gt;%
+  e_theme(&quot;vintage&quot;)</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"theme":"vintage","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"series":[{"type":"map","map":"world","name":"co2_total","data":[{"value":1777.85,"name":"Albania"},{"value":707.88,"name":"Algeria"},{"value":412.99,"name":"Angola"},{"value":2172.4,"name":"Argentina"},{"value":1109.93,"name":"Armenia"},{"value":1938.66,"name":"Australia"},{"value":1211.16,"name":"Austria"},{"value":1192.9,"name":"Bahamas"},{"value":374.18,"name":"Bangladesh"},{"value":889.11,"name":"Barbados"},{"value":960.22,"name":"Belarus"},{"value":1102.09,"name":"Belgium"},{"value":433.08,"name":"Belize"},{"value":1483.28,"name":"Bermuda"},{"value":873.03,"name":"Bolivia"},{"value":628.18,"name":"Bosnia and Herzegovina"},{"value":576.84,"name":"Botswana"},{"value":1616.73,"name":"Brazil"},{"value":560.16,"name":"Bulgaria"},{"value":452.41,"name":"Cambodia"},{"value":283.61,"name":"Cameroon"},{"value":1437.16,"name":"Canada"},{"value":1099.57,"name":"Chile"},{"value":640.19,"name":"China"},{"value":781.53,"name":"Colombia"},{"value":262.55,"name":"Congo"},{"value":891.27,"name":"Costa Rica"},{"value":996.15,"name":"Croatia"},{"value":591.69,"name":"Cuba"},{"value":741.37,"name":"Cyprus"},{"value":760.09,"name":"Czech Rep."},{"value":1498.18,"name":"Denmark"},{"value":883.88,"name":"Ecuador"},{"value":673.92,"name":"Egypt"},{"value":434.04,"name":"El Salvador"},{"value":830.72,"name":"Estonia"},{"value":241.92,"name":"Ethiopia"},{"value":716.09,"name":"Fiji"},{"value":1464.63,"name":"Finland"},{"value":1420.05,"name":"France"},{"value":1424.69,"name":"French Polynesia"},{"value":293.66,"name":"Gambia"},{"value":527.03,"name":"Georgia"},{"value":1066.29,"name":"Germany"},{"value":217.87,"name":"Ghana"},{"value":1497.29,"name":"Greece"},{"value":439.85,"name":"Grenada"},{"value":314.98,"name":"Guatemala"},{"value":432.71,"name":"Guinea"},{"value":434.08,"name":"Honduras"},{"value":1494.28,"name":"Hong Kong SAR. China"},{"value":576.79,"name":"Hungary"},{"value":1731.36,"name":"Iceland"},{"value":282.62,"name":"India"},{"value":367.51,"name":"Indonesia"},{"value":445.27,"name":"Iran"},{"value":1459.67,"name":"Ireland"},{"value":1405.71,"name":"Israel"},{"value":1206.33,"name":"Italy"},{"value":450.83,"name":"Jamaica"},{"value":644.04,"name":"Japan"},{"value":587.96,"name":"Jordan"},{"value":1575.08,"name":"Kazakhstan"},{"value":530.84,"name":"Kenya"},{"value":1345.44,"name":"Kuwait"},{"value":633.58,"name":"Latvia"},{"value":203.38,"name":"Liberia"},{"value":868.9,"name":"Lithuania"},{"value":1598.41,"name":"Luxembourg"},{"value":600.75,"name":"Macedonia"},{"value":440.75,"name":"Madagascar"},{"value":207.94,"name":"Malawi"},{"value":554.64,"name":"Malaysia"},{"value":903.46,"name":"Maldives"},{"value":1147.91,"name":"Malta"},{"value":672.07,"name":"Mauritius"},{"value":797.13,"name":"Mexico"},{"value":576.42,"name":"Morocco"},{"value":141.4,"name":"Mozambique"},{"value":563.8,"name":"Myanmar"},{"value":362.11,"name":"Namibia"},{"value":526.22,"name":"Nepal"},{"value":1292.82,"name":"Netherlands"},{"value":918.62,"name":"New Caledonia"},{"value":1750.95,"name":"New Zealand"},{"value":377.69,"name":"Nicaragua"},{"value":542.89,"name":"Niger"},{"value":267.79,"name":"Nigeria"},{"value":1381.89,"name":"Norway"},{"value":1296.7,"name":"Oman"},{"value":669.07,"name":"Pakistan"},{"value":928.46,"name":"Panama"},{"value":876.67,"name":"Paraguay"},{"value":402.84,"name":"Peru"},{"value":455.28,"name":"Philippines"},{"value":607.4,"name":"Poland"},{"value":1174.28,"name":"Portugal"},{"value":766.3,"name":"Romania"},{"value":1007.66,"name":"Russia"},{"value":181.63,"name":"Rwanda"},{"value":692.86,"name":"Saudi Arabia"},{"value":469.43,"name":"Senegal"},{"value":723.34,"name":"Serbia"},{"value":300.41,"name":"Sierra Leone"},{"value":560.34,"name":"Slovakia"},{"value":1111.56,"name":"Slovenia"},{"value":892.41,"name":"South Africa"},{"value":822.05,"name":"Korea"},{"value":988.47,"name":"Spain"},{"value":294.46,"name":"Sri Lanka"},{"value":678.94,"name":"Swaziland"},{"value":1527.03,"name":"Sweden"},{"value":1356.75,"name":"Switzerland"},{"value":559.55,"name":"Taiwan. ROC"},{"value":343.02,"name":"Tanzania"},{"value":378,"name":"Thailand"},{"value":188.09,"name":"Togo"},{"value":610.41,"name":"Trinidad and Tobago"},{"value":618.89,"name":"Tunisia"},{"value":897.01,"name":"Turkey"},{"value":304.72,"name":"Uganda"},{"value":665.73,"name":"Ukraine"},{"value":897.32,"name":"United Arab Emirates"},{"value":1241.63,"name":"United Kingdom"},{"value":1634.91,"name":"Uruguay"},{"value":1718.86,"name":"United States"},{"value":1104.1,"name":"Venezuela"},{"value":641.51,"name":"Vietnam"},{"value":225.3,"name":"Zambia"},{"value":350.33,"name":"Zimbabwe"}]}],"visualMap":[{"min":0,"max":2000,"calculable":true,"type":"continuous"}],"title":[{"left":"center","text":"Total CO2 emissions due to food products \n (kg CO2/person/year)"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+</div>
+<div id="d-map-total-co2-emissions-due-to-food-products" class="section level2">
+<h2>3D map: Total CO2 emissions due to food products</h2>
+<pre class="r"><code>map %&gt;%
+  e_charts(country) %&gt;%
+  e_map_3d(co2_total) %&gt;%
+  e_visual_map(min=0, max=2000) %&gt;%
+  e_title(&quot;Total CO2 emissions due to food products \n (kg CO2/person/year)&quot;, left = &quot;center&quot;) %&gt;%
+  e_theme(&quot;vintage&quot;)</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"theme":"vintage","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"series":[{"type":"map3D","map":"world","coordinateSystem":null,"name":"co2_total","data":[{"value":1777.85,"name":"Albania"},{"value":707.88,"name":"Algeria"},{"value":412.99,"name":"Angola"},{"value":2172.4,"name":"Argentina"},{"value":1109.93,"name":"Armenia"},{"value":1938.66,"name":"Australia"},{"value":1211.16,"name":"Austria"},{"value":1192.9,"name":"Bahamas"},{"value":374.18,"name":"Bangladesh"},{"value":889.11,"name":"Barbados"},{"value":960.22,"name":"Belarus"},{"value":1102.09,"name":"Belgium"},{"value":433.08,"name":"Belize"},{"value":1483.28,"name":"Bermuda"},{"value":873.03,"name":"Bolivia"},{"value":628.18,"name":"Bosnia and Herzegovina"},{"value":576.84,"name":"Botswana"},{"value":1616.73,"name":"Brazil"},{"value":560.16,"name":"Bulgaria"},{"value":452.41,"name":"Cambodia"},{"value":283.61,"name":"Cameroon"},{"value":1437.16,"name":"Canada"},{"value":1099.57,"name":"Chile"},{"value":640.19,"name":"China"},{"value":781.53,"name":"Colombia"},{"value":262.55,"name":"Congo"},{"value":891.27,"name":"Costa Rica"},{"value":996.15,"name":"Croatia"},{"value":591.69,"name":"Cuba"},{"value":741.37,"name":"Cyprus"},{"value":760.09,"name":"Czech Rep."},{"value":1498.18,"name":"Denmark"},{"value":883.88,"name":"Ecuador"},{"value":673.92,"name":"Egypt"},{"value":434.04,"name":"El Salvador"},{"value":830.72,"name":"Estonia"},{"value":241.92,"name":"Ethiopia"},{"value":716.09,"name":"Fiji"},{"value":1464.63,"name":"Finland"},{"value":1420.05,"name":"France"},{"value":1424.69,"name":"French Polynesia"},{"value":293.66,"name":"Gambia"},{"value":527.03,"name":"Georgia"},{"value":1066.29,"name":"Germany"},{"value":217.87,"name":"Ghana"},{"value":1497.29,"name":"Greece"},{"value":439.85,"name":"Grenada"},{"value":314.98,"name":"Guatemala"},{"value":432.71,"name":"Guinea"},{"value":434.08,"name":"Honduras"},{"value":1494.28,"name":"Hong Kong SAR. China"},{"value":576.79,"name":"Hungary"},{"value":1731.36,"name":"Iceland"},{"value":282.62,"name":"India"},{"value":367.51,"name":"Indonesia"},{"value":445.27,"name":"Iran"},{"value":1459.67,"name":"Ireland"},{"value":1405.71,"name":"Israel"},{"value":1206.33,"name":"Italy"},{"value":450.83,"name":"Jamaica"},{"value":644.04,"name":"Japan"},{"value":587.96,"name":"Jordan"},{"value":1575.08,"name":"Kazakhstan"},{"value":530.84,"name":"Kenya"},{"value":1345.44,"name":"Kuwait"},{"value":633.58,"name":"Latvia"},{"value":203.38,"name":"Liberia"},{"value":868.9,"name":"Lithuania"},{"value":1598.41,"name":"Luxembourg"},{"value":600.75,"name":"Macedonia"},{"value":440.75,"name":"Madagascar"},{"value":207.94,"name":"Malawi"},{"value":554.64,"name":"Malaysia"},{"value":903.46,"name":"Maldives"},{"value":1147.91,"name":"Malta"},{"value":672.07,"name":"Mauritius"},{"value":797.13,"name":"Mexico"},{"value":576.42,"name":"Morocco"},{"value":141.4,"name":"Mozambique"},{"value":563.8,"name":"Myanmar"},{"value":362.11,"name":"Namibia"},{"value":526.22,"name":"Nepal"},{"value":1292.82,"name":"Netherlands"},{"value":918.62,"name":"New Caledonia"},{"value":1750.95,"name":"New Zealand"},{"value":377.69,"name":"Nicaragua"},{"value":542.89,"name":"Niger"},{"value":267.79,"name":"Nigeria"},{"value":1381.89,"name":"Norway"},{"value":1296.7,"name":"Oman"},{"value":669.07,"name":"Pakistan"},{"value":928.46,"name":"Panama"},{"value":876.67,"name":"Paraguay"},{"value":402.84,"name":"Peru"},{"value":455.28,"name":"Philippines"},{"value":607.4,"name":"Poland"},{"value":1174.28,"name":"Portugal"},{"value":766.3,"name":"Romania"},{"value":1007.66,"name":"Russia"},{"value":181.63,"name":"Rwanda"},{"value":692.86,"name":"Saudi Arabia"},{"value":469.43,"name":"Senegal"},{"value":723.34,"name":"Serbia"},{"value":300.41,"name":"Sierra Leone"},{"value":560.34,"name":"Slovakia"},{"value":1111.56,"name":"Slovenia"},{"value":892.41,"name":"South Africa"},{"value":822.05,"name":"Korea"},{"value":988.47,"name":"Spain"},{"value":294.46,"name":"Sri Lanka"},{"value":678.94,"name":"Swaziland"},{"value":1527.03,"name":"Sweden"},{"value":1356.75,"name":"Switzerland"},{"value":559.55,"name":"Taiwan. ROC"},{"value":343.02,"name":"Tanzania"},{"value":378,"name":"Thailand"},{"value":188.09,"name":"Togo"},{"value":610.41,"name":"Trinidad and Tobago"},{"value":618.89,"name":"Tunisia"},{"value":897.01,"name":"Turkey"},{"value":304.72,"name":"Uganda"},{"value":665.73,"name":"Ukraine"},{"value":897.32,"name":"United Arab Emirates"},{"value":1241.63,"name":"United Kingdom"},{"value":1634.91,"name":"Uruguay"},{"value":1718.86,"name":"United States"},{"value":1104.1,"name":"Venezuela"},{"value":641.51,"name":"Vietnam"},{"value":225.3,"name":"Zambia"},{"value":350.33,"name":"Zimbabwe"}]}],"visualMap":[{"min":0,"max":2000,"calculable":true,"type":"continuous"}],"title":[{"left":"center","text":"Total CO2 emissions due to food products \n (kg CO2/person/year)"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+</div>
+<div id="choropleth-map-total-food-consumption" class="section level2">
+<h2>Choropleth Map: Total food consumption</h2>
+<pre class="r"><code>
+map %&gt;%
+  e_charts(country) %&gt;%
+  e_map(consumption_total) %&gt;%
+  e_visual_map(min=0, max=700) %&gt;%
+  e_title(&quot;Total food consumption \n (kg/person/year)&quot;, left = &quot;center&quot;) %&gt;%
+  e_theme(&quot;vintage&quot;)</code></pre>
+<div id="htmlwidget-3" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"theme":"vintage","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"series":[{"type":"map","map":"world","name":"consumption_total","data":[{"value":532.73,"name":"Albania"},{"value":364.51,"name":"Algeria"},{"value":115.99,"name":"Angola"},{"value":429.41,"name":"Argentina"},{"value":407.11,"name":"Armenia"},{"value":465.09,"name":"Australia"},{"value":469.14,"name":"Austria"},{"value":301.45,"name":"Bahamas"},{"value":236.6,"name":"Bangladesh"},{"value":311.26,"name":"Barbados"},{"value":321.53,"name":"Belarus"},{"value":463.46,"name":"Belgium"},{"value":232.77,"name":"Belize"},{"value":306.62,"name":"Bermuda"},{"value":204.25,"name":"Bolivia"},{"value":313.64,"name":"Bosnia and Herzegovina"},{"value":188.85,"name":"Botswana"},{"value":355.16,"name":"Brazil"},{"value":348.43,"name":"Bulgaria"},{"value":225.06,"name":"Cambodia"},{"value":97.09,"name":"Cameroon"},{"value":412.55,"name":"Canada"},{"value":335.06,"name":"Chile"},{"value":283.9,"name":"China"},{"value":235.03,"name":"Colombia"},{"value":117.33,"name":"Congo"},{"value":343.07,"name":"Costa Rica"},{"value":433.87,"name":"Croatia"},{"value":291.01,"name":"Cuba"},{"value":303.65,"name":"Cyprus"},{"value":384.61,"name":"Czech Rep."},{"value":499.07,"name":"Denmark"},{"value":291.36,"name":"Ecuador"},{"value":303.48,"name":"Egypt"},{"value":209.76,"name":"El Salvador"},{"value":464.96,"name":"Estonia"},{"value":85.77,"name":"Ethiopia"},{"value":252.52,"name":"Fiji"},{"value":639.79,"name":"Finland"},{"value":479.17,"name":"France"},{"value":346.66,"name":"French Polynesia"},{"value":180.56,"name":"Gambia"},{"value":362.22,"name":"Georgia"},{"value":461.1,"name":"Germany"},{"value":101.21,"name":"Ghana"},{"value":493.63,"name":"Greece"},{"value":254.25,"name":"Grenada"},{"value":133.3,"name":"Guatemala"},{"value":161.41,"name":"Guinea"},{"value":185.76,"name":"Honduras"},{"value":426.02,"name":"Hong Kong SAR. China"},{"value":352.99,"name":"Hungary"},{"value":472.31,"name":"Iceland"},{"value":227.7,"name":"India"},{"value":224.99,"name":"Indonesia"},{"value":292.26,"name":"Iran"},{"value":518.65,"name":"Ireland"},{"value":457.75,"name":"Israel"},{"value":513.98,"name":"Italy"},{"value":273.02,"name":"Jamaica"},{"value":286.46,"name":"Japan"},{"value":291.42,"name":"Jordan"},{"value":468.1,"name":"Kazakhstan"},{"value":162.56,"name":"Kenya"},{"value":410.38,"name":"Kuwait"},{"value":348.54,"name":"Latvia"},{"value":131.04,"name":"Liberia"},{"value":555.01,"name":"Lithuania"},{"value":497.9,"name":"Luxembourg"},{"value":321.47,"name":"Macedonia"},{"value":155.63,"name":"Madagascar"},{"value":51,"name":"Malawi"},{"value":282.74,"name":"Malaysia"},{"value":476.33,"name":"Maldives"},{"value":457.54,"name":"Malta"},{"value":358.12,"name":"Mauritius"},{"value":242.72,"name":"Mexico"},{"value":296.01,"name":"Morocco"},{"value":63.41,"name":"Mozambique"},{"value":275.1,"name":"Myanmar"},{"value":151.15,"name":"Namibia"},{"value":208.55,"name":"Nepal"},{"value":534.17,"name":"Netherlands"},{"value":321.24,"name":"New Caledonia"},{"value":360.92,"name":"New Zealand"},{"value":196.95,"name":"Nicaragua"},{"value":101.14,"name":"Niger"},{"value":94.23,"name":"Nigeria"},{"value":487.49,"name":"Norway"},{"value":363.67,"name":"Oman"},{"value":330.95,"name":"Pakistan"},{"value":260.53,"name":"Panama"},{"value":189.17,"name":"Paraguay"},{"value":215.19,"name":"Peru"},{"value":227.79,"name":"Philippines"},{"value":411.42,"name":"Poland"},{"value":459.44,"name":"Portugal"},{"value":445.49,"name":"Romania"},{"value":408.73,"name":"Russia"},{"value":40.38,"name":"Rwanda"},{"value":291.82,"name":"Saudi Arabia"},{"value":169.67,"name":"Senegal"},{"value":326.71,"name":"Serbia"},{"value":167.37,"name":"Sierra Leone"},{"value":350.06,"name":"Slovakia"},{"value":436.41,"name":"Slovenia"},{"value":212.41,"name":"South Africa"},{"value":286.06,"name":"Korea"},{"value":407.96,"name":"Spain"},{"value":218.77,"name":"Sri Lanka"},{"value":150.3,"name":"Swaziland"},{"value":550,"name":"Sweden"},{"value":514.9,"name":"Switzerland"},{"value":273.5,"name":"Taiwan. ROC"},{"value":98.83,"name":"Tanzania"},{"value":219.58,"name":"Thailand"},{"value":74.32,"name":"Togo"},{"value":315.02,"name":"Trinidad and Tobago"},{"value":370.93,"name":"Tunisia"},{"value":433.21,"name":"Turkey"},{"value":80.58,"name":"Uganda"},{"value":343.28,"name":"Ukraine"},{"value":397.71,"name":"United Arab Emirates"},{"value":447.97,"name":"United Kingdom"},{"value":433.6,"name":"Uruguay"},{"value":491.15,"name":"United States"},{"value":277.39,"name":"Venezuela"},{"value":268.74,"name":"Vietnam"},{"value":57.11,"name":"Zambia"},{"value":96.56,"name":"Zimbabwe"}]}],"visualMap":[{"min":0,"max":700,"calculable":true,"type":"continuous"}],"title":[{"left":"center","text":"Total food consumption \n (kg/person/year)"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
+</div>
+<div id="d-map-total-food-consumption" class="section level2">
+<h2>3D map: Total food consumption</h2>
+<pre class="r"><code>
+map %&gt;%
+  e_charts(country) %&gt;%
+  e_map_3d(consumption_total) %&gt;%
+  e_visual_map(min=0, max=700) %&gt;%
+  e_title(&quot;Total food consumption \n (kg/person/year)&quot;, left = &quot;center&quot;) %&gt;%
+  e_theme(&quot;vintage&quot;)</code></pre>
+<div id="htmlwidget-4" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"theme":"vintage","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"series":[{"type":"map3D","map":"world","coordinateSystem":null,"name":"consumption_total","data":[{"value":532.73,"name":"Albania"},{"value":364.51,"name":"Algeria"},{"value":115.99,"name":"Angola"},{"value":429.41,"name":"Argentina"},{"value":407.11,"name":"Armenia"},{"value":465.09,"name":"Australia"},{"value":469.14,"name":"Austria"},{"value":301.45,"name":"Bahamas"},{"value":236.6,"name":"Bangladesh"},{"value":311.26,"name":"Barbados"},{"value":321.53,"name":"Belarus"},{"value":463.46,"name":"Belgium"},{"value":232.77,"name":"Belize"},{"value":306.62,"name":"Bermuda"},{"value":204.25,"name":"Bolivia"},{"value":313.64,"name":"Bosnia and Herzegovina"},{"value":188.85,"name":"Botswana"},{"value":355.16,"name":"Brazil"},{"value":348.43,"name":"Bulgaria"},{"value":225.06,"name":"Cambodia"},{"value":97.09,"name":"Cameroon"},{"value":412.55,"name":"Canada"},{"value":335.06,"name":"Chile"},{"value":283.9,"name":"China"},{"value":235.03,"name":"Colombia"},{"value":117.33,"name":"Congo"},{"value":343.07,"name":"Costa Rica"},{"value":433.87,"name":"Croatia"},{"value":291.01,"name":"Cuba"},{"value":303.65,"name":"Cyprus"},{"value":384.61,"name":"Czech Rep."},{"value":499.07,"name":"Denmark"},{"value":291.36,"name":"Ecuador"},{"value":303.48,"name":"Egypt"},{"value":209.76,"name":"El Salvador"},{"value":464.96,"name":"Estonia"},{"value":85.77,"name":"Ethiopia"},{"value":252.52,"name":"Fiji"},{"value":639.79,"name":"Finland"},{"value":479.17,"name":"France"},{"value":346.66,"name":"French Polynesia"},{"value":180.56,"name":"Gambia"},{"value":362.22,"name":"Georgia"},{"value":461.1,"name":"Germany"},{"value":101.21,"name":"Ghana"},{"value":493.63,"name":"Greece"},{"value":254.25,"name":"Grenada"},{"value":133.3,"name":"Guatemala"},{"value":161.41,"name":"Guinea"},{"value":185.76,"name":"Honduras"},{"value":426.02,"name":"Hong Kong SAR. China"},{"value":352.99,"name":"Hungary"},{"value":472.31,"name":"Iceland"},{"value":227.7,"name":"India"},{"value":224.99,"name":"Indonesia"},{"value":292.26,"name":"Iran"},{"value":518.65,"name":"Ireland"},{"value":457.75,"name":"Israel"},{"value":513.98,"name":"Italy"},{"value":273.02,"name":"Jamaica"},{"value":286.46,"name":"Japan"},{"value":291.42,"name":"Jordan"},{"value":468.1,"name":"Kazakhstan"},{"value":162.56,"name":"Kenya"},{"value":410.38,"name":"Kuwait"},{"value":348.54,"name":"Latvia"},{"value":131.04,"name":"Liberia"},{"value":555.01,"name":"Lithuania"},{"value":497.9,"name":"Luxembourg"},{"value":321.47,"name":"Macedonia"},{"value":155.63,"name":"Madagascar"},{"value":51,"name":"Malawi"},{"value":282.74,"name":"Malaysia"},{"value":476.33,"name":"Maldives"},{"value":457.54,"name":"Malta"},{"value":358.12,"name":"Mauritius"},{"value":242.72,"name":"Mexico"},{"value":296.01,"name":"Morocco"},{"value":63.41,"name":"Mozambique"},{"value":275.1,"name":"Myanmar"},{"value":151.15,"name":"Namibia"},{"value":208.55,"name":"Nepal"},{"value":534.17,"name":"Netherlands"},{"value":321.24,"name":"New Caledonia"},{"value":360.92,"name":"New Zealand"},{"value":196.95,"name":"Nicaragua"},{"value":101.14,"name":"Niger"},{"value":94.23,"name":"Nigeria"},{"value":487.49,"name":"Norway"},{"value":363.67,"name":"Oman"},{"value":330.95,"name":"Pakistan"},{"value":260.53,"name":"Panama"},{"value":189.17,"name":"Paraguay"},{"value":215.19,"name":"Peru"},{"value":227.79,"name":"Philippines"},{"value":411.42,"name":"Poland"},{"value":459.44,"name":"Portugal"},{"value":445.49,"name":"Romania"},{"value":408.73,"name":"Russia"},{"value":40.38,"name":"Rwanda"},{"value":291.82,"name":"Saudi Arabia"},{"value":169.67,"name":"Senegal"},{"value":326.71,"name":"Serbia"},{"value":167.37,"name":"Sierra Leone"},{"value":350.06,"name":"Slovakia"},{"value":436.41,"name":"Slovenia"},{"value":212.41,"name":"South Africa"},{"value":286.06,"name":"Korea"},{"value":407.96,"name":"Spain"},{"value":218.77,"name":"Sri Lanka"},{"value":150.3,"name":"Swaziland"},{"value":550,"name":"Sweden"},{"value":514.9,"name":"Switzerland"},{"value":273.5,"name":"Taiwan. ROC"},{"value":98.83,"name":"Tanzania"},{"value":219.58,"name":"Thailand"},{"value":74.32,"name":"Togo"},{"value":315.02,"name":"Trinidad and Tobago"},{"value":370.93,"name":"Tunisia"},{"value":433.21,"name":"Turkey"},{"value":80.58,"name":"Uganda"},{"value":343.28,"name":"Ukraine"},{"value":397.71,"name":"United Arab Emirates"},{"value":447.97,"name":"United Kingdom"},{"value":433.6,"name":"Uruguay"},{"value":491.15,"name":"United States"},{"value":277.39,"name":"Venezuela"},{"value":268.74,"name":"Vietnam"},{"value":57.11,"name":"Zambia"},{"value":96.56,"name":"Zimbabwe"}]}],"visualMap":[{"min":0,"max":700,"calculable":true,"type":"continuous"}],"title":[{"left":"center","text":"Total food consumption \n (kg/person/year)"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>

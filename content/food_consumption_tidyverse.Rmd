@@ -1,0 +1,128 @@
+---
+title: "Food consumption and CO2 emissions due to food products. tidytuesday contribution"
+author: "Rubén F. Bustillo"
+date: 2020-02-21
+categories: ["R"]
+tags: ["tidytuesday", "food consumption"]
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+**Re**
+
+In this post, intented to be a small contribution to the tidytuesday project, we will use the package {echarts4r} to visualizate in a map the food consumption and CO2 emissions from 130 countries.
+
+\
+
+# Intro
+
+\
+
+This short post is going to be my first and small contribution to [Tidytuesday project](https://github.com/rfordatascience/tidytuesday). I will use the package {echarts4r} to plot in a map the food consumption and CO2 emissions due to food products. To some extent the procedure is practically identical to the one used in this [previous post](https://rquer.netlify.com/maps3d/) where it is exposed in a slightly more extensive way how to make the maps using {echarts4r}.
+
+\
+
+## libraries
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(echarts4r)
+
+```
+
+\
+
+## dataset
+
+```{r, message=FALSE}
+
+food_consumption <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-18/food_consumption.csv')
+
+```
+
+\
+
+a few modifications
+
+\
+
+```{r}
+
+map <- food_consumption %>% 
+  group_by(country) %>%
+  summarise(co2_total = sum(co2_emmission),
+            consumption_total = sum(consumption)) %>%
+  mutate(country = recode_factor (country,
+                                  `USA` = "United States",
+                                  `Czech Republic`= "Czech Rep.",
+                                  `South Korea`= "Korea"))
+
+```
+
+\
+
+## Choropleth Map: Total CO2 emissions due to food products
+
+```{r}
+
+map %>%
+  e_charts(country) %>%
+  e_map(co2_total) %>%
+  e_visual_map(min=0, max=2000) %>%
+  e_title("Total CO2 emissions due to food products \n (kg CO2/person/year)", left = "center") %>%
+  e_theme("vintage")
+
+```
+
+\
+
+## 3D map: Total CO2 emissions due to food products
+
+```{r}
+map %>%
+  e_charts(country) %>%
+  e_map_3d(co2_total) %>%
+  e_visual_map(min=0, max=2000) %>%
+  e_title("Total CO2 emissions due to food products \n (kg CO2/person/year)", left = "center") %>%
+  e_theme("vintage")
+
+```
+
+\
+
+## Choropleth Map: Total food consumption
+
+```{r}
+
+map %>%
+  e_charts(country) %>%
+  e_map(consumption_total) %>%
+  e_visual_map(min=0, max=700) %>%
+  e_title("Total food consumption \n (kg/person/year)", left = "center") %>%
+  e_theme("vintage")
+
+```
+
+\
+
+## 3D map: Total food consumption
+
+```{r}
+
+map %>%
+  e_charts(country) %>%
+  e_map_3d(consumption_total) %>%
+  e_visual_map(min=0, max=700) %>%
+  e_title("Total food consumption \n (kg/person/year)", left = "center") %>%
+  e_theme("vintage")
+
+```
+
+
