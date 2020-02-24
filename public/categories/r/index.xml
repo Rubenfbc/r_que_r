@@ -6,10 +6,23 @@
     <description>Recent content in R on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 21 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Utilizando R en Power Bi</title>
+      <link>/powerbi_gapminder/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/powerbi_gapminder/</guid>
+      <description>Re
+Power Bi es una herramienta de Business Inteligence (BI) de Microsoft. Un aspecto interesante es que Power Bi permite fácilmente utilizar el lenguaje de R en diversas fases del proceso de análisis.
+
+Power Bi
+Power Bi es un recientemente nuevo servicio de Business Inteligence (BI) y análisis empresarial desarrollado por Microsoft. Esta herramienta, o conjunto de herramientas, se presenta como una solución integrada en Office 365, y permite la descarga de datos, o conexión a numerosas fuentes y orígenes de datos, la manipulación (limpieza y transformación), visualización y análisis de una forma bastante intuitiva, especialmente si tenemos conocimientos previos de Excel, tablas dinámicas, Power Pivot y Power Query.</description>
+    </item>
     
     <item>
       <title>Food consumption and CO2 emissions due to food products (tidytuesday contribution)</title>

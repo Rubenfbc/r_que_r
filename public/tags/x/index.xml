@@ -6,20 +6,17 @@
     <description>Recent content in x on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/x/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Título</title>
-      <link>/prueba_powerbi/</link>
-      <pubDate>Thu, 20 Feb 2020 00:00:00 +0000</pubDate>
+      <link>/powerbi_gapminder/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/prueba_powerbi/</guid>
-      <description>Re
-Anyone know of an R package for interfacing with Alexa Skills? @thosjleeper @xieyihui @drob @JennyBryan @HoloMarkeD ?
-&amp;mdash; Jeff Leek (@jtleek) April 12, 2017  https://app.powerbi.com/reportEmbed?reportId=b6ed4b90-bc6f-46cf-9b54-14a525bb4c37&amp;amp;autoAuth=true&amp;amp;ctid=2b079dc7-e2ea-45bc-9182-0fde14b549b1&amp;amp;config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D</description>
+      <guid>/powerbi_gapminder/</guid>
+      <description>Re</description>
     </item>
     
   </channel>
