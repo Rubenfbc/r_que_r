@@ -28,7 +28,7 @@ Power Bi es una herramienta de Business Inteligence (BI) de Microsoft. Un aspect
 
 \
 
-Pero vayamos a lo que nos ocupa en este post. Resulta que, de una forma desde mi punto de vista muy interesante, Power Bi ha posibilitado diversos cauces mediante los cuales resulta posible integrar las capacidades de esta nueva plataforma con el lenguaje de R (y también de Phyton). Además, estos cauces son varios, siendo posible hacer uso de un R script para visualizar datos, pero también para la importación de los mismos o para su transformación y manipulación. Por consiguiente, el objetivo de este post será mostrar, utilizando los datasets del paquete {gapminder}, cómo realizar operaciones utilizando R en Power Bi. Los datasets escogidos, que personalmente me gustan mucho y los he utilizado en post previos (veáse [este](https://rquer.netlify.com/joins_sql/) y [este](https://rquer.netlify.com/evolution/)) muestra, entre otros aspectos, la renta per cápita, la población y la esperanza de vida para 187 países en diversos años (1952-2006).  
+Pero vayamos a lo que nos ocupa en este post. Resulta que, de una forma desde mi punto de vista muy interesante, Power Bi ha posibilitado diversos cauces mediante los cuales resulta posible integrar las capacidades de esta nueva plataforma con el lenguaje de R (y también de Phyton). Además, estos cauces son varios, siendo posible hacer uso de un R script para visualizar datos, pero también para la importación de los mismos o para su transformación y manipulación. Por consiguiente, el objetivo de este post será mostrar, utilizando los datasets del paquete {gapminder}, cómo realizar operaciones utilizando R en Power Bi. Los datasets escogidos, que personalmente me gustan mucho y los he utilizado en post previos (vease [este](https://rquer.netlify.com/joins_sql/) y [este](https://rquer.netlify.com/evolution/)) muestra, entre otros aspectos, la renta per cápita, la población y la esperanza de vida para 187 países en diversos años (1952-2006).  
 
 \
 
@@ -36,7 +36,7 @@ Antes de empezar es importante tener presente que para trabajar con R en Power B
 
 \
 
-Una vez dicho esto veamos como podemos utilizar R en Power Bi. Como he señalado, podemos utilizar R en diversas fases del proceso de análisis:
+Una vez dicho esto veamos cómo podemos utilizar R en Power Bi. Como he señalado, podemos utilizar R en diversas fases del proceso de análisis:
 
 \
 
@@ -74,7 +74,7 @@ grid.raster(importacion_3)
 
 ```
 
-En esta ocasión indicamos **cargar**, en la parte inferior de la pantalla, y las tres tablas se cargarán en nuestro Power Bi Desktop. Los campos aparecerán en la parte derecha tal y como refleja la figura siguiente, pudiendo observar fácilmente el nombre de las columnas que componen cada una de las tablas. Por su parte, en la parte izquierda de la pantalla encontramos tres iconos. El superior, donde nos encontramos, sería la pantalla de **informe**, donde desarrollaremos el análisis y prepararemos el informe y sus visualizaciones, el siguiente icono abre la pantalla **datos**, que nos lleva al editor de Power Query y, por último, el tercer icono nos conduce a la pantala del modelo donde podemos crear las relaciones entre tablas. 
+En esta ocasión indicamos **cargar**, en la parte inferior de la pantalla, y las tres tablas se cargarán en nuestro Power Bi Desktop. Los campos aparecerán en la parte derecha tal y como refleja la figura siguiente, pudiendo observar fácilmente el nombre de las columnas que componen cada una de las tablas. Por su parte, en la parte izquierda de la pantalla encontramos tres iconos. El superior, donde nos encontramos, sería la pantalla de **informe**, donde desarrollaremos el análisis y prepararemos el informe y sus visualizaciones, el siguiente icono abre la pantalla **datos**, que nos lleva al editor de Power Query y, por último, el tercer icono nos conduce a la pantalla del modelo donde podemos crear las relaciones entre tablas. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
