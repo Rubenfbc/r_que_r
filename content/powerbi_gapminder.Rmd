@@ -28,7 +28,7 @@ Power Bi es una herramienta de Business Inteligence (BI) de Microsoft. Un aspect
 
 \
 
-Pero vayamos a lo que nos ocupa en este post. Resulta que, de una forma desde mi punto de vista muy interesante, Power Bi ha posibilitado diversos cauces mediante los cuales resulta posible integrar las capacidades de esta nueva plataforma con el lenguaje de R (y también de Phyton). Además, estos cauces son varios, siendo posible hacer uso de un R script para visualizar datos, pero también para la importación de los mismos o para su transformación y manipulación. Por consiguiente, el objetivo de este post será mostrar, utilizando los datasets del paquete {gapminder}, cómo realizar operaciones utilizando R en Power Bi. Los datasets escogidos, que personalmente me gustan mucho y los he utilizado en post previos (vease [este](https://rquer.netlify.com/joins_sql/) y [este](https://rquer.netlify.com/evolution/)) muestra, entre otros aspectos, la renta per cápita, la población y la esperanza de vida para 187 países en diversos años (1952-2006).  
+Pero vayamos a lo que nos ocupa en este post. Resulta que, de una forma desde mi punto de vista muy interesante, Power Bi ha posibilitado diversos cauces mediante los cuales resulta posible integrar las capacidades de esta nueva plataforma con el lenguaje de R (y también de Phyton). Además, estos cauces son varios, siendo posible hacer uso de un R script para visualizar datos, pero también para la importación de los mismos o para su transformación y manipulación. Por consiguiente, el objetivo de este post será mostrar, utilizando los datasets del paquete {gapminder}, cómo realizar operaciones utilizando R en Power Bi. Los datasets escogidos, que personalmente me gustan mucho y los he utilizado en post previos (vease [este](https://rquer.netlify.com/joins_sql/) y [este](https://rquer.netlify.com/evolution/)) muestra, entre otros aspectos, la renta per cápita, la población y la esperanza de vida para 187 países en diversos años (1952-2007).  
 
 \
 
@@ -157,6 +157,8 @@ grid.raster(importacion_11)
 
 # 3. Visualización de datos en Power Bi Desktop
 
+\
+
 En tercer lugar podemos realizar visualizaciones de R, por ejemplo utilizando el conocido paquete {ggplot2}, en los informes de Power Bi Desktop. Para ello haremos *click* en el icono de R que se encuentra en el panel de visualizaciones en la pantalla de informes de Power Bi Desktop. Una vez seleccionado dicho icono se abrirá un objeto visual de R como el que se observa en la siguiente captura de pantalla.
 
 ```{r, echo=FALSE, out.width = '100%'}
@@ -166,7 +168,7 @@ grid.raster(importacion_12)
 
 ```
 
-Posteriormente arrastraremos las variables que queremos incluir para su posterior visualización. En nuestro caso particular vamos a realizar un *scatterplot* donde se relacione el PIB per cápita con la esperanza de vida, donde el tamaño de las burbujas corresponderá al tamaño de cada país según su número de habitantes. Nuestro gráfico será similar al realizado en [este post anterior](https://rquer.netlify.com/evolution/) aunque en esta ocasión graficaremos únicamente dicha relación en el año 2007.
+Posteriormente arrastraremos las variables que queremos incluir para su posterior visualización. En nuestro caso particular vamos a realizar un *scatterplot* donde se relacione el PIB per cápita con la esperanza de vida, donde el tamaño de las burbujas corresponderá al tamaño de cada país según su número de habitantes. Nuestro gráfico será similar al realizado en [este post anterior](https://rquer.netlify.com/evolution/), aunque en esta ocasión graficaremos únicamente dicha relación en el año 2007.
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -175,7 +177,7 @@ grid.raster(importacion_13)
 
 ```
 
-\
+A la hora de escribir el script de R tenemos dos opciones. Por un lado podemos escribir el código en el **editor de script R**, en la parte inferior de la pantalla, o por otro lado podemos **editar el script en IDE externo**, y a continuación se abrirá una pantalla en el IDE correspondiente. En nuestro caso se abre un script en Rstudio, tal y como se observa en la siguiente captura de pantalla. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -184,7 +186,7 @@ grid.raster(importacion_14)
 
 ```
 
-\
+Al **ejecutar el script** generamos la misma visualización que obtendríamos en R. Recuérdese que los paquetes que carguemos deben estar instalados previamente en R.
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -193,11 +195,17 @@ grid.raster(importacion_15)
 
 ```
 
+# Reflexiones
+
 \
 
-```{r, echo=FALSE, out.width = '100%'}
+Como hemos podido comprobar a lo largo de este post, resulta sencillo poder integrar el lenguaje y las capacidades de R en esta nueva y potente herramienta de Microsoft. Compaginar R con Power Bi nos proporciona enormes posibilidades a la hora de analizar y visualizar datos y nos abre las puertas a nuevas posibilidades. Resulta, por tanto, muy conveniente dedicar tiempo a profundizar en las posibilidades que ofrecen cada una de estas herramientas y en aprender los mecanismos mediante los cuales podemos trabajar conjuntamente con ambos y sacar el máximo provecho de ellas.
 
-importacion_16 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_16.png")
-grid.raster(importacion_16)
+\
 
-```
+El informe realizado a lo largo de este post puede ser visualizado utilizando Power Bi Server y compartido de diversas formas, también insertado en un sitio web como el actual. 
+
+
+<iframe width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=e97be189-dade-44b6-922f-15e4b087f19f&autoAuth=true&ctid=2b079dc7-e2ea-45bc-9182-0fde14b549b1&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+
+
