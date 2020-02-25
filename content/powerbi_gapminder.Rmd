@@ -74,7 +74,7 @@ grid.raster(importacion_3)
 
 ```
 
-En esta ocasión indicamos **cargar**, en la parte inferior de la pantalla, y las tres tablas se cargarán en nuestro Power Bi Desktop. Los campos aparecerán en la parte derecha tal y como refleja la figura siguiente, pudiendo observar fácilmente el nombre de las columnas que componen cada una de las tablas. Por su parte, en la parte izquierda de la pantalla encontramos tres iconos. El superior, donde nos encontramos, sería la pantalla de **informe**, donde desarrollaremos el análisis y prepararemos el informe y sus visualizaciones, el siguiente icono abre la pantalla **datos**, que nos lleva al editor de Power Query y, por último, el tercer icono nos conduce a la pantalla del modelo donde podemos crear las relaciones entre tablas. 
+En esta ocasión indicamos **cargar**, en la parte inferior de la pantalla, y las tres tablas se cargarán en nuestro Power Bi Desktop. Los campos aparecerán en la parte derecha tal y como refleja la figura siguiente, pudiendo observar fácilmente el nombre de las columnas que componen cada una de las tablas. Por su parte, en la parte izquierda de la pantalla encontramos tres iconos. El superior, donde nos encontramos, sería la pantalla de **informe**, donde desarrollaremos el análisis y prepararemos el informe y sus visualizaciones, el siguiente icono abre la pantalla **datos**, que nos permite observar las tablas de nuestro modelo y, por último, el tercer icono nos conduce a la pantalla del modelo donde podemos crear las relaciones entre tablas. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -102,3 +102,55 @@ grid.raster(importacion_6)
 
 ```
 
+# 2. Manipulación de datos en Power Query
+
+\
+
+Como se ha señalado, podemos utilizar el lenguaje de R para manipular y transformar los datos de las tablas con las que estamos trabajando. Si bien Power Bi incluye en su plataforma de Power Query un gran número de posibilidades a la hora de realizar estos pasos, cabe la posibilidad que nos resulte conveniente realizar dichas operaciones con R.
+
+\
+
+Para abrir el editor de Power Query vamos a la parte superior de la pantalla, y hacemos *click* en **Editar consultas**. Una vez se ha abierto el Editor de Power Query, y nos hemos situado en la tabla que queremos manipular, en la parte superior derecha de la pantalla veremos la opción **Ejecutar script de R**. 
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_7 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_7.png")
+grid.raster(importacion_7)
+
+```
+
+Al darle a **Ejecutar script de R** se abrirá una nueva ventana donde, al igual que hicimos previamente al importar los datos, podemos escribir nuestro código de R. En nuestro caso vamos a utilizar el paquete {dplyr} para realizar las transformaciones deseadas. El paquete {dplyr}, como expusimos en [este post antiguo](https://rquer.netlify.com/babynames/), se compone de un conjunto de funciones que permiten manipular fácilmente los datasets. En nuestro caso calcularemos el PIB total, en función del PIB por habitante y la población de cada país, guardando únicamente los valores para el año 2007 que presentaremos en un mapa. 
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_8 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_8.png")
+grid.raster(importacion_8)
+
+```
+
+Vemos que las operaciones que vamos realizando, al igual que sucede cuando realizamos cualquier operación con las opciones que incluye Power Bi, se van anotando en la parte derecha de la pantalla y en cualquier momento podemos corregir las acciones y volver a un punto anterior. Una vez hemos terminado de realizar las operaciones pertinentes indicaremos **Cerrar y aplicar** para ir de nuevo a la pantalla de informe. 
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_9 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_9.png")
+grid.raster(importacion_9)
+
+```
+
+A modo de ejemplo realizamos un mapa del mundo donde el tamaño de cada burbuja represente el PIB total que hemos calculado en el paso anterior para cada economía. Para hacer más bonito el mapa visualizaremos cada continente con un color diferente. Para realizar este mapa arrastramos los valores al apartado correspondiente tal y como se indica en la captura de pantalla siguiente.
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_10 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_10.png")
+grid.raster(importacion_10)
+
+```
+
+Como podemos comprobar Power Bi resulta muy funcional a la hora de realizar visualizaciones proveyendo un gran número de posibilidades al usuario para ello. Simplemente, por poner otro ejemplo, pongamos que nos interesa realizar un heat map con la misma información, es decir, indicando el PIB por país. En este caso vamos al icono del rodillo de pintura y activaríamos la opción de **mapa térmico** y algunas opciones de formato según nuestras preferencias. 
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_11 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_11.png")
+grid.raster(importacion_11)
+
+```
