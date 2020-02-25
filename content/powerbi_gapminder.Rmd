@@ -40,7 +40,7 @@ Una vez dicho esto veamos cómo podemos utilizar R en Power Bi. Como he señalad
 
 \
 
-# 1. Importación de datos
+# 1. Importación de datos en Power Bi Desktop
 
 \
 
@@ -152,5 +152,52 @@ Como podemos comprobar Power Bi resulta muy funcional a la hora de realizar visu
 
 importacion_11 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_11.png")
 grid.raster(importacion_11)
+
+```
+
+# 3. Visualización de datos en Power Bi Desktop
+
+En tercer lugar podemos realizar visualizaciones de R, por ejemplo utilizando el conocido paquete {ggplot2}, en los informes de Power Bi Desktop. Para ello haremos *click* en el icono de R que se encuentra en el panel de visualizaciones en la pantalla de informes de Power Bi Desktop. Una vez seleccionado dicho icono se abrirá un objeto visual de R como el que se observa en la siguiente captura de pantalla.
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_12 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_12.png")
+grid.raster(importacion_12)
+
+```
+
+Posteriormente arrastraremos las variables que queremos incluir para su posterior visualización. En nuestro caso particular vamos a realizar un *scatterplot* donde se relacione el PIB per cápita con la esperanza de vida, donde el tamaño de las burbujas corresponderá al tamaño de cada país según su número de habitantes. Nuestro gráfico será similar al realizado en [este post anterior](https://rquer.netlify.com/evolution/) aunque en esta ocasión graficaremos únicamente dicha relación en el año 2007.
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_13 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_13.png")
+grid.raster(importacion_13)
+
+```
+
+\
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_14 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_14.png")
+grid.raster(importacion_14)
+
+```
+
+\
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_15 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_15.png")
+grid.raster(importacion_15)
+
+```
+
+\
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_16 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_16.png")
+grid.raster(importacion_16)
 
 ```

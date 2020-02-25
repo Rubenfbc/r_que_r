@@ -30,8 +30,8 @@ tags: ["R", "Power Bi", "Gapminder"]
 <p><br />
 </p>
 </div>
-<div id="importación-de-datos" class="section level1">
-<h1>1. Importación de datos</h1>
+<div id="importación-de-datos-en-power-bi-desktop" class="section level1">
+<h1>1. Importación de datos en Power Bi Desktop</h1>
 <p><br />
 </p>
 <p>Para utilizar R a la hora de importar datos en Power Bi debemos, una vez abierta una sesión en Power Desktop, ir a la pestaña que indica <strong>obtener datos</strong> situada en la barra superior y, posteriormente, seleccionar la opción <strong>Script de R</strong>.</p>
@@ -64,4 +64,20 @@ tags: ["R", "Power Bi", "Gapminder"]
 <p><img src="/powerbi_gapminder_files/figure-html/unnamed-chunk-10-1.png" width="100%" /></p>
 <p>Como podemos comprobar Power Bi resulta muy funcional a la hora de realizar visualizaciones proveyendo un gran número de posibilidades al usuario para ello. Simplemente, por poner otro ejemplo, pongamos que nos interesa realizar un heat map con la misma información, es decir, indicando el PIB por país. En este caso vamos al icono del rodillo de pintura y activaríamos la opción de <strong>mapa térmico</strong> y algunas opciones de formato según nuestras preferencias.</p>
 <p><img src="/powerbi_gapminder_files/figure-html/unnamed-chunk-11-1.png" width="100%" /></p>
+</div>
+<div id="visualización-de-datos-en-power-bi-desktop" class="section level1">
+<h1>3. Visualización de datos en Power Bi Desktop</h1>
+<p>En tercer lugar podemos realizar visualizaciones de R, por ejemplo utilizando el conocido paquete {ggplot2}, en los informes de Power Bi Desktop. Para ello haremos <em>click</em> en el icono de R que se encuentra en el panel de visualizaciones en la pantalla de informes de Power Bi Desktop. Una vez seleccionado dicho icono se abrirá un objeto visual de R como el que se observa en la siguiente captura de pantalla.</p>
+<p><img src="/powerbi_gapminder_files/figure-html/unnamed-chunk-12-1.png" width="100%" /></p>
+<p>Posteriormente arrastraremos las variables que queremos incluir para su posterior visualización. En nuestro caso particular vamos a realizar un <em>scatterplot</em> donde se relacione el PIB per cápita con la esperanza de vida, donde el tamaño de las burbujas corresponderá al tamaño de cada país según su número de habitantes. Nuestro gráfico será similar al realizado en <a href="https://rquer.netlify.com/evolution/">este post anterior</a> aunque en esta ocasión graficaremos únicamente dicha relación en el año 2007.</p>
+<p><img src="/powerbi_gapminder_files/figure-html/unnamed-chunk-13-1.png" width="100%" /></p>
+<p><br />
+</p>
+<p><img src="/powerbi_gapminder_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
+<p><br />
+</p>
+<p><img src="/powerbi_gapminder_files/figure-html/unnamed-chunk-15-1.png" width="100%" /></p>
+<p><br />
+</p>
+<p><img src="/powerbi_gapminder_files/figure-html/unnamed-chunk-16-1.png" width="100%" /></p>
 </div>
