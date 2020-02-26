@@ -1,5 +1,5 @@
 ---
-title: "Utilizando R en Power Bi (En construcción)"
+title: "Utilizando R en Power Bi"
 author: "Rubén F. Bustillo"
 date: 2020-02-22
 categories: ["R", "Power Bi"]
@@ -24,15 +24,15 @@ Power Bi es una herramienta de Business Inteligence (BI) de Microsoft. Un aspect
 
 \
 
-[Power Bi](https://powerbi.microsoft.com/es-es/) es un recientemente nuevo servicio de Business Inteligence (BI) y análisis empresarial desarrollado por Microsoft. Esta herramienta, o conjunto de herramientas, se presenta como una solución integrada en Office 365, y permite la descarga de datos, o conexión a numerosas fuentes y orígenes de datos, la manipulación (limpieza y transformación), visualización y análisis de una forma bastante intuitiva, especialmente si tenemos conocimientos previos de Excel, tablas dinámicas, Power Pivot y Power Query. Power Bi permite la creación de paneles e informes personalizados y dinámicos, y su posterior publicación. Power Bi pretende con ello ser una herramienta que permita tener de forma sencilla una visión general del conjunto de la empresa mediante un análisis inteligente y una monitorización del funcionamiento conjunto del negocio ayudando con ello a tomar las mejores decisiones empresariales. Para el uso de Power Bi existen diversas opciones: Microsoft Desktop, Pro y Premium. La primera de ellas es de uso gratuito, aunque presenta limitaciones de funcionalidad con respecto a las otras dos versiones, especialmente en la fase de publicación de paneles e informes y a la hora de compartir los resultados con otros usuarios. Por su parte, las versiones de pago requieren licencias, y evidentemente su mayor o menor utilidad dependerá de las necesidades de la empresa o del usuario. 
+[Power Bi](https://powerbi.microsoft.com/es-es/) es un recientemente nuevo servicio de Business Inteligence (BI) y análisis empresarial desarrollado por Microsoft. Esta herramienta, o conjunto de herramientas, se presenta como una solución integrada en Office 365 y permite la descarga de datos, o conexión a numerosas fuentes y orígenes de datos, la manipulación (limpieza y transformación), visualización y análisis de una forma bastante intuitiva, especialmente si tenemos conocimientos previos de Excel, tablas dinámicas, Power Pivot y Power Query. Power Bi permite la creación de paneles e informes personalizados y dinámicos, y su posterior publicación. En definitiva, Power Bi pretende con ello ser una herramienta que permita tener de forma sencilla una visión general del conjunto de la empresa mediante un análisis inteligente y una monitorización del funcionamiento conjunto del negocio ayudando con ello a tomar las mejores decisiones empresariales. Para el uso de Power Bi existen diversas opciones: Microsoft Desktop, Pro y Premium. La primera de ellas es de uso gratuito, aunque presenta limitaciones de funcionalidad con respecto a las otras dos versiones, especialmente en la fase de publicación de paneles e informes y a la hora de compartir los resultados con otros usuarios. Por su parte, las versiones de pago requieren licencias, y evidentemente su mayor o menor utilidad dependerá de las necesidades de la empresa o del usuario. 
 
 \
 
-Pero vayamos a lo que nos ocupa en este post. Resulta que, de una forma desde mi punto de vista muy interesante, Power Bi ha posibilitado diversos cauces mediante los cuales resulta posible integrar las capacidades de esta nueva plataforma con el lenguaje de R (y también de Phyton). Además, estos cauces son varios, siendo posible hacer uso de un R script para visualizar datos, pero también para la importación de los mismos o para su transformación y manipulación. Por consiguiente, el objetivo de este post será mostrar, utilizando los datasets del paquete {gapminder}, cómo realizar operaciones utilizando R en Power Bi. Los datasets escogidos, que personalmente me gustan mucho y los he utilizado en post previos (vease [este](https://rquer.netlify.com/joins_sql/) y [este](https://rquer.netlify.com/evolution/)) muestra, entre otros aspectos, la renta per cápita, la población y la esperanza de vida para 187 países en diversos años (1952-2007).  
+Pero vayamos a lo que nos ocupa en este post. Resulta que, de una forma muy interesante desde mi punto de vista, Power Bi ha posibilitado diversos cauces mediante los cuales resulta posible integrar las capacidades de esta nueva plataforma con el lenguaje de R (y también de Phyton). Además, estos cauces son varios, siendo posible hacer uso de un *R script* para visualizar datos, pero también para la importación de los mismos o para su transformación y manipulación. Por consiguiente, el objetivo de este *post* será mostrar, utilizando los datasets del paquete {gapminder}, cómo realizar operaciones utilizando R en Power Bi. Los datasets escogidos, que personalmente me gustan mucho y los he utilizado en post previos (vease [este](https://rquer.netlify.com/joins_sql/) y [este](https://rquer.netlify.com/evolution/)) muestra, entre otros aspectos, la renta per cápita, la población y la esperanza de vida para 187 países en diversos años (1952-2007).  
 
 \
 
-Antes de empezar es importante tener presente que para trabajar con R en Power Bi es necesario tener instalado R en el mismo ordenador donde se tiene instalado Power Bi Desktop. De hecho, antes de utilizar algún paquete de R en Power Bi, resulta necesario tener ese paquete instalado previamente en R. En el menú de opciones de Power Bi Desktop podemos encontrar las opciones de *Script de R*, donde veremos que automáticamente se habrá detectado el directorio de inicio de R y, en el caso de usar un IDE (integrated development environment), como es mi caso que uso R Studio, Power Bi lo identificará también. 
+Antes de empezar es importante tener presente que para trabajar con R en Power Bi es necesario tener instalado R en el mismo ordenador donde se tiene instalado Power Bi Desktop. De hecho, antes de utilizar algún paquete de R en Power Bi, resulta necesario tener ese paquete instalado previamente en R. En el menú de opciones de Power Bi Desktop podemos encontrar las opciones de *Script de R*, donde veremos que automáticamente se habrá detectado el directorio de inicio de R y, en el caso de usar un IDE (acrónimo de *integrated development environment*), como es mi caso que uso R Studio, Power Bi lo identificará también. 
 
 \
 
@@ -44,7 +44,7 @@ Una vez dicho esto veamos cómo podemos utilizar R en Power Bi. Como he señalad
 
 \
 
-Para utilizar R a la hora de importar datos en Power Bi debemos, una vez abierta una sesión en Power Desktop, ir a la pestaña que indica **obtener datos** situada en la barra superior y, posteriormente, seleccionar la opción **Script de R**. 
+Para utilizar R en el proceso de importar datos en Power Bi debemos, una vez abierta una sesión en Power Desktop, ir a la pestaña que indica **Obtener datos** situada en la barra superior y, posteriormente, seleccionar la opción **Script de R**. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -65,7 +65,7 @@ grid.raster(importacion_2)
 
 ```
 
-Si todo ha ido bien debería abrirse una nueva ventana donde nos permita seleccionar las tres tablas. Podemos seleccionar alguna de ellas, o las tres a la vez y cargarlas. En el caso de requerir alguna modificación, o para su visualización, podríamos indicar **transformar datos** y se abrirá el **editor de Power Query** que quizá conocemos al trabajar con Excel. 
+Si todo ha ido bien debería abrirse una nueva ventana donde nos permita seleccionar las tres tablas. Podemos seleccionar alguna de ellas, o las tres a la vez y cargarlas. En el caso de requerir alguna modificación, o para su visualización, podríamos indicar **Transformar datos** y se abrirá el **editor de Power Query** que posiblemente nos resulte familiar si hemos trabajado previamente con Power Pivot en Excel. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -74,7 +74,7 @@ grid.raster(importacion_3)
 
 ```
 
-En esta ocasión indicamos **cargar**, en la parte inferior de la pantalla, y las tres tablas se cargarán en nuestro Power Bi Desktop. Los campos aparecerán en la parte derecha tal y como refleja la figura siguiente, pudiendo observar fácilmente el nombre de las columnas que componen cada una de las tablas. Por su parte, en la parte izquierda de la pantalla encontramos tres iconos. El superior, donde nos encontramos, sería la pantalla de **informe**, donde desarrollaremos el análisis y prepararemos el informe y sus visualizaciones, el siguiente icono abre la pantalla **datos**, que nos permite observar las tablas de nuestro modelo y, por último, el tercer icono nos conduce a la pantalla del modelo donde podemos crear las relaciones entre tablas. 
+Nosotros en esta ocasión indicamos **Cargar**, en la parte inferior de la pantalla, y las tres tablas se cargarán en nuestro Power Bi Desktop. Los campos aparecerán en la parte derecha tal y como refleja la captura de pantalla siguiente, pudiendo observar fácilmente el nombre de las columnas que componen cada una de las tablas. Por su parte, en la parte izquierda de la pantalla encontraremos tres iconos. El superior, donde nos encontramos, sería la pantalla de **Informe**, y es el lugar donde desarrollaremos el análisis y prepararemos el informe y las respectivas visualizaciones, el siguiente icono abre la pantalla **Datos**, lugar donde podremos observar las tablas que conforman nuestro modelo y, por último, el tercer icono nos conduce a la pantalla **Modelo**, que es donde acudiremos para crear las relaciones entre las distintas tablas. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -83,7 +83,7 @@ grid.raster(importacion_4)
 
 ```
 
-Si accedemos a la **pantalla del modelo**, podemos comprobar que Power Bi ha realizado automáticamente las relaciones entre las tablas vinculando las tablas `gapminder` y `gapminder_unfiltered` con la tabla `country_codes` usando como nexo de unión el nombre de los países (country). Aunque en este caso particular las relaciones han sido identificadas automáticamente por Power Bi, lo normal será que seamos nosotros los que tengamos que identificar de forma manual las relaciones correspondientes entre las distintas tablas que conforman nuestro modelo. 
+Si accedemos a la pantalla **Modelo**, podemos comprobar que Power Bi ha realizado automáticamente algunas relaciones entre las tablas vinculando las tablas `gapminder` y `gapminder_unfiltered` con la tabla `country_codes` usando como nexo de unión el nombre de los países (`country`). Aunque en este caso particular las relaciones han sido identificadas automáticamente por Power Bi, lo habitual será que seamos nosotros los que tengamos que identificar de forma manual las relaciones correspondientes entre las distintas tablas que conforman nuestro modelo. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -92,7 +92,7 @@ grid.raster(importacion_5)
 
 ```
 
-Una vez importadas las tablas podemos trabajar con ellas. A modo de ejemplo rápido pongamos que queremos realizar un **gráfico de barras** donde se indique la renta per cápita de los países incluidos en la tabla `gapminder` pero indicando en el eje los códigos iso (de la  tabla `country_codes`) para cada uno de los países en lugar del nombre del país. Esto implica utilizar información de las dos tablas conjuntamente gracias a las relaciones realizadas automáticamente por Power Bi. Utilizaremos además un filtro para poder seleccionar el año y clasificaremos los países por colores según el continente al que pertenecen. Estas operaciones se realizan de una forma muy sencilla en Power Bi Desktop indicando las operaciones correspondientes en el menú y arrastrando los valores que queremos incluir en el informe.   
+Una vez importadas las tablas podemos trabajar con ellas. A modo de ejemplo rápido pongamos que queremos realizar un **gráfico de barras** donde se indique el PIB per cápita de los países incluidos en la tabla `gapminder` pero utilizando como etiquetas para el eje los códigos iso (de la  tabla `country_codes`) para cada uno de los países en lugar del nombre del país. Esto implicará utilizar información de las dos tablas conjuntamente, algo que no supone un problema gracias a las relaciones realizadas automáticamente por Power Bi. Utilizaremos además un filtro para poder seleccionar el año y clasificaremos los países por colores según el continente al que pertenecen. Estas operaciones se realizan de una forma muy sencilla en Power Bi Desktop indicando las operaciones correspondientes en el menú y arrastrando los valores que queremos incluir en el informe.   
 
 
 ```{r, echo=FALSE, out.width = '100%'}
@@ -106,11 +106,11 @@ grid.raster(importacion_6)
 
 \
 
-Como se ha señalado, podemos utilizar el lenguaje de R para manipular y transformar los datos de las tablas con las que estamos trabajando. Si bien Power Bi incluye en su plataforma de Power Query un gran número de posibilidades a la hora de realizar estos pasos, cabe la posibilidad que nos resulte conveniente realizar dichas operaciones con R.
+En segundo lugar podemos utilizar el lenguaje de R para manipular y transformar los datos de las tablas con las que estamos trabajando. Si bien Power Bi incluye en su plataforma de Power Query un gran número de posibilidades a la hora de realizar manipulaciones y transformaciones de las tablas, operaciones que además suelen poder realizarse de forma bastante intuitiva, cabe la posibilidad de que nos resulte conveniente o más sencillo realizar algunas (o todas) de esas operaciones utilizando el lenguaje R.
 
 \
 
-Para abrir el editor de Power Query vamos a la parte superior de la pantalla, y hacemos *click* en **Editar consultas**. Una vez se ha abierto el Editor de Power Query, y nos hemos situado en la tabla que queremos manipular, en la parte superior derecha de la pantalla veremos la opción **Ejecutar script de R**. 
+Para abrir el **editor de Power Query** vamos a la parte superior de la pantalla, y hacemos *click* en **Editar consultas**. Una vez se ha abierto el Editor de Power Query, y nos hemos situado en la tabla que queremos manipular, en la parte superior derecha de la pantalla veremos la opción **Ejecutar script de R**. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -119,7 +119,7 @@ grid.raster(importacion_7)
 
 ```
 
-Al darle a **Ejecutar script de R** se abrirá una nueva ventana donde, al igual que hicimos previamente al importar los datos, podemos escribir nuestro código de R. En nuestro caso vamos a utilizar el paquete {dplyr} para realizar las transformaciones deseadas. El paquete {dplyr}, como expusimos en [este post antiguo](https://rquer.netlify.com/babynames/), se compone de un conjunto de funciones que permiten manipular fácilmente los datasets. En nuestro caso calcularemos el PIB total, en función del PIB por habitante y la población de cada país, guardando únicamente los valores para el año 2007 que presentaremos en un mapa. 
+Al darle a **Ejecutar script de R** se abrirá una nueva ventana donde, al igual que hicimos previamente cuando importamos los datos, podemos escribir nuestro código de R. En nuestro caso vamos a utilizar el paquete {dplyr} para realizar las transformaciones deseadas. El paquete {dplyr}, como expusimos en [este post antiguo](https://rquer.netlify.com/babynames/), se compone de un conjunto de funciones que permiten manipular fácilmente los datasets. En nuestro caso particular, situados en la tabla `gapminder_unfiltered`, calcularemos el PIB total de cada país multiplicando su PIB por habitante por su población, y seleccionaremos únicamente los valores correspondientes al año 2007 con el objetivo de presentar dicha información posteriormente en un mapa. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -128,7 +128,7 @@ grid.raster(importacion_8)
 
 ```
 
-Vemos que las operaciones que vamos realizando, al igual que sucede cuando realizamos cualquier operación con las opciones que incluye Power Bi, se van anotando en la parte derecha de la pantalla y en cualquier momento podemos corregir las acciones y volver a un punto anterior. Una vez hemos terminado de realizar las operaciones pertinentes indicaremos **Cerrar y aplicar** para ir de nuevo a la pantalla de informe. 
+Vemos que las operaciones que vamos realizando, al igual que sucede cuando realizamos cualquier operación con las opciones que incluye Power Bi, se van anotando en la parte derecha de la pantalla. Esto resulta de gran utilidad puesto que en cualquier momento podemos corregir las acciones y volver a un punto anterior del proceso de transformación del dataset. Una vez hemos terminado de realizar las operaciones pertinentes indicaremos **Cerrar y aplicar** para ir de nuevo a la pantalla de informe. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -137,7 +137,7 @@ grid.raster(importacion_9)
 
 ```
 
-A modo de ejemplo realizamos un mapa del mundo donde el tamaño de cada burbuja represente el PIB total que hemos calculado en el paso anterior para cada economía. Para hacer más bonito el mapa visualizaremos cada continente con un color diferente. Para realizar este mapa arrastramos los valores al apartado correspondiente tal y como se indica en la captura de pantalla siguiente.
+A modo de ejemplo **realizamos un mapa del mundo** donde el tamaño de cada burbuja represente el PIB total que hemos calculado en el paso anterior para cada economía. Para hacer más llamativo el mapa visualizaremos cada continente con un color diferente. Para realizar este mapa únicamente arrastramos los valores al apartado correspondiente tal y como se indica en la captura de pantalla siguiente.
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -146,7 +146,7 @@ grid.raster(importacion_10)
 
 ```
 
-Como podemos comprobar Power Bi resulta muy funcional a la hora de realizar visualizaciones proveyendo un gran número de posibilidades al usuario para ello. Simplemente, por poner otro ejemplo, pongamos que nos interesa realizar un heat map con la misma información, es decir, indicando el PIB por país. En este caso vamos al icono del rodillo de pintura y activaríamos la opción de **mapa térmico** y algunas opciones de formato según nuestras preferencias. 
+Como hemos podido comprobar, Power Bi resulta muy funcional a la hora de realizar visualizaciones puesto que pone a nuestra disposición un gran número de posibilidades al usuario para ello. Simplemente, por poner otro ejemplo, pongamos que nos interesa realizar un heat map con la misma información, es decir, indicando el PIB por país. En este caso vamos al icono del rodillo de pintura y activaríamos la opción de **mapa térmico** y algunas opciones de formato según nuestras preferencias. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -155,11 +155,29 @@ grid.raster(importacion_11)
 
 ```
 
+Además de las posibilidades existentes en el menú de visualizaciones de la pantalla de **Informe**, Power Bi pone a la disposición del usuario un **Marketplace** donde podemos descargar un gran número de objetos visuales. Es recomendable echar un vistazo a las posibilidades que ofrece el Marketplace, donde podemos encontrar herramientas que nos pueden ser treméndamente útiles para llevar a cabo análisis avanzados u otras que nos pueden resultar graciosas para otro tipo de análisis de carácter más informal como por ejemplo el **Enlighten Aquarium**. 
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_11b <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_11b.png")
+grid.raster(importacion_11b)
+
+```
+
+Al darle a **agregar** el objeto visual se importará dentro de nuestro menú. Una vez allí podemos utilizarlo como cualquier otro objeto visual presente en el menú de visualizaciones. En nuestro caso indicaremos que cada país venga representado por un pez y que el tamaño de cada uno de ellos venga determinado por su PIB per cápita. Podemos asimismo añadir una **Segmentación de datos** al objeto visual que nos permita seleccionar el año que queremos representar en cada momento. 
+
+```{r, echo=FALSE, out.width = '100%'}
+
+importacion_11c<- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\pics\\r_y_powerbi_11c.png")
+grid.raster(importacion_11c)
+
+```
+
 # 3. Visualización de datos en Power Bi Desktop
 
 \
 
-En tercer lugar podemos realizar visualizaciones de R, por ejemplo utilizando el conocido paquete {ggplot2}, en los informes de Power Bi Desktop. Para ello haremos *click* en el icono de R que se encuentra en el panel de visualizaciones en la pantalla de informes de Power Bi Desktop. Una vez seleccionado dicho icono se abrirá un objeto visual de R como el que se observa en la siguiente captura de pantalla.
+En tercer lugar podemos realizar **visualizaciones de R**, por ejemplo utilizando el conocido paquete {ggplot2}, en los informes de Power Bi Desktop. Para ello haremos *click* en el icono de R que se encuentra en el panel de visualizaciones en la pantalla de informes de Power Bi Desktop. Una vez seleccionado dicho icono se abrirá un objeto visual de R como el que se observa en la siguiente captura de pantalla.
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -177,7 +195,7 @@ grid.raster(importacion_13)
 
 ```
 
-A la hora de escribir el script de R tenemos dos opciones. Por un lado podemos escribir el código en el **editor de script R**, en la parte inferior de la pantalla, o por otro lado podemos **editar el script en IDE externo**, y a continuación se abrirá una pantalla en el IDE correspondiente. En nuestro caso se abre un script en Rstudio, tal y como se observa en la siguiente captura de pantalla. 
+A la hora de escribir el script de R tenemos dos opciones. Por un lado podemos escribir el código en el **Editor de script R**, en la parte inferior de la pantalla, o por otro lado podemos **Editar el script en IDE externo**, y a continuación se abrirá una pantalla en el IDE correspondiente. En nuestro caso se abre un script en Rstudio, tal y como se observa en la siguiente captura de pantalla. 
 
 ```{r, echo=FALSE, out.width = '100%'}
 
@@ -195,17 +213,15 @@ grid.raster(importacion_15)
 
 ```
 
-# Reflexiones
+# Nota final
 
 \
 
-Como hemos podido comprobar a lo largo de este post, resulta sencillo poder integrar el lenguaje y las capacidades de R en esta nueva y potente herramienta de Microsoft. Compaginar R con Power Bi nos proporciona enormes posibilidades a la hora de analizar y visualizar datos y nos abre las puertas a nuevas posibilidades. Resulta, por tanto, muy conveniente dedicar tiempo a profundizar en las posibilidades que ofrecen cada una de estas herramientas y en aprender los mecanismos mediante los cuales podemos trabajar conjuntamente con ambos y sacar el máximo provecho de ellas.
+Como hemos podido comprobar a lo largo de este *post*, resulta sencillo poder integrar el lenguaje y las capacidades de R en esta nueva y potente herramienta de Microsoft. Compaginar R con Power Bi nos proporciona un gran potencial a la hora de analizar y visualizar datos y nos abre las puertas a grandes posibilidades a explorar. Resulta, por tanto, muy conveniente dedicar tiempo a profundizar en las funcionalidades que ofrecen cada una de estas herramientas y en aprender los mecanismos mediante los cuales podemos trabajar conjuntamente con ambos con el objetivo de sacar el máximo provecho de ellas.
 
 \
 
-El informe realizado a lo largo de este post puede ser visualizado utilizando Power Bi Server y compartido de diversas formas, también insertado en un sitio web como el actual. 
+El informe realizado a lo largo de este post puede ser visualizado, compartido/publicado utilizando Power Bi Server, aunque algunas posibilidades estarán registringidas a usuarios con licencia. 
 
 
 <iframe width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=e97be189-dade-44b6-922f-15e4b087f19f&autoAuth=true&ctid=2b079dc7-e2ea-45bc-9182-0fde14b549b1&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
-
-
