@@ -2,7 +2,7 @@ baseurl = "https://rquer.netlify.com/"
 languageCode = "en-us"
 title = "R que R"
 theme = "amp"
-googleAnalytics = "UA-143560294-3"
+googleAnalytics = "UA-159336673-1"
 disqusShortname = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
