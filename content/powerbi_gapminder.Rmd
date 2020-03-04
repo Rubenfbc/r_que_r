@@ -1,10 +1,9 @@
 ---
 title: "Utilizando R en Power Bi"
 author: "Rubén F. Bustillo"
-date: 2020-02-26
-categories: ["R", "Power Bi"]
+date: '2020-02-26'
 tags: ["R", "Power Bi", "Gapminder"]
-
+categories: ["R", "Power Bi"]
 ---
 
 
@@ -221,7 +220,7 @@ Como hemos podido comprobar a lo largo de este *post*, resulta sencillo poder in
 
 \
 
-El informe realizado a lo largo de este post puede ser visualizado, compartido/publicado utilizando Power Bi Server, aunque algunas posibilidades estarán registringidas a usuarios con licencia. 
+El informe realizado a lo largo de este post puede ser visualizado, compartido/publicado utilizando Power Bi Server, aunque algunas posibilidades estarán restringidas a usuarios con licencia. 
 
 
 <iframe width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=e97be189-dade-44b6-922f-15e4b087f19f&autoAuth=true&ctid=2b079dc7-e2ea-45bc-9182-0fde14b549b1&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>

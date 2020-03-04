@@ -1,0 +1,473 @@
+---
+title: "Coronavirus"
+author: "Rubén F. Bustillo"
+date: '2020-03-04'
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+    vertical_layout: fill
+    theme: cerulean
+---
+
+
+
+```{r setup, include=FALSE}
+
+#------------------ paquetes ------------------
+
+devtools::install_github("RamiKrispin/coronavirus")
+
+library(flexdashboard)
+library(coronavirus)
+library(tidyverse)
+library(echarts4r)
+library(DT)
+
+
+data(coronavirus)
+
+
+# COLORES:
+
+# https://www.w3.org/TR/css-color-3/#svg-color
+
+confirmed_color <- "lightsteelblue"
+active_color <- "orange"
+recovered_color <- "limegreen"
+death_color <- "red"
+
+
+
+# DATASETS:
+
+# confirmed/active/recovered/death cases by country
+df <- coronavirus %>% 
+  group_by(Country.Region, type) %>%
+  summarise(total = sum(cases)) %>%
+  pivot_wider(names_from =  type, 
+                     values_from = total) %>%
+  mutate(unrecovered = confirmed - ifelse(is.na(recovered), 0, recovered) - ifelse(is.na(death), 0, death)) %>%
+  arrange(-confirmed) %>%
+  ungroup() %>%
+  mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
+  mutate(country = if_else(country == "Mainland China", "China", country)) %>%
+  mutate(country = if_else(country == "North Macedonia", "N.Macedonia", country)) %>%
+  mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
+  mutate(country = trimws(country)) %>%
+  mutate(country = factor(country, levels = country))
+
+df_spain <- df %>%
+  filter(country == "Spain")
+
+# CUMULATIVE CASES:
+
+df_daily <- coronavirus %>% 
+  group_by(date, type) %>%
+  summarise(total = sum(cases, na.rm = TRUE)) %>%
+  pivot_wider(names_from = type,
+                     values_from = total) %>%
+  arrange(date) %>%
+  ungroup() %>%
+  mutate(active =  confirmed - death - recovered) %>%
+  mutate(confirmed_cumulative = cumsum(confirmed),
+                death_cumulative = cumsum(death),
+                recovered_cumulative = cumsum(recovered),
+                active_cumulative = cumsum(active))
+  
+df1 <- coronavirus %>% 
+  filter(date == max(date))
+
+
+df_map <- df %>%
+  mutate(country = recode_factor(country,
+                                 `US` = "United States",
+                                 `UK` = "United Kingdom",
+                                 `UAE` = "United Arab Emirates",
+                                 `South Korea`= "Korea"))
+
+```
+
+Sidebar {.sidebar}
+=======================================================================
+
+### Last Update {.value-box}
+
+```{r}
+
+valueBox(value = head(df1$date, n=1), 
+         caption = "Last update")
+```
+
+\
+
+\
+
+\
+
+
+This dashboard presents information on COVID-19. The {coronavirus} dataset package is available on CRAN and comes from the [John Hopkins University Center for Systems Science and Engineering](https://hub.jhu.edu/2020/01/23/coronavirus-outbreak-mapping-tool-649-em1-art1-dtd-health/). The {coronavirus} dataset is updated daily by @Rami_Krispin (https://ramikrispin.github.io/coronavirus/)).
+
+I take this opportunity to thank Rami Krispin for sharing his work and code with the #rstat community. His dashboard on coronavirus has helped me tremendously to improve my knowledge of the {flexdashboard} package.
+
+[www.rquer.netlify.com](https://rquer.netlify.com/)
+
+Dashboard
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### confirmed {.value-box}
+
+```{r}
+
+valueBox(value = paste(format(sum(df$confirmed), big.mark = ","), "", sep = " "), 
+         caption = "Total Confirmed Cases", 
+         color = confirmed_color)
+```
+
+
+### active {.value-box}
+
+```{r}
+
+valueBox(value = paste(format(sum(df$unrecovered, na.rm = TRUE), big.mark = ","), 
+                       " (", round(100 * sum(df$unrecovered, na.rm = TRUE) / sum(df$confirmed), 1), 
+                       "%)", sep = ""), 
+         caption = "Active Cases",  
+         color = active_color)
+```
+
+### recovered {.value-box}
+
+```{r}
+
+valueBox(value = paste(format(sum(df$recovered, na.rm = TRUE), big.mark = ","), 
+                       " (", round(100 * sum(df$recovered, na.rm = TRUE) / sum(df$confirmed), 1), 
+                       "%)", sep = ""), 
+         caption = "Recovered Cases", 
+         color = recovered_color)
+```
+
+### death {.value-box}
+
+```{r}
+
+valueBox(value = paste(format(sum(df$death, na.rm = TRUE), big.mark = ","), 
+                       " (", round(100 * sum(df$death, na.rm = TRUE) / sum(df$confirmed), 1), 
+                       "%)", sep = ""),
+         caption = "Death Cases", 
+         color = death_color)
+
+```
+
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Confirmed Cases
+
+```{r}
+
+df_map %>%
+  e_charts(country) %>%
+  e_map(confirmed) %>%
+  e_title("Confirmed Cases by Country", left= "center") %>%
+  e_visual_map() %>%
+  e_theme("infographic") %>%
+  e_visual_map_range(selected= list(0,200))
+  
+
+```
+
+### Active Cases
+
+```{r}
+
+df_map %>%
+  e_charts(country) %>%
+  e_map(unrecovered) %>%
+  e_title("Active Cases by Country", left= "center") %>%
+  e_visual_map() %>%
+  e_theme("infographic")%>%
+  e_visual_map_range(selected= list(0,200))
+  
+
+```
+
+### Recovered Cases 
+
+```{r}
+
+df_map %>%
+  e_charts(country) %>%
+  e_map(recovered) %>%
+  e_title("Recovered Cases by Country", left= "center") %>%
+  e_visual_map() %>%
+  e_theme("infographic") %>%
+  e_visual_map_range(selected= list(0,200))
+  
+
+```
+
+### Death Cases 
+
+```{r}
+
+df_map %>%
+  e_charts(country) %>%
+  e_map(death) %>%
+  e_title("Death Cases by Country", left= "center") %>%
+  e_visual_map() %>%
+  e_theme("infographic") %>%
+  e_visual_map_range(selected= list(0,200))
+  
+
+```
+
+
+
+
+Data
+=======================================================================
+
+Column 
+-------------------------------------
+    
+### 
+    
+```{r}
+
+df_table <- df %>%
+  select(country, confirmed, recovered, death)
+
+df_table %>%
+  datatable(rownames = FALSE)
+
+```
+   
+   
+### Locations of people killed by COVID-19
+
+```{r, fig.width=10, fig.height=7}
+
+mapa_mundo <- map_data("world")
+
+
+coronavirus_mapa <- coronavirus %>%
+  filter(type == "death")
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes(x=long, y=lat, group=group),
+               fill= "grey30",
+               color= "white") +
+  geom_point(data = coronavirus_mapa, 
+             aes(x = coronavirus_mapa$Long,
+             y = coronavirus_mapa$Lat,
+             color = "orange",
+             alpha = 0.7,
+             size = 1.2)) +
+  theme_classic() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "none"
+  ) 
+
+```
+   
+Column 
+-------------------------------------
+   
+### 
+
+```{r}
+
+plotly::plot_ly(data = df, 
+                x = ~ country, 
+                y = ~ unrecovered, 
+                type = "bar", 
+                name = "Unrecovered",
+                marker = list(color = "darkorange")) %>%
+  plotly::add_trace(y = ~ recovered, 
+                    name = "Recovered",
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(y = ~ death, 
+                    name = "Death",
+                    marker = list(color = death_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases (log)",
+                              type = "log"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+
+```   
+ 
+
+
+Cumulative Data
+=======================================================================
+
+
+Row
+-------------------------------------------------------------------------
+
+### Cumulative Confirmed Cases
+
+```{r}
+
+plotly::plot_ly(data = df_daily) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ confirmed_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = confirmed_color),
+                    marker = list(color = confirmed_color)) %>%
+  plotly::layout(yaxis = list(title = "Confirmed Cases (cumulative)"),
+                 xaxis = list(title = ""))
+
+```
+
+
+
+### Cumulative Active Cases
+
+```{r}
+
+plotly::plot_ly(data = df_daily) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(yaxis = list(title = "Active Cases (cumulative)"),
+                 xaxis = list(title = ""))
+
+```
+
+
+Row
+-------------------------------------------------------------------------
+
+### Cumulative Recovered Cases
+
+```{r}
+
+plotly::plot_ly(data = df_daily) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::layout(yaxis = list(title = "Recovered Cases (cumulative)"),
+                 xaxis = list(title = ""))
+
+```
+
+
+
+### Cumulative Death Cases
+
+```{r}
+
+plotly::plot_ly(data = df_daily) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::layout(yaxis = list(title = "Recovered Cases (cumulative)"),
+                 xaxis = list(title = ""))
+
+```
+
+
+Spain
+=======================================================================
+
+Column 
+-------------------------------------
+    
+### 
+    
+```{r, figh.height = 10}
+
+df_Spain <- coronavirus %>% 
+  filter(Country.Region == "Spain") %>%
+  group_by(date, type) %>%
+  summarise(total = sum(cases, na.rm = F)) %>%
+  pivot_wider(names_from = type,
+              values_from = total) %>%
+  arrange(date) %>%
+  ungroup()
+
+df_Spain %>%
+  datatable(rownames = FALSE)
+
+```
+   
+   
+### Confirmed Cases in Spain
+
+```{r, fig.width=10, fig.height=10}
+
+plotly::plot_ly(data = df_Spain) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ confirmed,
+                    type = "bar",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(yaxis = list(title = "Confirmed Cases"),
+                 xaxis = list(title = ""))
+
+```
+   
+Column 
+-------------------------------------
+   
+### confirmed {.value-box}
+
+```{r}
+
+valueBox(value = df_spain$confirmed, 
+         caption = "Confirmed Cases in Spain", 
+         color = confirmed_color)
+```
+
+
+### active {.value-box}
+
+```{r}
+
+valueBox(value = df_spain$unrecovered, 
+         caption = "Active Cases",  
+         color = active_color)
+```
+
+### recovered {.value-box}
+
+```{r}
+
+valueBox(value = df_spain$recovered, 
+         caption = "Recovered Cases", 
+         color = recovered_color)
+```
+
+### death {.value-box}
+
+```{r}
+
+valueBox(value = df_spain$death,
+         caption = "Death Cases", 
+         color = death_color)
+
+```
+ 
