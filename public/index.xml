@@ -6,10 +6,23 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 05 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Coronavirus (COVID-19) Dashboard with {flexdashboard} package</title>
+      <link>/coronavirus/</link>
+      <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/coronavirus/</guid>
+      <description>Re
+This post presents a dashboard with information on coronavirus. The {coronavirus} package is available on CRAN and comes from The John Hopkins University Center for Systems Science and Engineering.
+
+Coronavirus Dashboard
+In this post I present a dashboard with information about the evolution of coronavirus (COVID-19). I use the coronavirus dataset from the {coronavirus} package, available on CRAN. The information comes from The John Hopkins University Center for Systems Science and Engineering (CSSE).</description>
+    </item>
     
     <item>
       <title>Utilizando R en Power Bi</title>
