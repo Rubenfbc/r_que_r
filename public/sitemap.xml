@@ -18,6 +18,11 @@
   </url>
   
   <url>
+    <loc>/coronavirus2/</loc>
+    <lastmod>2020-03-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/flexdashboard/</loc>
     <lastmod>2020-03-05T00:00:00+00:00</lastmod>
   </url>
@@ -43,12 +48,12 @@
   </url>
   
   <url>
-    <loc>/tags/power-bi/</loc>
+    <loc>/categories/power-bi/</loc>
     <lastmod>2020-02-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/power-bi/</loc>
+    <loc>/tags/power-bi/</loc>
     <lastmod>2020-02-26T00:00:00+00:00</lastmod>
   </url>
   
@@ -168,12 +173,12 @@
   </url>
   
   <url>
-    <loc>/categories/sql/</loc>
+    <loc>/tags/sql/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/sql/</loc>
+    <loc>/categories/sql/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   
