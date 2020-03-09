@@ -1,5 +1,5 @@
 ---
-title: "Coronavirus (COVID-19) Dashboard with {flexdashboard} package"
+title: "Coronavirus (COVID-19) Dashboard with {flexdashboard} package (part I)"
 author: "Rubén F. Bustillo"
 date: 2020-03-05
 categories: ["R"]
