@@ -54,7 +54,11 @@ df <- coronavirus %>%
   mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
   mutate(country = if_else(country == "Mainland China", "China", country)) %>%
   mutate(country = if_else(country == "North Macedonia", "N.Macedonia", country)) %>%
+  mutate(country = if_else(country == "Czech Republic", "Czech Rep.", country)) %>%
+  mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
   mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
+  mutate(country = if_else(country == "Faroe Islands", "Faeroe Is.", country)) %>%
+  mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
   mutate(country = trimws(country)) %>%
   mutate(country = factor(country, levels = country))
 
@@ -384,7 +388,7 @@ plotly::plot_ly(data = df_daily) %>%
                     name = "Death",
                     line = list(color = death_color),
                     marker = list(color = death_color))%>%
-  plotly::layout(yaxis = list(title = "Recovered Cases (cumulative)"),
+  plotly::layout(yaxis = list(title = "Death Cases (cumulative)"),
                  xaxis = list(title = ""))
 
 ```
