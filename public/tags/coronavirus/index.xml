@@ -31,7 +31,7 @@ In this post I present a dashboard with information about the evolution of coron
       
       <guid>/coronavirus2/</guid>
       <description>Re
-This post presents a dashboard with information on coronavirus. The {coronavirus} package is available on CRAN and comes from The John Hopkins University Center for Systems Science and Engineering.
+The dashboard presented is a continuation of the previous post. The dashboard shows the evolution of confirmed, recovered, active and death cases due to COVID-19 in a selected group of countries.
 
 Coronavirus Dashboard
 In this post I present a dashboard with information about the evolution of coronavirus (COVID-19). I use the coronavirus dataset from the {coronavirus} package, available on CRAN. The information comes from The John Hopkins University Center for Systems Science and Engineering (CSSE).</description>
