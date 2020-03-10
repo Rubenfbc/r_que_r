@@ -100,7 +100,7 @@ df1 <- coronavirus %>%
 ```
 
 
-Total
+TOTAL
 =======================================================================
 
 ```{r, include=FALSE}
@@ -237,6 +237,42 @@ valueBox(value = paste(format(sum(df$death, na.rm = TRUE), big.mark = ","),
 
 ```      
       
+
+TOTAL (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```
+
     
 
 China
@@ -380,7 +416,40 @@ valueBox(value = paste(format(sum(df_china_valuebox$death), big.mark = ","), "",
 
 ```
   
+China (b)
+=======================================================================
 
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_china) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```
 
 Spain
 =======================================================================
@@ -522,7 +591,42 @@ valueBox(value = paste(format(sum(df_spain_valuebox$death), big.mark = ","), "",
          color = death_color)
 
 ```
+
+
+Spain (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_spain) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
   
+  
+
+```  
 
 Italy
 =======================================================================
@@ -665,6 +769,41 @@ valueBox(value = paste(format(sum(df_italy_valuebox$death), big.mark = ","), "",
 
 ```
   
+Italy (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_italy) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```  
+
 
 France
 =======================================================================
@@ -807,6 +946,41 @@ valueBox(value = paste(format(sum(df_france_valuebox$death), big.mark = ","), ""
 
 ```
   
+France (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_france) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```  
+
 
 South Korea
 =======================================================================
@@ -948,6 +1122,42 @@ valueBox(value = paste(format(sum(df_southkorea_valuebox$death), big.mark = ",")
          color = death_color)
 
 ```
+  
+  
+South Korea (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_southkorea) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```  
   
 
 Iran
@@ -1091,6 +1301,40 @@ valueBox(value = paste(format(sum(df_Iran_valuebox$death), big.mark = ","), "", 
 
 ```
         
+Iran (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_Iran) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```  
 
 
 United Kingdom
@@ -1233,7 +1477,43 @@ valueBox(value = paste(format(sum(df_uk_valuebox$death), big.mark = ","), "", se
          color = death_color)
 
 ```      
-      
+   
+   
+United Kingdom (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_uk) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```  
+
 
 United States
 =======================================================================
@@ -1375,5 +1655,40 @@ valueBox(value = paste(format(sum(df_us_valuebox$death), big.mark = ","), "", se
          color = death_color)
 
 ```      
+ 
       
-    
+United States (b)
+=======================================================================
+
+### Active, recovered and death cases over time (cumulative cases)
+
+```{r}
+
+plotly::plot_ly(data = df_daily_us) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ death_cumulative,
+                    type = "bar",
+                    name = "Death",
+                    line = list(color = death_color),
+                    marker = list(color = death_color))%>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ recovered_cumulative,
+                    type = "bar",
+                    name = "Recovered",
+                    line = list(color = recovered_color),
+                    marker = list(color = recovered_color)) %>%
+  plotly::add_trace(x = ~ date,
+                    y = ~ active_cumulative,
+                    type = "bar",
+                    name = "Active",
+                    line = list(color = active_color),
+                    marker = list(color = active_color)) %>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Total Cases"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+  
+  
+
+```  
+ 
