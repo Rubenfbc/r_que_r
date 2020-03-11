@@ -56,9 +56,15 @@ df <- coronavirus %>%
   mutate(country = if_else(country == "North Macedonia", "N.Macedonia", country)) %>%
   mutate(country = if_else(country == "Czech Republic", "Czech Rep.", country)) %>%
   mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
+  mutate(country = if_else(country == "Republic of Korea", "Korea", country)) %>%
+  mutate(country = if_else(country == "Iran (Islamic Republic of)", "Iran", country)) %>%
   mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
   mutate(country = if_else(country == "Faroe Islands", "Faeroe Is.", country)) %>%
   mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
+  mutate(country = if_else(country == "Viet Nam", "Vietnam", country)) %>%
+  mutate(country = if_else(country == "occupied Palestinian territory", "Palestine", country)) %>%
+  mutate(country = if_else(country == "Russian Federation", "Russia", country)) %>%
+  mutate(country = if_else(country == "Republic of Moldova", "Moldova", country)) %>%
   mutate(country = trimws(country)) %>%
   mutate(country = factor(country, levels = country))
 
