@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ggthemes on R que R</title>
+    <link>/tags/ggthemes/</link>
+    <description>Recent content in ggthemes on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 12 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/ggthemes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Visualization Themes {ggplot2} {ggthemes} {ggthemer}</title>
+      <link>/ggplot_themes/</link>
+      <pubDate>Thu, 12 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/ggplot_themes/</guid>
+      <description>In this post you will find a dashboard presenting some of the most popular themes for ggplot visualizations from the packages {ggplot2}, {ggthemes} and {ggthemer}.</description>
+    </item>
+    
+  </channel>
+</rss>

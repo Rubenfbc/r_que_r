@@ -6,10 +6,19 @@
     <description>Recent content on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 05 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 12 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Visualization Themes {ggplot2} {ggthemes} {ggthemer}</title>
+      <link>/ggplot_themes/</link>
+      <pubDate>Thu, 12 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/ggplot_themes/</guid>
+      <description>In this post you will find a dashboard presenting some of the most popular themes for ggplot visualizations from the packages {ggplot2}, {ggthemes} and {ggthemer}.</description>
+    </item>
     
     <item>
       <title>Coronavirus (COVID-19) Dashboard with {flexdashboard} package (part I)</title>

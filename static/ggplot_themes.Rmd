@@ -1,0 +1,902 @@
+---
+title: "themes {ggplot2}, {ggthemes}, {ggthemer}"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    theme: yeti
+---
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(gapminder)
+library(ggthemes)
+library(ggthemr)
+
+
+gapminder <- gapminder::gapminder
+
+
+grafico <- gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarise(promedio = mean(lifeExp))
+
+
+
+```
+
+
+THEMES (a)
+=====================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### Default theme
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: default ")
+
+```
+
+### `theme_bw()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_bw() ") +
+  theme_bw()
+
+```
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_classic()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_classic() ") +
+  theme_classic()
+
+```
+
+### `theme_dark()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_dark() ") +
+  theme_dark()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_light()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_light() ") +
+  theme_light()
+
+```
+
+### `theme_linedraw()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_linedraw() ") +
+  theme_linedraw()
+
+```
+
+
+THEMES (b)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `theme_minimal()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_minimal() ") +
+  theme_minimal()
+```
+
+### `theme_void()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_void() ") +
+  theme_void()
+
+```
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_base()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_base() ") +
+  theme_classic() +
+  theme_base()
+
+```
+
+### `theme_calc()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_calc()") +
+  theme_calc()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_clean()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_clean()") +
+  theme_clean()
+
+```
+
+### `theme_economist()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_economist() ") +
+  theme_economist()
+
+```
+
+THEMES (c)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `theme_economist_white()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_economist_White() ") +
+  theme_economist_white()
+```
+
+### `theme_excel()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_excel() ") +
+  theme_excel()
+
+```
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_excel_new()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_excel_new() ") +
+  theme_excel_new() +
+  theme_base()
+
+```
+
+### `theme_calc()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_calc() ") +
+  theme_calc()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_few()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_few()") +
+  theme_few()
+
+```
+
+### `theme_fivethirtyeight()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_fivethirtyeight() ") +
+  theme_fivethirtyeight()
+
+```
+
+
+
+THEMES (d)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `theme_foundation()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_foundation() ") +
+  theme_foundation()
+```
+
+### `theme_gdocs()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_gdocs() ") +
+  theme_gdocs()
+
+```
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_hc()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_hc() ") +
+  theme_hc()
+
+```
+
+### `theme_igray()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_igray() ") +
+  theme_igray()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_ligth()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_light()") +
+  theme_light()
+
+```
+
+### `theme_linedraw()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_linedraw()") +
+  theme_linedraw()
+
+```
+
+
+
+THEMES (e)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `theme_map()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_linedraw()") +
+  theme_map()
+
+```
+
+### `theme_pander()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_pander()") +
+  theme_pander()
+
+```
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_par()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_par()") +
+  theme_par()
+
+```
+
+### `theme_solarized()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_solarized()") +
+  theme_solarized()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_solarized_2()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_solarized_2()") +
+  theme_solarized_2()
+
+```
+
+### `theme_solid()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_solid()") +
+  theme_solid()
+
+```
+
+
+THEMES (f)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `theme_stata()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_stata()") +
+  theme_stata()
+
+```
+
+### `theme_wsj()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_wsj()") +
+  theme_wsj()
+
+```
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `theme_tufte()`
+
+```{r}
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_tufte()") +
+  theme_tufte()
+
+```
+
+### `ggthemr("dust")`
+
+```{r}
+
+ggthemr("dust")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`dust`)")
+
+ggthemr_reset()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `ggthemr("flat")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("flat")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`flat`)")
+
+ggthemr_reset()
+
+```
+
+### `ggthemr("camoflauge")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("camoflauge")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`camoflauge`)")
+
+ggthemr_reset()
+
+```
+
+
+THEMES (g)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `ggthemr("chalk")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("chalk")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`chalk`)")
+
+ggthemr_reset()
+
+```
+
+### `ggthemr("copper")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("copper")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`copper`)")
+
+ggthemr_reset()
+
+```
+
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `ggthemr("earth")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("earth")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`earth`)")
+
+ggthemr_reset()
+
+```
+
+
+### `ggthemr("fresh")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("fresh")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`fresh`)")
+
+ggthemr_reset()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `ggthemr("grape")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("grape")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`grape`)")
+
+ggthemr_reset()
+
+```
+
+
+### `ggthemr("grass")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("grass")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`grass`)")
+
+ggthemr_reset()
+
+```
+
+
+THEMES (h)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `ggthemr("greyscale")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("greyscale")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`greyscale`)")
+
+ggthemr_reset()
+
+```
+
+### `ggthemr("light")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("light")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`light`)")
+
+ggthemr_reset()
+
+```
+
+
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `ggthemr("lilac")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("lilac")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`lilac`)")
+
+ggthemr_reset()
+
+```
+
+
+### `ggthemr("pale")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("pale")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`pale`)")
+
+ggthemr_reset()
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### `ggthemr("sea")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("sea")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`sea`)")
+
+ggthemr_reset()
+
+```
+
+
+### `ggthemr("sky")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("sky")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`sky`)")
+
+ggthemr_reset()
+
+```
+
+
+THEMES (i)
+==============================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+### `ggthemr("solarized")`
+
+```{r}
+
+library(ggthemr)
+ggthemr("solarized")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: ggthemr(`solarized`)")
+
+ggthemr_reset()
+
+```
+
+### `theme_lab()` [Trafforddatalab](https://www.trafforddatalab.io/graphics_companion/)
+
+```{r}
+
+source("https://github.com/traffordDataLab/assets/raw/master/theme/ggplot2/theme_lab.R")
+
+ggplot(grafico, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "life expectancy (mean) by continent in 2007",
+       subtitle = "theme: theme_lab()") +
+  theme_lab()
+
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### 
+
+```{r}
+
+```
+
+
+### 
+
+```{r}
+
+
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### 
+
+```{r}
+
+
+
+```
+
+
+### 
+
+```{r}
+
+
+```
