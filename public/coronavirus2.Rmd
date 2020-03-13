@@ -46,20 +46,18 @@ death_color <- "red"
 # CORONAVIRUS DATASET 
 
 coronavirus_b <- coronavirus %>%
-  mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
-  mutate(country = if_else(country == "Mainland China", "China", country)) %>%
-  mutate(country = if_else(country == "North Macedonia", "N.Macedonia", country)) %>%
-  mutate(country = if_else(country == "Czech Republic", "Czech Rep.", country)) %>%
-  mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
-  mutate(country = if_else(country == "Republic of Korea", "Korea", country)) %>%
-  mutate(country = if_else(country == "Iran (Islamic Republic of)", "Iran", country)) %>%
-  mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
-  mutate(country = if_else(country == "Faroe Islands", "Faeroe Is.", country)) %>%
-  mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
-  mutate(country = if_else(country == "Viet Nam", "Vietnam", country)) %>%
-  mutate(country = if_else(country == "occupied Palestinian territory", "Palestine", country)) %>%
-  mutate(country = if_else(country == "Russian Federation", "Russia", country)) %>%
-  mutate(country = if_else(country == "Republic of Moldova", "Moldova", country))
+  mutate(country = recode_factor(Country.Region,
+                                 "Czechia"= "Czech Rep.",
+                                 "United Arab Emirates" = "UAE",
+                                 "Bosnia and Herzegovina"= "Bosnia and Herz.",
+                                 "Korea, South" = "Korea",
+                                 "Dominican Republic" = "Dominican Rep.",
+                                 "Faroe Islands" = "Faeroe Is.",
+                                 "North Macedonia" = "Macedonia",
+                                 "occupied Palestinian territory" = "Palestine",
+                                 "Congo (Kinshasa)" = "Dem. Rep. Congo",
+                                 "Cote d'Ivoire"= "Côte d’Ivoire",
+                                 "Republic of Moldova" = "Moldova"))
 
 
 # CASES by country
@@ -68,26 +66,22 @@ df <- coronavirus %>%
   group_by(Country.Region, type) %>%
   summarise(total = sum(cases)) %>%
   pivot_wider(names_from =  type, 
-                     values_from = total) %>%
+              values_from = total) %>%
   mutate(unrecovered = confirmed - ifelse(is.na(recovered), 0, recovered) - ifelse(is.na(death), 0, death)) %>%
   arrange(-confirmed) %>%
   ungroup() %>%
-  mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
-  mutate(country = if_else(country == "Mainland China", "China", country)) %>%
-  mutate(country = if_else(country == "North Macedonia", "N.Macedonia", country)) %>%
-  mutate(country = if_else(country == "Czech Republic", "Czech Rep.", country)) %>%
-  mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
-  mutate(country = if_else(country == "Republic of Korea", "Korea", country)) %>%
-  mutate(country = if_else(country == "Iran (Islamic Republic of)", "Iran", country)) %>%
-  mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
-  mutate(country = if_else(country == "Faroe Islands", "Faeroe Is.", country)) %>%
-  mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
-  mutate(country = if_else(country == "Viet Nam", "Vietnam", country)) %>%
-  mutate(country = if_else(country == "occupied Palestinian territory", "Palestine", country)) %>%
-  mutate(country = if_else(country == "Russian Federation", "Russia", country)) %>%
-  mutate(country = if_else(country == "Republic of Moldova", "Moldova", country)) %>%
-  mutate(country = trimws(country)) %>%
-  mutate(country = factor(country, levels = country))
+  mutate(country = recode_factor(Country.Region,
+                                 "Czechia"= "Czech Rep.",
+                                 "United Arab Emirates" = "UAE",
+                                 "Bosnia and Herzegovina"= "Bosnia and Herz.",
+                                 "Korea, South" = "Korea",
+                                 "Dominican Republic" = "Dominican Rep.",
+                                 "Faroe Islands" = "Faeroe Is.",
+                                 "North Macedonia" = "Macedonia",
+                                 "occupied Palestinian territory" = "Palestine",
+                                 "Congo (Kinshasa)" = "Dem. Rep. Congo",
+                                 "Cote d'Ivoire"= "Côte d’Ivoire",
+                                 "Republic of Moldova" = "Moldova"))
 
 
 # CUMULATIVE CASES:
@@ -1355,7 +1349,7 @@ United Kingdom
 ```{r, include=FALSE}
 
 df_uk <- coronavirus_b %>% 
-  filter(country == "UK") %>%
+  filter(country == "United Kingdom") %>%
   group_by(date, type) %>%
   summarise(total = sum(cases, na.rm = F)) %>%
   pivot_wider(names_from = type,
@@ -1364,10 +1358,10 @@ df_uk <- coronavirus_b %>%
   ungroup()
 
 coronavirus_uk <- coronavirus_b %>%
-  filter (country == "UK")
+  filter (country == "United Kingdom")
 
 df_uk_valuebox<-df %>%
-  filter (country == "UK")
+  filter (country == "United Kingdom")
 
 df_daily_uk  <- coronavirus_uk %>% 
   group_by(date, type) %>%

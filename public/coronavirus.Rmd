@@ -47,24 +47,20 @@ df <- coronavirus %>%
   group_by(Country.Region, type) %>%
   summarise(total = sum(cases)) %>%
   pivot_wider(names_from =  type, 
-                     values_from = total) %>%
+              values_from = total) %>%
   mutate(unrecovered = confirmed - ifelse(is.na(recovered), 0, recovered) - ifelse(is.na(death), 0, death)) %>%
   arrange(-confirmed) %>%
   ungroup() %>%
   mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
-  mutate(country = if_else(country == "Mainland China", "China", country)) %>%
-  mutate(country = if_else(country == "North Macedonia", "N.Macedonia", country)) %>%
-  mutate(country = if_else(country == "Czech Republic", "Czech Rep.", country)) %>%
+  mutate(country = if_else(country == "North Macedonia", "Macedonia", country)) %>%
+  mutate(country = if_else(country == "Czechia", "Czech Rep.", country)) %>%
   mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
-  mutate(country = if_else(country == "Republic of Korea", "Korea", country)) %>%
-  mutate(country = if_else(country == "Iran (Islamic Republic of)", "Iran", country)) %>%
+  mutate(country = if_else(country == "Korea, South", "Korea", country)) %>%
   mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
-  mutate(country = if_else(country == "Faroe Islands", "Faeroe Is.", country)) %>%
   mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
-  mutate(country = if_else(country == "Viet Nam", "Vietnam", country)) %>%
-  mutate(country = if_else(country == "occupied Palestinian territory", "Palestine", country)) %>%
-  mutate(country = if_else(country == "Russian Federation", "Russia", country)) %>%
+  mutate(country = if_else(country == "Congo (Kinshasa)", "Dem. Rep. Congo", country)) %>%
   mutate(country = if_else(country == "Republic of Moldova", "Moldova", country)) %>%
+  mutate(country = if_else(country == "Cote d'Ivoire", "Côte d'Ivoire", country)) %>%
   mutate(country = trimws(country)) %>%
   mutate(country = factor(country, levels = country))
 
@@ -93,9 +89,7 @@ df1 <- coronavirus %>%
 df_map <- df %>%
   mutate(country = recode_factor(country,
                                  `US` = "United States",
-                                 `UK` = "United Kingdom",
-                                 `UAE` = "United Arab Emirates",
-                                 `South Korea`= "Korea"))
+                                 `UAE` = "United Arab Emirates"))
 
 ```
 
@@ -202,7 +196,7 @@ df_map %>%
   e_title("Active Cases by Country", left= "center") %>%
   e_visual_map() %>%
   e_theme("infographic")%>%
-  e_visual_map_range(selected= list(0,200))
+  e_visual_map_range(selected= list(1,200))
   
 
 ```
@@ -217,7 +211,7 @@ df_map %>%
   e_title("Recovered Cases by Country", left= "center") %>%
   e_visual_map() %>%
   e_theme("infographic") %>%
-  e_visual_map_range(selected= list(0,200))
+  e_visual_map_range(selected= list(1,200))
   
 
 ```
@@ -232,7 +226,7 @@ df_map %>%
   e_title("Death Cases by Country", left= "center") %>%
   e_visual_map() %>%
   e_theme("infographic") %>%
-  e_visual_map_range(selected= list(0,200))
+  e_visual_map_range(selected= list(1,200))
   
 
 ```
@@ -267,7 +261,8 @@ mapa_mundo <- map_data("world")
 
 
 coronavirus_mapa <- coronavirus %>%
-  filter(type == "death")
+  filter(type == "death") %>%
+  filter(cases != 0)
 
 mapa_mundo %>%
   ggplot() +
@@ -275,8 +270,8 @@ mapa_mundo %>%
                fill= "grey30",
                color= "white") +
   geom_point(data = coronavirus_mapa, 
-             aes(x = coronavirus_mapa$Long,
-             y = coronavirus_mapa$Lat,
+             aes(x = Long,
+             y = Lat,
              color = "orange",
              alpha = 0.7,
              size = 1.2)) +
