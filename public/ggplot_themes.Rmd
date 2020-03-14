@@ -3,6 +3,7 @@ title: "themes {ggplot2}, {ggthemes}, {ggthemer}"
 author: "Rubén F. Bustillo"
 output: 
   flexdashboard::flex_dashboard:
+    source_code: embed
     orientation: columns
     vertical_layout: fill
     theme: yeti
