@@ -1,0 +1,983 @@
+---
+title: "Data Visualizations: Bar Charts"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    source_code: embed
+    vertical_layout: fill
+    theme: journal
+---
+
+```{r setup, include=FALSE}
+
+# PACKAGES / LIBRARIES:
+
+library(flexdashboard)
+library(tidyverse)
+library(gapminder)
+library(ggthemes)
+library(ggthemr)
+
+
+
+# DATASET:
+
+gapminder <- gapminder::gapminder
+
+
+```
+
+Sheet A
+====================================================================================
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `summarise(promedio = mean(lifeExp))`
+
+```{r}
+
+# DATASET: AVERAGE LIFE EXPECTANCY BY CONTINENT IN 2007
+
+grafico_edad_promedio <- gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarise(promedio = mean(lifeExp))
+
+
+
+# GGTHEMR THEME: FLAT (More themes: https://rquer.netlify.com/ggplot_themes#themes-a)
+
+ggthemr("flat")
+
+
+# BASIC PLOT:
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy")
+
+
+```
+
+###  `reorder(continent, -promedio, sum)`
+
+```{r}
+
+# PLOT: ORDERED BY AVERAGE LIFE EXPECTANCY (DESCENDENT)
+
+ggplot(grafico_edad_promedio, 
+       aes(x= reorder(continent, -promedio, sum), 
+           y= promedio, fill=continent)) + 
+  geom_col() + 
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy", 
+       fill = NULL) 
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `x= reorder(continent, promedio, sum)`
+
+```{r}
+
+# PLOT: ORDERED BY AVERAGE LIFE EXPECTANCY (ASCENDENT). 
+# LEGEND HAS BEEN REMOVED
+
+ggplot(grafico_edad_promedio, 
+       aes(x= reorder(continent, promedio, sum), 
+           y= promedio, fill=continent)) + 
+  geom_col() + 
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy", 
+       fill = NULL) +
+  guides(fill = FALSE)
+
+```
+
+
+### `scale_x_date(breaks = grafico_spain$year, date_labels = "%Y")` / `geom_col(fill = "limegreen", alpha = 0.8)`
+
+
+```{r}
+
+# CONVERT YEAR COLUMN TO DATE FORMAT:
+
+grafico_spain <- filter(gapminder, 
+             country == "Spain") %>% 
+  mutate(year = as.Date(paste(year, 
+                              "-01-01", 
+                              sep = "", 
+                              format = "%Y-%b-%d")))
+
+
+# PLOT: EVOLUTION OF LIFE EXPECTANCY BY YEAR. 
+
+ggplot(grafico_spain, aes(x = year, 
+               y = lifeExp)) + 
+  geom_col(fill = "limegreen",     
+           alpha = 0.8) + 
+  scale_x_date(breaks = grafico_spain$year, 
+               date_labels = "%Y") + 
+  scale_y_continuous(expand = c(0, 0)) + #
+  labs(title = "Life expectancy in Spain", 
+       subtitle = "Period: 1952-2007", 
+       x = NULL, 
+       y = "life expectancy") 
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `coord_flip()`
+
+```{r}
+
+# PLOT: COORD_FLIP
+
+ggplot(grafico_edad_promedio, 
+       aes(x= reorder(continent, promedio, sum), 
+           y= promedio, fill=continent)) + 
+  geom_col() + 
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy", 
+       fill = NULL) +
+  coord_flip()
+
+```
+
+### `coord_flip()`
+
+```{r}
+
+# PLOT: COORD_FLIP
+
+ggplot(grafico_edad_promedio, 
+       aes(x= reorder(continent, -promedio, sum), 
+           y= promedio, fill=continent)) + 
+  geom_col() + 
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy", 
+       fill = NULL) +
+  coord_flip()
+
+```
+
+
+
+Sheet B
+=============================================================
+
+column
+----------------------------------------------------------
+
+### Cambio de tamaño, color y estilo del texto de los ejes y título. 
+
+```{r}
+
+# LETTER FONTS:
+
+library(extrafont)
+loadfonts(device = "win")
+
+
+# DATA: TOTAL POPULATION BY CONTINENT AND YEAR
+
+poblacion_total <- gapminder %>% 
+  group_by(year, continent) %>% 
+  summarise(poblacion = sum(as.double(pop)))
+
+
+# PLOT: WE HAVE CHANGED THE TITLE AND SUBTITLE (COLOR, FONT, SIZE ..), AND AXIS TEXT.
+
+ggplot(poblacion_total, 
+       aes(x = year, 
+           y = poblacion, 
+           fill = continent)) + 
+  geom_col(colour = "white",
+           size = 0.2) + 
+  scale_x_continuous(breaks = seq(1952, 2007, 5), 
+                     expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by continent", 
+       subtitle = "From 1952 to 2007", 
+       x = NULL, 
+       y = NULL) +
+  theme (axis.text.x = element_text(face="italic", colour="red", size=rel(0.8)),
+         axis.text.y = element_text(face="italic", colour="red", size=rel(0.8))) +
+  theme (plot.title = element_text(family = "Comic Sans MS",
+                                   size = rel(2),
+                                   hjust = 0.5,
+                                   face = "bold",
+                                   color = "orange",
+                                   lineheight = 1.2)) +
+  theme (plot.subtitle = element_text(family = "Comic Sans MS",
+                                   size = rel(1.2),
+                                   hjust = 0.5,
+                                   face = "bold",
+                                   color = "orange",
+                                   lineheight = 1.2)) 
+  
+
+```
+
+
+
+### `guides(fill = guide_legend(reverse = T))`
+
+```{r}
+
+# DATA: ONLY FOR YEAR >= 1977
+
+poblacion_total_b <- gapminder %>% 
+  group_by(year, continent) %>% 
+  filter(year >= 1977) %>%
+  summarise(poblacion = sum(as.double(pop)))
+
+
+# PLOT: THE ORDER OF THE LEGEND HAS BEEN CHANGED
+
+ggplot(poblacion_total_b, 
+       aes(x = year, 
+           y = poblacion, 
+           fill = continent)) + 
+  geom_col(colour = "white",
+           size = 0.2) + 
+  scale_x_continuous(breaks = seq(1977, 2007, 5), 
+                     expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  guides(fill = guide_legend(reverse = T)) + 
+  labs(title = "Total population by continent", 
+       subtitle = "From 1977 to 2007", 
+       x = NULL, 
+       y = NULL) 
+
+```
+
+
+column
+----------------------------------------------------------
+
+### `geom_col(position = "fill)`
+
+```{r}
+
+# PLOT: POSITION = FILL
+
+ggplot(poblacion_total, 
+       aes(x = year, 
+           y = poblacion, 
+           fill = continent)) + 
+  geom_col(position = "fill", 
+           colour = "white",
+           size = 0.2) + 
+  scale_x_continuous(breaks = seq(1952, 2007, 5), 
+                     expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::percent, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by continent", 
+       subtitle = "From 1952 to 2007", 
+       x = NULL, y = NULL)
+
+
+```
+
+### `theme (axis.text.x = element_text(face = "bold", colour = "red", size = rel(1.2), angle = 45, hjust = 1))`
+
+```{r}
+
+# PLOT: 
+
+ggplot(poblacion_total_b, 
+       aes(x = year, 
+           y = poblacion, 
+           fill = continent)) + 
+  geom_col(position = "fill", 
+           colour = "white",
+           size = 0.2) + 
+  scale_x_continuous(breaks = seq(1977, 2007, 5), 
+                     expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::percent, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by continent", 
+       subtitle = "From 1977 to 2007", 
+       x = NULL, y = NULL) +
+  theme (axis.text.x = element_text(face = "bold", 
+                                    colour = "red",
+                                    size = rel(1.2),
+                                    angle = 45,
+                                    hjust = 1)) 
+
+```
+
+
+column
+----------------------------------------------------------
+
+### `geom_col(position = "dodge)`
+
+```{r}
+
+# PLOT: POSITION = DODGE
+
+ggplot(poblacion_total, 
+       aes(x = year, 
+           y = poblacion, 
+           fill = continent)) + 
+  geom_col(position = "dodge", 
+           colour = "white",
+           size = 0.2) + 
+  scale_x_continuous(breaks = seq(1952, 2007, 5), 
+                     expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by continent and year", 
+       subtitle = "From 1952 to 2007", 
+       x = NULL, y = NULL)
+
+
+```
+
+
+### `scale_fill_discrete(guide = guide_legend(title = "Año", keywidth = 2, keyheight = 2))
+`
+
+```{r}
+
+poblacion_total_c <- gapminder %>% 
+  group_by(year, continent) %>% 
+  filter(year >= 1992) %>%
+  summarise(poblacion = sum(as.double(pop)))
+
+
+ggplot(poblacion_total_c, 
+       aes(x = continent, 
+           y = poblacion, 
+           fill = factor(year))) + 
+  geom_col(position = "dodge", 
+           colour = "white",
+           size = 0.2) + 
+  #scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by continent and year", 
+       subtitle = "From 1992 to 2007", 
+       x = NULL, y = NULL) +
+  scale_fill_discrete(guide = guide_legend(title = "Año", 
+                                             keywidth = 2, 
+                                             keyheight = 2))
+
+```
+
+
+
+
+Sheet C
+=============================================================
+
+column
+----------------------------------------------------------
+
+### `scale_x_discrete(limit = c("Africa"))` 
+
+```{r}
+
+# PLOT: LIMIT AFRICA
+
+ggplot(poblacion_total_b, 
+       aes(x = continent, 
+           y = poblacion, 
+           fill = factor(year))) + 
+  geom_col(position = "dodge", 
+           colour = "white",
+           size = 0.2) + 
+  #scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by year in Africa", 
+       subtitle = "From 1977 to 2007", 
+       x = NULL, y = NULL) +
+  scale_fill_discrete(guide = guide_legend(title = "Año")) +
+  scale_x_discrete(limit = c("Africa"))
+
+```
+
+
+### `scale_x_discrete(limit = c("Africa", "Europe"))`
+
+```{r}
+
+# PLOT: LIMIT AFRICA AND EUROPE
+
+ggplot(poblacion_total_b, 
+       aes(x = continent, 
+           y = poblacion, 
+           fill = factor(year))) + 
+  geom_col(position = "dodge", 
+           colour = "white",
+           size = 0.2) + 
+  #scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by year in Africa & Europe", 
+       subtitle = "From 1977 to 2007", 
+       x = NULL, y = NULL) +
+  scale_fill_discrete(guide = guide_legend(title = "Año")) +
+  scale_x_discrete(limit = c("Africa", "Europe"))
+
+```
+
+column
+----------------------------------------------------------
+
+### `scale_x_discrete(limit = c("Europe", "Africa"))`
+
+```{r}
+
+# PLOT: LIMIT TO EUROPE AND AFRICA (ORDER CHANGED)
+
+ggplot(poblacion_total_b, 
+       aes(x = continent, 
+           y = poblacion, 
+           fill = factor(year))) + 
+  geom_col(position = "dodge", 
+           colour = "white",
+           size = 0.2) + 
+  #scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by year in Europe & Africa", 
+       subtitle = "From 1977 to 2007", 
+       x = NULL, y = NULL) +
+  scale_fill_discrete(guide = guide_legend(title = "Año")) +
+  scale_x_discrete(limit = c("Europe", "Africa"))
+
+```
+
+
+### `scale_y_continous(limit = c(0, 1000000000))`
+
+```{r}
+
+# PLOT: SIZE OF Y AXIS REDUCED TO 0-1000 MILLION
+
+ggplot(poblacion_total_b, 
+       aes(x = continent, 
+           y = poblacion, 
+           fill = factor(year))) + 
+  geom_col(position = "dodge", 
+           colour = "white",
+           size = 0.2) + 
+  #scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0),
+                     limit = c(0, 1000000000)) + 
+  labs(title = "Total population by year in Africa & Europe", 
+       subtitle = "From 1977 to 2007", 
+       x = NULL, y = NULL) +
+  scale_fill_discrete(guide = guide_legend(title = "Año")) +
+  scale_x_discrete(limit = c("Africa", "Europe"))
+
+```
+
+
+column
+----------------------------------------------------------
+
+### `scale_x_discrete(labels = c("AFR", "AME", "ASI", "EUR", "OCE"))`
+
+```{r}
+
+# PLOT: X LABELS MODIFIED. 
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  scale_x_discrete(labels = c("AFR", "AME", "ASI", "EUR", "OCE"))
+
+```
+
+
+### `scale_x_discrete(breaks = c("Asia"))`
+
+```{r}
+
+# PLOT: SOME LABELS (X AXIS) HAVE BEEN REMOVED
+
+ggplot(poblacion_total_b, 
+       aes(x = continent, 
+           y = poblacion, 
+           fill = factor(year))) + 
+  geom_col(position = "dodge", 
+           colour = "white",
+           size = 0.2) + 
+  #scale_x_continuous(expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::comma, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by year in Asia \n Compared to the other continents", 
+       subtitle = "From 1992 to 2007", 
+       x = NULL, y = NULL) +
+  scale_fill_discrete(guide = guide_legend(title = "Año")) +
+  scale_x_discrete(breaks = c("Asia"))
+```
+
+
+
+
+Sheet D
+=============================================================
+
+column
+----------------------------------------------------------
+
+### `scale_y_continuous( breaks = seq(0, 80, 10))` 
+
+```{r}
+
+# PLOT: 
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  scale_y_continuous( breaks = seq(0, 80, 10))
+
+```
+
+### `scale_x_discrete(breaks = seq(50, 80, 5))`
+
+```{r}
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  scale_y_continuous( breaks = seq(50, 80, 5))
+
+```
+
+column
+----------------------------------------------------------
+
+### `scale_y_continuous( breaks = c(0, 40, 80))`
+
+```{r}
+
+# PLOT: 
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  scale_y_continuous( breaks = c(0, 40, 80))
+
+
+```
+
+
+### `scale_y_continuous( breaks = c(54.8, 70.72, 73.60, 77.64, 80.71), labels = c("Africa (54.8)", "Asia (70.7)", "Americas (73.6)", "Europe (77.6)", "Oceania (80.7)"))`
+
+```{r}
+
+# PLOT:
+
+ggplot(grafico_edad_promedio, 
+       aes(x= reorder(continent, promedio, sum), 
+           y= promedio, fill=continent)) + 
+  geom_col() + 
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = NULL, 
+       fill = NULL)  +
+  scale_y_continuous( breaks = c(54.8, 70.72, 73.60, 77.64, 80.71),
+                      labels = c("Africa (54.8)", "Asia (70.7)", "Americas (73.6)", "Europe (77.6)", "Oceania (80.7)"))
+
+```
+
+column
+----------------------------------------------------------
+
+### `scale_y_continuous( breaks = NULL)`
+
+```{r}
+
+# PLOT:
+
+ggplot(grafico_edad_promedio, 
+       aes(x= reorder(continent, promedio, sum), 
+           y= promedio, fill=continent)) + 
+  geom_col() + 
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = NULL, 
+       fill = NULL)  +
+  scale_y_continuous( breaks = NULL)
+
+```
+
+### `scale_y_continuous( trans = "reverse")`
+
+```{r}
+
+# PLOT: REVERSED
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  scale_y_continuous( trans = "reverse")
+
+
+
+```
+
+
+Sheet E
+====================================================================================
+
+
+Column 
+-----------------------------------------------------------------------
+
+### 
+
+```{r}
+
+# CHANGED NUMBER FORMAT: (more info: https://rquer.netlify.com/formatear_numeros/)
+
+grafico_edad_promedio$promedio_labels <- formatC(grafico_edad_promedio$promedio, format = "f", digits = 2)
+
+# PLOT: 
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  geom_text(aes(label=promedio_labels),
+            size = 3,
+            vjust = -0.4) 
+  
+
+
+
+```
+
+### 
+
+```{r}
+
+# PLOT: 
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  geom_text(aes(label=promedio_labels),
+            size = 3.5,
+            vjust = 2,
+            color = "white",
+            fontface = "bold") 
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+### 
+
+```{r}
+
+# PLOT: ANGLE OF TEXT
+
+ggplot(grafico_edad_promedio, aes(x = continent, y = promedio, fill = continent)) +
+  geom_col() +
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy") +
+  geom_text(aes(label=promedio_labels),
+            size = 4,
+            vjust = -0.1,
+            angle = 45,
+            fontface = "bold") 
+
+```
+
+### 
+
+```{r}
+
+# CHANGED NUMBER FORMAT: (more info: https://rquer.netlify.com/formatear_numeros/)
+
+grafico_spain$lifeExp_labels <- formatC(grafico_spain$lifeExp, format = "f", digits = 2)
+
+# PLOT:
+
+ggplot(grafico_spain, aes(x = year, 
+               y = lifeExp)) + 
+  geom_col(fill = "limegreen",     
+           alpha = 0.8) + 
+  scale_x_date(breaks = grafico_spain$year, 
+               date_labels = "%Y") + 
+  scale_y_continuous(expand = c(0, 0)) + 
+  labs(title = "Life expectancy in Spain", 
+       subtitle = "Period: 1952-2007", 
+       x = NULL, 
+       y = "life expectancy") +
+  geom_text(aes(label=lifeExp_labels),
+            size = 3.5,
+            hjust = 1.2,
+            angle = 90,
+            color = "white",
+            fontface = "bold") 
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+### 
+
+```{r}
+
+# PLOT: 
+
+ggplot(grafico_edad_promedio, 
+       aes(x= reorder(continent, promedio, sum), 
+           y= promedio, fill=continent)) + 
+  geom_col() + 
+  labs(title = "Life expectancy (mean) by continent in 2007", 
+       x = NULL, 
+       y = "Life Expectancy", 
+       fill = NULL) +
+  coord_flip() +
+  geom_text(aes(label = promedio_labels),
+            hjust = 2,
+            color = "white",
+            fontface = "bold")
+
+```
+
+### 
+
+```{r}
+
+# CHANGED NUMBER FORMAT: (more info: https://rquer.netlify.com/formatear_numeros/)
+
+poblacion_total_c$poblacion_label <- formatC(poblacion_total_c$poblacion, format= "f",digits= 0, big.mark = ".") 
+
+# PLOT:
+
+ggplot(poblacion_total_c, 
+       aes(x = year, 
+           y = poblacion, 
+           fill = continent)) + 
+  geom_col(position = "fill", 
+           colour = "white",
+           size = 0.2) + 
+  scale_x_continuous(breaks = seq(1977, 2007, 5), 
+                     expand = c(0, 0)) + 
+  scale_y_continuous(labels = scales::percent, 
+                     expand = c(0, 0)) + 
+  labs(title = "Total population by continent", 
+       subtitle = "From 1992 to 2007", 
+       x = NULL, y = NULL) +
+  geom_text(aes(label = poblacion_label), 
+            position = position_fill(),
+            vjust = 2.5,
+            color = "white",
+            fontface = "bold",
+            size = 3.5)+
+  guides(fill = FALSE)
+
+ggthemr_reset()
+
+```
+
+
+
+Sheet F
+=============================================================
+
+column {data-height=250}
+----------------------------------------------------------
+
+### `theme_bw()`
+
+```{r, fig.height= 11, fig.width= 6}
+
+# THERE ARE PLENTY OF THEMES WE CAN USE IN OUR CHARTS (https://rquer.netlify.com/ggplot_themes#themes-a). 
+# Here I present 4 themes (one by continent). Thanks to https://www.trafforddatalab.io/graphics_companion/ for the inspiration while creating the plots. 
+
+
+
+# PLOT: EUROPE
+
+grafico_edad_promedio_europe <- gapminder %>%
+  filter ( year == 2007) %>%
+  filter (continent == "Europe") %>%
+  mutate (median = median(lifeExp),
+          diff = lifeExp - median,
+          type = ifelse(lifeExp > median, "Above", "Below")) %>%
+  arrange (diff) %>%
+  mutate(country = factor(country, levels = country))
+
+
+ggplot(grafico_edad_promedio_europe, aes(x = country, y = diff, label = country)) +
+  geom_col(aes(fill = type), width = 0.5) +
+  scale_fill_manual(labels = c("Above median", "Below median"),
+                    values = c("Above" = "cornflowerblue", "Below" = "firebrick1")) +
+  coord_flip()+
+  guides(fill = guide_legend(nrow = 1)) +
+  theme_bw() +
+  theme(legend.position = "top",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs( title = "Continent: Europe",
+        subtitle = "Life Expectancy in relation to continent average \n year: 2007",
+        x = NULL,
+        y = NULL)
+
+
+```
+
+column {data-height=250}
+----------------------------------------------------------
+
+### `theme_gdocs()`
+
+
+
+```{r, fig.height= 11, fig.width= 6}
+
+# PLOT: AMERICAS
+
+grafico_edad_promedio_americas <- gapminder %>%
+  filter ( year == 2007) %>%
+  filter (continent == "Americas") %>%
+  mutate (median = median(lifeExp),
+          diff = lifeExp - median,
+          type = ifelse(lifeExp > median, "Above", "Below")) %>%
+  arrange (diff) %>%
+  mutate(country = factor(country, levels = country))
+
+
+ggplot(grafico_edad_promedio_americas, aes(x = country, y = diff, label = country)) +
+  geom_col(aes(fill = type), width = 0.5) +
+  scale_fill_manual(labels = c("Above median", "Below median"),
+                    values = c("Above" = "gold", "Below" = "darkorchid")) +
+  coord_flip()+
+  guides(fill = guide_legend(nrow = 1)) +
+  theme_gdocs()+
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs( title = "Continent: Americas",
+        subtitle = "Life Expectancy in relation to continent average \n year: 2007",
+        x = NULL,
+        y = NULL)
+
+```
+
+column {data-height=250}
+----------------------------------------------------------
+
+### `theme_clean()`
+
+```{r, fig.height= 11, fig.width= 6}
+
+# PLOT: ASIA
+
+grafico_edad_promedio_asia <- gapminder %>%
+  filter ( year == 2007) %>%
+  filter (continent == "Asia") %>%
+  mutate (median = median(lifeExp),
+          diff = lifeExp - median,
+          type = ifelse(lifeExp > median, "Above", "Below")) %>%
+  arrange (diff) %>%
+  mutate(country = factor(country, levels = country))
+
+
+ggplot(grafico_edad_promedio_asia, aes(x = country, y = diff, label = country)) +
+  geom_col(aes(fill = type), width = 0.5) +
+  scale_fill_manual(labels = c("Above median", "Below median"),
+                    values = c("Above" = "orange", "Below" = "grey")) +
+  coord_flip()+
+  guides(fill = guide_legend(nrow = 1)) +
+  theme_clean() +
+  theme(legend.position = "top",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs( title = "Continent: Asia",
+        subtitle = "Life Expectancy in relation to continent average \n year: 2007",
+        x = NULL,
+        y = NULL)
+
+```
+
+column {data-height=250}
+----------------------------------------------------------
+
+### `theme_hc()`
+
+```{r, fig.height= 11, fig.width= 6}
+
+# PLOT: AFRICA
+
+grafico_edad_promedio_africa <- gapminder %>%
+  filter ( year == 2007) %>%
+  filter (continent == "Africa") %>%
+  mutate (median = median(lifeExp),
+          diff = lifeExp - median,
+          type = ifelse(lifeExp > median, "Above", "Below")) %>%
+  arrange (diff) %>%
+  mutate(country = factor(country, levels = country))
+
+
+ggplot(grafico_edad_promedio_africa, aes(x = country, y = diff, label = country)) +
+  geom_col(aes(fill = type), width = 0.5) +
+  scale_fill_manual(labels = c("Above median", "Below median"),
+                    values = c("Above" = "darkturquoise", "Below" = "deeppink2")) +
+  coord_flip() +
+  theme_hc()+
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs( title = "Continent: Africa",
+        subtitle = "Life Expectancy in relation to continent average \n year: 2007",
+        x = NULL,
+        y = NULL)
+
+
+
+```

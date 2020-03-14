@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bar charts on R que R</title>
+    <link>/tags/bar-charts/</link>
+    <description>Recent content in bar charts on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 14 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/bar-charts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Data Visualizations: Bar Charts</title>
+      <link>/bar_charts/</link>
+      <pubDate>Sat, 14 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/bar_charts/</guid>
+      <description>Dashboard with some options/tools that might be useful while creating bar charts with {ggplot2}.</description>
+    </item>
+    
+  </channel>
+</rss>

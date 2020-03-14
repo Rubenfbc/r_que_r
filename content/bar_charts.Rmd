@@ -1,0 +1,18 @@
+---
+title: "Data Visualizations: Bar Charts"
+author: "Rubén F. Bustillo"
+date: 2020-03-14
+categories: ["R"]
+tags: ["bar charts", "ggplot2"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+Dashboard with some options/tools that might be useful while creating bar charts with {ggplot2}.
