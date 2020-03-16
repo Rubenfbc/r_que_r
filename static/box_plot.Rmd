@@ -1,0 +1,230 @@
+---
+title: "Data Visualizations: Box plots"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    source_code: embed
+    vertical_layout: fill
+    theme: journal
+---
+
+```{r setup, include=FALSE}
+
+# PACKAGES / LIBRARIES:
+
+library(flexdashboard)
+library(tidyverse)
+library(gapminder)
+library(ggthemes)
+library(ggthemr)
+
+
+
+# DATASET:
+
+gapminder <- gapminder::gapminder
+
+
+```
+
+Sheet A
+====================================================================================
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `geom_boxplot()`
+
+```{r}
+
+# DATASET: FDP IN SELECTED COUNTRIES BY CONTINENT IN 2007
+
+grafico_gdppercap <- gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent)
+
+
+# GGTHEMR THEME: FLAT (More themes: https://rquer.netlify.com/ggplot_themes#themes-a)
+
+ggthemr("flat")
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap, fill = continent)) +
+  geom_boxplot() +
+  labs(title = "GDP per capita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") 
+
+```
+
+### `geom_boxplot(color = "blue")`  
+
+```{r}
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap, fill = continent)) +
+  geom_boxplot(color = "blue") +
+  labs(title = "GDP per capita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") 
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `scale_fill_brewer(palette = "Set2")`
+
+```{r}
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap, fill = continent)) +
+  geom_boxplot() +
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "GDp per capita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") 
+
+```
+
+
+### `scale_fill_brewer(palette = "BuPu")` | `theme(legend.position="none")`
+
+```{r}
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap, fill = continent)) +
+  geom_boxplot() +
+  scale_fill_brewer(palette = "BuPu") +
+  labs(title = "GDP percapita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") +
+  theme(legend.position="none")
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `geom_boxplot(fill="limegreen", alpha=0.2`
+
+```{r}
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap)) +
+  geom_boxplot(fill="limegreen", alpha=0.2) +
+  labs(title = "GDP percapita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") 
+
+```
+
+### `geom_boxplot(fill="cornflowerblue", color= "darkblue", alpha=0.2, notch = TRUE, notchwidth = 0.5, outlier.color = "firebrick1", outlier.fill = "red", outlier.size = 3)`
+
+```{r}
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap)) +
+  geom_boxplot(fill="cornflowerblue", 
+               color= "darkblue",
+               alpha=0.2,
+               notch = TRUE,
+               notchwidth = 0.5,
+               outlier.color = "firebrick1",
+               outlier.fill = "red",
+               outlier.size = 3) +
+  labs(title = "GDP percapita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") 
+
+```
+
+
+
+Sheet B
+====================================================================================
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `grafico_gdppercap$type=factor(ifelse(grafico_gdppercap$continent=="Europe","A","B"))`
+
+```{r}
+
+grafico_gdppercap$type=factor(ifelse(grafico_gdppercap$continent=="Europe","A","B"))
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap, fill = type)) +
+  geom_boxplot() +
+  labs(title = "GDP per capita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") 
+
+```
+
+### `scale_fill_manual(values = c("cornflowerblue", "firebrick1")) + scale_alpha_manual(values = c(0.6, 0.6))`  
+
+```{r}
+
+ggplot(grafico_gdppercap, aes(x = continent, y = gdpPercap, 
+                              fill = type,
+                              alpha =  type)) +
+  geom_boxplot() +
+  labs(title = "GDP per capita of selected countries by continent",
+       subtitle = "year: 2007",
+       x = "",
+       y = "GDP per capita") +
+  scale_fill_manual(values = c("cornflowerblue", "firebrick1")) + 
+  scale_alpha_manual(values = c(0.6, 0.6)) 
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `scale_fill_brewer(palette = "Set2")`
+
+```{r}
+
+
+
+```
+
+
+### `scale_fill_brewer(palette = "BuPu")` | `theme(legend.position="none")`
+
+```{r}
+
+
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+### `geom_boxplot(fill="limegreen", alpha=0.2`
+
+```{r}
+
+
+
+```
+
+### `geom_boxplot(fill="cornflowerblue", color= "darkblue", alpha=0.2, notch = TRUE, notchwidth = 0.5, outlier.color = "firebrick1", outlier.fill = "red", outlier.size = 3)`
+
+```{r}
+
+
+
+```
