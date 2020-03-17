@@ -3,37 +3,52 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/tags/box-and-whisker-plot/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/box-plot/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/box_plot/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ggplot2/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-03-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/bar-charts/</loc>
     <lastmod>2020-03-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
-    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/bar_charts/</loc>
-    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/ggplot2/</loc>
-    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2020-03-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2020-03-14T00:00:00+00:00</lastmod>
   </url>
   
@@ -78,12 +93,12 @@
   </url>
   
   <url>
-    <loc>/categories/power-bi/</loc>
+    <loc>/tags/power-bi/</loc>
     <lastmod>2020-02-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/power-bi/</loc>
+    <loc>/categories/power-bi/</loc>
     <lastmod>2020-02-26T00:00:00+00:00</lastmod>
   </url>
   
@@ -203,12 +218,12 @@
   </url>
   
   <url>
-    <loc>/categories/sql/</loc>
+    <loc>/tags/sql/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/sql/</loc>
+    <loc>/categories/sql/</loc>
     <lastmod>2019-12-06T00:00:00+00:00</lastmod>
   </url>
   

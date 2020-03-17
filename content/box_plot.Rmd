@@ -1,0 +1,18 @@
+---
+title: "Data Visualizations: Box Plots (Box and Whisker Plots)"
+author: "Rubén F. Bustillo"
+date: 2020-03-17
+categories: ["R"]
+tags: ["box plot", "ggplot2", "box and whisker plot"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+Dashboard with some indications that might be useful when creating box plots (box and whisker plots) with {ggplot2}.
