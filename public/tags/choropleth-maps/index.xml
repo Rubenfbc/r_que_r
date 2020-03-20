@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>choropleth maps on R que R</title>
+    <link>/tags/choropleth-maps/</link>
+    <description>Recent content in choropleth maps on R que R</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/choropleth-maps/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Choropleth maps with {ggplot2} and {mapdata}</title>
+      <link>/choropleth_maps/</link>
+      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/choropleth_maps/</guid>
+      <description>Dashboard with some indications that might be useful when creating choropleth maps with {ggplot2} and {mapdata.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,18 @@
+---
+title: "Choropleth maps with {ggplot2} and {mapdata}"
+author: "Rubén F. Bustillo"
+date: 2020-03-20
+categories: ["R"]
+tags: ["maps", "ggplot2", "choropleth maps", "mapdata"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+Dashboard with some indications that might be useful when creating choropleth maps with {ggplot2} and {mapdata.

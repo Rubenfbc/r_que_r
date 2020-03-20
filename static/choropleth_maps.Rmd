@@ -1,0 +1,501 @@
+---
+title: "Choropleth maps with {ggplot2} and {mapdata}"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    source_code: embed
+    orientation: columns
+    theme: simplex
+    vertical_layout: fill
+---
+
+
+```{r setup, include=FALSE}
+
+## Packages / libraries to be loaded: 
+
+library(flexdashboard)
+library(tidyverse)
+library(gapminder)
+library(mapdata)
+library(stringr)
+library(viridis)
+
+
+# country codes in gapminder::country_codes
+
+gapminder_codes <- gapminder::country_codes
+
+# countries with info in gapminder::gapminder_unfiltered
+
+gapminder <-gapminder::gapminder_unfiltered
+
+# We join both datasets with inner_join to get a dataset with the info by 
+# country, continent and country-code
+
+gapminder <- gapminder %>%
+  inner_join(gapminder_codes, by= "country") %>%
+  mutate(code = iso_alpha)
+
+# A map of the world (Antarctica removed)
+
+world <- map_data("world") %>%
+  filter(region != "Antarctica")
+
+```
+
+[www.rquer.netlify.com](https://rquer.netlify.com/)
+
+
+
+Row {.tabset .tabset-fade}
+-------------------------------------------------------------
+
+### Base Map
+
+```{r, fig.height=6, fig.width= 12}
+
+# our first try would be this:
+
+# gapminder %>%
+#  filter(year == 2007) %>%
+#  inner_join(maps::iso3166 %>%
+#               select(a3, mapname), by= c(code = "a3")) %>%
+#  inner_join(world, by= c(mapname = "region")) %>%
+#  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+#  geom_polygon() +
+#  labs("Malaria deaths in 2000 ")
+
+
+
+# But China, Norway and Findland do not appear in the map. The reason is that they come with more info in brackets: 
+
+# maps::iso3166 %>% filter( a3 == "NOR" | a3 == "CHN" | a3 == "FIN") 
+
+# We modify our dataset removing the brackets using regular expresions:
+
+# We join (inner join) our dataset with map::iso3166 to ensure the names of
+# the countries are the same.
+
+gapminder_data <- gapminder %>%
+  inner_join(maps::iso3166 %>%
+               select(a3, mapname), by= c(code = "a3")) %>%
+  mutate(mapname = str_remove(mapname, "\\(.*"))
+
+
+# Our first map (Base Map) for 2007
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "white", size= 0.2) +
+  labs(title="Life Expectancy",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme(plot.title=element_text(size = 18, 
+                                hjust = 0.5),
+        plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1)) +
+  coord_fixed (ratio = 1.3)
+
+```
+
+
+
+### Color gradient 
+
+```{r, fig.height=6, fig.width= 12}
+
+# We can modify the colors indicating a low value, a high value and a 
+# midpoint with `scale_fill_gradient2()`. 
+# The POSITION OF THE LEGEND can be modified also and moved to another location.
+# We can change some aspects of the map (background, title position, etc.)
+
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "white", size = 0.05) +
+  scale_fill_gradient2(low = "firebrick1", 
+                       high= "cornflowerblue", 
+                       midpoint = 60) +
+  labs(title="Life Expectancy",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill = "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.1, 0.25),
+    legend.background = element_blank(),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed (ratio = 1.3)
+
+```
+
+
+
+### Color gradient with {Viridis}
+
+```{r, fig.height=6, fig.width= 12}
+
+# We can use the color palettes of the {viridis} package:
+# https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "black", size = 0.05, alpha = 0.8) +
+  scale_fill_viridis(option = "C") +
+  labs(title="Life Expectancy",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "lightsteelblue1", color = NA),
+    panel.background = element_rect(fill = "lightsteelblue1", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.05, 0.25),
+    legend.background = element_blank(),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed (ratio = 1.3)
+
+```
+
+
+
+### Set breaks with `scale_fill_gradientn()`
+
+```{r, fig.height=6, fig.width= 12}
+
+# We can set the gradient breaks with `scale_fill_gradientn(breaks = c())`. 
+# For example, lets add breaks each 5 years. 
+# In this example the order of the legend values has been revered with `trans = "reverse"`
+
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "white", size = 0.1) +
+  scale_fill_gradientn(colours = terrain.colors(11), 
+                       trans = "reverse",
+                       breaks = c(40,45,50,55,60,65,70,75,80,85)) +
+  labs(title="Life Expectancy",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme_minimal() +
+  coord_fixed (ratio = 1.3) +
+  theme(plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1))
+
+```
+
+
+
+### Logarithmic scale
+
+```{r, fig.height=6, fig.width= 12}
+
+
+# We might need to represent log scales in the legend. For example, if we 
+# want to represent in the map the population of the countries of our dataset,
+# where China and India have more than one thousand million people, 
+# we will have to adjust our legend. To do that we can use the function
+# `scale_fill_gradientn(trans = "log10", breaks = c()). 
+# We use 'options(scipen=10000)` to avoid scientific notations.
+# To add commas use: `scale_fill_gradientn(labels = scales::comma)
+# In this ocassion we have used the rainbow palette with 11 
+
+
+options(scipen=10000)
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  ggplot(aes(long, lat, group= group, fill= pop)) +
+  geom_polygon(color = "darkgrey", size = 0.7, alpha = 0.5) +
+  scale_fill_gradientn(colours = rainbow(11), 
+                       trans = "log10",
+                       breaks = c(10000, 100000,1000000, 10000000, 100000000, 1000000000),
+                       labels = scales::comma) +
+  theme_void() +
+  labs(title="Population by country in 2007 ",
+       fill ="Population (log scale)")  +
+  theme(plot.title=element_text(size = 16, 
+                                hjust = 0.5))+
+  coord_fixed (ratio = 1.3)
+
+```
+
+
+
+### Colors for group intervals
+
+```{r, fig.height=6, fig.width= 12}
+
+# In this maps 6 year groups have been created using the function `case_when()`
+# The Spectral palette is used to select a color for each group.
+# Spectral: Divergin palette from {RColorBrewer}
+
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  mutate(groups = case_when(
+    lifeExp > 0  & lifeExp <= 40 ~ "Less than 40",
+    lifeExp > 40 & lifeExp <= 50 ~ "between 40 & 50",
+    lifeExp > 50 & lifeExp <= 60 ~ "between 50 & 60",
+    lifeExp > 60 & lifeExp <= 70 ~ "between 60 & 70",
+    lifeExp > 70 & lifeExp <= 80 ~ "between 70 & 80",
+    TRUE ~ "More than 80"
+  )) %>%
+  ggplot(aes(long, lat, group= group, fill= groups)) +
+  geom_polygon(color = "black", size = 0.2, alpha = 0.8) +
+  theme_void() +
+  labs(title="Life expectancy by country in 2007",
+       fill = "")  +
+  coord_fixed (ratio = 1.3) +
+  theme(plot.title=element_text(size = 16, 
+                                hjust = 0.5),
+        panel.background = element_rect(colour = "grey", size = 1),
+        legend.position = "bottom") +
+  scale_fill_brewer(palette = "Spectral")
+
+
+```
+
+
+
+### Colors with `scale_fill_manual()`
+
+```{r, fig.height=6, fig.width= 12}
+
+# We can select manually the colors we want to use for each one of the 
+# groups created in the previous map.
+# To do that we use scale_fill_manual(values = c())` where we indicate the 
+# preferred color for each group. 
+# List of colors here: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  mutate(groups = case_when(
+    lifeExp > 0  & lifeExp <= 40 ~ "Less than 40",
+    lifeExp > 40 & lifeExp <= 50 ~ "between 40 & 50",
+    lifeExp > 50 & lifeExp <= 60 ~ "between 50 & 60",
+    lifeExp > 60 & lifeExp <= 70 ~ "between 60 & 70",
+    lifeExp > 70 & lifeExp <= 80 ~ "between 70 & 80",
+    TRUE ~ "More than 80"
+  )) %>%
+  ggplot(aes(long, lat, group= group, fill= groups)) +
+  geom_polygon(color = "white", size = 0.2, alpha = 0.8) +
+  theme_void() +
+  labs(title="Life expectancy by country in 2007",
+       fill = "")  +
+  coord_fixed (ratio = 1.3) +
+  theme(plot.title=element_text(size = 16, 
+                                hjust = 0.5),
+        panel.background = element_rect(colour = "grey", size = 1),
+        legend.position = "top") +
+  scale_fill_manual(values = c("sienna1", "sienna3", "sienna", "seagreen2", "red2","seagreen" ))
+
+
+```
+
+
+
+### Facets with `facet_wrap()`
+
+```{r, fig.height=6, fig.width= 12}
+
+# We can also use facets when plotting maps. 
+# In this case 4 different years are selected by using `filter(year %in% c(1992, 1997, 2002, 2007))
+# We use again the {viridis} package for the color palette (magma)
+# Legend is located at the bottom using a color bar
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year %in% c(1992, 1997, 2002, 2007)) %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "white", size = 0.05, alpha = 0.8) +
+  scale_fill_viridis(
+    option= "magma",
+    direction = -1,
+    name = "Life Expectancy",
+    guide =guide_colorbar(
+    direction = "horizontal",
+    barheight = unit(2, units = "mm"),
+    barwidth = unit(50, units = "mm"),
+    draw.ulim = F,
+    title.position = "top",
+    title.hjust = 0.5,
+    label.hjust = 0.5
+  )) +
+  theme_void() +
+  facet_wrap(~year) +
+  labs(title="Life Expectancy in selected years")  +
+  coord_fixed (ratio = 1.3) +
+  theme(plot.title=element_text(size = 16, 
+                                hjust = 0.5),
+        legend.position = "bottom")
+
+
+```
+
+
+
+### Subregion with `xlim()` & `ylim()`
+
+```{r}
+
+# One of the methods we can use to select a portion of the total maps is
+# using xlim() and ylim(), indicating the coordinates of the are we want to plot. 
+# In this maps the color, size and font of the x and y axis title and text have been modified. 
+# The color and size of the legend tittle and values have also been modified.
+
+
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "white", size = 0.1) +
+  scale_fill_gradientn(colours = terrain.colors(11), 
+                       trans = "reverse",
+                       breaks = c(40,60,80)) +
+  labs(title="Life Expectancy",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme_minimal() +
+  coord_fixed (ratio = 1.3) +
+  theme(plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    plot.caption = element_text(size = 5, hjust = 1),
+    legend.title = element_text(color = "brown", size = 8),
+    legend.text = element_text(color = "limegreen", size = 6),
+    axis.text.x = element_text(face = "italic", colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(face = "italic", colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7))) +
+  xlim(c(-30, 70)) +
+  ylim(c(-45, 75))
+
+```
+
+
+
+### Subregion with `filter()`
+
+```{r}
+
+# In this case we use `filter(continent= "Asia")` to select a continent. 
+# The only countries represented in the maps are those included in the new dataset.
+
+
+map_data("world") %>%
+  tbl_df() %>%
+  inner_join(gapminder_data, by=c(region= "mapname")) %>%
+  filter(year == 2007) %>%
+  filter(continent == "Asia") %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "lightgrey", size = 0.05) +
+  scale_fill_gradient2(low = "firebrick1", 
+                       high= "cornflowerblue", 
+                       midpoint = 65) +
+  labs(title="Life Expectancy in Asia",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.05, 0.1),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed (ratio = 1.3)
+
+```
+
+
+### Highlighting a region
+
+
+```{r, fig.height=6, fig.width= 12}
+
+# To highlight a specific region we can plot that region on top of a wold map.
+# We will have to play with the table joins. In this case we use # `right_join()` so all the countries in the world map will stay in the dataset # even if there is no data about those places.
+# We can see that there is no data in our Asia dataset of the Republic of Lao or North Korea. 
+
+gapminder_data%>%
+  filter(year == 2007) %>%
+  filter(continent == "Asia") %>%
+  right_join(world, by= c(mapname = "region")) %>%
+  ggplot(aes(long, lat, group= group, fill= lifeExp)) +
+  geom_polygon(color = "white", size = 0.01) +
+  theme_void() +
+  scale_fill_viridis(option = "B") +
+  labs(title="Life Expectancy in Asia",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.05, 0.25),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed (ratio = 1.3)
+
+```
+
