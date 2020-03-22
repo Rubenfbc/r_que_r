@@ -1,5 +1,5 @@
 ---
-title: "Choropleth maps with {ggplot2} and {mapdata}"
+title: "Data visualizations: Choropleth maps with {ggplot2} and {mapdata}"
 author: "Rubén F. Bustillo"
 date: 2020-03-20
 categories: ["R"]
