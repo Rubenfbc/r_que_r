@@ -1,0 +1,213 @@
+---
+title: "Maps with {ggplot2}"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    source_code: embed
+    orientation: columns
+    theme: simplex
+    vertical_layout: fill
+---
+
+
+```{r setup, include=FALSE}
+
+## Packages / libraries to be loaded: 
+
+library(flexdashboard)
+library(tidyverse)
+library(stringr)
+library(viridis)
+library(mapdata)
+
+
+```
+
+[www.rquer.netlify.com](https://rquer.netlify.com/)
+
+
+
+Row {.tabset .tabset-fade}
+-------------------------------------------------------------
+
+### Base Map
+
+```{r, fig.height=6, fig.width= 12}
+
+mapa_mundo <- map_data("world")
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "black",
+               color = "white",
+               size = 0.1) + 
+  coord_fixed (ratio = 1.3)
+
+```
+
+
+### Customized Base Map
+
+```{r, fig.height=6, fig.width= 12}
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "darkgrey",
+               color = "white",
+               size = 0.1) + 
+  coord_fixed (ratio = 1.3) +
+  theme_void() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill = "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) 
+
+```
+
+
+### Customized Base Map
+
+```{r, fig.height=6, fig.width= 12}
+
+nuclear_explosions <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-20/nuclear_explosions.csv")
+
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "lightgrey",
+               size = 0.1) + 
+  geom_point(data = nuclear_explosions,
+             aes(x=longitude, 
+                 y = latitude,
+                 size = magnitude_surface + 0.5,
+                 color = magnitude_body),
+             alpha = 0.5,
+             show.legend = T) +
+  scale_color_gradient(low="coral", high = "red4") +
+  scale_size_continuous(range = c(1,6)) +
+  coord_fixed (ratio = 1.3) +
+  labs (title = "Nuclear Explosions Sites",
+        subtitle = "From 1945 to 1998",
+        caption = "Source: Stockholm International Peace Research Institute",
+        size = "Magnitude Surface",
+        color = "Magnitude Body")  +
+  theme_void() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "lightcyan", color = "lemonchiffon" ),
+    panel.background = element_rect(fill = "lightcyan", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) 
+
+```
+
+### NES
+
+
+```{r, fig.height=6, fig.width= 12}
+
+
+nuclear_explosions <- nuclear_explosions%>%
+  mutate(country = case_when(
+    country == "CHINA" ~ "China",
+    country == "FRANCE" ~ "France",
+    country == "INDIA" ~ "India",
+    country == "PAKIST" ~ "Pakistan",
+    country == "UK" ~ "UK",
+    country == "USA" ~ "USA",
+    TRUE ~ "USSR")) 
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "#2a2a2a",
+               color = "black",
+               size = 0.1) + 
+  geom_point(data = nuclear_explosions,
+             aes(x=longitude, 
+                 y = latitude,
+                 size = magnitude_surface + 0.5,
+                 color = country),
+             alpha = 0.6,
+             show.legend = T) +
+  scale_colour_manual(values = c("lightpink1","orange", "brown", "darkgrey", "palegreen4", "blue", "orangered3")) +
+  scale_size_continuous(range = c(1,6)) +
+  coord_fixed (ratio = 1.3) +
+  labs (title = "Nuclear Weapons Testing Sites",
+        subtitle = "From 1945 to 1998",
+        caption = "Source: Stockholm International Peace Research Institute",
+        size = "Magnitude Surface",
+        color = "Country")  +
+  theme_void() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "lightcyan", color = "lemonchiffon" ),
+    panel.background = element_rect(fill = "lightcyan", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) 
+
+```
+
+### a
+
+```{r, fig.height=6, fig.width= 12}
+
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "#2a2a2a",
+               color = "black",
+               size = 0.1) + 
+  geom_point(data = nuclear_explosions,
+             aes(x=longitude, 
+                 y = latitude,
+                 size = magnitude_surface + 0.5,
+                 color = country),
+             alpha = 0.5,
+             show.legend = T) +
+  scale_colour_manual(values = c("lightpink1","orange", "brown", "darkgrey", "palegreen4", "blue", "orangered3")) +
+  scale_size_continuous(range = c(1.5,10)) +
+  labs (title = "Nuclear Weapons Testing Sites",
+        subtitle = "From 1945 to 1998",
+        caption = "Source: Stockholm International Peace Research Institute",
+        size = "Magnitude Surface",
+        color = "Country")  +
+  theme_void() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "lightcyan", color = "lemonchiffon" ),
+    panel.background = element_rect(fill = "lightcyan", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5,
+                              family = "Bangers"),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed(xlim= c(-12,180),
+              ylim= c(25,80),
+              ratio= 1.3)
+
+```

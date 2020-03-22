@@ -1,0 +1,18 @@
+---
+title: "Data visualizations: Maps using geographic coordinates"
+author: "Rubén F. Bustillo"
+date: 2020-03-22
+categories: ["R"]
+tags: ["maps", "ggplot2", "coordinates maps", "mapdata", "raster"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+Dashboard with some indications that might be useful when creating maps with {ggplot2} and {mapdata} using geographic coordinates.

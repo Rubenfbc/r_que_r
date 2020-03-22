@@ -6,24 +6,24 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 20 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>choropleth maps</title>
-      <link>/tags/choropleth-maps/</link>
-      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      <title>coordinates maps</title>
+      <link>/tags/coordinates-maps/</link>
+      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/choropleth-maps/</guid>
+      <guid>/tags/coordinates-maps/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ggplot2</title>
       <link>/tags/ggplot2/</link>
-      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/ggplot2/</guid>
       <description></description>
@@ -32,7 +32,7 @@
     <item>
       <title>mapdata</title>
       <link>/tags/mapdata/</link>
-      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/mapdata/</guid>
       <description></description>
@@ -41,9 +41,27 @@
     <item>
       <title>maps</title>
       <link>/tags/maps/</link>
-      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/maps/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Raster</title>
+      <link>/tags/raster/</link>
+      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/raster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>choropleth maps</title>
+      <link>/tags/choropleth-maps/</link>
+      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/choropleth-maps/</guid>
       <description></description>
     </item>
     
@@ -287,15 +305,6 @@
       <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/sqldf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Raster</title>
-      <link>/tags/raster/</link>
-      <pubDate>Thu, 28 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/raster/</guid>
       <description></description>
     </item>
     

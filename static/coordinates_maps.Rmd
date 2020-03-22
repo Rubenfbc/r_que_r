@@ -1,0 +1,535 @@
+---
+title: "Data visualizations: Maps using geographic coordinates"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    source_code: embed
+    orientation: columns
+    theme: journal
+    vertical_layout: fill
+---
+
+
+```{r setup, include=FALSE}
+
+## Packages / libraries to be loaded: 
+
+library(flexdashboard)
+library(tidyverse)
+library(stringr)
+library(viridis)
+library(mapdata)
+library(ggrepel)
+
+
+```
+
+[www.rquer.netlify.com](https://rquer.netlify.com/)
+
+
+
+Row {.tabset .tabset-fade}
+-------------------------------------------------------------
+
+### Base Map
+
+```{r, fig.height=6, fig.width= 12}
+
+
+# WORLD MAP with {mapdata}
+
+mapa_mundo <- map_data("world")
+
+# PLOT BASE MAP:
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "black",
+               color = "white",
+               size = 0.1) + 
+  coord_fixed (ratio = 1.3)
+
+```
+
+
+
+### Map locations I
+
+```{r, fig.height=6, fig.width= 12}
+
+# DATA SET: NUCLEAR EXPLOSIONS. I got this dataset from the Tidytuesday project from 2019-08-20. 
+# https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-08-20
+# Info about the dataset also in Wikipedia: https://en.wikipedia.org/wiki/List_of_nuclear_weapons_tests
+
+
+# CSV document:
+
+nuclear_explosions <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-20/nuclear_explosions.csv")
+
+# PLOT: Each site can be represented using its latitude and longitude coordinates. 
+# For info about how to do animated maps see: https://rquer.netlify.com/mapa_coordenadas/ 
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "#2a2a2a",
+               size = 0.1) + 
+  geom_point(data = nuclear_explosions,
+             aes(x=longitude, 
+                 y = latitude,
+                 size = magnitude_surface + 0.5,
+                 color = yield_upper),
+             alpha = 0.5,
+             show.legend = T) +
+  scale_color_gradient(low="orange", high = "magenta4",
+                       labels = scales::comma) +
+  scale_size_continuous(range = c(0.5,5)) +
+  coord_fixed (ratio = 1.3) +
+  labs (title = "Nuclear Weapons Testing Sites",
+        subtitle = "From 1945 to 1998",
+        caption = "Ms: Surface wave magnitude of explosion; Explosion yield: Explosion yield upper estimate in kilotons of TNT. Info: https://seismo.berkeley.edu/~rallen/research/nuke/yield.html \nSource: Stockholm International Peace Research Institute",
+        size = "Ms",
+        color = "Explosion yield")  +
+  theme_void() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "lightcyan", color = "lemonchiffon" ),
+    panel.background = element_rect(fill = "lightcyan", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 0, color = "darkgrey"),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm"),
+    legend.title = element_text(size = 8),
+    legend.text = element_text(size = 6)) 
+
+```
+
+
+
+### Map locations II
+
+
+```{r, fig.height=6, fig.width= 12}
+
+# We just change the elements to be represented in the map:
+
+nuclear_explosions <- nuclear_explosions%>%
+  mutate(country = case_when(
+    country == "CHINA" ~ "China",
+    country == "FRANCE" ~ "France",
+    country == "INDIA" ~ "India",
+    country == "PAKIST" ~ "Pakistan",
+    country == "UK" ~ "UK",
+    country == "USA" ~ "USA",
+    TRUE ~ "USSR")) 
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "#2a2a2a",
+               color = "black",
+               size = 0.1) + 
+  geom_point(data = nuclear_explosions,
+             aes(x=longitude, 
+                 y = latitude,
+                 size = magnitude_surface + 0.5,
+                 color = country),
+             alpha = 0.6,
+             show.legend = T) +
+  scale_colour_manual(values = c("lightpink1","orange", "brown", "darkgrey", "palegreen4", "blue", "orangered3")) +
+  scale_size_continuous(range = c(1,6)) +
+  coord_fixed (ratio = 1.3) +
+  labs (title = "Nuclear Weapons Testing Sites",
+        subtitle = "From 1945 to 1998",
+        caption = "Ms: Surface wave magnitude of explosion; Country: Country deploying the nuclear device. Info: https://seismo.berkeley.edu/~rallen/research/nuke/yield.html \nSource: Stockholm International Peace Research Institute",
+        size = "Ms",
+        color = "Country")  +
+  theme_void() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "lightcyan", color = "lemonchiffon" ),
+    panel.background = element_rect(fill = "lightcyan", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 0, color = "darkgrey"),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm"),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)) 
+
+```
+
+
+
+### Change coordinates `xlim & ylim`
+
+```{r, fig.height=6, fig.width= 12}
+
+# With xlim and ylim we can select an area of the map.
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "#2a2a2a",
+               color = "black",
+               size = 0.1) + 
+  geom_point(data = nuclear_explosions,
+             aes(x=longitude, 
+                 y = latitude,
+                 size = magnitude_surface + 0.5,
+                 color = country),
+             alpha = 0.5,
+             show.legend = T) +
+  scale_colour_manual(values = c("lightpink1","orange", "brown", "darkgrey", "palegreen4", "blue", "orangered3")) +
+  scale_size_continuous(range = c(1,8)) +
+  labs (title = "Nuclear Weapons Testing Sites",
+        subtitle = "From 1945 to 1998",
+        caption = "Ms: Surface wave magnitude of explosion; Country: Country deploying the nuclear device. Info: https://seismo.berkeley.edu/~rallen/research/nuke/yield.html \nSource: Stockholm International Peace Research Institute",
+        size = "Ms",
+        color = "Country")  +
+  theme_void() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "lightcyan", color = "lemonchiffon" ),
+    panel.background = element_rect(fill = "lightcyan", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 0, color= "darkgrey"),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed(xlim= c(-12,180),
+              ylim= c(25,80),
+              ratio= 1.3)
+
+```
+
+
+
+### Using `borders("world")`
+
+```{r, fig.height=6, fig.width= 12}
+
+# We can also plot a world map Using `borders("word")  
+
+
+nuclear_explosions %>%
+  filter(country == "USA") %>%
+  ggplot(aes(longitude, latitude, 
+             color = type)) +
+  borders("world") + 
+  labs (title = "Nuclear Weapons Testing Sites \nCountry deploying the nuclear device: USA",
+        subtitle = "From 1945 to 1998",
+        caption = "Type: Method of deployment. ATMOSPH (Atmospheric); UG (underground); BALLOON (Balloon drop); AIRDROP (Airplane deployed); ROCKET (Rocket deployed); \nTOWER (deplyed at top of constructed tower); WATERSURFACE (on surface of body of water); BARGE (on barge boat); SURFACE (on surface or in shallow crater); \nUW (Underwater); SHAFT (Vertical Shaft underground); TUNNEL/GALLERY (Horizontal tunnel). Info: https://seismo.berkeley.edu/~rallen/research/nuke/yield.html \nSource: Stockholm International Peace Research Institute \n ",
+        color = "Type") +
+  geom_point(size = 4, 
+             alpha = 0.6) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "beige", color = NA ),
+    panel.background = element_rect(fill = "beige", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 7.5, hjust = 0, color = "grey20"),
+    legend.position = c(1.1, 0.4),
+    legend.title = element_text(size = 8, hjust = 0.5),
+    legend.text = element_text(size = 6)) +
+  scale_color_viridis(discrete = T) +
+  coord_fixed(ratio= 1.3)
+  
+
+```
+
+
+### Using `borders("world", regions = "USA")`
+
+
+```{r, fig.height=6, fig.width= 12}
+
+# The dataset comes from: https://simplemaps.com/data/us-cities
+# In this ocasion the document is loaded from my PC
+
+library(readxl)
+uscities <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/uscities.xlsx")
+
+# We use `borders("world", regions = "USA")` to get a regional map of USA awhere we plot the cities from the excel document.
+
+uscities %>%
+  arrange(desc(ranking)) %>%
+  ggplot(aes(lng, lat, 
+             color = factor(ranking))) +
+  borders("world", regions = "USA") + 
+  labs (title = "United States Cities",
+        subtitle = "",
+        caption = " Each point corresponds to one US city / town from all 50 states, DC, Puerto Rico and US Virgin Islands. \n Ranking: An integer from 1-3 that captures the importance of a city (1 is most important, 3 least important). \n Source: https://simplemaps.com/data/us-cities (Data updated as of September 2019) \n ",
+        color = "Ranking") +
+  geom_point(size = 0.2, alpha = 0.7) +
+  theme_void() +
+  theme( plot.background = element_rect(fill = "linen", color = NA ),
+    panel.background = element_rect(fill = "linen", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 0, color = "grey20"),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 10),
+    legend.position = c(1.05, 0.4)) +
+  scale_color_manual(values = c("red", "orange", "olivedrab3")) + 
+  coord_fixed(xlim= c(-170,-65),
+              ylim= c(20,70),
+              ratio= 1.3)
+
+
+```
+
+
+### USA cities
+
+```{r, fig.height=6, fig.width= 12}
+
+# We can easily write some cities in our map. 
+# In this example we create a data frame with the longitude and latitude of the 10 largest US cities 
+ 
+
+cities <- c("New York", "Los Angeles", "Chicago", "Houston", "Philadelphia", "Phoenix", "San Antonio", "San Diego", "Dallas", "San José")
+
+coords <- data.frame( long = c(-74.0059413, -118.2436849, -87.6297982, -95.3698028, -75.1652215, -112.0740373, -98.4936282, -117.1610838, -96.7969879, -121.8863286), 
+                      lat= c(40.7127837, 34.0522342, 41.8781136, 29.7604267, 39.9525839, 33.4483771, 29.4241219, 32.715738, 32.7766642, 37.3382082),
+                      stringsAsFactors = F) 
+              
+coords$cities <- cities      
+
+
+#PLOT:
+
+mapa_mundo %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "#FFD300",
+               size = 0.1,
+               color = "grey70") + 
+  coord_fixed (ratio = 1.3) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "lightblue", color = NA ),
+    panel.background = element_rect(fill = "lightblue", color = NA)) +
+  coord_fixed(xlim= c(-170,-40),
+              ylim= c(10,80),
+              ratio= 1.3)+
+  geom_point(data=coords, aes(long, lat),
+             color= "red", size=1) +
+  geom_text_repel(data = coords, 
+                  aes(long, lat, 
+                      label =cities),
+                  angle = 10,
+                  size = 2.5,
+                  color = "grey30",
+                  fontface = "bold") +
+  labs ( title = "10 largest US cities by population",
+         caption = "Source: https://public.opendatasoft.com \n ") +
+  theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+```
+
+
+
+### USA map with `map_data("state")`
+
+```{r}
+
+# We can also get a regional map of USA from {mapdata}. 
+
+states <- map_data("state")
+
+ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, 
+                   fill = region, 
+                   group = group), 
+               color = "white",
+               alpha = 0.6) + 
+  coord_fixed(1.3) +
+  guides(fill=FALSE) +
+  theme_void() +
+  geom_point(data=coords, aes(long, lat),
+             color= "red", size=1) +
+  geom_text_repel(data = coords, 
+                  aes(long, lat, 
+                      label =cities),
+                  size = 2.5,
+                  color = "grey30",
+                  fontface = "bold") +
+  labs ( title = "10 largest US cities by population",
+         caption = "Source: https://public.opendatasoft.com  \n ") +
+  theme(plot.title = element_text(size = 14, hjust = 0.5),
+        plot.caption = element_text(size = 8, hjust =  1))
+
+
+
+```
+
+
+
+### Map with {raster} (level=2)
+
+```{r}
+
+# We can also get a US mapa using the {raster} package
+
+library(raster)
+
+# Data for the map (level = 2)
+
+USA_2 <- getData("GADM", country= "USA", level=2)
+
+# PLOT:
+
+ggplot() +
+  geom_polygon(data= USA_2,
+               aes( x= long, y=lat, group= group),
+               color= "white",
+               fill = "plum2", 
+               size = 0.2,
+               alpha = 0.5) +
+  geom_point(data=coords, aes(long, lat),
+             color= "red", size=1) +
+  geom_text_repel(data = coords, 
+                  aes(long, lat, 
+                      label =cities),
+                  size = 2,
+                  color = "grey30",
+                  fontface = "bold") +
+  theme_void() + 
+  coord_fixed(xlim= c(-170,-55),
+              ylim= c(15,75),
+              ratio= 1.3) +
+  labs ( title = "10 largest US cities by population",
+         caption = "Source: https://public.opendatasoft.com  ") +
+  theme(plot.title = element_text(size = 14, hjust = 0.5))
+  
+
+```
+
+
+### Map with {raster} (level=1)
+
+```{r}
+
+# Data for the map (level = 1)
+
+USA_1 <- getData("GADM", country= "USA", level=1)
+
+
+# Names: 
+
+USA_df<- broom::tidy(USA_1, region = "NAME_1")
+
+# lapply(USA_df, class)
+
+state_names <- aggregate(cbind(long, lat) ~ id, data = USA_df, FUN = mean) 
+
+state_names <- state_names %>%
+  filter(id != "District of Columbia")
+
+# If you are not happy with the position of the labels on the map you can change de lat and long coordinates.
+# In this ocassion I will do it manuallly, so I get used to the position of the US states, but you do not need to do it this way.
+# You can use another dataset for it with the long and lat coordinates like this one: https://www.latlong.net/category/states-236-14.html
+
+
+state_names$lat[1] <- 32.3182
+state_names$long[1] <- -85.95222
+state_names$lat[2] <- 64.16
+state_names$long[3] <- -112.21770
+state_names$lat[4] <- 34.91510
+state_names$long[4] <- -92.00
+state_names$lat[5] <- 37.81605
+state_names$lat[6] <- 39.57848
+state_names$long[6] <- -106.40
+state_names$long[7] <- -72.699997
+state_names$lat[7] <- 41.599998
+state_names$lat[8] <- 39.20
+state_names$long[9] <- -81.30778
+state_names$lat[9] <- 28.05528
+state_names$lat[10] <- 32.10184
+state_names$long[10] <- -82.20
+state_names$lat[12] <- 44.00000
+state_names$lat[13] <- 39.56886
+state_names$long[14] <- -86.126976
+state_names$lat[14] <- 40.273502
+state_names$long[15] <- -92.60341
+state_names$long[16] <- -99.5
+state_names$lat[16] <- 38.78386
+state_names$long[17] <- -83.97675
+state_names$long[18] <- -90.94280
+state_names$lat[18] <- 30.36833
+state_names$lat[19] <- 46.00
+state_names$lat[21] <- 42.50
+state_names$long[22] <- -84.12698
+state_names$lat[22] <- 43.70
+state_names$long[23] <- -94.50
+state_names$long[24] <- -90.000000
+state_names$lat[24] <- 33.000000
+state_names$lat[25] <- 37.81605
+state_names$long[25] <- -92.60341
+state_names$long[26] <- -108.18085
+state_names$lat[26] <- 47.63724
+state_names$long[27] <- -99.5
+state_names$lat[28] <- 39.57848
+state_names$long[28] <- -116.00
+state_names$lat[29] <- 43.5
+state_names$lat[30] <- 40.00
+state_names$long[30] <- -73.00
+state_names$lat[31] <- 34.39087
+state_names$long[31] <- -106.00
+state_names$long[32] <- -76.00
+state_names$lat[32] <- 43.09639
+state_names$lat[33] <- 35.80655
+state_names$long[34] <- -99.5
+state_names$lat[34] <- 47.77724
+state_names$lat[35] <- 40.56886
+state_names$long[35] <- -83.00
+state_names$lat[36] <- 36.00000
+state_names$lat[37] <- 44.00
+state_names$long[37]<- -120.62861
+state_names$long[38] <- -77.08343
+state_names$long[39] <- -68.5
+state_names$lat[39] <- 41.7
+state_names$lat[40] <- 34.00
+state_names$long[41] <- -99.5
+state_names$lat[41] <- 45.1
+state_names$lat[42] <- 36.00
+state_names$long[42] <- -86.8
+state_names$long[43] <- -99.5
+state_names$lat[43] <- 32.00184
+state_names$lat[44] <- 39.57848
+state_names$long[46] <- -78.00
+state_names$long[47] <- -119.52861
+state_names$long[49] <- -90.00
+state_names$long[50] <-  -107.290283
+
+# PLOT:
+
+ggplot() +
+  geom_polygon(data = USA_1,
+               aes(x = long, y = lat, group = group),
+               colour = "white",
+               fill = "tan1",
+               alpha = 0.6)+
+  geom_text(data = state_names, 
+            aes(x= long, y=lat, label =id), 
+            size = 1, color = "gray20") + 
+  theme_void() + 
+  coord_fixed(xlim= c(-170,-55),
+              ylim= c(15,75),
+              ratio= 1.3) +
+  labs ( title = "US. States",
+         caption = "") +
+  theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+```
+
