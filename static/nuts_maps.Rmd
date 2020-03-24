@@ -50,7 +50,7 @@ The current NUTS classification, valid since 2018, lists 104 regions at NUTS-1 l
 
 \
 
-The present dashboard pretends to show how to work with the Eurostat NUTS nomenclature using the {eurostat} package. **First** we will use the `get_eurostat_geospatial()` function to download geographic information from Gisco, the body responsible for  generating and updating geographic information for the European Commission. This function downloads three types of information: simple feature (sf), spatial polygon dataframe (spdf) and dataframe (df). In the **second** place we will show how to work with NUTS nomenclature at a country level. Finally, in **third** place, a few examples will be presented, in order to show how to download data from Eurostat at different NUTS levels and how to present that information in a map.
+The present dashboard shows how to work with the Eurostat NUTS nomenclature using the {eurostat} package. **First** we will use the `get_eurostat_geospatial()` function to download geographic information from Gisco, the body responsible for  generating and updating geographic information for the European Commission. This function downloads three types of information: simple feature (sf), spatial polygon dataframe (spdf) and dataframe (df). In the **second** place we will show how to work with NUTS nomenclature at a country level. Finally, in **third** place, a few examples will be presented, in order to show how to download data from Eurostat at different NUTS levels and how to present that information in a map.
 
 \
 
