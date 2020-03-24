@@ -19,6 +19,10 @@ output:
 devtools::install_github("RamiKrispin/coronavirus")
 coronavirus<-coronavirus::coronavirus
 
+
+# other dataset available:
+# df <- read.csv("https://query.data.world/s/cdc5dussbvmp52xnluz6wvyntjn6am", header=TRUE, stringsAsFactors=FALSE)
+
 library(flexdashboard)
 library(coronavirus)
 library(tidyverse)

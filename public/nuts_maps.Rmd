@@ -1,0 +1,1962 @@
+---
+title: "Working with the Nomenclature of Territorial Units for Statistics (NUTS) of Eurostat"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    source_code: embed
+    vertical_layout: fill
+    theme: yeti
+---
+
+```{r setup, include=FALSE}
+
+
+# PACKAGES / LIBRARIES:
+
+library(flexdashboard)
+library(tidyverse)
+library(eurostat)
+library(mapdata)
+library(sf)
+library(ggthemes)
+library(ggthemr)
+library(DT)
+library(cowplot)
+library(RColorBrewer)
+
+
+
+```
+
+
+
+Simple Feature (Sf)
+====================================================================================
+
+
+Columna {data-width=300}
+-------------------------------------------------------------------
+
+### **OVERVIEW**
+
+\
+
+The **Nomenclature of Territorial Statistical Units** (NUTS) are the set of territorial demarcations of the EU created by Eurostat for statistical and analytical purposes. The geographical regions are based on the entities with administrative authorities in each of the countries that make up the Euro region. The NUTS levels into which each of these administrative units are divided depend, mainly, on certain minimum and maximum population limits.
+
+\
+
+The current NUTS classification, valid since 2018, lists 104 regions at NUTS-1 level, 281 regions at NUTS-2 and 1,348 regions at NUTS 3. The NUTS regions of each country can be consulted at the following [Eurostat link](https://ec.europa.eu/eurostat/web/nuts/nuts-maps).
+
+\
+
+The present dashboard pretends to show how to work with the Eurostat NUTS nomenclature using the {eurostat} package. **First** we will use the `get_eurostat_geospatial()` function to download geographic information from Gisco, the body responsible for  generating and updating geographic information for the European Commission. This function downloads three types of information: simple feature (sf), spatial polygon dataframe (spdf) and dataframe (df). In the **second** place we will show how to work with NUTS nomenclature at a country level. Finally, in **third** place, a few examples will be presented, in order to show how to download data from Eurostat at different NUTS levels and how to present that information in a map.
+
+\
+
+Spanish version: [link to post](https://rquer.netlify.com/nuts/)
+
+Column {data-width=200}
+--------------------------------------------------------------------
+
+### **1. Simple Feature (sf)**
+
+\
+
+**Simple features** (or simple feature access) refers to a formal standard (ISO 19125-1:2004). It describes how objects can be represented in computers, with emphasis on the spatial geometry of these objects ([more info](https://r-spatial.github.io/sf/articles/sf1.html)). Simple features refers, therefore, to a standarized way to encode spatial data. 
+
+\
+
+The package {sf} is one of the most commonly used packages to get access to simple features, and it provides dataframes or tibbles with a geometry list-column ([link to CRAN](https://cran.r-project.org/web/packages/sf/index.html)).
+
+\
+
+As we said, the function `get_eurostat_geospatial()` downloads simple features from [GISCO](https://ec.europa.eu/eurostat/web/gisco). When using this function the nuts level required must be indicated (see link to code). 
+
+
+Column 
+-----------------------------------------------------------------------
+
+### 
+
+```{r}
+
+mapdata_0 <- get_eurostat_geospatial(nuts_level = 0)
+
+mapdata_0 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="darkorchid1", 
+          color="white", 
+          size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 0",
+       subtitle = "color: darkorchid1") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+### 
+
+```{r}
+
+mapdata_2 <- get_eurostat_geospatial(nuts_level = 2)
+
+mapdata_2 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="darkorchid3", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 2",
+       subtitle = "color: darkorchid3") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### 
+
+```{r}
+
+mapdata_1 <- get_eurostat_geospatial(nuts_level = 1)
+
+mapdata_1 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="darkorchid2", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  labs(title = "NUTS 1",
+       subtitle = "color: darkorchid2") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+### 
+
+```{r}
+
+mapdata_3 <- get_eurostat_geospatial(nuts_level = 3)
+
+mapdata_3 %>% 
+  ggplot(., aes()) +
+  geom_sf(fill="darkorchid4", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  labs(title = "NUTS 3",
+       subtitle = "color: darkorchid4") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+
+# For all levels:
+
+
+# mapdata_all <- get_eurostat_geospatial(nuts_level = "all", resolution = 60)
+
+# mapdata_all %>% 
+#  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+#                                     `0`= "NUTS-0", 
+#                                     `1`= "NUTS-1", 
+#                                     `2`= "NUTS-2", 
+#                                     `3`= "NUTS-3" )) %>%
+#  ggplot(., aes()) +
+#  geom_sf(fill="purple", color="white", size = 0.1) +
+#  theme_minimal() +
+#  xlim(c(-30, 44)) +
+#  ylim(c(35, 75)) + 
+#  facet_wrap(~LEVL_CODE_2) +
+#  ggtitle("Unidades Territoriales Estadísticas (NUTS)")
+
+```
+
+
+
+Spatial Polygon Dataframe (spdf)
+=================================================================
+
+Column {data-width=200}
+--------------------------------------------------------------------
+
+### **2. Spatial polygon dataframe (spdf)**
+
+\
+
+Alternatively we can download an **spatial polygon dataframe** that contains all the geographic information at all NUTS levels. To do that we will use again the function `get_eurostat_geospatial()` from the {eurostat} package. 
+
+\
+
+Once the spatial polygon dataframe has been downloaded we can use the package {tidyverse} to modify the object, to select the level of NUTS required (0-3 NUTS level) and /or to plot the map selected.
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+### 
+
+```{r}
+
+# The spatial polygon dataframe:
+mapdata_spdf <- get_eurostat_geospatial(output_class = "spdf", resolution = 60)
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 0,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="tomato1", color="white", size = 0.11) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 0",
+       subtitle = "color: tomato1") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+### 
+
+```{r}
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 2,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="tomato3", color="white", size = 0.1) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  labs(title = "NUTS 2",
+       subtitle = "color: tomato3") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### 
+
+```{r}
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 1,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="tomato2", color="white", size = 0.1) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 1",
+       subtitle = "color: tomato2") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+### 
+
+```{r}
+
+mapdata_spdf[mapdata_spdf$LEVL_CODE == 3,] %>% 
+  ggplot(., aes(x=long,y=lat,group=group)) +
+  geom_polygon(fill="tomato4", color="white", size = 0.1) +
+  theme_minimal()+
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75))+
+  labs(title = "NUTS 3",
+       subtitle = "color: tomato4") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+
+Dataframe (df)
+=================================================================
+
+Column {data-width=200}
+--------------------------------------------------------------------
+
+### **3. Dataframe (df)**
+
+\
+
+A third option is to use the function `get_eurostat_geospatial()` to download a **dataframe** where all the geographic information (all NUTS levels) is included together. 
+
+\
+
+When the dataframe is downloaded we can use the function `filter()` from the {tidyverse package} to select the level we want. 
+
+
+
+Column
+---------------------------------------------------------------
+
+### 
+
+```{r}
+
+mapdata_df <- get_eurostat_geospatial(output_class = "df", resolution = 60)
+
+# NUTS-0
+
+mapdata_df %>%
+  filter(LEVL_CODE == 0) %>%
+  ggplot(., aes(x=long,y=lat, group=group)) +
+  geom_polygon(fill="chocolate1", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 0",
+       subtitle = "color: chocolate1") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+###
+
+```{r}
+
+# NUTS-2
+
+mapdata_df %>%
+  filter(LEVL_CODE == 2) %>%
+  ggplot(., aes(x=long,y=lat, group=group)) +
+  geom_polygon(fill="chocolate3", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 2",
+       subtitle = "color: chocolate3") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+
+
+```
+
+Column
+------------------------------------------------------------------
+
+### 
+
+```{r}
+
+
+# NUTS-1
+
+mapdata_df %>%
+  filter(LEVL_CODE == 1) %>%
+  ggplot(., aes(x=long,y=lat, group=group)) +
+  geom_polygon(fill="chocolate2", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 1",
+       subtitle = "color: chocolate2") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+###
+
+```{r}
+
+# NUTS-3
+
+mapdata_df %>%
+  filter(LEVL_CODE == 3) %>%
+  ggplot(., aes(x=long,y=lat, group=group)) +
+  geom_polygon(fill="chocolate4", color="white", size = 0.1) +
+  theme_minimal() +
+  xlim(c(-30, 44)) +
+  ylim(c(35, 75)) +
+  labs(title = "NUTS 3",
+       subtitle = "color: chocolate4") +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+
+# mapdata_df %>% 
+#  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, `0`= "NUTS-0", `1`= "NUTS-1", `2`= "NUTS-2", `3`= "NUTS-3" )) %>%
+#  ggplot(., aes(x=long,y=lat, group=group)) +
+#  geom_polygon(fill="orange", color="white", size = 0.1) +
+#  theme_minimal() +
+#  xlim(c(-30, 44)) +
+#  ylim(c(35, 75)) + 
+#  facet_wrap(~LEVL_CODE_2) 
+
+
+```
+
+
+Country Level
+===========================================================================
+
+Row {.tabset .tabset-fade}
+-------------------------------------------------------------
+
+### **ALL CODES**
+
+- **AL**: Albania
+- **AT**: Austria
+- **BE**: Belgium
+- **BG**: Bulgaria
+- **CH**: Switzerland
+- **CY**: Cyprus
+- **CZ**: Czech Republic
+- **DE**: Germany
+- **DK**: Denmark
+- **EE**: Estonia
+- **EL**: Greece
+- **ES**: Spain
+- **FI**: Finland
+- **FR**: France
+- **HR**: Croatia
+- **HU**: Hungary
+- **IE**: Ireland
+- **IS**: Iceland
+- **IT**: Italy
+- **LI**: Liechenstein
+- **LT**: Lithuania
+- **LU**: Luxembourgh
+- **LV**: Latvia
+- **ME**: Montenegro
+- **MK**: North Macedonia
+- **MT**: Malta
+- **NL**: Netherlands
+- **NO**: Norway
+- **PL**: Poland
+- **PT**: Portugal
+- **Ro**: Romania
+- **RS**: Serbia
+- **SE**: Sweden
+- **SI**: Slovenia
+- **SK**: Slovakia
+- **TR**: Turkey
+- **UK**: United Kingdom
+
+\
+
+colors: [link](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+
+
+
+### AL
+
+```{r}
+
+# unique(mapdata_df$CNTR_CODE)
+##  [1] "BG" "CH" "CY" "AL" "CZ" "BE" "AT" "DE" "DK" "EE" "EL" "ES" "FI" "HR" "FR"
+## [16] "HU" "IE" "IS" "IT" "LI" "LT" "LU" "LV" "ME" "MK" "MT" "NL" "NO" "PL" "PT"
+## [31] "RO" "RS" "SE" "SI" "SK" "TR" "UK"
+
+
+albania <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("AL", NUTS_ID))
+  
+
+ggplot(albania, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="bisque", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Albania",
+       subtitle = "color: bisque") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+### AT
+
+```{r}
+
+austria <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("AT", NUTS_ID))
+  
+
+ggplot(austria, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="burlywood", 
+               color="darkgrey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs( title = "Austria",
+        subtitle = "color: burlywood") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+### BE
+
+```{r}
+
+belgium <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("BE", NUTS_ID))
+  
+
+ggplot(belgium, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="brown", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Belgium",
+       subtitle = "color: brown") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+### BG
+
+```{r}
+
+
+
+bulgaria <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("BG", NUTS_ID))
+  
+
+ggplot(bulgaria, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="antiquewhite", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Bulgaria",
+       subtitle = "color: antiquewhite") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7))) 
+
+```
+
+
+### CH
+
+```{r}
+
+switzerland <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("CH", NUTS_ID))
+  
+
+ggplot(switzerland, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="aquamarine", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Switzerland",
+       subtitle = "color: aquamarine") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### CY
+
+```{r}
+
+cyprus <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("CY", NUTS_ID))
+  
+
+ggplot(cyprus, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="azure", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Cyprus",
+       subtitle = "color: azure") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+### CZ
+
+```{r}
+
+czech <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("CZ", NUTS_ID))
+  
+
+ggplot(czech, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="slateblue", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Czech Republic",
+       subtitle = "color: slateblue") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+### DE
+
+```{r}
+
+germany <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("DE", NUTS_ID))
+  
+
+ggplot(germany, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="cadetblue", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Germany",
+       subtitle = "color: cadetblue") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+### DK
+
+```{r}
+
+denmark <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("DK", NUTS_ID))
+  
+
+ggplot(denmark, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="chartreuse", 
+               color="darkgrey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Denmark",
+       subtitle = "color: chartreuse") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+### EE
+
+```{r}
+
+estonia <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("EE", NUTS_ID))
+  
+
+ggplot(estonia, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="coral", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Estonia",
+       subtitle = "color: coral") +
+  coord_map() +
+  xlim(c(20,30)) +
+  ylim(c(57,60)) +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+### EL
+
+```{r}
+
+greece <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("EL", NUTS_ID))
+  
+
+ggplot(greece, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="cornsilk", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Greece",
+       subtitle = "color: cornsilk") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size =8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+###  ES
+
+```{r}
+
+spain <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("ES", NUTS_ID))
+  
+
+ggplot(spain, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="darkorange", color="white", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "España",
+       subtitle = "color: darkorange") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+###  FI
+
+```{r}
+
+finland <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("FI", NUTS_ID))
+  
+
+ggplot(finland, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="cyan", color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Finland",
+       subtitle = "color: cyan") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+###  FR
+
+```{r}
+
+france <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("FR", NUTS_ID))
+  
+
+ggplot(france, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="darkolivegreen1", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "France",
+       subtitle = "color: darkolivegreen1") +
+  coord_map() +
+  xlim(c(-7,12)) +
+  ylim(c(40,52)) +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+###  HR
+
+```{r}
+
+croatia <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("HR", NUTS_ID))
+  
+
+ggplot(croatia, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="darkgoldenrod", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Croatia",
+       subtitle = "color: darkgoldenrod") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+
+###  HU
+
+```{r}
+
+hungary <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("HU", NUTS_ID))
+  
+
+ggplot(hungary, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="turquoise", 
+               color="darkgrey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Hungary",
+       subtitle = "color: turquoise") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+###  IE
+
+```{r}
+
+ireland <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("IE", NUTS_ID))
+  
+
+ggplot(ireland, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="darkorchid", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Ireland",
+       subtitle = "color: darkorchid") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+###  IS
+
+```{r}
+
+iceland <- mapdata_df %>%
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("IS", NUTS_ID))
+  
+
+ggplot(iceland, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="darkseagreen", 
+               color="grey", 
+               size = 0.1) +
+  theme_minimal() +
+  labs(title = "Iceland",
+       subtitle = "color: darkseagreen") +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### IT
+
+```{r}
+
+italy <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("IT", NUTS_ID))
+   
+
+ggplot(italy, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="darkslategray1", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Italy",
+       subtitle = "color: darkslategray1")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### LI
+
+```{r}
+
+liechtenstein <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("LI", NUTS_ID))
+   
+
+ggplot(liechtenstein, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="olivedrab", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Liechtenstein",
+       subtitle = "color: olivedrab")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### LT
+
+```{r}
+
+
+lithuania <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("LT", NUTS_ID))
+   
+
+ggplot(lithuania, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="deeppink", 
+               color="white", size = 0.1) +
+  theme_minimal()+
+  labs( title = "Lithuania",
+        subtitle = "color: deeppink")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### LU
+
+```{r}
+
+luxembourg <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("LU", NUTS_ID))
+   
+
+ggplot(luxembourg, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="deepskyblue", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Luxembourg",
+       subtitle = "color: deepskyblue")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### LV
+
+```{r}
+
+latvia <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("LV", NUTS_ID))
+   
+
+ggplot(latvia, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="lightskyblue", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Latvia",
+       subtitle = "color: lightskyblue")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### ME
+
+```{r}
+
+montenegro <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("ME", NUTS_ID))
+   
+
+ggplot(montenegro, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="mediumpurple", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Montenegro",
+       subtitle = "color:mediumpurple")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### MK
+
+```{r}
+
+macedonia <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("MK", NUTS_ID))
+   
+
+ggplot(macedonia, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="lightblue", 
+               color="darkgrey", 
+               size = 0.2) +
+  theme_minimal()+
+  labs(title = "North Macedonia",
+       subtitle = "color: lightblue")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### MT
+
+```{r}
+
+malta <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("MT", NUTS_ID))
+   
+
+ggplot(malta, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="lightcoral", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Malta",
+       subtitle = "color: lightcoral")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### NL
+
+```{r}
+
+netherlands <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("NL", NUTS_ID))
+   
+
+ggplot(netherlands, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="lavender", 
+               color="darkgrey", size = 0.1) +
+  theme_minimal()+
+  labs(title = "Netherlands",
+       subtitle = "color: lavender")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### NO
+
+```{r}
+
+norway <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("NO", NUTS_ID))
+   
+
+ggplot(norway, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="khaki", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Norway",
+       subtitle = "color: khaki")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### PL
+
+```{r}
+
+poland <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("PL", NUTS_ID))
+   
+
+ggplot(poland, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="ivory", 
+               color="darkgrey", size = 0.1) +
+  theme_minimal()+
+  labs(title = "Poland",
+       subtitle = "color: ivory")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### PT
+
+```{r}
+
+portugal <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("PT", NUTS_ID))
+   
+
+ggplot(portugal, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="indianred", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Portugal",
+       subtitle = "color: indianred")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### RO
+
+```{r}
+
+romania <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("RO", NUTS_ID))
+   
+
+ggplot(romania, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="hotpink", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Romania",
+       subtitle = "color: hotpink")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### RS
+
+```{r}
+
+serbia <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("RS", NUTS_ID))
+   
+
+ggplot(serbia, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="goldenrod", 
+               color="white", size = 0.1) +
+  theme_minimal()+
+  labs(title = "Serbia",
+       subtitle = "color: goldenrod")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### SE
+
+```{r}
+
+sweden <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("SE", NUTS_ID))
+   
+
+ggplot(sweden, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="gold", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Sweden",
+       subtitle = "gold")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### SI
+
+```{r}
+
+slovenia <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("SI", NUTS_ID))
+   
+
+ggplot(slovenia, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="gainsboro", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Slovenia",
+       subtitle = "color: gainsboro")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### SK
+
+```{r}
+
+slovakia <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("SK", NUTS_ID))
+   
+
+ggplot(slovakia, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="forestgreen", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Slovakia",
+       subtitle = "color: forestgreen")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### TR
+
+```{r}
+
+turkey <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("TR", NUTS_ID))
+   
+
+ggplot(turkey, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="firebrick", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "Turkey",
+       subtitle = "color: firebrick")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+### UK
+
+```{r}
+
+uk <- mapdata_df %>% 
+  mutate(LEVL_CODE_2 = recode_factor(LEVL_CODE, 
+                                     `0`= "NUTS-0", 
+                                     `1`= "NUTS-1", 
+                                     `2`= "NUTS-2", 
+                                     `3`= "NUTS-3" )) %>%
+  filter(grepl("UK", NUTS_ID))
+   
+
+ggplot(uk, aes(x=long, y=lat, group=group)) +
+  facet_wrap(~LEVL_CODE_2) +
+  geom_polygon(fill="dodgerblue", 
+               color="darkgrey", size = 0.2) +
+  theme_minimal()+
+  labs(title = "United Kingdom",
+       subtitle = "color: dodgerblue")  +
+  coord_map() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    axis.text.x = element_text(colour = "grey", size = rel(0.5)),
+    axis.text.y = element_text(colour = "grey", size = rel(0.5)),
+    axis.title.x = element_text(colour = "darkgrey", size = rel(0.7)),
+    axis.title.y = element_text(colour = "darkgrey", size = rel(0.7)))
+
+```
+
+
+Examples with data from Eurostat
+===========================================================================
+
+Row {.tabset .tabset-fade}
+-------------------------------------------------------------
+
+### **NUTS 0. Infant mortality rate**
+
+```{r}
+
+# Dataset search from Eurostat:
+
+mortality <- search_eurostat(pattern = "mortality", 
+                                type = "table")
+
+# Title and code:
+
+info <- mortality %>%
+  select(title, code)
+
+# import dataset "infant mortality rate" using id(tps0027)
+
+inf_mort_rate <- get_eurostat(id= "tps00027",  time_format = "num")
+
+# codes included in the dataset (Simple feature - sf)
+
+mapdata_0 <- get_eurostat_geospatial(nuts_level = 0)
+country_codes <- unique(mapdata_0$NUTS_ID)
+
+# country_codes
+##  [1] "BG" "CH" "CY" "AL" "CZ" "BE" "AT" "DE" "DK" "EE" "EL" "ES" "FI" "HR" "FR"
+## [16] "HU" "IE" "IS" "IT" "LI" "LT" "LU" "LV" "ME" "MK" "MT" "NL" "NO" "PL" "PT"
+## [31] "RO" "RS" "SE" "SI" "SK" "TR" "UK"
+
+# We make a few modifications to our dataset to select year=2007 and the codes 
+
+inf_mort_2017 <- inf_mort_rate %>%
+  filter( time == "2017") %>%
+  filter(geo %in% country_codes )
+
+# lets join the two datasets creating 10 categories:
+
+inf_mort_2017_mapa <- mapdata_0 %>%
+  right_join(inf_mort_2017) %>%
+  mutate(cat = cut_to_classes(values, n=10, decimals = 1)) 
+
+# Final plot:
+
+ggplot(inf_mort_2017_mapa, aes(fill=cat)) +
+  geom_sf(color = alpha("white", 1/2), alpha= .9) +
+  xlim(c(-20, 44)) +
+  ylim(c(35, 70)) +
+  labs(title = "Infant Mortality Rate (%), 2017",
+       subtitle = "Num of deaths of children (under one year of age) per 1000 live births",
+       caption = "Source: Eurostat",
+       fill= "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    plot.caption = element_text(size = 6, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_brewer(palette= "Spectral")
+
+```
+
+
+
+### **NUTS 2. Young people neither in employment nor in education and training**
+
+```{r}
+
+# Dataset search from Eurostat:
+
+neet <- get_eurostat(id= "edat_lfse_22",  time_format = "num")
+
+# Labels:
+
+neet_label <- label_eurostat(neet, fix_duplicated = T)
+
+# check dataset:
+
+# label_eurostat_vars(names(neet))
+# levels(neet$sex)
+# levels(neet$age)
+# levels(neet$training)
+# levels(neet$wstatus)
+# levels(neet$unit)
+
+
+# codes included in the dataset (dataframe - df)
+
+mapdata_df_2 <- mapdata_df %>%
+  filter(LEVL_CODE == 2)
+regions_codes <- unique(mapdata_df_2$geo)
+
+# changes in dataset:
+
+neet_total_2016 <- neet %>%
+  filter(sex == "T", 
+         age == "Y15-24",
+         time == 2016, 
+         geo %in% regions_codes) %>%
+  select(geo, values) 
+
+# dataset join and ranges:
+
+neet_total_map <- mapdata_df_2 %>%
+  right_join(neet_total_2016) %>%
+  mutate(cat = cut_to_classes(values, n=10, decimals=1))
+
+
+# We add the grey color to the Spectral palete for regions with no data
+
+colores <- c("grey60", "#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#FFFFBF", "#FEE08B","#FDAE61", "#F46D43","#D53E4F", "#9E0142")
+
+# Plot:
+
+ggplot(neet_total_map, aes(x= long, y=lat, group= group)) +
+  geom_polygon(aes(fill = cat), 
+               color = "white", 
+               alpha= .9,
+               size = 0.05) +
+  xlim(c(-24, 44)) +
+  ylim(c(35, 72)) +
+  labs(title = "NEET rate (%), 2016",
+       subtitle  ="Young people (15-24 Yrs) neither in employment nor in education/training",
+       caption = "Source: Eurostat",
+       fill= "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    plot.caption = element_text(size = 6, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_manual(values= colores)
+
+```
+
+
+
+### **NUTS 3. Mean age of women at childbirth**
+
+```{r}
+
+# Dataset search from Eurostat:
+
+fertility <- get_eurostat(id= "demo_r_find3",  time_format = "num")
+
+# Labels: 
+
+fertility_label <- label_eurostat(fertility, fix_duplicated = T)
+
+# Info about the dataset:
+
+# label_eurostat_vars(names(fertility))
+## [1] "Demographic indicator"                                                        
+## [2] "Unit of measure"                                                               
+## [3] "Geopolitical entity (reporting)"                                               
+## [4] "Period of time (a=annual, q=quarterly, m=monthly, d=daily, c=cumulated from January)"
+# levels(fertility$indic_de)
+## [1] "AGEMOTH"    "MEDAGEMOTH" "TOTFERRT"
+# levels(fertility_label$indic_de)
+## [1] "Mean age of women at childbirth"   
+## [2] "Median age of women at childbirth"
+## [3] "Total fertility rate"
+
+
+mapdata_df_3 <- mapdata_df %>%
+  filter(LEVL_CODE == 3)
+regions_3_codes <- unique(mapdata_df_3$geo)
+
+# changes:
+
+fertility_total_2017 <- fertility %>%
+  filter(time == 2017, 
+         indic_de == "AGEMOTH",
+         geo %in% regions_3_codes) %>%
+  select(geo, values) 
+
+# join and ranges:
+
+fertility_total_map <- mapdata_df_3 %>%
+  right_join(fertility_total_2017) %>%
+  mutate(cat = cut_to_classes(values, n=8, decimals=1))
+
+# colors:
+
+colores_2 <- c("#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4","#FDAE61", "#F46D43","#D53E4F", "#9E0142")
+
+# plot:
+
+ggplot(fertility_total_map, aes(x= long, y=lat, group= group)) +
+  geom_polygon(aes(fill = cat), 
+               color = "white",
+               size = 0.005) +
+  xlim(c(-24, 44)) +
+  ylim(c(35, 72)) +
+  labs(title = "Fertility, 2017",
+       subtitle = "Median age of women at childbirth",
+       caption = "Source: Eurostat",
+       fill= "") +
+  theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    plot.caption = element_text(size = 6, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.93, 0.6),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  scale_fill_manual(values= colores_2)
+         
+```
+

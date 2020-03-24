@@ -1,0 +1,18 @@
+---
+title: "Data visualizations: Working with the Nomenclature of Territorial Units for Statistics (NUTS) of Eurostat"
+author: "Rubén F. Bustillo"
+date: 2020-03-24
+categories: ["R"]
+tags: ["maps", "ggplot2", "eurostat"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+The present dashboard pretends to show how to work with the Eurostat NUTS nomenclature using the {eurostat} package.

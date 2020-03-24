@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Eurostat on R que R</title>
+    <title>eurostat on R que R</title>
     <link>/tags/eurostat/</link>
-    <description>Recent content in Eurostat on R que R</description>
+    <description>Recent content in eurostat on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 24 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/eurostat/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Data visualizations: Working with the Nomenclature of Territorial Units for Statistics (NUTS) of Eurostat</title>
+      <link>/nuts_maps/</link>
+      <pubDate>Tue, 24 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/nuts_maps/</guid>
+      <description>The present dashboard pretends to show how to work with the Eurostat NUTS nomenclature using the {eurostat} package.</description>
+    </item>
     
     <item>
       <title>¿Cómo trabajar con las Nomenclaturas de las Unidades Territoriales Estadísticas (NUTS) de Eurostat en R?</title>
