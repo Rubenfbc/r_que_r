@@ -17,7 +17,7 @@
       <pubDate>Tue, 24 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/nuts_maps/</guid>
-      <description>The present dashboard pretends to show how to work with the Eurostat NUTS nomenclature using the {eurostat} package.</description>
+      <description>The present dashboard shows how to work with the Eurostat NUTS nomenclature using the {eurostat} package.</description>
     </item>
     
     <item>
