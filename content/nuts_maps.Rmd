@@ -15,4 +15,4 @@ knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 
-The present dashboard pretends to show how to work with the Eurostat NUTS nomenclature using the {eurostat} package.
+The present dashboard shows how to work with the Eurostat NUTS nomenclature using the {eurostat} package.
