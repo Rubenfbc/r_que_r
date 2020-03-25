@@ -16,7 +16,7 @@ output:
 
 #------------------ paquetes ------------------
 
-devtools::install_github("RamiKrispin/coronavirus")
+devtools::install_github("RamiKrispin/coronavirus", force = T)
 coronavirus<-coronavirus::coronavirus
 
 
@@ -47,60 +47,112 @@ death_color <- "red"
 # DATASETS:
 
 # confirmed/active/recovered/death cases by country
-df <- coronavirus %>% 
-  group_by(Country.Region, type) %>%
-  summarise(total = sum(cases)) %>%
-  pivot_wider(names_from =  type, 
-              values_from = total) %>%
-  mutate(unrecovered = confirmed - ifelse(is.na(recovered), 0, recovered) - ifelse(is.na(death), 0, death)) %>%
-  arrange(-confirmed) %>%
-  ungroup() %>%
-  mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
-  mutate(country = if_else(country == "North Macedonia", "Macedonia", country)) %>%
-  mutate(country = if_else(country == "Czechia", "Czech Rep.", country)) %>%
-  mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
-  mutate(country = if_else(country == "Korea, South", "Korea", country)) %>%
-  mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
-  mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
-  mutate(country = if_else(country == "Congo (Kinshasa)", "Dem. Rep. Congo", country)) %>%
-  mutate(country = if_else(country == "Republic of Moldova", "Moldova", country)) %>%
-  mutate(country = if_else(country == "Cote d'Ivoire", "Côte d'Ivoire", country)) %>%
-  mutate(country = if_else(country == "Central African Republic", "Central African Rep.", country)) %>%
-  mutate(country = if_else(country == "Congo (Brazzaville)", "Congo", country)) %>%
-  mutate(country = if_else(country == "	Eswatini", "Swaziland", country)) %>%
-  mutate(country = if_else(country == "Equatorial Guinea", "Eq. Guinea", country)) %>%
-  mutate(country = if_else(country == "occupied Palestinian territory", "Palestine", country)) %>%
-  mutate(country = trimws(country)) %>%
-  mutate(country = factor(country, levels = country))
+#df <- coronavirus %>% 
+#  group_by(Country.Region, type) %>%
+#  summarise(total = sum(cases)) %>%
+#  pivot_wider(names_from =  type, 
+#              values_from = total) %>%
+#  mutate(unrecovered = confirmed - ifelse(is.na(recovered), 0, recovered) - ifelse(is.na(death), 0, death)) %>%
+#  arrange(-confirmed) %>%
+#  ungroup() %>%
+#  mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
+#  mutate(country = if_else(country == "North Macedonia", "Macedonia", country)) %>%
+#  mutate(country = if_else(country == "Czechia", "Czech Rep.", country)) %>%
+#  mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
+#  mutate(country = if_else(country == "Korea, South", "Korea", country)) %>%
+#  mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
+#  mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
+#  mutate(country = if_else(country == "Congo (Kinshasa)", "Dem. Rep. Congo", country)) %>%
+#  mutate(country = if_else(country == "Republic of Moldova", "Moldova", country)) %>%
+#  mutate(country = if_else(country == "Cote d'Ivoire", "Côte d'Ivoire", country)) %>%
+#  mutate(country = if_else(country == "Central African Republic", "Central African Rep.", country)) %>%
+#  mutate(country = if_else(country == "Congo (Brazzaville)", "Congo", country)) %>%
+#  mutate(country = if_else(country == "	Eswatini", "Swaziland", country)) %>%
+#  mutate(country = if_else(country == "Equatorial Guinea", "Eq. Guinea", country)) %>%
+#  mutate(country = if_else(country == "occupied Palestinian territory", "Palestine", country)) %>%
+#  mutate(country = trimws(country)) %>%
+#  mutate(country = factor(country, levels = country))
 
-df_spain <- df %>%
-  filter(country == "Spain")
+  ### 
+
+  df_updated <- coronavirus %>% 
+    group_by(Country.Region, type) %>%
+    summarise(total = sum(cases)) %>%
+    pivot_wider(names_from =  type, 
+                values_from = total) %>%
+    arrange(-confirmed) %>%
+    ungroup() %>%
+    mutate(country = if_else(Country.Region == "United Arab Emirates", "UAE", Country.Region)) %>%
+    mutate(country = if_else(country == "North Macedonia", "Macedonia", country)) %>%
+    mutate(country = if_else(country == "Czechia", "Czech Rep.", country)) %>%
+    mutate(country = if_else(country == "Bosnia and Herzegovina", "Bosnia and Herz.", country)) %>%
+    mutate(country = if_else(country == "Korea, South", "Korea", country)) %>%
+    mutate(country = if_else(country == "Dominican Republic", "Dominican Rep.", country)) %>%
+    mutate(country = if_else(country == "N.Macedonia", "Macedonia", country)) %>%
+    mutate(country = if_else(country == "Congo (Kinshasa)", "Dem. Rep. Congo", country)) %>%
+    mutate(country = if_else(country == "Republic of Moldova", "Moldova", country)) %>%
+    mutate(country = if_else(country == "Cote d'Ivoire", "Côte d'Ivoire", country)) %>%
+    mutate(country = if_else(country == "Central African Republic", "Central African Rep.", country)) %>%
+    mutate(country = if_else(country == "Congo (Brazzaville)", "Congo", country)) %>%
+    mutate(country = if_else(country == "	Eswatini", "Swaziland", country)) %>%
+    mutate(country = if_else(country == "Equatorial Guinea", "Eq. Guinea", country)) %>%
+    mutate(country = if_else(country == "occupied Palestinian territory", "Palestine", country)) %>%
+    mutate(country = trimws(country)) %>%
+    mutate(country = factor(country, levels = country))
+  
+
+
+#df_spain <- df %>%
+#  filter(country == "Spain")
+  
+  
+df_spain <- df_updated %>%
+    filter(country == "Spain")
+    
 
 # CUMULATIVE CASES:
 
-df_daily <- coronavirus %>% 
+#df_daily <- coronavirus %>% 
+#  group_by(date, type) %>%
+#  summarise(total = sum(cases, na.rm = TRUE)) %>%
+#  pivot_wider(names_from = type,
+#              values_from = total) %>%
+#  arrange(date) %>%
+#  ungroup() %>%
+#  mutate(active =  confirmed - death - recovered) %>%
+#  mutate(confirmed_cumulative = cumsum(confirmed),
+#         death_cumulative = cumsum(death),
+#         recovered_cumulative = cumsum(recovered),
+#         active_cumulative = cumsum(active))
+
+
+df_daily_updated <- coronavirus %>% 
   group_by(date, type) %>%
   summarise(total = sum(cases, na.rm = TRUE)) %>%
   pivot_wider(names_from = type,
-                     values_from = total) %>%
+              values_from = total) %>%
   arrange(date) %>%
   ungroup() %>%
-  mutate(active =  confirmed - death - recovered) %>%
   mutate(confirmed_cumulative = cumsum(confirmed),
-                death_cumulative = cumsum(death),
-                recovered_cumulative = cumsum(recovered),
-                active_cumulative = cumsum(active))
-  
+         death_cumulative = cumsum(death))
+
+
 df1 <- coronavirus %>% 
   filter(date == max(date))
 
 
-df_map <- df %>%
+#df_map <- df %>%
+#  mutate(country = recode_factor(country,
+#                                 `US` = "United States",
+#                                 `UAE` = "United Arab Emirates"))
+
+df_map_updated <- df_updated %>%
   mutate(country = recode_factor(country,
                                  `US` = "United States",
                                  `UAE` = "United Arab Emirates"))
 
 ```
+
 
 Sidebar {.sidebar}
 =======================================================================
@@ -136,26 +188,23 @@ Row
 
 ```{r}
 
-valueBox(value = paste(format(sum(df$confirmed), big.mark = ","), "", sep = " "), 
+valueBox(value = paste(format(sum(df_updated$confirmed), big.mark = ","), "", sep = " "), 
          caption = "Total Confirmed Cases", 
          color = confirmed_color)
 ```
 
 
-### active {.value-box}
+```{r eval=FALSE, include=FALSE}
 
-```{r}
-
-valueBox(value = paste(format(sum(df$unrecovered, na.rm = TRUE), big.mark = ","), 
+valueBox(value = paste(format(sum(df_updated$unrecovered, na.rm = TRUE), big.mark = ","), 
                        " (", round(100 * sum(df$unrecovered, na.rm = TRUE) / sum(df$confirmed), 1), 
                        "%)", sep = ""), 
          caption = "Active Cases",  
          color = active_color)
 ```
 
-### recovered {.value-box}
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 valueBox(value = paste(format(sum(df$recovered, na.rm = TRUE), big.mark = ","), 
                        " (", round(100 * sum(df$recovered, na.rm = TRUE) / sum(df$confirmed), 1), 
@@ -168,8 +217,8 @@ valueBox(value = paste(format(sum(df$recovered, na.rm = TRUE), big.mark = ","),
 
 ```{r}
 
-valueBox(value = paste(format(sum(df$death, na.rm = TRUE), big.mark = ","), 
-                       " (", round(100 * sum(df$death, na.rm = TRUE) / sum(df$confirmed), 1), 
+valueBox(value = paste(format(sum(df_updated$death, na.rm = TRUE), big.mark = ","), 
+                       " (", round(100 * sum(df_updated$death, na.rm = TRUE) / sum(df_updated$confirmed), 1), 
                        "%)", sep = ""),
          caption = "Death Cases", 
          color = death_color)
@@ -184,7 +233,7 @@ Row {.tabset .tabset-fade}
 
 ```{r}
 
-df_map %>%
+df_map_updated %>%
   e_charts(country) %>%
   e_map(confirmed) %>%
   e_title("Confirmed Cases by Country", left= "center") %>%
@@ -195,9 +244,9 @@ df_map %>%
 
 ```
 
-### Active Cases
+###
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 df_map %>%
   e_charts(country) %>%
@@ -210,9 +259,9 @@ df_map %>%
 
 ```
 
-### Recovered Cases 
+### 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 df_map %>%
   e_charts(country) %>%
@@ -229,7 +278,7 @@ df_map %>%
 
 ```{r}
 
-df_map %>%
+df_map_updated %>%
   e_charts(country) %>%
   e_map(death) %>%
   e_title("Death Cases by Country", left= "center") %>%
@@ -253,8 +302,8 @@ Column
     
 ```{r}
 
-df_table <- df %>%
-  select(country, confirmed, recovered, death)
+df_table <- df_updated %>%
+  select(country, confirmed, death)
 
 df_table %>%
   datatable(rownames = FALSE)
@@ -300,7 +349,7 @@ Column
    
 ### 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 plotly::plot_ly(data = df, 
                 x = ~ country, 
@@ -322,6 +371,22 @@ plotly::plot_ly(data = df,
 
 ```   
  
+```{r}
+
+plotly::plot_ly(data = df_updated, 
+                x = ~ country, 
+                y = ~ death, 
+                type = "bar", 
+                name = "Unrecovered",
+                marker = list(color = "darkorange"))%>%
+  plotly::layout(barmode = 'stack',
+                 yaxis = list(title = "Death Cases (log)",
+                              type = "log"),
+                 xaxis = list(title = ""),
+                 hovermode = "compare")
+
+
+```
 
 
 Cumulative Data
@@ -329,13 +394,13 @@ Cumulative Data
 
 
 Row
--------------------------------------------------------------------------
+-----------------------------------------------------------------------
 
 ### Cumulative Confirmed Cases
 
 ```{r}
 
-plotly::plot_ly(data = df_daily) %>%
+plotly::plot_ly(data = df_daily_updated) %>%
   plotly::add_trace(x = ~ date,
                     y = ~ confirmed_cumulative,
                     type = "bar",
@@ -348,10 +413,7 @@ plotly::plot_ly(data = df_daily) %>%
 ```
 
 
-
-### Cumulative Active Cases
-
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 plotly::plot_ly(data = df_daily) %>%
   plotly::add_trace(x = ~ date,
@@ -369,9 +431,7 @@ plotly::plot_ly(data = df_daily) %>%
 Row
 -------------------------------------------------------------------------
 
-### Cumulative Recovered Cases
-
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 plotly::plot_ly(data = df_daily) %>%
   plotly::add_trace(x = ~ date,
@@ -391,7 +451,7 @@ plotly::plot_ly(data = df_daily) %>%
 
 ```{r}
 
-plotly::plot_ly(data = df_daily) %>%
+plotly::plot_ly(data = df_daily_updated) %>%
   plotly::add_trace(x = ~ date,
                     y = ~ death_cumulative,
                     type = "bar",
@@ -457,18 +517,15 @@ valueBox(value = df_spain$confirmed,
 ```
 
 
-### active {.value-box}
-
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 valueBox(value = df_spain$unrecovered, 
          caption = "Active Cases",  
          color = active_color)
 ```
 
-### recovered {.value-box}
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 valueBox(value = df_spain$recovered, 
          caption = "Recovered Cases", 

@@ -1,0 +1,99 @@
+---
+title: "Choropleth maps with {ggplot2} and {mapdata}"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    source_code: embed
+    orientation: columns
+    theme: simplex
+    vertical_layout: fill
+---
+
+
+```{r setup, include=FALSE}
+
+## Packages / libraries to be loaded: 
+
+library(flexdashboard)
+library(tidyverse)
+library(gapminder)
+library(mapdata)
+library(stringr)
+library(viridis)
+library(ggiraph)
+library(widgetframe)
+
+
+# country codes in gapminder::country_codes
+
+gapminder_codes <- gapminder::country_codes
+
+# countries with info in gapminder::gapminder_unfiltered
+
+gapminder <-gapminder::gapminder_unfiltered
+
+# We join both datasets with inner_join to get a dataset with the info by 
+# country, continent and country-code
+
+gapminder <- gapminder %>%
+  inner_join(gapminder_codes, by= "country") %>%
+  mutate(code = iso_alpha)
+
+# A map of the world (Antarctica removed)
+
+world <- map_data("world") %>%
+  filter(region != "Antarctica")
+
+```
+
+[www.rquer.netlify.com](https://rquer.netlify.com/)
+
+
+
+Row {.tabset .tabset-fade}
+-------------------------------------------------------------
+
+### Base Map
+
+
+```{r}
+
+gapminder_data <- gapminder %>%
+  inner_join(maps::iso3166 %>%
+               select(a3, mapname), by= c(code = "a3")) %>%
+  mutate(mapname = str_remove(mapname, "\\(.*"))
+
+lifeExp_map <- gapminder_data%>%
+  filter(year == 2007) %>%
+  right_join(world, by= c(mapname = "region")) %>%
+  ggplot() +
+  geom_polygon_interactive(color = "white", size = 0.01, 
+                           aes(long, lat, group= group, fill= lifeExp,
+                               tooltip = sprintf("%s<br/>%s", country, lifeExp))) +
+  theme_void() +
+  scale_fill_viridis(option = "B") +
+  labs(title="Life Expectancy",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.05, 0.25),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed (ratio = 1.3)
+
+widgetframe::frameWidget(ggiraph(code=print(lifeExp_map)))
+
+
+```
+
