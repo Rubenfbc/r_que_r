@@ -61,7 +61,7 @@ We will also use the `meterorite landings` dataset from the [Tidytuesday project
 
 - **name**: Meteorite name
 - **mass**: Mass in grams
-- **yea**: Year found
+- **year**: Year found
 - **lat**: Latitude
 - **long**: Longitude
 - **fall**: fall or found meteorite
@@ -169,7 +169,16 @@ lifeExp_map <- gapminder_data%>%
 widgetframe::frameWidget(ggiraph(code=print(lifeExp_map)))
 
 
+
 ```
+
+\
+
+\
+
+\
+
+\
 
 \
 
@@ -182,6 +191,8 @@ On the other hand, we can also create an interactive map with the package {plotl
 \
 
 ```{r, out.width= "100%", fig.align='center'}
+
+
 
 gapminder_lifeExp_07 <- gapminder_data %>%
   filter(year == 2007) %>%
@@ -199,6 +210,8 @@ lifeExp_07 <- lifeExp_07 %>% layout(
   title = 'Life Expectancy in 2007<br>Source:<a href="https://www.gapminder.org"> gapminder.org</a>',geo = lifeExp_07)
 
 lifeExp_07
+
+
 
 ```
 
