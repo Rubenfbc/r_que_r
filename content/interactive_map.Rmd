@@ -1,0 +1,464 @@
+---
+title: 'Data visualizations: Interactive and animated maps'
+author: "Rubén F. Bustillo"
+date: '2020-03-25'
+tags: ["maps"]
+categories: ["R"]
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+In this post we will present a few examples of interactive and animated maps using different R packages. 
+This post is a continuation of previous posts that addressed the creation of static maps. 
+
+\
+
+# Libraries / packages
+
+\
+
+There are plenty of packages available in R designed to create interactive or animated plots, graphs and/or maps. This post is not intended to carry out an exhaustive analysis of all of them, but to present some examples of interactive and animated maps using some tools available in R. I hope that it may be of interest to someone. In a way this post can be considered as a continuation of two dashboards previously made, where it was shown how to make static choropleth maps ([link to dashboard](https://rquer.netlify.com/choropleth_maps)) and how to create static maps using geographic coordinates ([link to post](https://rquer.netlify.com/coordinates_maps)). At this point I will show only 5 or 6 maps, using {gganimate}, {echarts4r}, {ggiraph} and {plotly} packages, but I might add more examples using different packages in the future. 
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(gapminder)
+library(echarts4r)
+library(gganimate)
+library(ggiraph)
+library(widgetframe)
+library(ggthemes)
+library(plotly)
+library(viridis)
+library(DT)
+```
+
+\
+
+# Datasets
+
+\
+
+In this post we are going to use a well known dataset called `gapminder / gapminder_unfiltered` included in the package of the same name. If you have read previous post of this blog you might be familiarized with it as I have used the `gapminder` dataset a few times in other examples, even on the previously mentioned dashboards. The dataframe contains the following information for a list of countries (187 in the `gapminder_unfiltered` version):
+
+- **country**: Country names.
+- **continent**: Continent of each country.
+- **year**: The data range covers the period 1952-2007 (in 5-year increments).
+- **lifeExp**: Life expectancy of each country in years.
+- **pop**: Population.
+- **gdpPercap**: GDP per capita in inflation-adjusted dollars.
+
+We will also use the `meterorite landings` dataset from the [Tidytuesday project](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-06-11) (11-06-2019). As the name indicates, this datasets is about meteorites and the information comes from the Meteoritical Society of NASA. Although the dataset includes more information, we will mainly be interested in the following variables:
+
+- **name**: Meteorite name
+- **mass**: Mass in grams
+- **yea**: Year found
+- **lat**: Latitude
+- **long**: Longitude
+- **fall**: fall or found meteorite
+
+
+\
+
+## gapminder dataset:
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+# country codes in gapminder::country_codes
+
+gapminder_codes <- gapminder::country_codes
+
+# countries with info in gapminder::gapminder_unfiltered
+
+gapminder <-gapminder::gapminder_unfiltered
+
+# We join both datasets with inner_join to get a dataset with the info by country, continent and country-code
+
+gapminder <- gapminder %>%
+  inner_join(gapminder_codes, by= "country") %>%
+  mutate(code = iso_alpha)
+
+# A map of the world (Antarctica removed)
+
+world <- map_data("world") %>%
+  filter(region != "Antarctica")
+
+
+gapminder_data <- gapminder %>%
+  inner_join(maps::iso3166 %>%
+               select(a3, mapname), by= c(code = "a3")) %>%
+  mutate(mapname = str_remove(mapname, "\\(.*"))
+
+
+```
+
+\
+
+```{r}
+
+datatable(gapminder_data)
+
+```
+
+
+## Meteorites dataset
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+meteoritos <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-11/meteorites.csv")
+
+datatable(meteoritos)
+```
+
+\
+
+
+# 1. Interactive maps with {ggiraph}
+
+\
+
+The dashboard presented in [this post](https://rquer.netlify.com/choropleth_maps) showed different ways of representing the life expectancy of a list of countries on a static choropleth map using the `gapminder_unfiltered` dataset. If we want a **tooltip** to appear when we hover the pointer over a country we can use the {ggiraph} and the {widgetframe} packages. We will use the `geom_polygon_interactive()` function from the {ggiraph} package and the `framewidget()` function from the {widgetframe} package as follows:
+
+\
+
+```{r, out.width= "100%", fig.align='center', warning=FALSE}
+
+
+lifeExp_map <- gapminder_data%>%
+  filter(year == 2007) %>%
+  right_join(world, by= c(mapname = "region")) %>%
+  ggplot() +
+  geom_polygon_interactive(color = "white", size = 0.01, 
+                           aes(long, lat, group= group, fill= lifeExp,
+                               tooltip = sprintf("%s<br/>%s", country, lifeExp))) +
+  theme_void() +
+  scale_fill_viridis(option = "B") +
+  labs(title="Life Expectancy",
+       subtitle = "Year: 2007",
+       caption = "Source: gapminder.org",
+       fill = "Years")  +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.background = element_rect(fill = "snow", color = NA),
+    panel.background = element_rect(fill= "snow", color = NA),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.title = element_text(color = "grey40", size = 8),
+    legend.text = element_text(color = "grey40", size = 7, hjust = 0),
+    legend.position = c(0.05, 0.25),
+    plot.margin = unit(c(0.5,2,0.5,1), "cm")) +
+  coord_fixed (ratio = 1.3)
+
+widgetframe::frameWidget(ggiraph(code=print(lifeExp_map)))
+
+
+```
+
+\
+
+# Interactive maps with {plotly}
+
+\
+
+On the other hand, we can also create an interactive map with the package {plotly}. As in the previous example, {plotly} allows us to add a tooltip to our map, but it also allows to perform additional actions, such as zooming in and out, lasso or box selecting o downloading the map as a png file.
+
+\
+
+```{r, out.width= "100%", fig.align='center'}
+
+gapminder_lifeExp_07 <- gapminder_data %>%
+  filter(year == 2007) %>%
+  select(mapname, code, lifeExp)
+
+lifeExp_07<- plot_geo(gapminder_lifeExp_07)
+
+lifeExp_07<- lifeExp_07 %>% add_trace(
+  z = ~lifeExp, color = ~lifeExp, colors = 'Oranges',
+  text = ~mapname, locations = ~code)
+
+lifeExp_07 <- lifeExp_07 %>% colorbar(title = 'Years')
+
+lifeExp_07 <- lifeExp_07 %>% layout(
+  title = 'Life Expectancy in 2007<br>Source:<a href="https://www.gapminder.org"> gapminder.org</a>',geo = lifeExp_07)
+
+lifeExp_07
+
+```
+
+\
+
+# Maps with {echarts4r}
+
+\
+
+As explained in a [previous post](https://rquer.netlify.com/maps3d/), we can also represent the evolution of a variable on a map (i.e. life expectancy or another variable of interest) with the package {echarts4r}. That map would allows us to visualize the evolution of each country and instantly detect those countries that are not included in the {gapminder} package dataframe. In fact, as we can observe in the next example, there is no information for many countries in most of the years included in the dataset. Notice that {echarts4r} also allows adding a tooltip with the function `e_tooltip()`.
+
+\
+
+```{r}
+
+datos_gapminder_map <- gapminder %>%
+  mutate(Name = recode_factor(country,
+                              `Congo, Dem. Rep.`= "Dem. Rep. Congo",
+                              `Congo, Rep.`= "Congo",
+                              `Cote d'Ivoire`= "Côte d'Ivoire",
+                              `Central African Republic`= "Central African Rep.",
+                              `Yemen, Rep.`= "Yemen",
+                              `Korea, Rep.`= "Korea",
+                              `Korea, Dem. Rep.`= "Dem. Rep. Korea",
+                              `Czech Republic`= "Czech Rep.",
+                              `Slovak Republic`= "Slovakia",
+                              `Dominican Republic`= "Dominican Rep.",
+                              `Equatorial Guinea`= "Eq. Guinea"))
+```
+
+
+```{r, out.width="80%", fig.align='center'}
+
+datos_gapminder_map %>%
+  group_by(year) %>%
+  e_chart(Name, timeline = TRUE) %>%
+  e_map(lifeExp) %>%
+  e_visual_map(min= 30, max= 90,
+               type = 'piecewise') %>%
+  e_title("Life expectancy by country and year", left = "center") %>%
+  e_tooltip(
+    trigger = "item",
+    formatter = e_tooltip_choro_formatter())
+
+
+
+```
+
+\
+
+**3D map** with the function `e_map_3d()`:
+
+\
+
+```{r, out.width="80%"}
+
+datos_gapminder_map %>%
+  group_by(year) %>%
+  e_chart(Name, timeline = TRUE) %>%
+  e_map_3d(lifeExp) %>%
+  e_visual_map(min= 30, max= 90,
+               type = 'piecewise') %>%
+  e_title("Life expectancy by country and year", left = "center") %>%
+  e_tooltip(
+    trigger = "item",
+    formatter = e_tooltip_choro_formatter())
+
+
+```
+
+\
+
+# Evolution in time with {gganimate}
+
+\
+
+{gganimate} is a extension of ggplot2 for creating animated ggplots. This package includes a wide range of functions that can be added to our ggplot2 object (maps also) to include animations. As the package {gganimate} allows animations, we can also use them to show the change of a variable over time. In the next paragraphs we will present three examples of animated maps using this package. However, there are many functionalities and options available that you can use to customize your own animations ([link to more info](https://gganimate.com/)). 
+
+\
+
+## Animated choropleth maps
+
+In this ocassion we will select only four years (1992, 1997, 2002, 2007) and the {viridis} package.
+
+\
+
+```{r, out.width="100%", fig.align='center', warning=FALSE, message=FALSE}
+
+mapa_animado_4 <- gapminder_data %>%
+ filter(year %in% c(1992, 1997, 2002, 2007)) %>%
+  right_join(world, by= c(mapname = "region")) %>%
+  ggplot(aes(long, lat, 
+             group= group, 
+             fill= lifeExp)) +
+  geom_polygon(color = "white", 
+               size = 0.01) +
+  theme_void() +
+  scale_fill_viridis(option = "B",
+                     name= "Years",
+                     guide = guide_colorbar(
+                       direction = "horizontal",
+                       barheight = unit(2, units = "mm"),
+                       barwidth = unit(100, units = "mm"),
+                       draw.ulim = FALSE,
+                       title.position = "top",
+                       title.hjust = 0.5,
+                       title.vjust = 0.5 )) +
+  labs(title="Life Expectancy",
+       subtitle = "{current_frame}",
+       caption = "Source: gapminder.org")  +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.position = "bottom") +
+  coord_fixed (ratio = 1.3) +
+  transition_manual(year)
+
+
+animate(mapa_animado_4, 
+        fps = 10, 
+        height = 500, 
+        width = 700)
+
+
+```
+
+\
+
+## Animated maps using geographic coordinates 
+
+Meteorite falls, also called observed falls, are those meteorites collected after their fall from space was observed by automated devices or by people. In the dataset those meteorites are called `fell` and we will only work with those ones in our graphs. There are 1107 documented falls in our dataset although, as the [Meteoritical Bulletin Database](https://www.lpi.usra.edu/meteor/) indicates, the number of confirmed falls has increased since then. 
+
+\
+
+In the first example we want to indicate the locations of the meteorites falls on a map by year. The argument `nframes` indicates the **number of frames to render** (the default is 100), and `fps` makes reference to the **framerate of the animation or frames per second** (the default is 10). 
+
+\
+
+```{r, out.width="100%", fig.align='center'}
+
+options(scipen = 999) 
+
+meteoritos_Mundo <- meteoritos %>%
+  filter(fall == "Fell") %>%
+  filter(year > 1800) %>%
+  drop_na() %>%
+  arrange(mass)
+
+
+
+mapa_animado <- world %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey20",
+               color = "white",
+               size = 0.1) +
+  geom_point(data= meteoritos_Mundo, 
+             x = meteoritos_Mundo$long, 
+             y = meteoritos_Mundo$lat,
+             color = "orange",
+             alpha = 0.7,
+             size = 0.2) +
+  transition_states(year,
+                    transition_length = 1, 
+                    state_length = 1) +
+  shadow_mark(past = TRUE) +
+  labs( title = "Meteorite Falls \n Year :{closest_state}",
+        caption = "The Meteoritical Society") +
+  theme_map() +
+  theme(plot.title = element_text(size = 10, hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    plot.caption = element_text(size = 6, hjust = 1))
+
+
+animate(mapa_animado, 
+        fps = 15, 
+        nframes = 350,
+        height = 500, 
+        width = 700, 
+        res = 150)
+
+```
+
+\
+
+In the next example we also want to show the locations of the meteorites falls on a map, but in this ocassion we will enter the `enter` and `exit` functions in order to modify the state of appearing and disappearing data. We will use the functions `enter_fade()` and `exit_shrink()` to modify the entrance and exit animations but you can even create you own animation using the `enter_manual()` and `exit_manual()` functions.  
+
+\
+
+```{r, out.width="100%", fig.align='center'}
+
+mapa_animado_3 <- world %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey20",
+               color = "white",
+               size = 0.01) +
+  geom_point(data= meteoritos_Mundo, 
+             aes(x = long, 
+                 y = lat, 
+                 size = mass),
+             color = "orange",
+             alpha = 0.9) +
+  transition_components(year) +
+  enter_fade() +
+  exit_shrink() +
+  ease_aes("sine-in-out") +
+  shadow_mark(past = FALSE) +
+  labs( title = "Meteorite Landings \n Year :{round(frame_time)}",
+        caption = "The Meteoritical Society") +
+  theme_map() +
+  scale_size_continuous(guide = F) +
+  scale_color_discrete(name = "Type") +
+  theme(plot.title = element_text(size = 10, hjust = 0.5))
+
+animate(mapa_animado_3, 
+        fps = 2, 
+        height = 500, 
+        width = 700, 
+        res = 150)
+
+```
+
+\
+
+# Plotly
+
+\
+
+In a previous example we used {plotly} to create an interactive choropleth map. Similarly, we can use this package to plot another map indicating locations using a list of geographical coordinates. The procedure will be similar to the choropleth example, but in this ocassion we will have to indicate the longtitud and latitute coordinates in the `plot_geo()` function. Note that in the tooltip we have added information about the name of the location where the meteorite fell, its mass (in grams) and the year (year found).
+
+\
+
+```{r, out.width="100%", fig.align='center'}
+
+meteoritos_fell <- meteoritos %>%
+  filter(fall == "Fell")
+
+meteoritos_map <- list(
+  #scope = 'usa',
+  projection = list(type = 'Mercator'),
+  showland = TRUE,
+  landcolor = toRGB("grey80")
+)
+
+
+meteo_map <- plot_geo(meteoritos_fell, lat = ~lat, lon = ~long)
+meteo_map <- meteo_map %>% add_markers(
+  text = ~paste(paste("Name:", name), 
+                paste("Year:", year), 
+                paste("Mass:", mass), sep = "<br />"),
+  color = ~mass, symbol = I("circle-dot"), size = I(8), hoverinfo = "text"
+)
+meteo_map <- meteo_map %>% colorbar(title = "Mass")
+meteo_map <- meteo_map %>% layout(
+  title = 'Meteorite Landings<br />(Meteorite falls)', geo = meteoritos_map
+)
+
+meteo_map
+
+```
+

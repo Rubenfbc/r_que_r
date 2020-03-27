@@ -6,10 +6,20 @@
     <description>Recent content in R on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 25 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Data visualizations: Interactive and animated maps</title>
+      <link>/interactive_map/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/interactive_map/</guid>
+      <description>Re
+In this post we will present a few examples of interactive and animated maps using different R packages.This post is a continuation of previous posts that addressed the creation of static maps.</description>
+    </item>
     
     <item>
       <title>Data visualizations: Working with the Nomenclature of Territorial Units for Statistics (NUTS) of Eurostat</title>

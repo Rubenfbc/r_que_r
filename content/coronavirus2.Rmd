@@ -36,4 +36,4 @@ The dashboard on coronavirus is deployed in rpubs.com:
 
 \
 
-[Link to the dashboard](https://rpubs.com/rubenfbc/coronavirus)
+[Link to the dashboard](https://rpubs.com/rubenfbc/coronavirus2)
