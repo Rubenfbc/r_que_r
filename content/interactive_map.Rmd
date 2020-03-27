@@ -1,5 +1,5 @@
 ---
-title: 'Data visualizations: Interactive and animated maps'
+title: 'Data visualization: Interactive and animated maps'
 author: "Rubén F. Bustillo"
 date: '2020-03-25'
 tags: ["maps"]
