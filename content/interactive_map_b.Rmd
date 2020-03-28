@@ -1,0 +1,265 @@
+---
+title: 'Data visualization: Interactive and animated maps with {ggplot2} and {plotly}'
+author: "Rubén F. Bustillo"
+date: '2020-03-28'
+tags: ["maps"]
+categories: ["R"]
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+**Re**
+
+In this post we will present a few examples of interactive and animated maps using both {ggplot2} and {plotly} .  
+This post is a continuation of the previous one ( interactive and animated maps ) . 
+
+\
+
+# Libraries / packages
+
+\
+
+This post is just a continuation of the [previous post](https://rquer.netlify.com/interactive_map/) on animated and interactive maps. We will show four examples of maps created using {ggplot2} and {plotly}. 
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(gapminder)
+library(echarts4r)
+library(gganimate)
+library(ggiraph)
+library(widgetframe)
+library(ggthemes)
+library(plotly)
+library(viridis)
+library(DT)
+```
+
+\
+
+# Datasets
+
+\
+
+## gapminder dataset:
+
+\
+
+```{r}
+
+world <- map_data("world") %>%
+  filter(region != "Antarctica")
+
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+
+gapminder_codes <- gapminder::country_codes
+
+gapminder <-gapminder::gapminder_unfiltered
+
+
+gapminder <- gapminder %>%
+  inner_join(gapminder_codes, by= "country") %>%
+  mutate(code = iso_alpha)
+
+gapminder_data <- gapminder %>%
+  inner_join(maps::iso3166 %>%
+               select(a3, mapname), by= c(code = "a3")) %>%
+  mutate(mapname = str_remove(mapname, "\\(.*"))
+
+
+```
+
+\
+
+## Meteorites dataset
+
+\
+
+```{r, warning=FALSE, message=FALSE}
+
+meteoritos <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-11/meteorites.csv")
+
+options(scipen = 999) 
+
+meteoritos_Mundo <- meteoritos %>%
+  filter(fall == "Fell") %>%
+  filter(year > 1800) %>%
+  drop_na() %>%
+  arrange(mass)
+
+
+```
+
+\
+
+
+# Example 1.
+
+\
+
+```{r, out.width="100%", warning=FALSE}
+
+mapa_animado_1 <- world %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey20",
+               color = "white",
+               size = 0.01) +
+  geom_point(data= meteoritos_Mundo, 
+             aes(x = long, 
+                 y = lat, 
+                 size = mass),
+             color = "orange",
+             alpha = 0.7) +
+  labs( title = "Meteorite Landings \n from 1800 to 2013}",
+        caption = "The Meteoritical Society") +
+  theme_map() +
+  scale_size_continuous(guide = F) +
+  scale_color_discrete(name = "Type") +
+  theme(plot.title = element_text(size = 10, hjust = 0.5))
+
+
+fig_1 <- ggplotly(mapa_animado_1)
+
+fig_1
+
+```
+
+\
+
+# Example 2.
+
+\
+
+
+```{r, out.width="100%", warning=FALSE}
+
+mapa_animado_2 <- world %>%
+  ggplot() +
+  geom_polygon(aes( x= long, y = lat, group = group),
+               fill = "grey20",
+               color = "white",
+               size = 0.01) +
+  geom_point(data= meteoritos_Mundo, 
+             aes(x = long, 
+                 y = lat, 
+                 frame = year,
+                 size = mass),
+             color = "orange",
+             alpha = 0.7) +
+  labs( title = "Meteorite Landings \n from 1800 to 2013}",
+        caption = "The Meteoritical Society") +
+  theme_map() +
+  scale_size_continuous(guide = F) +
+  scale_color_discrete(name = "Type") +
+  theme(plot.title = element_text(size = 10, hjust = 0.5))
+
+
+fig_2 <- ggplotly(mapa_animado_2)%>%
+  animation_slider(currentvalue = list(prefix = "Year ", font = list(color="orange")))
+
+fig_2
+
+```
+
+\
+
+# Example 3
+
+\
+
+```{r, out.width="100%", warning=FALSE}
+
+mapa_animado_3 <- gapminder_data %>%
+ filter(year == 2007) %>%
+  right_join(world, by= c(mapname = "region")) %>%
+  ggplot(aes(long, lat, 
+             group= group, 
+             fill= lifeExp)) +
+  geom_polygon(color = "white", 
+               size = 0.01) +
+  theme_void() +
+  scale_fill_viridis(option = "B",
+                     name= "Years",
+                     guide = guide_colorbar(
+                       direction = "horizontal",
+                       barheight = unit(2, units = "mm"),
+                       barwidth = unit(100, units = "mm"),
+                       draw.ulim = FALSE,
+                       title.position = "top",
+                       title.hjust = 0.5,
+                       title.vjust = 0.5 )) +
+  labs(title="Life Expectancy",
+       subtitle = "year: 2007",
+       caption = "Source: gapminder.org")  +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.position = "bottom") +
+  coord_fixed(ratio = 1.3) 
+
+
+
+fig_3 <- ggplotly(mapa_animado_3)
+
+fig_3
+
+```
+
+\
+
+# Example 4. 
+
+\
+
+```{r, out.width="100%", warning=FALSE}
+
+mapa_animado_4 <- gapminder_data %>%
+ filter(year %in% c(1992, 1997, 2002, 2007)) %>%
+  right_join(world, by= c(mapname = "region")) %>%
+  ggplot(aes(long, lat, 
+             group= group, 
+             fill= lifeExp)) +
+  geom_polygon(aes(frame = year),
+               color = "white", 
+               size = 0.01) +
+  theme_void() +
+  scale_fill_viridis(option = "B",
+                     name= "Years",
+                     guide = guide_colorbar(
+                       direction = "horizontal",
+                       barheight = unit(2, units = "mm"),
+                       barwidth = unit(100, units = "mm"),
+                       draw.ulim = FALSE,
+                       title.position = "top",
+                       title.hjust = 0.5,
+                       title.vjust = 0.5 )) +
+  labs(title="Life Expectancy",
+       subtitle = "",
+       caption = "Source: gapminder.org")  +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 10, hjust = 0.5),
+    plot.caption = element_text(size = 8, hjust = 1),
+    legend.position = "bottom") +
+  coord_fixed(ratio = 1.3) 
+
+
+
+fig_4 <- ggplotly(mapa_animado_4) %>%
+  animation_slider(currentvalue = list(prefix = "Year ", font = list(color="orange")))
+
+fig_4
+
+```
