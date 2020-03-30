@@ -1,0 +1,18 @@
+---
+title: "Data Wrangling: Joining Data"
+author: "Rubén F. Bustillo"
+date: 2020-03-30
+categories: ["R"]
+tags: ["joins"]
+
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(collapse = TRUE)
+
+```
+
+
+Dashboards with information about functions in {dplyr} and {Base R} used to join / combine tables. 

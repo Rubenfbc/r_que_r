@@ -165,8 +165,7 @@ mapa_animado_2 <- world %>%
   theme(plot.title = element_text(size = 10, hjust = 0.5))
 
 
-fig_2 <- ggplotly(mapa_animado_2)%>%
-  animation_slider(currentvalue = list(prefix = "Year ", font = list(color="orange")))
+fig_2 <- ggplotly(mapa_animado_2) %>% animation_slider(currentvalue = list(prefix = "Year ", font = list(color="orange")))
 
 fig_2
 
@@ -190,23 +189,13 @@ mapa_animado_3 <- gapminder_data %>%
                size = 0.01) +
   theme_void() +
   scale_fill_viridis(option = "B",
-                     name= "Years",
-                     guide = guide_colorbar(
-                       direction = "horizontal",
-                       barheight = unit(2, units = "mm"),
-                       barwidth = unit(100, units = "mm"),
-                       draw.ulim = FALSE,
-                       title.position = "top",
-                       title.hjust = 0.5,
-                       title.vjust = 0.5 )) +
+                     name= "Years") +
   labs(title="Life Expectancy",
-       subtitle = "year: 2007",
-       caption = "Source: gapminder.org")  +
+       subtitle = "year: 2007")  +
   theme(
     plot.title = element_text(size = 12, hjust = 0.5),
     plot.subtitle = element_text(size = 10, hjust = 0.5),
-    plot.caption = element_text(size = 8, hjust = 1),
-    legend.position = "bottom") +
+    plot.caption = element_text(size = 8, hjust = 1)) +
   coord_fixed(ratio = 1.3) 
 
 
@@ -236,30 +225,19 @@ mapa_animado_4 <- gapminder_data %>%
                size = 0.01) +
   theme_void() +
   scale_fill_viridis(option = "B",
-                     name= "Years",
-                     guide = guide_colorbar(
-                       direction = "horizontal",
-                       barheight = unit(2, units = "mm"),
-                       barwidth = unit(100, units = "mm"),
-                       draw.ulim = FALSE,
-                       title.position = "top",
-                       title.hjust = 0.5,
-                       title.vjust = 0.5 )) +
-  labs(title="Life Expectancy",
-       subtitle = "",
-       caption = "Source: gapminder.org")  +
+                     name= "Years") +
+  labs(title="Life Expectancy")  +
   theme(
     plot.title = element_text(size = 12, hjust = 0.5),
     plot.subtitle = element_text(size = 10, hjust = 0.5),
-    plot.caption = element_text(size = 8, hjust = 1),
-    legend.position = "bottom") +
+    plot.caption = element_text(size = 8, hjust = 1)) +
   coord_fixed(ratio = 1.3) 
 
 
 
-fig_4 <- ggplotly(mapa_animado_4) %>%
-  animation_slider(currentvalue = list(prefix = "Year ", font = list(color="orange")))
+fig_4 <- ggplotly(mapa_animado_4) %>% animation_slider(currentvalue = list(prefix = "Year ", font = list(color="orange")))
 
 fig_4
+
 
 ```

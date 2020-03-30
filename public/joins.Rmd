@@ -1,0 +1,1162 @@
+---
+title: "Data Wrangling: Joining Data"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    orientation: columns
+    source_code: embed
+    vertical_layout: fill
+    theme: simplex
+---
+
+```{r setup, include=FALSE}
+
+
+# PACKAGES / LIBRARIES:
+
+library(flexdashboard)
+library(tidyverse)
+library(gapminder)
+library(ggthemes)
+library(ggthemr)
+library(DT)
+
+
+
+# MAIN DATASET:
+
+gapminder <- gapminder::gapminder
+
+
+```
+
+
+Tables (I)
+====================================================================================
+
+
+Column 
+-----------------------------------------------------------------------
+
+### LEFT TABLE: `vab_pc`
+
+```{r}
+
+vab_pc <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Peru", "India", "Australia", "Japan", "Canada")) %>%
+  select(country, continent, gdpPercap)
+
+vab_pc$gdpPercap <- formatC(vab_pc$gdpPercap, format = "f", digits = 2, big.mark = ",")
+
+datatable(vab_pc, rownames = TRUE, list(
+  columnDefs = list(list(className = 'dt-center', targets = 0:3))))
+
+
+```
+
+
+### RiGHT TABLE: `life_exp`
+
+```{r}
+
+life_exp <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Australia", "Singapore", "Canada", "Japan", "Mongolia", "Brazil")) %>%
+  select(country, continent, lifeExp)
+
+life_exp$lifeExp <- formatC(life_exp$lifeExp, format = "f", digits = 2)
+
+datatable(life_exp, rownames = TRUE, list(
+  columnDefs = list(list(className = 'dt-center', targets = 0:3))))
+
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### LEFT TABLE: `vab_pc`
+
+```{r}
+
+library(png)
+library(grid)
+
+vabpc <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\vab_pc.png")
+grid.raster(vabpc)
+
+
+```
+
+
+
+### LEFT TABLE: `life_exp`
+
+```{r}
+
+
+lifeexp <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\life_exp.png")
+grid.raster(lifeexp)
+
+
+```
+
+
+
+
+
+INNER JOIN
+====================================================================================
+
+Column 
+-----------------------------------------------------------------------
+
+\
+
+### THE `inner_join()` FUNCTION (dplyr) RETURNS ALL ROWS FROM THE LEFT TABLE WHERE THERE ARE MATCHING VALUES IN THE RIGHT TABLE. THEREFORE, THE `inner_join()` RETURNS A TABLE WHICH COMBINE BOTH TABLES BASED ON THE JOIN PREDICATE. IF THERE ARE MULTIPLE MATCHES BETWEEN THE LEFT AND THE RIGHT TABLE ALL COMBINATIONS OF THE MATCHES ARE RETURNED. ALTERNATIVELY WE CAN USE THE `merge()` FUNCTION (BASE R) INDICATING `all=FALSE`
+
+
+```{r}
+
+inner_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\inner_join.png")
+grid.raster(inner_join)
+
+
+```
+
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+\
+
+`inner_join(vab_pc, life_exp, by= c("country", "continent"))`
+
+\
+
+```{r}
+
+inner_join(vab_pc, life_exp, by= c("country", "continent"))
+
+```
+
+*** 
+
+
+\
+
+`inner_join(life_exp, vab_pc, by= c("country", "continent"))`
+
+\
+
+```{r}
+
+inner_join(life_exp, vab_pc,  by= c("country", "continent"))
+
+```
+
+
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+### Base R {data-commentary-width=100}
+
+*** 
+
+\
+
+\
+
+`merge(vab_pc, life_exp, all = FALSE)`
+
+\
+
+```{r}
+
+merge(vab_pc, life_exp, all = FALSE)
+
+```
+
+
+*** 
+
+\
+
+\
+
+\
+
+`merge(life_exp, vab_pc, all = FALSE)`
+
+\
+
+```{r}
+
+merge(life_exp, vab_pc, all = FALSE)
+
+```
+
+
+
+
+
+LEFT JOIN
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `left_join()` FUNCTION (dplyr) RETURNS ALL RECORDS FROM THE LEFT TABLE AND THE MATCHED RECORDS FROM THE RIGHT TABLE. THE RESULT IS `NA` FROM THE RIGHT SIDE IF THERE IS NO MATCH. IF THERE ARE MULTIPLE MATCHES BETWEEN THE LEFT TABLE AND THE RIGHT TABLE ALL COMBINATIONS OF THE MATCHES ARE RETURNED. IN BASE R WE CAN USE THE FUNCTION `merge()` INDICATING `all.x = TRUE`. 
+
+
+
+```{r}
+
+left_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\left_join.png")
+grid.raster(left_join)
+
+```
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+\
+
+`vab_pc %>% 
+    left_join(life_exp, by = c("country", "continent"))`
+
+\
+
+```{r}
+
+vab_pc %>%
+  left_join(life_exp, by = c("country", "continent"))
+
+```
+
+
+*** 
+
+\
+
+`life_exp %>% 
+    left_join(vab_pc, by = c("country", "continent"))`
+
+\
+
+```{r}
+
+life_exp %>%
+  left_join(vab_pc, by = c("country", "continent"))
+
+```
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+### Base R {data-commentary-width=100}
+
+*** 
+
+\
+
+\
+
+`merge(vab_pc, life_exp, all.x = TRUE)`
+
+\
+
+```{r}
+
+merge(vab_pc, life_exp, all.x = TRUE)
+
+```
+
+
+*** 
+
+\
+
+\
+
+\
+
+`merge(life_exp, vab_pc, all.x = TRUE)`
+
+\
+
+```{r}
+
+merge(life_exp, vab_pc, all.x = TRUE)
+
+```
+
+
+
+
+RIGHT JOIN
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `right_join()` FUNCTION (dplyr) RETURNS ALL RECORDS FROM THE RIGHT TABLE AND THE MATCHED RECORDS FROM THE LEFT TABLE. THE RESULT IS `NA` FROM THE LEFT SIDE IF THERE IS NO MATCH. IF THERE ARE MULTIPLE MATCHES BETWEEN THE LEFT TABLE AND THE RIGHT TABLE, ALL COMBINATIONS OF THE MATCHES ARE RETURNED. IN BASE R WE CAN USE THE FUNCTION `merge()` INDICATING `all.y = TRUE`. 
+
+
+```{r}
+
+
+right_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\right_join.png")
+grid.raster(right_join)
+
+
+```
+
+
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+\
+
+`vab_pc %>% 
+    right_join(life_exp, by = c("country", "continent"))`
+
+\
+
+```{r}
+
+vab_pc %>%
+  right_join(life_exp, by = c("country", "continent"))
+
+```
+
+
+*** 
+
+\
+
+`life_exp %>% 
+    right_join(vab_pc, by = c("country", "continent"))`
+
+\
+
+```{r}
+
+life_exp %>%
+  right_join(vab_pc, by = c("country", "continent"))
+
+```
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+### Base R {data-commentary-width=100}
+
+*** 
+
+\
+
+\
+
+`merge(vab_pc, life_exp, all.y = TRUE)`
+
+\
+
+```{r}
+
+merge(vab_pc, life_exp, all.y = TRUE)
+
+```
+
+
+*** 
+
+\
+
+\
+
+\
+
+`merge(life_exp, vab_pc, all.y = TRUE)`
+
+\
+
+```{r}
+
+merge(life_exp, vab_pc, all.y = TRUE)
+
+```
+
+
+
+FULL JOIN
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `full_join()` FUNCTION (dplyr) RETURNS ALL ROWS AND ALL COLUMNS FROM BOTH THE LEFT AND THE RIGHT TABLE. WHERE THERE ARE NOT MATCHING VALUES RETURNS `NA` FOR THE ONES MISSING. IN BASE R WE CAN USE THE FUNCTION `merge()` INDICATING `all = TRUE`. 
+
+\
+
+```{r}
+
+
+full_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\full_join.png")
+grid.raster(full_join)
+
+
+```
+
+
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+\
+
+`vab_pc %>% 
+    full_join(life_exp, by = c("country", "continent"))`
+
+\
+
+```{r}
+
+vab_pc %>%
+  full_join(life_exp, by = c("country", "continent"))
+
+```
+
+
+*** 
+
+\
+
+`life_exp %>% 
+    full_join(vab_pc, by = c("country", "continent"))`
+
+\
+
+```{r}
+
+life_exp %>%
+  full_join(vab_pc, by = c("country", "continent"))
+
+```
+
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+### Base R {data-commentary-width=100}
+
+*** 
+
+\
+
+\
+
+`merge(vab_pc, life_exp, all = TRUE)`
+
+\
+
+```{r}
+
+merge(vab_pc, life_exp, all = TRUE)
+
+```
+
+
+*** 
+
+\
+
+\
+
+\
+
+`merge(life_exp, vab_pc, all = TRUE)`
+
+\
+
+```{r}
+
+merge(life_exp, vab_pc, all = TRUE)
+
+```
+
+
+
+
+BIND COLS
+====================================================================================
+
+Columna {data-width=700}
+-----------------------------------------------------------------
+
+\
+
+### THE FUNCTION `bind_cols()` (dplyr) AND THE FUNCTION `cbind()` (BASE R) JOINS TWO TABLES HORIZONTALLY AND DO NOT NEED TO SPECIFY A COMMON KEY. THEY HORIZONTALLY CONCATENATES THE LEFT AND RIGHT TABLE, BUT THE TABLES MUST HAVE THE SAME NUMBER OF ROWS AND BE SORTED IN THE SAME ORDER AS THEY ARE MATCHED BY POSITION (**NOTE THAT IN THIS CASE BOTH TABLES MUST HAVE THE SAME OBSERVATIONS**)
+
+\  
+
+\
+
+```{r}
+
+
+cbind_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\cbind_join.png")
+grid.raster(cbind_join)
+
+
+```
+
+
+
+Columna {data-width=300}
+-----------------------------------------------------------------------
+
+
+### Dplyr
+
+
+`bind_cols(vab_pc_b, life_exp_b)`
+
+```{r}
+
+vab_pc_b <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Peru", "India", "Australia", "Japan", "Canada")) %>%
+  select(country, continent, gdpPercap)
+
+life_exp_b <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Peru", "India", "Australia", "Japan", "Canada")) %>%
+  select(country, continent, gdpPercap)
+
+bind_cols(vab_pc_b, life_exp_b)
+
+```
+
+
+`bind_cols(life_exp_b, vab_pc_b)`
+
+
+```{r}
+
+bind_cols(list(life_exp_b, vab_pc_b))
+
+```
+
+### Base R 
+
+`cbind(vab_pc_b, life_exp_b)`
+
+
+```{r}
+
+cbind(vab_pc_b, life_exp_b)
+
+```
+
+
+`cbind(life_exp_b, vab_pc_b)`
+
+
+```{r}
+
+cbind(life_exp_b, vab_pc_b)
+
+```
+
+
+
+SEMI JOIN
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `semi_join()` FUNCTION RETURNS ALL ROWS FROM THE LEFT TABLE WHERE THERE IS A CORRESPONDING MATCHING VALUE IN THE RIGHT TABLE, KEEPING JUST COLUMNS FROM THE FIRST ONE. INSTEAD OF RETURNING A TABLE COMBINING BOTH TABLES (AS IT DOES THE `inner_join()` FUNCTION, IT ONLY CONTAINS DATA FROM THE LEFT TABLE. THEREFORE, THE `semi_join()` FUNCTION WILL NEVER DUPLICATE ROWS OF THE LEFT TABLE.  
+
+\
+
+```{r}
+
+
+semi_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\semi_join.png")
+grid.raster(semi_join)
+
+
+```
+
+
+
+
+
+Columna {data-width=400}
+-----------------------------------------------------------------------
+
+
+### Dyplyr 
+
+*** 
+
+`semi_join(vab_pc, life_exp)`
+
+
+```{r}
+
+semi_join(vab_pc, life_exp)
+
+```
+
+
+
+*** 
+
+`semi_join(life_exp, vab_pc)`
+
+
+```{r}
+
+semi_join(life_exp, vab_pc)
+
+```
+
+
+*** 
+
+`semi_join(matches, by= c("country", "continent")`
+
+```{r}
+
+vab_pc %>%
+  semi_join(life_exp, by= c("country", "continent"))
+
+```
+
+
+*** 
+
+`vab_pc %>%
+  filter(country %in% life_exp$country)`
+
+```{r}
+
+vab_pc %>%
+  filter(country %in% life_exp$country)
+
+```
+
+
+
+ANTI JOIN
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `anti_join()` FUNCTION RETURNS ALL ROWS FROM THE LEFT TABLE WHERE THERE ARE NOT MATCHING VALUES IN THE RIGHT TABLE, KEEPING JUST COLUMNS FROM THE LEFT TABLE. THE `anti_join()` CAN BE VERY USEFUL AS IT ALLOWS TO DETECT THE OBSERVATIONS IN A DATASET (LEFT TABLE) THAT ARE NOT INCLUDED IN A SECOND TABLE (RIGHT TABLE)
+
+\
+
+```{r}
+
+
+anti_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\anti_join.png")
+grid.raster(anti_join)
+
+
+```
+
+
+
+
+
+Columna {data-width=400}
+-----------------------------------------------------------------------
+
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+
+`anti_join(vab_pc, life_exp)`
+
+
+```{r}
+
+anti_join(vab_pc, life_exp)
+
+```
+
+
+
+*** 
+
+
+`anti_join(life_exp, vab_pc)`
+
+
+```{r}
+
+anti_join(life_exp, vab_pc)
+
+```
+
+
+
+*** 
+
+
+`anti_join(life_exp, vab_pc, by = c("country", "continent"))`
+
+
+```{r}
+
+anti_join(vab_pc, life_exp, by = c("country", "continent"))
+
+```
+
+
+*** 
+
+
+`vab_pc %>%
+  filter(country %nin% life_exp$country)`
+
+
+```{r}
+
+library(Hmisc)
+
+vab_pc %>%
+  filter(country %nin% life_exp$country)
+
+```
+
+
+
+Tables (II)
+====================================================================================
+
+
+Columna 
+-----------------------------------------------------------------------
+
+### LEFT TABLE: `A`
+
+```{r}
+
+gapminder <-gapminder::gapminder
+
+A <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Peru", "India", "Australia", "Japan", "Canada")) %>%
+  select(country, continent, gdpPercap, lifeExp)
+
+A$gdpPercap <- formatC(A$gdpPercap, format = "f", digits = 2, big.mark = ",")
+A$lifeExp <- formatC(A$lifeExp, format = "f", digits = 2)
+
+datatable(A, rownames = TRUE, list(
+  columnDefs = list(list(className = 'dt-center', targets = 0:4))))
+
+```
+
+
+### RiGHT TABLE: `B`
+
+```{r}
+
+B <- gapminder %>%
+  filter(year == 2007) %>%
+  filter(country %in% c("Spain", "Australia", "Singapore", "Canada", "Japan", "Mongolia", "Brazil")) %>%
+  select(country, continent, gdpPercap, lifeExp)
+
+B$gdpPercap <- formatC(B$gdpPercap, format = "f", digits = 2, big.mark = ",")
+B$lifeExp <- formatC(B$lifeExp, format = "f", digits = 2)
+
+
+datatable(B, rownames = TRUE, list(
+  columnDefs = list(list(className = 'dt-center', targets = 0:4))))
+
+```
+
+
+
+Column 
+-----------------------------------------------------------------------
+
+
+### LEFT TABLE: `A`
+
+```{r}
+
+
+A2 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\A.png")
+grid.raster(A2)
+
+
+```
+
+
+
+### LEFT TABLE: `B`
+
+```{r}
+
+
+B2 <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\B.png")
+grid.raster(B2)
+
+
+```
+
+
+
+INTERSECT
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `intersect()` FUNCTION TAKES THE ROWS THAT APPEARS IN BOTH  TABLES AND RETURNS A DATAFRAME WITH THOSE ROWS THAT ARE BOTH IN THE LEFT AND IN THE RIGHT TABLE. THIS FUNCTION IS SIMILAR TO THE `inner_join()` BUT IN THIS CASE **BOTH DATASETS MUST HAVE THE SAME COLUMNS**. BEWARE THAT THE `intersect()` FUNCTION REMOVES DUPLICATES. 
+
+\
+
+```{r}
+
+
+intersect_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\intersect_join.png")
+grid.raster(intersect_join)
+
+
+```
+
+
+
+
+
+Columna {data-width=400}
+-----------------------------------------------------------------------
+
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+
+`intersect(A,B)`
+
+
+```{r}
+
+intersect(A,B)
+
+```
+
+
+*** 
+
+
+`intersect(B,A)`
+
+
+```{r}
+
+intersect(B,A)
+
+```
+
+
+
+
+
+UNION
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `union()` FUNCTION COMBINES ALL ROWS FROM THE LEFT AND THE RIGHT TABLE BUT **REMOVES DUPLICATE RECORDS**.  
+
+\
+
+```{r}
+
+
+union_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\union_join.png")
+grid.raster(union_join)
+
+
+```
+
+
+
+
+
+Columna {data-width=400}
+-----------------------------------------------------------------------
+
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+
+`union(A,B)`
+
+
+```{r}
+
+union(A,B)
+
+```
+
+
+*** 
+
+
+`union(B,A)`
+
+
+```{r}
+
+union(B,A)
+
+```
+
+
+
+UNION ALL | BIND ROWS
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `union_all()` OR THE `bind_rows()` (dplyr) FUNCTIONS, OR THE FUNCTION `rbind()` IN BASE R, COMBINE ALL ROWS FROM THE LEFT AND THE RIGHT TABLE **WITHOUT REMOVING THE DUPLICATE RECORDS**. 
+
+\
+
+```{r}
+
+
+unionall_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\unionall_join.png")
+grid.raster(unionall_join)
+
+
+```
+
+
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+### dyplyr 
+
+`union_all(A,B)`
+
+
+```{r}
+
+union_all(A,B)
+
+```
+
+
+`union_all(B,A)`
+
+
+```{r}
+
+union_all(B,A)
+
+```
+
+
+`bind_rows(A, B)`
+
+```{r}
+
+bind_rows(A, B)
+
+```
+
+
+
+Columna {data-width=200}
+-----------------------------------------------------------------------
+
+
+### base R
+
+
+`rbind(A,B)`
+
+```{r}
+
+rbind(A,B)
+
+```
+
+
+`rbind(B,A)`
+
+```{r}
+
+rbind(B, A)
+
+```
+
+
+
+
+
+SETDIFF
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### THE `setdiff()` FUNCTION (dplyr) RETURNS THE ROWS THAT APPEAR IN THE LEFT TABLE BUT NOT IN THE RIGHT TABLE.  BEWARE THAT THE `setdiff()` FUNCTION REMOVES DUPLICATES. 
+
+\
+
+```{r}
+
+
+except_join <- readPNG("C:\\Users\\Usuario\\Desktop\\r_que_r\\r_que_r\\content\\datasets\\joins_sql\\except_join.png")
+grid.raster(except_join)
+
+
+```
+
+
+
+
+
+Columna {data-width=400}
+-----------------------------------------------------------------------
+
+
+### Dyplyr {data-commentary-width=400}
+
+*** 
+
+
+`setdiff(A,B)`
+
+
+```{r}
+
+setdiff(A,B)
+
+```
+
+
+*** 
+
+`setdiff(B,A)`
+
+
+```{r}
+
+setdiff(B,A)
+
+```
+
+
+
+
+(SELF JOIN)
+====================================================================================
+
+Columna {data-width=600}
+-----------------------------------------------------------------
+
+\
+
+### Dataset: `gapminder` 
+
+
+```{r}
+
+datatable(gapminder, rownames = TRUE, list(
+  columnDefs = list(list(className = 'dt-center', targets = 0:6))))
+
+```
+
+
+Columna {data-width=400}
+-----------------------------------------------------------------
+
+\
+
+\
+
+***
+
+`gapminder %>%
+  filter(year == c(1952,2007)) %>%
+  select(country, continent, year, lifeExp) %>%
+  spread(key= year, lifeExp) %>%
+  mutate(crecimiento = ((`2007`-`1952`)/`1952`)*100) %>%
+  head(n=10)`
+  
+\
+
+```{r}
+
+gapminder %>%
+  filter(year == c(1952,2007)) %>%
+  select(country, continent, year, lifeExp) %>%
+  spread(key= year, lifeExp) %>%
+  mutate(crecimiento = ((`2007`-`1952`)/`1952`)*100) %>%
+  head(n=20)
+
+```
