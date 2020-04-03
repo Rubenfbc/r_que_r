@@ -70,6 +70,9 @@ Column
 library(readxl)
 peru_mapa_vab2018 <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/peru_mapa_vab2018.xlsx")
 
+peru_mapa_vab2018$Vab_perc <- formatC(peru_mapa_vab2018$Vab_perc, digits=3)
+peru_mapa_vab2018$Vab_perc <- as.numeric(peru_mapa_vab2018$Vab_perc)
+
 peru_map_region <- rnaturalearth::ne_states(country = "Peru", returnclass = "sf") %>%
   select(name, iso_3166_2, geometry) %>%
  left_join(peru_mapa_vab2018, 
@@ -96,7 +99,7 @@ Column
 library(readxl)
 peru_mapa_vab2018 <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/peru_mapa_vab2018.xlsx")
 
-
+peru_mapa_vab2018$Vab_perc <- formatC(peru_mapa_vab2018$Vab_perc, format = "f", digits = 3)
 
 peru_mapa_vab2018 %>%
   arrange(vab_2018) %>%
