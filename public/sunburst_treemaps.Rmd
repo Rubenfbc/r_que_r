@@ -1,0 +1,251 @@
+---
+title: "Data visualization: Sunburst charts and Treemaps with {plotly}"
+author: "Rubén F. Bustillo"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    orientation: columns
+    source_code: embed
+    vertical_layout: fill
+    theme: paper
+---
+
+```{r setup, include=FALSE}
+
+
+# PACKAGES / LIBRARIES:
+
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(rnaturalearth)
+
+
+```
+
+Peru
+===========================================================================
+
+Column {data-width=300}
+---------------------------------------------------------------------------
+
+### 
+
+\
+
+**Sunburst Charts and Treemaps** can be very useful for displaying hierarchical data. In a **sunburst chart** (o ring chart) each level of the hierarchy is represented by one circle (or ring), with the innermost circle as the top of the hierarchy. In a **treemap chart** each brand of a "tree" is given a rectangle, which is then tiled with smaller rectangles. Each area is proportional to a specified dimension of the data. We can use {plotly} to create interactive suburst and treemap charts. The hierarchy in both is defined by using the `labels` and `parents` attributes (see link to code). 
+
+\
+
+As an example we will represent the **regional and sectoral productive structure of Peru in 2018** using data from the Peruvian National Institute of Statistics and Informatics ([INEI](https://www.inei.gob.pe/)). Peru is divided into 24 departments, plus the Constitutional Province of Callao. Geographically it can also be divided in three big regions: The coast, the highlands (or mountain range) and the Jungle. The capital is Lima and, as we can see in the map and bar chart, most of the productive activity (approx. 40% of total Gross Added Value) is concentrated in Lima Province (or Metropolitan Lima). The magnitude of this economic concentration will be reflected in our charts
+
+\
+
+The INEI distinguishes 12 major economic / productive sectors: 
+
+- Agriculture, Livestock, Hunting and Forestry.
+- Fishing and Aquaculture.
+- Extraction of Minerals, Gas and Oil.
+- Manufacturing.
+- Electricity, Gas and Water.
+- Construction.
+- Commerce.
+- Transportation, Storage, Mail and Messaging.
+- Accommodation and Restaurants.
+- Telecommunications and Other Information Services.
+- Public Administration and Defence.
+- Other services.
+
+\
+
+Regions are included in one of the three geographic categories according to the proportion of jungle, coast and highlands in their territory. 
+
+Column
+---------------------------------------------------------------------------
+
+### Gross Value Added by region (% of total GVA), 2018
+
+```{r}
+
+library(readxl)
+peru_mapa_vab2018 <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/peru_mapa_vab2018.xlsx")
+
+peru_map_region <- rnaturalearth::ne_states(country = "Peru", returnclass = "sf") %>%
+  select(name, iso_3166_2, geometry) %>%
+ left_join(peru_mapa_vab2018, 
+            by = "name") 
+
+max_val = max(abs(peru_map_region$Vab_perc), na.rm = T)
+at_11 = lattice::do.breaks(endpoints = c(-max_val, max_val), nint = 11)
+fig<-peru_map_region %>%
+  mapview::mapview(zcol = "Vab_perc", at= at_11)
+fig
+
+
+```
+
+
+
+Column
+---------------------------------------------------------------------------
+
+### Gross Value Added by region (log scale), 2018. (in constant 2007 PEN thousands)
+
+```{r}
+
+library(readxl)
+peru_mapa_vab2018 <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/peru_mapa_vab2018.xlsx")
+
+
+
+peru_mapa_vab2018 %>%
+  arrange(vab_2018) %>%
+  mutate(name = factor(name, levels = name)) %>% 
+  plotly::plot_ly(x = ~ vab_2018,
+                  y = ~ name, 
+                  type = 'bar',
+                  text = ~ vab_2018,
+                  textposition = 'auto', 
+                  marker = list (color = c('mediumseagreen', 'mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen','mediumseagreen', 'yellow'))) %>%
+  plotly::layout(title = "",
+                 xaxis = list(type = "log", title = ""),
+                 yaxis = list(title = "")) %>%
+  plotly::layout(annotations = list(x = 1 , y = -0.05, text = "Source: INEI | The region of Lima (Lima) does not include Lima Province or Callao (Lima Metropolitana) ",
+                 showarrow = F, xref='paper', yref='paper', 
+                 xanchor='right', yanchor='auto', xshift=0, yshift=0,
+                 font=list(size=10, color="darkgrey")))
+
+
+
+```
+
+
+
+
+Sunburst Charts
+====================================================================================
+
+Column
+---------------------------------------------------------------------------
+
+### Gross Value Added, Peru 2018 (in constant 2007 PEN).  Big geographic areas and Regions (Lima includes Callao and Lima Province)
+
+\
+
+```{r}
+
+
+
+library(readxl)
+sunburst_treemap_1 <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/sunburst_treemap_1.xlsx")
+
+
+
+fig_peru <- plot_ly()
+
+fig_peru <- fig_peru %>%
+  add_trace(
+    ids = sunburst_treemap_1$labels,
+    labels = sunburst_treemap_1$labels,
+    parents = sunburst_treemap_1$parents,
+    values = sunburst_treemap_1$vab,
+    maxdepth = 2,
+    type = 'sunburst') %>%
+  layout(
+    title = ''
+  )
+
+
+
+fig_peru
+
+```
+
+
+
+Column
+---------------------------------------------------------------------------
+
+### GVA, Peru 2018 (in constant 2007 PEN). Big geographic areas, Regions and Productive Sectors (Lima includes Callao and Lima Province)
+
+\
+
+```{r}
+
+sunburst_treemap_2 <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/sunburst_treemap_2.xlsx")
+
+fig_peru<- fig_peru %>%
+  add_trace(
+    ids = sunburst_treemap_2$labels,
+    labels = sunburst_treemap_2$labels,
+    parents = sunburst_treemap_2$parents,
+    values = sunburst_treemap_2$vab,
+    maxdepth = 2,
+    type = 'sunburst') %>%
+  layout(
+    title = ''
+  )
+
+fig_peru
+
+```
+
+
+
+Treemap Charts
+====================================================================================
+
+Column
+---------------------------------------------------------------------------
+
+### Gross Value Added, Peru 2018 (in constant 2007 PEN).  Big geographic areas and Regions (Lima includes Callao and Lima Province)
+
+
+```{r}
+
+fig_peru <- plot_ly()
+
+fig_peru <- fig_peru %>%
+  add_trace(
+    ids = sunburst_treemap_1$labels,
+    labels = sunburst_treemap_1$labels,
+    parents = sunburst_treemap_1$parents,
+    values = sunburst_treemap_1$vab,
+    type = 'treemap') %>%
+  layout(
+    title = ''
+  )
+
+
+
+fig_peru
+
+
+```
+
+
+Column
+---------------------------------------------------------------------------
+
+### GVA, Peru 2018 (in constant 2007 PEN). Big geographic areas, Regions and Productive Sectors (Lima includes Callao and Lima Province)
+
+```{r}
+
+
+fig_peru<- fig_peru %>%
+  add_trace(
+    ids = sunburst_treemap_2$labels,
+    labels = sunburst_treemap_2$labels,
+    parents = sunburst_treemap_2$parents,
+    values = sunburst_treemap_2$vab,
+    type = 'treemap') %>%
+  layout(
+    title = ''
+  )
+
+fig_peru
+
+```
+
+
+

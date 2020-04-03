@@ -1,0 +1,316 @@
+labels;parents;vab
+Sierra;;138109
+Selva;;24805
+Costa;;323488
+Amazonas;Selva;3118
+Ancash;Sierra;20716
+Apurimac;Sierra;7128
+Arequipa;Sierra;31493
+Ayacucho;Sierra;5759
+Cajamarca;Sierra;11203
+Cusco;Sierra;21708
+Huancavelica;Sierra;3553
+Huanuco;Sierra;6009
+Ica;Costa;16979
+Junin;Sierra;15454
+La Libertad;Costa;21901
+Lambayeque;Costa;11836
+Lima;Costa;234337
+Loreto;Selva;8935
+Madre de Dios;Selva;2249
+Moquegua;Costa;8779
+Pasco;Sierra;5332
+Piura;Costa;19778
+Puno;Sierra;9754
+San Martin;Selva;6063
+Tacna;Costa;7113
+Tumbes;Costa;2765
+Ucayali;Selva;4441
+Agricultura, Ganad., Caza y Silv.;Amazonas;1021446
+Pesca y Acuicultura;Amazonas;1125
+Extrac. de Minerales, Gas y Petrol.;Amazonas;76316
+Manufactura;Amazonas;137980
+Electricidad, Gas y Agua;Amazonas;36550
+Construccion;Amazonas;379964
+Comercio;Amazonas;332751
+Transporte, Almacen., Correo y Mensaj.;Amazonas;126596
+Alojamiento y Restaurantes;Amazonas;43963
+Telecom. y Otros Serv. de Info,;Amazonas;63809
+Admin. Public. y Defensa;Amazonas;302870
+Otros Servicios;Amazonas;594811
+Agricultura, Ganad., Caza y Silv.;Ancash;707244
+Pesca y Acuicultura;Ancash;469462
+Extrac. de Minerales, Gas y Petrol.;Ancash;9730847
+Manufactura;Ancash;1933394
+Electricidad, Gas y Agua;Ancash;427853
+Construccion;Ancash;1065521
+Comercio;Ancash;1151703
+Transporte, Almacen., Correo y Mensaj.;Ancash;678277
+Alojamiento y Restaurantes;Ancash;500667
+Telecom. y Otros Serv. de Info,;Ancash;583363
+Admin. Public. y Defensa;Ancash;942826
+Otros Servicios;Ancash;2524767
+Agricultura, Ganad., Caza y Silv.;Apurimac;452383
+Pesca y Acuicultura;Apurimac;562
+Extrac. de Minerales, Gas y Petrol.;Apurimac;4472926
+Manufactura;Apurimac;96611
+Electricidad, Gas y Agua;Apurimac;46425
+Construccion;Apurimac;568977
+Comercio;Apurimac;240465
+Transporte, Almacen., Correo y Mensaj.;Apurimac;80994
+Alojamiento y Restaurantes;Apurimac;65986
+Telecom. y Otros Serv. de Info,;Apurimac;56483
+Admin. Public. y Defensa;Apurimac;315450
+Otros Servicios;Apurimac;730968
+Agricultura, Ganad., Caza y Silv.;Arequipa;1800677
+Pesca y Acuicultura;Arequipa;30859
+Extrac. de Minerales, Gas y Petrol.;Arequipa;11533710
+Manufactura;Arequipa;3318866
+Electricidad, Gas y Agua;Arequipa;302131
+Construccion;Arequipa;2436108
+Comercio;Arequipa;2925973
+Transporte, Almacen., Correo y Mensaj.;Arequipa;1583120
+Alojamiento y Restaurantes;Arequipa;622931
+Telecom. y Otros Serv. de Info,;Arequipa;1120565
+Admin. Public. y Defensa;Arequipa;949813
+Otros Servicios;Arequipa;4868671
+Agricultura, Ganad., Caza y Silv.;Ayacucho;749957
+Pesca y Acuicultura;Ayacucho;1313
+Extrac. de Minerales, Gas y Petrol.;Ayacucho;1319546
+Manufactura;Ayacucho;433176
+Electricidad, Gas y Agua;Ayacucho;39680
+Construccion;Ayacucho;570963
+Comercio;Ayacucho;549639
+Transporte, Almacen., Correo y Mensaj.;Ayacucho;202458
+Alojamiento y Restaurantes;Ayacucho;70635
+Telecom. y Otros Serv. de Info,;Ayacucho;217195
+Admin. Public. y Defensa;Ayacucho;492931
+Otros Servicios;Ayacucho;1111383
+Agricultura, Ganad., Caza y Silv.;Cajamarca;1358213
+Pesca y Acuicultura;Cajamarca;1204
+Extrac. de Minerales, Gas y Petrol.;Cajamarca;2196704
+Manufactura;Cajamarca;718520
+Electricidad, Gas y Agua;Cajamarca;175883
+Construccion;Cajamarca;1035309
+Comercio;Cajamarca;1022618
+Transporte, Almacen., Correo y Mensaj.;Cajamarca;436222
+Alojamiento y Restaurantes;Cajamarca;250891
+Telecom. y Otros Serv. de Info,;Cajamarca;395949
+Admin. Public. y Defensa;Cajamarca;973558
+Otros Servicios;Cajamarca;2637542
+Agricultura, Ganad., Caza y Silv.;Cusco;1027938
+Pesca y Acuicultura;Cusco;2625
+Extrac. de Minerales, Gas y Petrol.;Cusco;9862759
+Manufactura;Cusco;1178705
+Electricidad, Gas y Agua;Cusco;275533
+Construccion;Cusco;1664417
+Comercio;Cusco;1581555
+Transporte, Almacen., Correo y Mensaj.;Cusco;947776
+Alojamiento y Restaurantes;Cusco;951965
+Telecom. y Otros Serv. de Info,;Cusco;515686
+Admin. Public. y Defensa;Cusco;898876
+Otros Servicios;Cusco;2799930
+Agricultura, Ganad., Caza y Silv.;Huancavelica;300430
+Pesca y Acuicultura;Huancavelica;8398
+Extrac. de Minerales, Gas y Petrol.;Huancavelica;463872
+Manufactura;Huancavelica;58081
+Electricidad, Gas y Agua;Huancavelica;1129288
+Construccion;Huancavelica;355018
+Comercio;Huancavelica;169245
+Transporte, Almacen., Correo y Mensaj.;Huancavelica;75231
+Alojamiento y Restaurantes;Huancavelica;36623
+Telecom. y Otros Serv. de Info,;Huancavelica;31271
+Admin. Public. y Defensa;Huancavelica;360197
+Otros Servicios;Huancavelica;565633
+Agricultura, Ganad., Caza y Silv.;Huanuco;1051142
+Pesca y Acuicultura;Huanuco;633
+Extrac. de Minerales, Gas y Petrol.;Huanuco;462214
+Manufactura;Huanuco;388070
+Electricidad, Gas y Agua;Huanuco;364013
+Construccion;Huanuco;604808
+Comercio;Huanuco;671518
+Transporte, Almacen., Correo y Mensaj.;Huanuco;362356
+Alojamiento y Restaurantes;Huanuco;156641
+Telecom. y Otros Serv. de Info,;Huanuco;221994
+Admin. Public. y Defensa;Huanuco;600651
+Otros Servicios;Huanuco;1125234
+Agricultura, Ganad., Caza y Silv.;Ica;2393203
+Pesca y Acuicultura;Ica;166888
+Extrac. de Minerales, Gas y Petrol.;Ica;2670603
+Manufactura;Ica;3257711
+Electricidad, Gas y Agua;Ica;276341
+Construccion;Ica;1914287
+Comercio;Ica;1502654
+Transporte, Almacen., Correo y Mensaj.;Ica;1070853
+Alojamiento y Restaurantes;Ica;253349
+Telecom. y Otros Serv. de Info,;Ica;533241
+Admin. Public. y Defensa;Ica;543283
+Otros Servicios;Ica;2396834
+Agricultura, Ganad., Caza y Silv.;Junin;1490317
+Pesca y Acuicultura;Junin;14498
+Extrac. de Minerales, Gas y Petrol.;Junin;4478611
+Manufactura;Junin;931104
+Electricidad, Gas y Agua;Junin;388710
+Construccion;Junin;949368
+Comercio;Junin;1725780
+Transporte, Almacen., Correo y Mensaj.;Junin;1004318
+Alojamiento y Restaurantes;Junin;304040
+Telecom. y Otros Serv. de Info,;Junin;579725
+Admin. Public. y Defensa;Junin;925815
+Otros Servicios;Junin;2661809
+Agricultura, Ganad., Caza y Silv.;La Libertad;3387023
+Pesca y Acuicultura;La Libertad;217561
+Extrac. de Minerales, Gas y Petrol.;La Libertad;1941273
+Manufactura;La Libertad;3611558
+Electricidad, Gas y Agua;La Libertad;218556
+Construccion;La Libertad;1202765
+Comercio;La Libertad;2362922
+Transporte, Almacen., Correo y Mensaj.;La Libertad;1403446
+Alojamiento y Restaurantes;La Libertad;532783
+Telecom. y Otros Serv. de Info,;La Libertad;1205341
+Admin. Public. y Defensa;La Libertad;1075544
+Otros Servicios;La Libertad;4742440
+Agricultura, Ganad., Caza y Silv.;Lambayeque;1025465
+Pesca y Acuicultura;Lambayeque;39353
+Extrac. de Minerales, Gas y Petrol.;Lambayeque;33820
+Manufactura;Lambayeque;1211446
+Electricidad, Gas y Agua;Lambayeque;126668
+Construccion;Lambayeque;978536
+Comercio;Lambayeque;2199426
+Transporte, Almacen., Correo y Mensaj.;Lambayeque;954922
+Alojamiento y Restaurantes;Lambayeque;311837
+Telecom. y Otros Serv. de Info,;Lambayeque;752129
+Admin. Public. y Defensa;Lambayeque;815803
+Otros Servicios;Lambayeque;3386140
+Agricultura, Ganad., Caza y Silv.;Lima;4438371
+Pesca y Acuicultura;Lima;578043
+Extrac. de Minerales, Gas y Petrol.;Lima;3639728
+Manufactura;Lima;43214032
+Electricidad, Gas y Agua;Lima;4931602
+Construccion;Lima;12109221
+Comercio;Lima;30195235
+Transporte, Almacen., Correo y Mensaj.;Lima;16852367
+Alojamiento y Restaurantes;Lima;10976790
+Telecom. y Otros Serv. de Info,;Lima;15106849
+Admin. Public. y Defensa;Lima;13309086
+Otros Servicios;Lima;78985332
+Agricultura, Ganad., Caza y Silv.;Loreto;807674
+Pesca y Acuicultura;Loreto;37690
+Extrac. de Minerales, Gas y Petrol.;Loreto;1645418
+Manufactura;Loreto;630491
+Electricidad, Gas y Agua;Loreto;109154
+Construccion;Loreto;323463
+Comercio;Loreto;1510037
+Transporte, Almacen., Correo y Mensaj.;Loreto;476486
+Alojamiento y Restaurantes;Loreto;290231
+Telecom. y Otros Serv. de Info,;Loreto;312641
+Admin. Public. y Defensa;Loreto;723295
+Otros Servicios;Loreto;2068517
+Agricultura, Ganad., Caza y Silv.;Madre de Dios;183151
+Pesca y Acuicultura;Madre de Dios;1291
+Extrac. de Minerales, Gas y Petrol.;Madre de Dios;713871
+Manufactura;Madre de Dios;124448
+Electricidad, Gas y Agua;Madre de Dios;20527
+Construccion;Madre de Dios;184525
+Comercio;Madre de Dios;290772
+Transporte, Almacen., Correo y Mensaj.;Madre de Dios;118151
+Alojamiento y Restaurantes;Madre de Dios;73235
+Telecom. y Otros Serv. de Info,;Madre de Dios;49280
+Admin. Public. y Defensa;Madre de Dios;112922
+Otros Servicios;Madre de Dios;376594
+Agricultura, Ganad., Caza y Silv.;Moquegua;94000
+Pesca y Acuicultura;Moquegua;57062
+Extrac. de Minerales, Gas y Petrol.;Moquegua;2276983
+Manufactura;Moquegua;4061162
+Electricidad, Gas y Agua;Moquegua;218788
+Construccion;Moquegua;664504
+Comercio;Moquegua;209391
+Transporte, Almacen., Correo y Mensaj.;Moquegua;183560
+Alojamiento y Restaurantes;Moquegua;104872
+Telecom. y Otros Serv. de Info,;Moquegua;100151
+Admin. Public. y Defensa;Moquegua;238765
+Otros Servicios;Moquegua;569751
+Agricultura, Ganad., Caza y Silv.;Pasco;419872
+Pesca y Acuicultura;Pasco;608
+Extrac. de Minerales, Gas y Petrol.;Pasco;3123653
+Manufactura;Pasco;102321
+Electricidad, Gas y Agua;Pasco;72273
+Construccion;Pasco;325674
+Comercio;Pasco;259346
+Transporte, Almacen., Correo y Mensaj.;Pasco;118300
+Alojamiento y Restaurantes;Pasco;59050
+Telecom. y Otros Serv. de Info,;Pasco;64315
+Admin. Public. y Defensa;Pasco;223997
+Otros Servicios;Pasco;562935
+Agricultura, Ganad., Caza y Silv.;Piura;1631192
+Pesca y Acuicultura;Piura;450913
+Extrac. de Minerales, Gas y Petrol.;Piura;1966507
+Manufactura;Piura;2975625
+Electricidad, Gas y Agua;Piura;361723
+Construccion;Piura;1630792
+Comercio;Piura;2731315
+Transporte, Almacen., Correo y Mensaj.;Piura;1501870
+Alojamiento y Restaurantes;Piura;478227
+Telecom. y Otros Serv. de Info,;Piura;742353
+Admin. Public. y Defensa;Piura;1207441
+Otros Servicios;Piura;4100301
+Agricultura, Ganad., Caza y Silv.;Puno;1491276
+Pesca y Acuicultura;Puno;88263
+Extrac. de Minerales, Gas y Petrol.;Puno;959023
+Manufactura;Puno;771043
+Electricidad, Gas y Agua;Puno;148467
+Construccion;Puno;924389
+Comercio;Puno;1113124
+Transporte, Almacen., Correo y Mensaj.;Puno;756067
+Alojamiento y Restaurantes;Puno;208540
+Telecom. y Otros Serv. de Info,;Puno;386225
+Admin. Public. y Defensa;Puno;756453
+Otros Servicios;Puno;2151090
+Agricultura, Ganad., Caza y Silv.;San Martin;1646804
+Pesca y Acuicultura;San Martin;5157
+Extrac. de Minerales, Gas y Petrol.;San Martin;40473
+Manufactura;San Martin;572299
+Electricidad, Gas y Agua;San Martin;38346
+Construccion;San Martin;537274
+Comercio;San Martin;686278
+Transporte, Almacen., Correo y Mensaj.;San Martin;171270
+Alojamiento y Restaurantes;San Martin;179519
+Telecom. y Otros Serv. de Info,;San Martin;215677
+Admin. Public. y Defensa;San Martin;554199
+Otros Servicios;San Martin;1415640
+Agricultura, Ganad., Caza y Silv.;Tacna;522997
+Pesca y Acuicultura;Tacna;62919
+Extrac. de Minerales, Gas y Petrol.;Tacna;2497116
+Manufactura;Tacna;290526
+Electricidad, Gas y Agua;Tacna;73637
+Construccion;Tacna;628304
+Comercio;Tacna;752349
+Transporte, Almacen., Correo y Mensaj.;Tacna;514058
+Alojamiento y Restaurantes;Tacna;117439
+Telecom. y Otros Serv. de Info,;Tacna;261620
+Admin. Public. y Defensa;Tacna;318701
+Otros Servicios;Tacna;1073428
+Agricultura, Ganad., Caza y Silv.;Tumbes;191278
+Pesca y Acuicultura;Tumbes;188513
+Extrac. de Minerales, Gas y Petrol.;Tumbes;219395
+Manufactura;Tumbes;332713
+Electricidad, Gas y Agua;Tumbes;20227
+Construccion;Tumbes;234567
+Comercio;Tumbes;490904
+Transporte, Almacen., Correo y Mensaj.;Tumbes;158811
+Alojamiento y Restaurantes;Tumbes;55414
+Telecom. y Otros Serv. de Info,;Tumbes;133116
+Admin. Public. y Defensa;Tumbes;205191
+Otros Servicios;Tumbes;535239
+Agricultura, Ganad., Caza y Silv.;Ucayali;449947
+Pesca y Acuicultura;Ucayali;24060
+Extrac. de Minerales, Gas y Petrol.;Ucayali;261705
+Manufactura;Ucayali;629121
+Electricidad, Gas y Agua;Ucayali;57625
+Construccion;Ucayali;330246
+Comercio;Ucayali;755000
+Transporte, Almacen., Correo y Mensaj.;Ucayali;199491
+Alojamiento y Restaurantes;Ucayali;171372
+Telecom. y Otros Serv. de Info,;Ucayali;216022
+Admin. Public. y Defensa;Ucayali;350333
+Otros Servicios;Ucayali;996011

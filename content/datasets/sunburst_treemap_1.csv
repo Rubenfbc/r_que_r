@@ -1,0 +1,28 @@
+labels;x;vab;parents
+Mountain range;;138109;
+Jungle;;24805;
+Coast;;323488;
+Amazonas;Selva;3118181;Jungle
+Ancash;Sierra;20715924;Mountain range
+Apurímac;Sierra;7128230;Mountain range
+Arequipa;Sierra;31493424;Mountain range
+Ayacucho;Sierra;5758876;Mountain range
+Cajamarca;Sierra;11202613;Mountain range
+Cusco;Sierra;21707765;Mountain range
+Huancavelica;Sierra;3553287;Mountain range
+Huánuco;Sierra;6009274;Mountain range
+Ica;Costa;16979247;Coast
+Junín;Sierra;15454095;Mountain range
+La Libertad;Costa;21901212;Coast
+Lambayeque;Costa;11835545;Coast
+Lima;Costa;234336656;Coast
+Loreto;Selva;8935097;Jungle
+Madre de Dios;Selva;2248767;Jungle
+Moquegua;Costa;8778989;Coast
+Pasco;Sierra;5332344;Mountain range
+Piura;Costa;19778259;Coast
+Puno;Sierra;9753960;Mountain range
+San Martín;Selva;6062936;Jungle
+Tacna;Costa;7113094;Coast
+Tumbes;Costa;2765368;Coast
+Ucayali;Selva;4440933;Jungle

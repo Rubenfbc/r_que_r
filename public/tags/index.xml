@@ -6,10 +6,37 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 03 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>mapview</title>
+      <link>/tags/mapview/</link>
+      <pubDate>Fri, 03 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mapview/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sunburst charts</title>
+      <link>/tags/sunburst-charts/</link>
+      <pubDate>Fri, 03 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sunburst-charts/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>treemaps</title>
+      <link>/tags/treemaps/</link>
+      <pubDate>Fri, 03 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/treemaps/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>joins</title>
