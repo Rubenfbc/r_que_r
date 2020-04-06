@@ -1,7 +1,7 @@
 ---
 title: "Data visualization: Sunburst charts and Treemaps with {plotly}"
 author: "Rubén F. Bustillo"
-date: 2020-04-03
+date: '2020-04-03'
 categories: ["R"]
 tags: ["sunburst charts", "treemaps", "mapview"]
 

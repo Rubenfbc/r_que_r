@@ -6,10 +6,19 @@
     <description>Recent content in R on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 03 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Data visualization: Treemaps with {treemap}, {d3treeR} and {highcharter}</title>
+      <link>/treemaps_2/</link>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/treemaps_2/</guid>
+      <description>This dashboard is a continuation of a previous post. In this occasion we will show how to create static treemaps using {treemap} and animated treemaps with {d3treeR} and {highcharter}.</description>
+    </item>
     
     <item>
       <title>Data visualization: Sunburst charts and Treemaps with {plotly}</title>

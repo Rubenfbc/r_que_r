@@ -6,17 +6,44 @@
     <description>Recent content in Tags on R que R</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 03 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>d3treeR</title>
+      <link>/tags/d3treer/</link>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/d3treer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>highcharter</title>
+      <link>/tags/highcharter/</link>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/highcharter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>mapview</title>
       <link>/tags/mapview/</link>
-      <pubDate>Fri, 03 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/mapview/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>treemaps</title>
+      <link>/tags/treemaps/</link>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/treemaps/</guid>
       <description></description>
     </item>
     
@@ -26,15 +53,6 @@
       <pubDate>Fri, 03 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/sunburst-charts/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>treemaps</title>
-      <link>/tags/treemaps/</link>
-      <pubDate>Fri, 03 Apr 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/treemaps/</guid>
       <description></description>
     </item>
     
@@ -93,7 +111,7 @@
     </item>
     
     <item>
-      <title>Raster</title>
+      <title>raster</title>
       <link>/tags/raster/</link>
       <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       

@@ -1,0 +1,494 @@
+---
+title: "Data visualization: Treemaps with {treemap}, {d3treeR} and {highcharter}"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    orientation: columns
+    source_code: embed
+    vertical_layout: fill
+    theme: paper
+---
+
+
+
+```{r setup, include=FALSE}
+
+
+# PACKAGES / LIBRARIES:
+
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(leaflet)
+library(rnaturalearth)
+library(treemap)
+library(d3treeR)
+library(highcharter)
+library(readxl)
+library(stringr)
+library(knitr)
+library(DT)
+library(viridisLite)
+
+options(scipen=10000)
+
+```
+
+Peru
+===========================================================================
+
+Column {data-width=300}
+---------------------------------------------------------------------------
+
+### 
+
+\
+
+This dashboard is a continuation of a [previous post](https://rquer.netlify.com/sunburst_treemaps#peru). As we explained in there, in a **treemap chart** each brand of a "tree" is given a rectangle, which is then tiled with smaller rectangles. Then, each area is proportional to a specified dimension of the data. **Treemaps** are very useful for displaying hierarchical data. In the post mentioned we explained how to create interactive sunburst charts and treemaps using {plotly}. In this occasion we will show how to create static treemaps using {treemap} and animated treemaps with {d3treeR} and {highcharter}. The treemaps created with {highcharter} are, in my opinion, especially beautiful and very functional. However, note that although {highcharter} is free for personal users, schools, ngos, etc., it is not free for commercial or governmental use. 
+
+
+On the other hand, the map of Peru is created using {leaflet}. The tootips have been customized to show the name of each region when the user hovers over a region. When clicking on one region it will show the total GVA of the region selected and the % with respect to the total GVA of the country. The provider of the base map is `Esri.WorldShadedRelief`. 
+
+
+The dashboard presents the data in DaTables using {DT}. It is also possible to customize DataTables, as we will show in the examples. DataTables provides filtering, sorting, pagination and other features. 
+
+
+We will use again data related to the **regional and sectoral productive structure of Peru for 2018**. Data comes from the Peruvian National Institute of Statistics and Informatics ([INEI](https://www.inei.gob.pe/)). 
+
+
+The INEI distinguishes 12 major economic / productive sectors: 
+
+- Agriculture, Livestock, Hunting and Forestry.
+- Fishing and Aquaculture.
+- Extraction of Minerals, Gas and Oil.
+- Manufacturing.
+- Electricity, Gas and Water.
+- Construction.
+- Commerce.
+- Transportation, Storage, Mail and Messaging.
+- Accommodation and Restaurants.
+- Telecommunications and Other Information Services.
+- Public Administration and Defence.
+- Other Services.
+
+\
+
+
+
+
+
+
+Column
+---------------------------------------------------------------------------
+
+### Gross Value Added by region (in constant 2007 PEN thousands) and % of total GVA, 2018
+
+```{r}
+
+library(readxl)
+peru_mapa_vab2018 <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/peru_mapa_vab2018.xlsx")
+
+peru_mapa_vab2018$Vab_perc <- formatC(peru_mapa_vab2018$Vab_perc, digits=3)
+peru_mapa_vab2018$Vab_perc <- as.numeric(peru_mapa_vab2018$Vab_perc)
+peru_mapa_vab2018$vab_2018<- format(peru_mapa_vab2018$vab_2018, big.mark = ",")
+
+
+peru_map_region <- rnaturalearth::ne_states(country = "Peru", returnclass = "sf") %>%
+  select(name, iso_3166_2, geometry) %>%
+ left_join(peru_mapa_vab2018, 
+            by = "name") 
+
+
+peru_map_region %>%
+  leaflet() %>%
+  addProviderTiles(providers$Esri.WorldShadedRelief) %>%
+  addPolygons(
+    weight = 1,
+    label = ~ name,
+    color = "darkgreen",
+    popup = ~paste("Region:", name,
+                   "<br/>",
+                   "GVA:", vab_2018,
+                   "<br/>",
+                   "% GVA:", Vab_perc))
+
+```
+
+
+
+Column 
+---------------------------------------------------------------------------
+
+### Productive Economic Structure by region, 2018. (GVA in constant 2007 PEN thousands)
+
+```{r}
+
+
+Peru_vab_sectores <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Peru_vab_sectores_2.xlsx")
+
+
+names(Peru_vab_sectores) = c("Regions", "AGR", "PES", "EXT", "MAN", "ELEC", "CONS", "COM", "TRANS", "REST", "TELEC", "ADPUB", "OS")
+
+
+x<-Peru_vab_sectores %>%
+  group_by(Regions) %>%
+  mutate(total= AGR + PES + EXT + MAN + ELEC + CONS + COM + TRANS + REST + TELEC + ADPUB + OS) %>%
+  arrange(total) %>%
+  ungroup()
+
+x$Regions = factor(x$Regions, levels = x$Regions)
+
+plotly::plot_ly(data = x,
+                y = ~ Regions,
+                x = ~ AGR, 
+                orientation = 'h',
+                name = 'Agriculture, Livestock, Hunting and Forestry', 
+                type = 'bar') %>%
+  plotly::add_trace( x = ~ PES, 
+                     name = "Fishing and Aquaculture") %>% 
+  plotly::add_trace( x = ~ EXT, 
+                     name = "Extraction of Minerals, Gas and Oil") %>% 
+  plotly::add_trace( x = ~ MAN, 
+                     name = "Manufacturing") %>%
+  plotly::add_trace( x = ~ ELEC, 
+                     name = "Electricity, Gas and Water") %>%
+  plotly::add_trace( x = ~ CONS, 
+                     name = "Construction") %>% 
+  plotly::add_trace( x = ~ COM, 
+                     name = "Commerce") %>% 
+  plotly::add_trace( x = ~ TRANS, 
+                     name = "Transportation, Storage, Mail and Messaging") %>%
+  plotly::add_trace( x = ~ REST, 
+                     name = "Accommodation and Restaurants") %>%
+  plotly::add_trace( x = ~ TELEC, 
+                     name = "Telecommunications and Other Information Services") %>%
+  plotly::add_trace( x = ~ ADPUB, 
+                     name = "Public Administration and Defence") %>%
+  plotly::add_trace( x = ~ OS, 
+                     name = "Other Services") %>%
+  plotly::layout(title = " Gross Value Added by region and sector \n (constant 2007 PEN thousands)",
+                 barmode = 'stack', 
+                 legend = list(x = 0.5, y = 0.1),
+                 yaxis = list(title = ""),
+                 xaxis = list(title = "Source: INEI | Lima includes Callao en Lima Province"),
+                 hovermode = "compare",
+                 margin = list(
+                   l = 20,
+                   r = 10,
+                   b = 10,
+                   t = 80,
+                   pad = 2
+                 ))
+
+
+
+
+```
+
+
+
+
+
+datatable- DT
+====================================================================================
+
+Columna {data-width=700}
+---------------------------------------------------------------------------
+
+\
+
+### Datatable with fixed column, `info = T`, `sort = T`, and values centered. 
+
+\
+
+```{r}
+
+
+Peru_vab_sectores <- read_excel("C:/Users/Usuario/Desktop/r_que_r/r_que_r/content/datasets/Peru_vab_sectores_2.xlsx")
+
+
+datatable(Peru_vab_sectores, 
+          rownames = F,
+          extensions = "FixedColumns",
+          options = list(
+            info = TRUE, 
+            sort = TRUE,
+            fixedColumns = list(leftColumns = 1),
+            columnDefs = list(list(className = 'dt-center', targets = 1:12))
+          )
+          ) 
+
+
+```
+
+\
+
+
+
+Columna {data-width=300}
+---------------------------------------------------------------------------
+
+\
+
+### Datatable with `filter= bottom`, `class= 'cell-border stripe'`, `searching= T`
+
+\
+
+```{r}
+
+Peru_sectores <- Peru_vab_sectores %>%
+  gather(key = "sector", value = "vab", 2:13)
+
+
+datatable(Peru_sectores, 
+          filter = "bottom",
+          rownames = FALSE,
+          class = 'cell-border stripe',
+          extensions = "FixedColumns",
+          options = list(
+            searching = TRUE,
+            info = TRUE, 
+            sort = TRUE,
+            fixedColumns = list(leftColumns = 1))
+          )
+
+
+```
+
+
+Few questions about the data
+=================================================================================
+
+Column
+------------------------------------------------------------------------------
+
+### **1. REGIONAL CONTRIBUTION TO NATIONAL GVA (DESC)**
+
+```{r}
+
+a <- Peru_sectores %>%
+  group_by(Regions) %>%
+  summarise(vab_regional = sum(vab)) %>%
+  mutate(total= sum(vab_regional), percent = 100*(vab_regional/total)) %>%
+  arrange(desc(percent)) %>%
+  select(Regions, percent) %>%
+  ungroup()
+
+a$percent <- formatC(a$percent, format = "f", digits = 2)
+
+datatable(a)
+
+```
+
+
+### **2. SECTORAL CONTRIBUTION TO NATIONAL GVA (DESC)**
+
+```{r}
+
+b <- Peru_sectores %>%
+  group_by(sector) %>%
+  summarise(vab_regional = sum(vab)) %>%
+  mutate(total= sum(vab_regional), percent = 100*(vab_regional/total)) %>%
+  arrange(desc(percent)) %>%
+  select(sector, percent) %>%
+  ungroup()
+
+b$percent <- formatC(b$percent, format = "f", digits = 2)
+
+datatable(b)
+
+```
+
+Column
+------------------------------------------------------------------------------
+
+### **3. SECTORAL CONTRIBUTION OF EACH REGION TO NATIONAL GVA (DESC)**
+
+```{r}
+
+c <- Peru_sectores %>%
+  mutate(suma_total= sum(vab), percent= 100*(vab/suma_total)) %>%
+  select(Regions, sector,percent) %>%
+  arrange(desc(percent)) 
+
+c$percent <- formatC(c$percent, format = "f", digits = 2)
+  
+datatable(c)
+```
+
+### **4. SECTORAL CONTRIBUTION TO REGIONAL GVA (DESC by region)** 
+
+```{r}
+
+d <- Peru_sectores %>%
+  group_by(Regions) %>%
+  mutate(suma_total= sum(vab), percent= 100*(vab/suma_total)) %>%
+  select(Regions, sector, percent) %>%
+  arrange(Regions, desc(percent)) %>%
+  ungroup()
+
+d$percent <- formatC(d$percent, format = "f", digits = 2)
+
+datatable(d)
+
+```
+
+Column
+------------------------------------------------------------------------------
+
+### **5. REGIONAL CONTRIBUTION TO SECTORAL GVA (DESC by sector)**
+
+```{r}
+
+e <- Peru_sectores %>%
+  group_by(sector) %>%
+  mutate(suma_total= sum(vab), percent= 100*(vab/suma_total)) %>%
+  select(sector, Regions, percent) %>%
+  arrange(sector, desc(percent)) %>%
+  ungroup()
+
+e$percent <- formatC(e$percent, format = "f", digits = 2)
+
+datatable(e)
+
+```
+
+### **6. SECTOR IN EACH REGION THAT CONTRIBUTES MOST TO NATIONAL GVA (DESC by %)**
+
+```{r}
+
+f <- Peru_sectores %>%
+  mutate(suma_total= sum(vab), percent= 100*(vab/suma_total)) %>%
+  select(Regions, sector, percent) %>%
+  arrange(desc(percent)) %>%
+  group_by(Regions) %>%
+  top_n(1) %>%
+  ungroup()
+
+f$percent <- formatC(f$percent, format = "f", digits = 2)
+
+datatable(f)
+
+```
+
+
+
+{treemap}
+====================================================================================
+
+
+### Example I. Sectoral Level
+
+
+```{r, fig.width=14, fig.height=8}
+
+tree_sectores <- treemap(
+  Peru_sectores,
+  index=c("sector","Regions"),
+  vSize="vab",
+  title = "GVA, economic sector and region, 2018 ",
+  vColor="sector",
+  type="index",
+  force.print.labels = F,
+  border.col = c("black", "white"),
+  border.lwds = c(3,2),
+  align.labels = list(
+    c("center","center"),
+    c("center", "top")
+  )
+)
+
+
+
+```
+
+
+{treemap} II
+====================================================================================
+
+
+### Example II. Regional Level
+
+
+```{r, fig.width=14, fig.height=8}
+
+tree_regions <- treemap(
+  Peru_sectores,
+  index=c("Regions", "sector"),
+  vSize="vab",
+  title = "GVA, region and economic sector, 2018 ",
+  vColor="vab",
+  type="value",
+  palette = "BuPu",
+  force.print.labels = F,
+  border.col = c("black", "white"),
+  border.lwds = c(3,2),
+  align.labels = list(
+    c("center","center"),
+    c("center", "top")
+  )
+)
+
+```
+
+
+{d3treeR} 
+====================================================================================
+
+### Example I. Sectoral Level
+
+```{r}
+
+d3tree(tree_sectores,
+       rootname = "GVA, economic sector and region, 2018")
+
+```
+
+
+
+{d3treeR} II
+====================================================================================
+
+
+### Example II. Regional Level
+
+```{r}
+
+d3tree(tree_regions,
+       rootname = "GVA, region and economic sector, 2018")
+
+```
+
+
+
+ {highcharter}
+====================================================================================
+
+### Example I. Sectoral Level
+
+```{r}
+
+hctreemap(tree_sectores, allowDrillToNode = TRUE) %>%
+  hc_title(text = "GVA, economic sector and region, 2018") %>%
+  hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
+                            GVA: {point.value:,.0f}") %>%
+  hc_exporting(enabled = TRUE)
+
+```
+
+
+
+{highcharter} II
+====================================================================================
+
+### Example II. Regional Level
+
+```{r}
+
+hctreemap(tree_regions, allowDrillToNode = TRUE) %>%
+  hc_title(text = "GVA, region and economic sector, 2018") %>%
+  hc_tooltip(pointFormat = "<b>{point.name}</b>:<br>
+                            GVA: {point.value:,.0f}") %>%
+  hc_exporting(enabled = TRUE)
+
+```
